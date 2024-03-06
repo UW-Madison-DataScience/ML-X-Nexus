@@ -2,25 +2,35 @@ project:
   type: website
 
 website:
-  title: "Community Shared Resources"
-  navbar:
-    logo: "images/mlx_logo_horizontal.png"
+  title: "ML+X Community Shared Resources"
+  page-navigation: true
     #left:
     #  - href: index.qmd
     #    text: Home
     #  - about.qmd
+  sidebar:
     tools:
       - icon: github
         href: https://github.com/UW-Madison-DataScience/ML-X-Community
-  sidebar:
-    collapse-level: 1
+        text: "GitHub organization"
+    background: "#dbd9d9"
+    logo: "images/mlx_logo_horizontal.png"
+    pinned: true
+    align: center
+    style: "docked"
+    search: true
+    collapse-level: 2
     contents: auto
 
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme:
+      light: [cosmo, theme.scss]
+      dark: [cosmo, theme-dark.scss]
+    # css: styles.css
     toc: true
+    code-copy: true
+    code-overflow: wrap
 
 execute:
   freeze: auto
