@@ -188,6 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a>
   <ul class="collapse">
+  <li><a href="#practice-this-notebook-here-open-in-colab" id="toc-practice-this-notebook-here-open-in-colab" class="nav-link" data-scroll-target="#practice-this-notebook-here-open-in-colab">Practice this notebook here: <img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open in Colab"></a></li>
   <li><a href="#iris-flower-classification" id="toc-iris-flower-classification" class="nav-link" data-scroll-target="#iris-flower-classification">Iris Flower Classification</a></li>
   </ul></li>
   </ul>
@@ -223,6 +224,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Scikit-learn documentation: https://scikit-learn.org/stable/</li>
 <li>Keras documentation: https://keras.io/api/</li>
 </ul>
+<section id="practice-this-notebook-here-open-in-colab" class="level3">
+<h3 class="anchored" data-anchor-id="practice-this-notebook-here-open-in-colab">Practice this notebook here: <a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Community/blob/main/Guides/intro-ml/ML_Example1_Iris_flower_classification.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open in Colab"></a></h3>
+</section>
 <section id="iris-flower-classification" class="level2">
 <h2 class="anchored" data-anchor-id="iris-flower-classification">Iris Flower Classification</h2>
 <ul>
@@ -238,7 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Keras to build the neural network</li>
 <li>Sklearn to evaluate the build model using Kfold Cross Validation</li>
 </ul>
-<div id="cell-4" class="cell" data-execution_count="1">
+<div id="cell-5" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras</span>
@@ -259,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Loading the Iris dataset into pandas dataframe</p>
 <p>Attribute Information: 1. sepal length in cm 2. sepal width in cm 3. petal length in cm 4. petal width in cm 5. class: - Iris Setosa - Iris Versicolour - Iris Virginica</p>
-<div id="cell-6" class="cell" data-execution_count="2">
+<div id="cell-7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pandas.read_csv(<span class="st">"data\iris_dataset.csv"</span>, header <span class="op">=</span> <span class="va">None</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -327,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Lets plot the dataset</p>
-<div id="cell-8" class="cell" data-execution_count="41">
+<div id="cell-9" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(data.iloc[:,<span class="dv">0</span>:<span class="dv">1</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-setosa'</span>], data.iloc[:,<span class="dv">1</span>:<span class="dv">2</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-setosa'</span>], color <span class="op">=</span><span class="st">'green'</span> , label<span class="op">=</span><span class="st">'Iris-setosa'</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(data.iloc[:,<span class="dv">0</span>:<span class="dv">1</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-versicolor'</span>], data.iloc[:,<span class="dv">1</span>:<span class="dv">2</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-versicolor'</span>], color <span class="op">=</span><span class="st">'red'</span> , label<span class="op">=</span><span class="st">'Iris-versicolor'</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(data.iloc[:,<span class="dv">0</span>:<span class="dv">1</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-virginica'</span>], data.iloc[:,<span class="dv">1</span>:<span class="dv">2</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-virginica'</span>], color <span class="op">=</span><span class="st">'blue'</span> , label<span class="op">=</span><span class="st">'Iris-virginica'</span>)</span>
@@ -344,7 +348,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-9" class="cell" data-execution_count="42">
+<div id="cell-10" class="cell" data-execution_count="42">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(data.iloc[:, <span class="dv">2</span>:<span class="dv">3</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-setosa'</span>], data.iloc[:, <span class="dv">3</span>:<span class="dv">4</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-setosa'</span>], color <span class="op">=</span><span class="st">'green'</span> , label<span class="op">=</span><span class="st">'Iris-setosa'</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(data.iloc[:, <span class="dv">2</span>:<span class="dv">3</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-versicolor'</span>], data.iloc[:, <span class="dv">3</span>:<span class="dv">4</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-versicolor'</span>], color <span class="op">=</span><span class="st">'red'</span> , label<span class="op">=</span><span class="st">'Iris-versicolor'</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(data.iloc[:, <span class="dv">2</span>:<span class="dv">3</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-virginica'</span>], data.iloc[:, <span class="dv">3</span>:<span class="dv">4</span>][data[<span class="dv">4</span>]<span class="op">==</span><span class="st">'Iris-virginica'</span>], color <span class="op">=</span><span class="st">'blue'</span> , label<span class="op">=</span><span class="st">'Iris-virginica'</span>)</span>
@@ -362,20 +366,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Separating data into input and output variables</p>
-<div id="cell-11" class="cell" data-execution_count="3">
+<div id="cell-12" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> data.values</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> dataset[: , <span class="dv">0</span>:<span class="dv">4</span>]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> dataset[: , <span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Using one hot encoding for multi-class classification problem</p>
-<div id="cell-13" class="cell" data-execution_count="4">
+<div id="cell-14" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> LabelEncoder()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>encoder.fit(y)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>encoder_y <span class="op">=</span> encoder.transform(y)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>dummy_y <span class="op">=</span> np_utils.to_categorical(encoder_y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Creating baseline neural network model using keras - Built sequential model - Created simple fully connected network with one hidden layer that contains 8 neurons. - In the first layer, we are using dense layer with 8 neurons, input dimension as 4 (input features) and activation function as relu - In the second layer i.e the output layer, 3 neurons are used to predict 3 output classes(3 flower categories) with activation function as softmax</p>
-<div id="cell-15" class="cell" data-execution_count="5">
+<div id="cell-16" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> baseline_model():</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> Sequential()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(<span class="dv">8</span>, input_dim<span class="op">=</span><span class="dv">4</span>, activation<span class="op">=</span><span class="st">'relu'</span>))</span>
@@ -385,26 +389,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Creating KerasClassifier for use in scikit-learn</p>
-<div id="cell-17" class="cell" data-execution_count="7">
+<div id="cell-18" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>estimator <span class="op">=</span> KerasClassifier(build_fn<span class="op">=</span>baseline_model, epochs<span class="op">=</span><span class="dv">200</span>, batch_size<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Evaluation of the model created using neural networks on training data using kfold(10) validation</p>
-<div id="cell-19" class="cell" data-execution_count="8">
+<div id="cell-20" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fix random seed for reproducibility in evaluation</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">7</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>numpy.random.seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-20" class="cell" data-execution_count="9">
+<div id="cell-21" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>kfold <span class="op">=</span> KFold(n_splits <span class="op">=</span> <span class="dv">10</span>, shuffle <span class="op">=</span> <span class="va">True</span>, random_state <span class="op">=</span> seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-21" class="cell" data-scrolled="true" data-execution_count="10">
+<div id="cell-22" class="cell" data-scrolled="true" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> cross_val_score(estimator, X, dummy_y, cv<span class="op">=</span>kfold)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Baseline Prediction Accuracy: </span><span class="sc">%.2f%%</span><span class="st"> (</span><span class="sc">%.2f%%</span><span class="st">)"</span> <span class="op">%</span> (results.mean()<span class="op">*</span><span class="dv">100</span>, results.std()<span class="op">*</span><span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Baseline Prediction Accuracy: 97.33% (4.42%)</code></pre>
 </div>
 </div>
-<div id="cell-22" class="cell" data-execution_count="11">
+<div id="cell-23" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>array([ 1.        ,  0.93333334,  1.        ,  1.        ,  1.        ,
