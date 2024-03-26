@@ -1,0 +1,42 @@
+```{=html}
+<div class="list quarto-listing-default">
+    <% for (const item of items) { %>
+    
+    <div class="quarto-post image-left" <%= metadataAttrs(item) %>>
+        <div class="thumbnail">
+            <a href="<%- item.path %>">
+            <!-- preview image tag here -->
+            </a>
+        </a>
+        </div>
+        <div class="body">
+            <h3 class="no-anchor listing-title"><%= item.title %></h3>
+            <div class="listing-subtitle">
+            <a href="<%- item.lesson_materials %>">Lesson Materials</a>
+            <a href="<%- item.registration %>">Registration</a>
+            </div>
+            <div class="listing-categories">
+            <% for (const category of item.categories) { %>
+            <div class="listing-category" onclick="window.quartoListingCategory('<%=category%>'); return false;"><%= category %></div>
+            <% } %>
+            </div>
+            <div class="listing-description">
+                <% if (item.prerequisites) {%>
+                    <h4 class="listing-title">Prerequisites</h4>
+                    <%= item.prerequisites %>
+                <% } %>
+            </div>
+        </div>
+        <div class="metadata">
+            <div class="metadata-value listing-registration">
+            <a href="<%- item.registration %>">Registration</a>
+            </div>
+            <div class="metadata-value listing-length">
+            <%- item.length>
+            </div>
+        </div>
+    </div>
+    
+<% } %>
+</div>
+```
