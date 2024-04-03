@@ -1,4 +1,10 @@
 ```{=html}
+<%
+date_options = {
+    year: 'numeric',
+    month: 'long'
+}
+%>
 <div class="list quarto-listing-default">
     <% for (const item of items) { %>
         <div class="workshop-item" <%= metadataAttrs(item) %>>
@@ -13,7 +19,7 @@
                     <div class="listing-organizers">Organized by <%= item.organizers %></div>
                 <% } %>
                 <% if (item.offered) { %>
-                    <span class="listing-offered">Offered <%- item.offered %></span> |
+                    <span class="listing-offered">Offered <%- new Date(item.offered).toLocaleDateString(undefined, date_options) %></span> |
                 <% } %>
                     <span class="listing-materials">
                         <a href="<%- item.lesson_materials %>">Lesson Materials</a>
