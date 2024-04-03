@@ -1,42 +1,43 @@
 ```{=html}
 <div class="list quarto-listing-default">
     <% for (const item of items) { %>
-    
-    <div class="quarto-post image-left" <%= metadataAttrs(item) %>>
-        <div class="thumbnail">
-            <a href="<%- item.path %>">
-            <!-- preview image tag here -->
-            </a>
-        </a>
-        </div>
-        <div class="body">
-            <h3 class="no-anchor listing-title"><%= item.title %></h3>
-            <div class="listing-subtitle">
-            <a href="<%- item.lesson_materials %>">Lesson Materials</a>
-            <a href="<%- item.registration %>">Registration</a>
-            </div>
+        <div class="workshop-item" <%= metadataAttrs(item) %>>
+            <h3 class="listing-title no-anchor"><%- item.title %></h3>
             <div class="listing-categories">
-            <% for (const category of item.categories) { %>
-            <div class="listing-category" onclick="window.quartoListingCategory('<%=category%>'); return false;"><%= category %></div>
-            <% } %>
+                <% if (item.categories) { for (const category of item.categories) { %>
+                <span class="listing-category" onclick="window.quartoListingCategory('<%= category %>'); return false;"><%= category %></span>
+                <% }} %>
             </div>
-            <div class="listing-description">
-                <% if (item.prerequisites) {%>
-                    <h4 class="listing-title">Prerequisites</h4>
-                    <%= item.prerequisites %>
+            <div class="listing-info">
+                <% if (item.organizers) { %>
+                    <div class="listing-organizers">Organized by <%= item.organizers %></div>
+                <% } %>
+                <% if (item.offered) { %>
+                    <span class="listing-offered">Offered <%- item.offered %></span> |
+                <% } %>
+                    <span class="listing-materials">
+                        <a href="<%- item.lesson_materials %>">Lesson Materials</a>
+                    </span> |
+                    <span class="listing-registration">
+                        <a href="<%- item.registration %>">Registration</a>
+                    </span>
+                <% if (item.length) {%>
+                    <div class="listing-length"><%= item.length %> to complete</div>
                 <% } %>
             </div>
-        </div>
-        <div class="metadata">
-            <div class="metadata-value listing-registration">
-            <a href="<%- item.registration %>">Registration</a>
+            <div class="listing-tools">
+                Tools:
+                <% if (item.tools) { for (const category of item.tools) { %>
+                <span class="listing-tool"><%= category %></span>
+                <% }} %>
             </div>
-            <div class="metadata-value listing-length">
-            <%- item.length>
+            <div class="listing-packages">
+                Packages:
+                <% if (item.packages) { for (const category of item.packages) { %>
+                <span class="listing-package"><%= category %></span>
+                <% }} %>
             </div>
         </div>
-    </div>
-    
-<% } %>
+    <% } %>
 </div>
 ```
