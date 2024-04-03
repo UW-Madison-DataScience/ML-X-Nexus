@@ -1,0 +1,97 @@
+---
+title: How to contribute?
+author: "ML+X community"
+order: 6
+image: retrosupply-unsplash.png
+tbl-colwidths: [5,30]
+date-modified: "last-modified"
+date-format: long
+categories:
+  - how-to
+  - contribute
+---
+
+Nexus is the ML+X community's centralized resource hub for individuals interesting in advancing their knowledge and skill in machine learning (ML) and related fields (X).  Moreover, we want Nexus to serve also as a place where members of the community can share their knowledge. This guide answers the question, how to contribute to the ML+X-Nexus?
+
+We want to site to have:
+
+📜 Guides: Explore a vast library of ML guides covering a wide range of topics, from foundational concepts to advanced techniques. Written by community members, these guides offer clear explanations, practical examples, and actionable insights to help you navigate the complexities of ML with confidence.
+
+🏆 ML Stories: Discover a curated collection of blogs which dive into real-world experiences and lessons learned by ML practitioners. 
+
+🚀 Exploratory data analysis (EDA) case studies: As the adage goes, "garbage in, garbage out," emphasizing the critical role of EDA in ensuring the quality and integrity of any ML pipeline. These case studies offer firsthand experiences in navigating real-world datasets, demonstrating the technical steps and domain knowledge needed to explore different data types (time-series, tabular, images, etc.) from various fields.
+
+## External versus original content
+Nexus is primarily intended to host *original* content that is either (a) difficult to find elsewhere online or (b) unique/relevant to work conducted at UW-Madison. However, we welcome contributors to add useful external resources (links to other useful guides and blogs) to the "External" page on Nexus.
+
+## How to make a post with GitHub?
+
+We follow GitHub's collaboration model, so the general idea to make a post or edit a document is the same:
+
+1. [Fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) the [ML+X-Nexus repository](https://github.com/UW-Madison-DataScience/ML-X-Nexus) repository.
+
+2. [Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) that repository into your system of preference
+
+3. [Create a new branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository)
+
+4. Make the post, commit the changes, and [make a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
+
+These are many links and if you don't know how to use Git / GitHub, is could be a bit startling. A friendlier alternative could be to [download GitHub desktop](https://desktop.github.com/) and setup the repository by following [Chris's guide](https://docs.google.com/document/d/1Qk5qMwDHWPLvJPbyq5dpEFXwTt2LkV0NBxOgujTD_LY/edit#heading=h.bjbbmik9gkc7).
+
+## Where to locate your post?
+
+We want the site to be constantly evolving with the community, and our intention is to keep the contributions to the site as free as possible. However, we added some sections that to structure the site a little bit:
+
+```txt
+.
+├── EDA-examples
+├── Guides
+├── external-guides.qmd
+├── ML-stories
+└── Workshops
+```
+
+We conceptualize the contents for each section to be:
+
+- **EDA-examples**: Examples for exploratory dat analysis. There are multiple types of data, and ML can be applied in many different fields, so we want to have examples of how the members of the community initially approach a data problem.
+- **Guides** and **external-guides**: This is a bit self-explanatory. However, we dont't want to reinvent the wheel, so if the guide is not available anywhere else or could be anything unique to the ML practice at UW this is the place for that guide. Alternatively, if the guide is useful, but someone else already wrote it, posting the link in the **external-guides** file is sufficient.
+- **ML-stories**: We want to know about your research, and probably we are not the only ones. This is the place to informally write about your research and share it with the community.
+
+## How to write the post?
+
+To write a post, there are many alternatives: Write it using [quarto](www.quarto.org), [rmarkdown](https://rmarkdown.rstudio.com/), or [jupyter](https://jupyter.org/). The post could be a new file in the folder, or a named folder with an `index.[ipynb|qmd|rmd|md]` extension. In any case, the header of the post needs to be a `yaml` section witht the fields: 
+
+```yaml
+---
+title: An Example
+description: |
+  An exploratory data analysis example
+author: ML+X
+date-modified: "last-modified"
+date-format: long
+categories:
+  - EDA
+  - PCA
+---
+```
+
+The only fields that need to be changed are `title`, `description`, `author` and the `categories`. Ideally the categories should match the tags that are already in use in the site, e.g. if tag that we are using for support vector machines is `SVM` then use that one instead of writing another one like `support-vector-machines`.
+
+## Extra: Essential Git Terminology: {#sec-terminology}
+
+This section was copied from [Chris's guide on How to use Git/Github Demo](https://docs.google.com/document/d/1Qk5qMwDHWPLvJPbyq5dpEFXwTt2LkV0NBxOgujTD_LY/edit?usp=sharing)
+
+- **Repository == repo**: A project that is tracked via git/GitHub
+  
+    - **Remote repo**: A git project that is stored on GitHub
+    - **Local repo**: A git project that has been downloaded to your local machine
+    
+- **Clone**: Cloning is the process of making a copy of a remote repo on your local machine. This allows you to work on the project locally and perform tasks like commits, branches, and pulls.
+- **Commit**: A git command that marks the completion of new work to a repo (e.g., add a new script, add a feature, fill out README). You can always recover previous versions of your work by loading up a previous commit.
+- **Push**: A git command that sends local changes (commits) stored in your local repo to the remote repo.
+- **Pull**: A git command that allows you to update your local repo based on changes made to the remote repo (e.g., if your colleague pushes to the remote repo)
+- **Branch**: A branch in Git is a parallel line of development that allows you to work on features, bug fixes, or experiments without affecting the main codebase. You can create and switch between branches to isolate your work.
+- **Merge**: Merging is the process of integrating changes from one branch into another. This is typically done to combine the changes made in a feature branch with the main branch (e.g., main or master).
+- **Pull Request (PR)**: A pull request is a feature provided by platforms like GitHub, GitLab, and Bitbucket. It's a way to propose changes (commits) to a project. Others can review the changes, and once approved, they can be merged into the main branch.
+- **Fork**: Forking a repository means creating a copy of someone else's project in your GitHub account. This allows you to make changes independently and propose those changes back to the original project via pull requests. If everyone on your team has write-access to the repo, it’s best to use new branches instead of forks for pull requests. 
+- **Gitignore**: A .gitignore file is used to specify which files and directories should be excluded from version control. It's essential for preventing unnecessary or sensitive files from being included in the repository.
