@@ -6,6 +6,7 @@ Welcome to the ML+X {name in progress}! This is a collaborative platform dedicat
 
 ## Contributors
 Special thanks to our contributors:
+
 ![Contributors graph](https://contrib.rocks/image?repo=UW-Madison-DataScience/ML-X-Nexus)
 
 ## About ML+X {name in progress}:
