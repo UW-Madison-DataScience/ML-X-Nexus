@@ -1,7 +1,12 @@
 # ML+X Community
+
 ![ML + X Banner](https://github.com/UW-Madison-DataScience/ML-X-Community/assets/59903252/b3dbe076-526d-4dbe-9525-f9c2f62bf27c)
 
 Welcome to the ML+X {name in progress}! This is a collaborative platform dedicated to crowdsourcing machine learning guides, best practices, and starter notebooks for practitioners across UW–Madison and beyond.
+
+## Contributors
+
+![Contributors graph](https://contrib.rocks/image?repo=UW-Madison-DataScience/ML-X-Nexushttps://github.com/UW-Madison-DataScience/ML-X-Nexus/graphs/contributors)
 
 ## About ML+X {name in progress}:
 
