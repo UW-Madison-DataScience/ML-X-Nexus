@@ -5,7 +5,7 @@
 Welcome to the ML+X {name in progress}! This is a collaborative platform dedicated to crowdsourcing machine learning guides, best practices, and starter notebooks for practitioners across UW–Madison and beyond.
 
 ## Contributors
-
+Special thanks to our contributors:
 ![Contributors graph](https://contrib.rocks/image?repo=UW-Madison-DataScience/ML-X-Nexus)
 
 ## About ML+X {name in progress}:
