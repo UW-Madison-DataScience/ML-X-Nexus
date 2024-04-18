@@ -1,11 +1,11 @@
 # ML+X Community
 ![ML + X Banner](https://github.com/UW-Madison-DataScience/ML-X-Community/assets/59903252/b3dbe076-526d-4dbe-9525-f9c2f62bf27c)
 
-Welcome to the ML+X {name in progress}! This is a collaborative platform dedicated to crowdsourcing machine learning guides, best practices, and starter notebooks for practitioners across UW–Madison and beyond.
+Welcome to the ML+X Nexus! This is a collaborative platform dedicated to crowdsourcing machine learning guides, best practices, and starter notebooks for practitioners across UW–Madison and beyond.
 
-## About ML+X {name in progress}:
+## About ML+X Nexus:
 
-The ML+X {name in progress} serves as a centralized resource hub for individuals interested in advancing their knowledge and skills in machine learning (ML) and related fields (X). Whether you're a student, researcher, or industry professional, you'll find a wealth of curated resources tailored to various experience levels and areas of interest.
+The ML+X Nexus serves as a centralized resource hub for individuals interested in advancing their knowledge and skills in machine learning (ML) and related fields (X). Whether you're a student, researcher, or industry professional, you'll find a wealth of curated resources tailored to various experience levels and areas of interest.
 
 ## Features:
 
