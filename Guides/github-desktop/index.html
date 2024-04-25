@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="ML+X community">
 
-<title>Nexus: Crowdsourced ML Resources - Example 1</title>
+<title>Nexus: Crowdsourced ML Resources - Intro to Git and GitHub Desktop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,6 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../ML-stories/index.html" rel="next">
+<link href="../../Guides/vscode/index.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -80,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Example 1</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Guides/index.html">Guides</a></li><li class="breadcrumb-item"><a href="../../Guides/github-desktop/index.html">Intro to Git and GitHub Desktop</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -125,11 +128,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../../Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../Guides/intro-python/index.html" class="sidebar-item-text sidebar-link">
@@ -184,7 +187,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Guides/github-desktop/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Guides/github-desktop/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Intro to Git and GitHub Desktop</span></a>
   </div>
 </li>
@@ -249,22 +252,50 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#essential-git-terminology" id="toc-essential-git-terminology" class="nav-link active" data-scroll-target="#essential-git-terminology">Essential Git Terminology</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  <li><a href="#tracking-changes" id="toc-tracking-changes" class="nav-link" data-scroll-target="#tracking-changes">Tracking changes</a></li>
+  <li><a href="#ignoring-.ipynb-files" id="toc-ignoring-.ipynb-files" class="nav-link" data-scroll-target="#ignoring-.ipynb-files">Ignoring .ipynb files</a></li>
+  <li><a href="#pulling-updates-from-github" id="toc-pulling-updates-from-github" class="nav-link" data-scroll-target="#pulling-updates-from-github">Pulling updates from GitHub</a></li>
+  <li><a href="#reverting-to-a-previous-commit" id="toc-reverting-to-a-previous-commit" class="nav-link" data-scroll-target="#reverting-to-a-previous-commit">Reverting to a previous commit</a></li>
+  <li><a href="#using-pull-requests-to-review-each-others-work" id="toc-using-pull-requests-to-review-each-others-work" class="nav-link" data-scroll-target="#using-pull-requests-to-review-each-others-work">Using “pull requests” to review each other’s’ work</a></li>
+  <li><a href="#saving-kaggle-notebooks-to-git" id="toc-saving-kaggle-notebooks-to-git" class="nav-link" data-scroll-target="#saving-kaggle-notebooks-to-git">Saving Kaggle Notebooks to Git</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Guides/index.html">Guides</a></li><li class="breadcrumb-item"><a href="../../Guides/github-desktop/index.html">Intro to Git and GitHub Desktop</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Example 1</h1>
-</div>
+<h1 class="title">Intro to Git and GitHub Desktop</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">version control</div>
+  </div>
+  </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>ML+X community </p>
+          </div>
+  </div>
     
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">April 25, 2024</p>
+    </div>
+  </div>
     
   </div>
   
@@ -273,8 +304,198 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Navigating the world of version control systems like Git can initially feel daunting, especially for those new to programming or collaborative software development projects. However, with the right tools and guidance, anyone can quickly grasp the essentials and begin leveraging the power of Git for efficient project management and collaboration. While Git commands can be run via a Unix shell, there are alternatives which are more friendly for beginners. In this guide, we’ll explore why GitHub Desktop serves as an ideal gateway to Git, along with a step-by-step walkthrough on essential Git terminology, setup procedures, tracking changes, collaboration workflows, and even managing Kaggle notebooks seamlessly. Whether you’re embarking on your first coding adventure or seeking to streamline your team’s development process, this guide aims to demystify Git and empower you with practical knowledge to navigate the Git landscape with confidence.</p>
+<section id="essential-git-terminology" class="level2">
+<h2 class="anchored" data-anchor-id="essential-git-terminology">Essential Git Terminology</h2>
+<ul>
+<li><strong>Repository == repo</strong>: A project that is tracked via git/GitHub
+<ul>
+<li><strong>Remote repo</strong>: A git project that is stored on GitHub</li>
+<li><strong>Local repo</strong>: A git project that has been downloaded to your local machine</li>
+</ul></li>
+<li><strong>Clone</strong>: Cloning is the process of making a copy of a remote repo on your local machine. This allows you to work on the project locally and perform tasks like commits, branches, and pulls.</li>
+<li><strong>Commit</strong>: A git command that marks the completion of new work to a repo (e.g., add a new script, add a feature, fill out README). You can always recover previous versions of your work by loading up a previous commit.</li>
+<li><strong>Push</strong>: A git command that sends local changes (commits) stored in your local repo to the remote repo.</li>
+<li><strong>Pull</strong>: A git command that allows you to update your local repo based on changes made to the remote repo (e.g., if your colleague pushes to the remote repo)</li>
+<li><strong>Branch</strong>: A branch in Git is a parallel line of development that allows you to work on <strong>features</strong>, bug fixes, or experiments without affecting the main codebase. You can create and switch between branches to isolate your work.</li>
+<li><strong>Merge</strong>: Merging is the process of integrating changes from one branch into another. This is typically done to combine the changes made in a** feature branch** with the main branch (e.g., main or master).</li>
+<li><strong>Pull Request (PR)</strong>: A pull request is a feature provided by platforms like GitHub, GitLab, and Bitbucket. It’s a way to propose changes (commits) to a project. Others can review the changes, and once approved, they can be merged into the main branch.</li>
+<li><strong>Fork</strong>: Forking a repository means creating a copy of someone else’s project in your GitHub account. This allows you to make changes independently and propose those changes back to the original project via pull requests. If everyone on your team has write-access to the repo, it’s best to use new branches instead of forks for pull requests.</li>
+<li><strong>Gitignore</strong>: A .gitignore file is used to specify which files and directories should be excluded from version control. It’s essential for preventing unnecessary or <strong>sensitive files </strong>(contains like API keys) from being included in the repository.</li>
+</ul>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<ol type="1">
+<li><strong>Install GitHub Desktop</strong>
+<ol type="1">
+<li>Visit <a href="https://desktop.github.com/">https://desktop.github.com/</a> to install</li>
+</ol></li>
+<li><strong>Create repo</strong>
+<ol start="2" type="1">
+<li>Visit <a href="https://github.com/">https://github.com/</a> and sign in to your GitHub account</li>
+<li>Click “new” to create a new repo</li>
+<li>Provide a name for the project, e.g., “my_kaggle_project”</li>
+<li>Give a description: “Git repo for collaborating on Kaggle project for MLM23.”</li>
+<li>Set to private if you’re worried about having your work scooped</li>
+<li>Add a README file: generally a good idea to have a README that explains how to use your code/repo</li>
+<li>Choose a license: <a href="https://choosealicense.com/">https://choosealicense.com/</a>. MIT license is usually best for open-source projects.</li>
+</ol></li>
+<li><strong>Add collaborator(s)</strong>
+<ol start="9" type="1">
+<li>From your repo homepage on GitHub, click the settings tab</li>
+<li>Click on the “Collaborators” menu option shown in the left panel</li>
+<li>Click “Add people” and enter your collaborator’s username or GitHub email address</li>
+</ol></li>
+<li><strong>Setup SSH key</strong>: SSH provides a secure way to authenticate and transfer data between your local machine and GitHub. You can also use HTTPS if you prefer, but it is less secure. HTTPS avoids having to generate an SSH key, but you will need to enter your GitHub login credentials from time to time.
+<ol start="12" type="1">
+<li>Open GitBash (windows) or terminal (Mac) and run the following commands replacing the example email with your GitHub email:
+<ol type="1">
+<li><p>ssh-keygen -t ed25519 -C “your_github_email@address.com”</p></li>
+<li><p>cat ~/.ssh/id_ed25519.pub</p>
+<p><em>The ssh-keygen produces private and public keys, and <strong>make </strong>sure to copy and paste the output from the command</em></p>
+<p>cat ~/.ssh/id_ed25519.pub</p></li>
+</ol></li>
+<li>Paste output (starts like ssh-ed25519) into the new SSH key under GitHub settings (SSH and GPG Keys) and save the key</li>
+</ol></li>
+<li><strong>Clone repo</strong>
+<ol start="14" type="1">
+<li>From your GitHub repo homepage, click the green “Code” button</li>
+<li>Select SSH if you setup an SSH key or select HTTPS if you don’t have one setup. Copy the URL shown.</li>
+<li>Open GitHub Desktop</li>
+<li>Click File → Clone repository → URL</li>
+<li>Paste the repo URL and pay attention to the destination folder path so you can access this folder later</li>
+<li>Click “Clone”</li>
+</ol></li>
+</ol>
+</section>
+<section id="tracking-changes" class="level2">
+<h2 class="anchored" data-anchor-id="tracking-changes">Tracking changes</h2>
+<ol type="1">
+<li><strong>Add a blank text file to your local repo</strong>
+<ol type="1">
+<li>Right-click repo name in GitHub Desktop → show in explorer (show in Finder and go to the directory on Mac)</li>
+<li>Create a new text file and add to local repo folder</li>
+<li>Add a line of text to the file, e.g., “hello world” and save the file</li>
+</ol></li>
+<li><strong>View local changes </strong>
+<ol start="4" type="1">
+<li>In GitHub desktop, you can view this change under the “Changes” tab. Notice that we see the new file and added text under this tab.</li>
+</ol></li>
+<li><strong>Commit the new file</strong>
+<ol start="5" type="1">
+<li>Commits mark a checkpoint in the progress you have made to your repo. Provide a short summary message and optionally provide more information in the “Description” box.</li>
+</ol></li>
+<li><strong>View remote changes (or lack thereof)</strong>
+<ol start="6" type="1">
+<li>Visit GitHub and notice that the change is not yet reflected on GitHub</li>
+</ol></li>
+<li><strong>Push the change to GitHub </strong></li>
+<li><strong>View remote changes</strong>
+<ol start="7" type="1">
+<li>Visit GitHub again and notice the change has now been transferred to GitHub</li>
+</ol></li>
+</ol>
+</section>
+<section id="ignoring-.ipynb-files" class="level2">
+<h2 class="anchored" data-anchor-id="ignoring-.ipynb-files">Ignoring .ipynb files</h2>
+<ol type="1">
+<li><strong>Add jupyter lab file to repo</strong>
+<ol type="1">
+<li>Open anaconda prompt and cd into your local repo folder</li>
+<li>run “jupyter lab” command to start a new jupyter lab instance</li>
+<li>create a new notebook, e.g., preprocess_data.ipynb</li>
+<li>add a line of code, e.g., print(‘hello world’)</li>
+<li>save the notebook and open GitHub desktop</li>
+</ol></li>
+<li><strong>In GitHub desktop, notice the changes being tracked are wildly confusing. </strong>
+<ol start="6" type="1">
+<li>Jupyter files are stored in JSON format which includes a lot of metadata unrelated to the changes you made to your file. The solution? Use Jupytext!</li>
+</ol></li>
+<li><strong>Install jupytext</strong>
+<ol start="7" type="1">
+<li>pip install jupytext</li>
+<li>jupytext –set-formats ipynb,py *.ipynb # convert .ipynb files to .py</li>
+<li>jupytext –set-formats py,ipynb *.py
+<ol type="1">
+<li>alternatively to convert just one specific file: jupytext –set-formats ipynb,py file_name.ipynb</li>
+</ol></li>
+</ol></li>
+<li><strong>git ignore .ipynb files</strong>
+<ol start="10" type="1">
+<li>right click one of the .ipynb files in GitHub Desktop</li>
+<li>ignore all files of this type</li>
+</ol></li>
+<li><strong>commit changes</strong></li>
+<li><strong>push and view changes on GitHub</strong></li>
+</ol>
+</section>
+<section id="pulling-updates-from-github" class="level2">
+<h2 class="anchored" data-anchor-id="pulling-updates-from-github">Pulling updates from GitHub</h2>
+<p>Assuming your collaborators have recently added some code to GitHub, how can you retrieve these changes and pull them onto your local machine?</p>
+<ol type="1">
+<li>Pretend you are a collaborator and visit GitHub to find your repo</li>
+<li>Add a new file to the repo: Add file → create new file</li>
+<li>Commit the file to the repo</li>
+<li>Open your local repo folder and notice we don’t have this new file yet</li>
+<li>In GitHub Desktop, click “Fetch origin” by “Pull origin”
+<ol type="1">
+<li>Fetch origin will run and inform you of any changes made to the remote copy of the repo (the one stored on GitHub)</li>
+<li>If changes have been made since you last pulled, you’ll see the Fetch button turn into a “Pull” option. Click this option to retrieve any updates from GitHub and pull them into the local version of your repo.</li>
+</ol></li>
+<li>Check your local repo folder to verify the new file has been pulled from GitHub onto your machine</li>
+</ol>
+</section>
+<section id="reverting-to-a-previous-commit" class="level2">
+<h2 class="anchored" data-anchor-id="reverting-to-a-previous-commit">Reverting to a previous commit</h2>
+<ol type="1">
+<li><strong>Find the commit to revert to</strong>
+<ol type="1">
+<li>Open the GitHub Desktop “History” tab to view the commit history of your repository.</li>
+<li>Locate and select the commit you want to revert to. You can do this by clicking on the specific commit in the history list.</li>
+</ol></li>
+<li><strong>Create a new branch from the selected commit</strong>
+<ol start="3" type="1">
+<li>With the commit selected, click on the “Create branch” button. This action will create a new branch starting from the selected commit and automatically switch to this branch</li>
+</ol></li>
+<li><strong>Commit the changes to the new branch</strong></li>
+<li><strong>Make any necessary changes in the new branch to resolve the issue or implement the desired changes. </strong></li>
+<li><strong>Commit and Push (“Publish branch”) </strong>
+<ol start="4" type="1">
+<li>In GitHub Desktop, commit the changes to the branch and push them to the remote repository. This will upload the new branch and its commits to GitHub</li>
+</ol></li>
+<li><strong>Create a Pull Request (Optional)</strong>
+<ol start="5" type="1">
+<li>If you want to merge these changes back into your main branch, you can create a pull request on GitHub. This is particularly useful if you are working with a team and need the changes reviewed.</li>
+</ol></li>
+<li><strong>Review and Merge (If Using a Pull Request):</strong>
+<ol start="6" type="1">
+<li>If you created a pull request, reviewers can examine your changes and merge them once they are satisfied.</li>
+</ol></li>
+</ol>
+</section>
+<section id="using-pull-requests-to-review-each-others-work" class="level2">
+<h2 class="anchored" data-anchor-id="using-pull-requests-to-review-each-others-work">Using “pull requests” to review each other’s’ work</h2>
+<p>Pull requests provide a structured way for team members to review and collaborate on code changes. They allow peers to inspect, discuss, and provide feedback on the proposed modifications before merging them into the main codebase.</p>
+<ol type="1">
+<li><strong>Create a New Branch</strong>: Click the “Current Branch” dropdown in GitHub Desktop. Select “New Branch” and give it a descriptive name (e.g., “feature-branch” or “collaborator-feature”). Choose the base branch, typically the default branch like main or master.</li>
+<li><strong>Make Changes in the New Branch</strong>: Collaborators can now make changes in this new branch. They can create, edit, or delete files as needed.</li>
+<li><strong>Commit and Push Changes</strong>: Collaborators should commit their changes to the new branch and push them to the remote repository.</li>
+<li><strong>Preview Pull Request</strong>: In GitHub Desktop, click on “Preview Pull Request.” This will inform you of which branch is being merged into the main code base.</li>
+<li><strong>Create Pull Request</strong>: After confirming that the preview is correct, click “Create pull request”.</li>
+<li><strong>Review and Submit the Pull Request on GitHub</strong>: Collaborators should review their changes and fill out the details for the pull request on the GitHub website. They can add a title, description, and assign reviewers (you and other collaborators) to review the changes. Collaborators can then submit the pull request.</li>
+<li><strong>Review the Pull Request in GitHub Desktop</strong>: You and other collaborators can now go back to GitHub Desktop and see the newly created pull request listed in the “Current Branch” dropdown. Click on the pull request to view the changes, comments, and review the code. Collaborators can respond to any feedback or comments in the GitHub Desktop interface.</li>
+<li>** Accept or Request Changes**: After reviewing the code, you and other collaborators can either accept the pull request if it’s good to merge or request changes if there are issues that need to be addressed. You can leave comments, suggestions, and feedback in the pull request.</li>
+<li><strong>Collaborators Make Changes</strong>: If changes are requested, collaborators can make the necessary adjustments in their branch and push the changes. The pull request will be automatically updated with the new commits.</li>
+<li><strong>Close the Pull Request</strong>: Once the pull request is approved and the changes have been successfully reviewed, the pull request can be merged, and the branch can be deleted. Using this workflow, you can efficiently collaborate with collaborators who have write access to the repository while ensuring that changes are reviewed and merged using pull requests in a controlled and organized manner.</li>
+</ol>
+</section>
+<section id="saving-kaggle-notebooks-to-git" class="level2">
+<h2 class="anchored" data-anchor-id="saving-kaggle-notebooks-to-git">Saving Kaggle Notebooks to Git</h2>
+<p><a href="https://www.kaggle.com/discussions/product-feedback/295170">https://www.kaggle.com/discussions/product-feedback/295170</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -830,6 +1051,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../Guides/vscode/index.html" class="pagination-link" aria-label="How to get started with Visual Studio Code">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">How to get started with Visual Studio Code</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../ML-stories/index.html" class="pagination-link" aria-label="ML stories">
+        <span class="nav-page-text">ML stories</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 
