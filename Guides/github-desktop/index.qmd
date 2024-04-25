@@ -1,0 +1,160 @@
+---
+title: Intro to Git and GitHub Desktop
+author: "ML+X community"
+date-modified: "last-modified"
+date-format: long
+categories:
+  - version control
+---
+
+Navigating the world of version control systems like Git can initially feel daunting, especially for those new to programming or collaborative software development projects. However, with the right tools and guidance, anyone can quickly grasp the essentials and begin leveraging the power of Git for efficient project management and collaboration. While Git commands can be run via a Unix shell, there are alternatives which are more friendly for beginners. In this guide, we'll explore why GitHub Desktop serves as an ideal gateway to Git, along with a step-by-step walkthrough on essential Git terminology, setup procedures, tracking changes, collaboration workflows, and even managing Kaggle notebooks seamlessly. Whether you're embarking on your first coding adventure or seeking to streamline your team's development process, this guide aims to demystify Git and empower you with practical knowledge to navigate the Git landscape with confidence.
+
+
+## Essential Git Terminology
+* **Repository == repo**: A project that is tracked via git/GitHub
+    * **Remote repo**: A git project that is stored on GitHub
+    * **Local repo**: A git project that has been downloaded to your local machine
+* **Clone**: Cloning is the process of making a copy of a remote repo on your local machine. This allows you to work on the project locally and perform tasks like commits, branches, and pulls.
+* **Commit**: A git command that marks the completion of new work to a repo (e.g., add a new script, add a feature, fill out README). You can always recover previous versions of your work by loading up a previous commit.
+* **Push**: A git command that sends local changes (commits) stored in your local repo to the remote repo.
+* **Pull**: A git command that allows you to update your local repo based on changes made to the remote repo (e.g., if your colleague pushes to the remote repo)
+* **Branch**: A branch in Git is a parallel line of development that allows you to work on **features**, bug fixes, or experiments without affecting the main codebase. You can create and switch between branches to isolate your work.
+* **Merge**: Merging is the process of integrating changes from one branch into another. This is typically done to combine the changes made in a** feature branch** with the main branch (e.g., main or master).
+* **Pull Request (PR)**: A pull request is a feature provided by platforms like GitHub, GitLab, and Bitbucket. It's a way to propose changes (commits) to a project. Others can review the changes, and once approved, they can be merged into the main branch.
+* **Fork**: Forking a repository means creating a copy of someone else's project in your GitHub account. This allows you to make changes independently and propose those changes back to the original project via pull requests. If everyone on your team has write-access to the repo, it’s best to use new branches instead of forks for pull requests. 
+* **Gitignore**: A .gitignore file is used to specify which files and directories should be excluded from version control. It's essential for preventing unnecessary or **sensitive files **(contains like API keys)  from being included in the repository.
+
+
+## Setup
+
+1. **Install GitHub Desktop**
+    1. Visit [https://desktop.github.com/](https://desktop.github.com/) to install 
+2. **Create repo**
+    2. Visit [https://github.com/](https://github.com/) and sign in to your GitHub account
+    3. Click “new” to create a new repo
+    4. Provide a name for the project, e.g., “my_kaggle_project”
+    5. Give a description: “Git repo for collaborating on Kaggle project for MLM23.”
+    6. Set to private if you’re worried about having your work scooped
+    7. Add a README file: generally a good idea to have a README that explains how to use your code/repo
+    8. Choose a license: [https://choosealicense.com/](https://choosealicense.com/). MIT license is usually best for open-source projects.
+3. **Add collaborator(s)**
+    9. From your repo homepage on GitHub, click the settings tab
+    10. Click on the “Collaborators” menu option shown in the left panel
+    11. Click “Add people” and enter your collaborator’s username or GitHub email address
+4. **Setup SSH key**: SSH provides a secure way to authenticate and transfer data between your local machine and GitHub. You can also use HTTPS if you prefer, but it is less secure. HTTPS avoids having to generate an SSH key, but you will need to enter your GitHub login credentials from time to time.
+    12. Open GitBash (windows) or terminal (Mac) and run the following commands replacing the example email with your GitHub email:
+        1. ssh-keygen -t ed25519 -C "your_github_email@address.com"
+        2. cat ~/.ssh/id_ed25519.pub
+
+            _The ssh-keygen produces private and public keys, and **make **sure to copy and paste the output from the command_
+
+
+            cat ~/.ssh/id_ed25519.pub
+
+    13. Paste output (starts like ssh-ed25519)  into the new SSH key under GitHub settings (SSH and GPG Keys) and save the key
+5. **Clone repo** 
+    14. From your GitHub repo homepage, click the green “Code” button
+    15. Select SSH if you setup an SSH key or select HTTPS if you don’t have one setup. Copy the URL shown.
+    16. Open GitHub Desktop
+    17. Click File → Clone repository → URL
+    18. Paste the repo URL and pay attention to the destination folder path so you can access this folder later
+    19. Click “Clone”
+
+
+## Tracking changes
+
+
+
+1. **Add a blank text file to your local repo**
+    1. Right-click repo name in GitHub Desktop → show in explorer (show in Finder and go to the directory on Mac)
+    2. Create a new text file and add to local repo folder
+    3. Add a line of text to the file, e.g., “hello world” and save the file
+2. **View local changes **
+    4. In GitHub desktop, you can view this change under the “Changes” tab. Notice that we see the new file and added text under this tab.
+3. **Commit the new file**
+    5. Commits mark a checkpoint in the progress you have made to your repo. Provide a short summary message and optionally provide more information in the “Description” box.
+4. **View remote changes (or lack thereof)**
+    6. Visit GitHub and notice that the change is not yet reflected on GitHub
+5. **Push the change to GitHub **
+6. **View remote changes**
+    7. Visit GitHub again and notice the change has now been transferred to GitHub
+
+
+## Ignoring .ipynb files 
+
+
+
+1. **Add jupyter lab file to repo**
+    1. Open anaconda prompt and cd into your local repo folder
+    2. run “jupyter lab” command to start a new jupyter lab instance
+    3. create a new notebook, e.g., preprocess_data.ipynb
+    4. add a line of code, e.g., print(‘hello world’)
+    5. save the notebook and open GitHub desktop
+2. **In GitHub desktop, notice the changes being tracked are wildly confusing. **
+    6. Jupyter files are stored in JSON format which includes a lot of metadata unrelated to the changes you made to your file. The solution? Use Jupytext!
+3. **Install jupytext**
+    7. pip install jupytext
+    8. jupytext --set-formats ipynb,py *.ipynb # convert .ipynb files to .py
+    9. jupytext --set-formats py,ipynb *.py
+        1. alternatively to convert just one specific file: jupytext --set-formats ipynb,py file_name.ipynb 
+4. **git ignore .ipynb files**
+    10. right click one of the .ipynb files in GitHub Desktop
+    11. ignore all files of this type
+5. **commit changes**
+6. **push and view changes on GitHub**
+
+
+## Pulling updates from GitHub
+
+Assuming your collaborators have recently added some code to GitHub, how can you retrieve these changes and pull them onto your local machine?
+
+
+
+1. Pretend you are a collaborator and visit GitHub to find your repo
+2. Add a new file to the repo: Add file → create new file
+3. Commit the file to the repo
+4. Open your local repo folder and notice we don’t have this new file yet
+5. In GitHub Desktop, click “Fetch origin” by “Pull origin”
+    1. Fetch origin will run and inform you of any changes made to the remote copy of the repo (the one stored on GitHub)
+    2. If changes have been made since you last pulled, you’ll see the Fetch button turn into a “Pull” option. Click this option to retrieve any updates from GitHub and pull them into the local version of your repo.
+6. Check your local repo folder to verify the new file has been pulled from GitHub onto your machine
+
+
+## Reverting to a previous commit
+
+1. **Find the commit to revert to**
+    1. Open the GitHub Desktop "History" tab to view the commit history of your repository.
+    2. Locate and select the commit you want to revert to. You can do this by clicking on the specific commit in the history list.
+2. **Create a new branch from the selected commit**
+    3. With the commit selected, click on the "Create branch" button. This action will create a new branch starting from the selected commit and automatically switch to this branch
+3. **Commit the changes to the new branch**
+4. **Make any necessary changes in the new branch to resolve the issue or implement the desired changes. **
+5. **Commit and Push (“Publish branch”) **
+    4. In GitHub Desktop, commit the changes to the branch and push them to the remote repository. This will upload the new branch and its commits to GitHub
+6. **Create a Pull Request (Optional)**
+    5. If you want to merge these changes back into your main branch, you can create a pull request on GitHub. This is particularly useful if you are working with a team and need the changes reviewed.
+7. **Review and Merge (If Using a Pull Request):**
+    6. If you created a pull request, reviewers can examine your changes and merge them once they are satisfied.
+
+
+## Using “pull requests” to review each other's' work
+
+Pull requests provide a structured way for team members to review and collaborate on code changes. They allow peers to inspect, discuss, and provide feedback on the proposed modifications before merging them into the main codebase.
+
+
+1. **Create a New Branch**: Click the "Current Branch" dropdown in GitHub Desktop. Select "New Branch" and give it a descriptive name (e.g., "feature-branch" or "collaborator-feature"). Choose the base branch, typically the default branch like main or master.
+2. **Make Changes in the New Branch**: Collaborators can now make changes in this new branch. They can create, edit, or delete files as needed. 
+3. **Commit and Push Changes**: Collaborators should commit their changes to the new branch and push them to the remote repository. 
+4. **Preview Pull Request**: In GitHub Desktop, click on "Preview Pull Request." This will inform you of which branch is being merged into the main code base.
+5. **Create Pull Request**: After confirming that the preview is correct, click “Create pull request”.
+6. **Review and Submit the Pull Request on GitHub**: Collaborators should review their changes and fill out the details for the pull request on the GitHub website. They can add a title, description, and assign reviewers (you and other collaborators) to review the changes. Collaborators can then submit the pull request. 
+7. **Review the Pull Request in GitHub Desktop**: You and other collaborators can now go back to GitHub Desktop and see the newly created pull request listed in the "Current Branch" dropdown. Click on the pull request to view the changes, comments, and review the code. Collaborators can respond to any feedback or comments in the GitHub Desktop interface.
+8. ** Accept or Request Changes**: After reviewing the code, you and other collaborators can either accept the pull request if it's good to merge or request changes if there are issues that need to be addressed. You can leave comments, suggestions, and feedback in the pull request. 
+9. **Collaborators Make Changes**: If changes are requested, collaborators can make the necessary adjustments in their branch and push the changes. The pull request will be automatically updated with the new commits. 
+10. **Close the Pull Request**: Once the pull request is approved and the changes have been successfully reviewed, the pull request can be merged, and the branch can be deleted. Using this workflow, you can efficiently collaborate with collaborators who have write access to the repository while ensuring that changes are reviewed and merged using pull requests in a controlled and organized manner.
+
+
+## Saving Kaggle Notebooks to Git
+[https://www.kaggle.com/discussions/product-feedback/295170](https://www.kaggle.com/discussions/product-feedback/295170) 
+
+
