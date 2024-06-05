@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="External">
 
-<title>Nexus: Crowdsourced ML Resources - ML Stories</title>
+<title>Nexus: Crowdsourced ML Resources - Intro to PyTorch</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +24,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../EDA-examples/index.html" rel="next">
-<link href="../Seminars/index.html" rel="prev">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../Guides/Graph-neural-nets/index.html" rel="next">
+<link href="../../Guides/OOD-detection/index.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,65 +70,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-title','listing-description','listing-date','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +83,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ML-stories/index.html">ML stories</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Guides/index.html">Guides</a></li><li class="breadcrumb-item"><a href="../../Guides/Deep-learning_PyTorch/index.html">Intro to PyTorch</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -152,12 +93,12 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      <img src="../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -173,58 +114,58 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../how-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../how-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../Guides/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/github-desktop/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Guides/github-desktop/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Intro to Git and GitHub Desktop</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/CHTC-main/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Guides/CHTC-main/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">CHTC</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/OOD-detection/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Guides/OOD-detection/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Out-of-distribution detection</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/Deep-learning_PyTorch/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Guides/Deep-learning_PyTorch/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Intro to PyTorch</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/Graph-neural-nets/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Guides/Graph-neural-nets/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Graph neural networks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/Model-sharing/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Guides/Model-sharing/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Model sharing via Hugging Face</span></a>
   </div>
 </li>
@@ -232,25 +173,25 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Local workshops</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Seminars/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Seminars/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Forums and seminars</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ML-stories/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../ML-stories/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML stories</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../EDA-examples/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../EDA-examples/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Exploratory analysis</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -259,7 +200,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../EDA-examples/example1/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../EDA-examples/example1/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">An Example</span></a>
   </div>
 </li>
@@ -267,13 +208,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../pretrained-models.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pretrained-models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Pretrained models</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Glossary of ML terms</span></a>
   </div>
 </li>
@@ -283,21 +224,46 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-external-resource" id="toc-about-this-external-resource" class="nav-link active" data-scroll-target="#about-this-external-resource">About this external resource</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Guides/Deep-learning_PyTorch/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Guides/index.html">Guides</a></li><li class="breadcrumb-item"><a href="../../Guides/Deep-learning_PyTorch/index.html">Intro to PyTorch</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">ML Stories</h1>
-</div>
+<h1 class="title">Intro to PyTorch</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">PyTorch</div>
+    <div class="quarto-category">Workshop</div>
+    <div class="quarto-category">External</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>External </p>
+          </div>
+  </div>
     
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">June 5, 2024</p>
+    </div>
+  </div>
     
   </div>
   
@@ -306,64 +272,23 @@ window.Quarto = {
 </header>
 
 
-<p>Are you currently immersed in an exciting ML project? We want to hear about it! Share your insights, challenges, and successes by contributing a blog post to Nexus, the ML+X resource sharing platform.</p>
-<p>Whether you’re exploring ML applications in biology, engineering, social sciences, or any other field, your unique perspective is invaluable. Showcase your innovation, research, and creativity to inspire others in the ML+X community.</p>
-<p>Don’t miss this opportunity to amplify your work and connect with fellow enthusiasts. Submit your blog post today and be part of the ML+X conversation at UW-Madison!</p>
-<p>Get started by [insert contribution instructions].</p>
+<section id="about-this-external-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-external-resource">About this external resource</h2>
+<p><strong>External link</strong>: <a href="https://www.udacity.com/course/deep-learning-pytorch--ud188">www.udacity.com/course/deep-learning-pytorch–ud188</a></p>
+<p>Udacity offers many free educational materials focused on tech-related topics. The below workshop from Udacity will walk you through introductory deep learning concepts as well as how to build a neural networks in PyTorch. PyTorch is one of the most popular deep learning frameworks. Known for its speed and more “pythonic” feel, it is frequently the go-to choice for most researchers. The biggest downside of PyTorch, compared to a framework like Keras, is that it is quite verbose. You’ll need to right a couple hundred lines of code to train and evaluate your neural network model. Keras is a great alternative for those who are just getting started with neural networks, as you can train/evaluate in just a dozen or so lines of code.</p>
+<section id="see-also" class="level4">
+<h4 class="anchored" data-anchor-id="see-also">See also</h4>
+<ul>
+<li><a href="https://carpentries-incubator.github.io/deep-learning-intro/">Intro to Deep Learning with Keras</a>: Explore Keras as an alternative deep learning framework</li>
+<li><a href="https://udlbook.github.io/udlbook/"><em>Understanding Deep Learning</em> - Simon J.D. Prince</a>: This free textbook is a good modern overview of deep learning, and provides colab notebooks to explore deep learning concepts and implementations. The book uses PyTorch as its framework of choice. You may find additional details in this book that the workshop only briefly touches on.</li>
+</ul>
+<iframe width="1000" height="500" src="https://www.udacity.com/enrollment/ud188" title="Webpage example"></iframe>
 
 
+</section>
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-title" data-direction="asc">
-          Title
-        </option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-     </select>
-  </div>
-</div>
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1717598335187" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
-<div class="thumbnail">
-<p><a href="../ML-stories/Example/index.html" class="no-external"></a></p><a href="../ML-stories/Example/index.html" class="no-external">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-</a><p><a href="../ML-stories/Example/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../ML-stories/Example/index.html" class="no-external">Example 1</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../ML-stories/Example/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="../ML-stories/Example/index.html" class="no-external"></a>
-</div>
-</div>
-<div class="metadata">
-<p><a href="../ML-stories/Example/index.html" class="no-external"></a></p><a href="../ML-stories/Example/index.html" class="no-external">
-<div class="listing-reading-time">
-1 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -917,15 +842,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
+<nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../Seminars/index.html" class="pagination-link" aria-label="Forums and seminars">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Forums and seminars</span>
+      <a href="../../Guides/OOD-detection/index.html" class="pagination-link" aria-label="Out-of-distribution detection">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Out-of-distribution detection</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../EDA-examples/index.html" class="pagination-link" aria-label="Exploratory analysis">
-        <span class="nav-page-text">Exploratory analysis</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../Guides/Graph-neural-nets/index.html" class="pagination-link" aria-label="Graph neural networks">
+        <span class="nav-page-text">Graph neural networks</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -934,4 +859,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/ML-stories/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Guides/Deep-learning_PyTorch/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
