@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="CHTC">
 
-<title>Nexus: Crowdsourced ML Resources - Guides</title>
+<title>Nexus: Crowdsourced ML Resources - Center for Highthroughput Computing (CHTC)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +24,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../Guides/Deep-learning_Keras/index.html" rel="next">
-<link href="../how-to-contribute.html" rel="prev">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../Resources/OOD-detection/index.html" rel="next">
+<link href="../../Resources/github-desktop/index.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,66 +70,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-title','listing-description','listing-date','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      page: 6,
-    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
-      searchColumns: ["listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -143,7 +83,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Guides/index.html">Guides</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Resources/index.html">Resources</a></li><li class="breadcrumb-item"><a href="../../Resources/CHTC-main/index.html">Center for Highthroughput Computing (CHTC)</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -153,12 +93,12 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      <img src="../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -174,20 +114,20 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../how-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../how-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../Guides/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Guides</span></a>
+            <a href="../../Resources/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -195,43 +135,43 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/Deep-learning_Keras/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Resources/Deep-learning_Keras/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Intro to Deep Learning with Keras (Carpentries)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/github-desktop/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Resources/github-desktop/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Intro to Git and GitHub Desktop</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/CHTC-main/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Resources/CHTC-main/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Center for Highthroughput Computing (CHTC)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/OOD-detection/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Resources/OOD-detection/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Out-of-distribution detection</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/Deep-learning_PyTorch/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Resources/Deep-learning_PyTorch/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Intro to Deep Learning with PyTorch (Udacity)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/Graph-neural-nets/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Resources/Graph-neural-nets/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Graph neural networks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Guides/Model-sharing/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Resources/Model-sharing/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Model sharing via Hugging Face</span></a>
   </div>
 </li>
@@ -239,25 +179,25 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Local workshops</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Seminars/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Seminars/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Forums and seminars</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ML-stories/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../ML-stories/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML stories</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../EDA-examples/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../EDA-examples/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Exploratory analysis</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -266,7 +206,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../EDA-examples/example1/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../EDA-examples/example1/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">An Example</span></a>
   </div>
 </li>
@@ -274,13 +214,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../pretrained-models.html" class="sidebar-item-text sidebar-link">
+  <a href="../../pretrained-models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Pretrained models</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Glossary of ML terms</span></a>
   </div>
 </li>
@@ -290,21 +230,49 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div><div class="category" data-category="Carpentries">Carpentries <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Compute">Compute <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Deep learning">Deep learning <span class="quarto-category-count">(2)</span></div><div class="category" data-category="External">External <span class="quarto-category-count">(1)</span></div><div class="category" data-category="GPU">GPU <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Git/GitHub">Git/GitHub <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Graph neural networks">Graph neural networks <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Hugging Face">Hugging Face <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Keras">Keras <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Model sharing">Model sharing <span class="quarto-category-count">(1)</span></div><div class="category" data-category="OOD">OOD <span class="quarto-category-count">(1)</span></div><div class="category" data-category="PyTorch">PyTorch <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Reproducibility">Reproducibility <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Trustworthy AI">Trustworthy AI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Udacity">Udacity <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Version control">Version control <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Workshop">Workshop <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-center-for-high-throughput-computing-chtc---your-gateway-to-efficient-computing" id="toc-the-center-for-high-throughput-computing-chtc---your-gateway-to-efficient-computing" class="nav-link active" data-scroll-target="#the-center-for-high-throughput-computing-chtc---your-gateway-to-efficient-computing">The Center for High Throughput Computing (CHTC) - Your Gateway to Efficient Computing</a>
+  <ul class="collapse">
+  <li><a href="#gpu-based-templates" id="toc-gpu-based-templates" class="nav-link" data-scroll-target="#gpu-based-templates">GPU-based Templates</a></li>
+  <li><a href="#chtc-recipes-repository" id="toc-chtc-recipes-repository" class="nav-link" data-scroll-target="#chtc-recipes-repository">CHTC Recipes Repository</a></li>
+  <li><a href="#container-guides" id="toc-container-guides" class="nav-link" data-scroll-target="#container-guides">Container Guides</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Resources/CHTC-main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Resources/index.html">Resources</a></li><li class="breadcrumb-item"><a href="../../Resources/CHTC-main/index.html">Center for Highthroughput Computing (CHTC)</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Guides</h1>
-</div>
+<h1 class="title">Center for Highthroughput Computing (CHTC)</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Compute</div>
+    <div class="quarto-category">GPU</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>CHTC </p>
+          </div>
+  </div>
     
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">June 6, 2024</p>
+    </div>
+  </div>
     
   </div>
   
@@ -313,176 +281,38 @@ window.Quarto = {
 </header>
 
 
+<section id="the-center-for-high-throughput-computing-chtc---your-gateway-to-efficient-computing" class="level1">
+<h1>The Center for High Throughput Computing (CHTC) - Your Gateway to Efficient Computing</h1>
+<hr>
+<p>Established in 2006, the <a href="https://chtc.cs.wisc.edu/">Center for High Throughput Computing (CHTC)</a> is committed to democratizing access to powerful computing resources across all research domains. High Throughput Computing (HTC) encompasses a set of principles and techniques designed to optimize computing resource utilization towards solving complex problems. When applied to scientific computing, HTC enhances resource efficiency, automation, and accelerates scientific breakthroughs, including those in machine learning.</p>
+<p>Are you a researcher at UW-Madison seeking to extend your computing capabilities beyond local resources, particularly for machine learning tasks? <a href="https://chtc.cs.wisc.edu/uw-research-computing/form.html">Request an account now</a> to take advantage of the open computing services offered by the CHTC!</p>
+<section id="gpu-based-templates" class="level2">
+<h2 class="anchored" data-anchor-id="gpu-based-templates">GPU-based Templates</h2>
+<p>Explore our collection of templates tailored for high throughput compute (HTC) systems utilizing GPUs, ideal for accelerating machine learning workflows. These templates streamline the process of job submission, maximizing the utilization of GPU resources for your computational tasks in machine learning. Dive into efficient computing with our GPU-based templates available on GitHub: <a href="https://github.com/CHTC/templates-GPUs">CHTC GPU Templates</a></p>
+</section>
+<section id="chtc-recipes-repository" class="level2">
+<h2 class="anchored" data-anchor-id="chtc-recipes-repository">CHTC Recipes Repository</h2>
+<p>Visit the <a href="https://github.com/CHTC/recipes">CHTC Recipes Repository</a> to discover a collection of common CHTC workflows or “recipes”, including those specifically geared towards machine learning tasks:</p>
+<ul>
+<li><a href="https://github.com/CHTC/recipes/tree/main/software/Python">Python</a></li>
+<li><a href="https://github.com/CHTC/recipes/tree/main/software/R">R</a></li>
+<li><a href="https://github.com/CHTC/recipes/tree/main/software/PyTorch">PyTorch</a></li>
+<li><a href="https://github.com/CHTC/recipes/blob/main/software/AlphaFold">Alphafold</a></li>
+</ul>
+</section>
+<section id="container-guides" class="level2">
+<h2 class="anchored" data-anchor-id="container-guides">Container Guides</h2>
+<p>Empower your machine learning research endeavors with containerization! Our comprehensive guides on Docker and Apptainer for HTC empower researchers to encapsulate their machine learning workflows, dependencies, and environments efficiently. Seamlessly integrate containers into your machine learning computing workflow for enhanced reproducibility and scalability. Explore our containerization guides:</p>
+<ul>
+<li><a href="https://chtc.cs.wisc.edu/uw-research-computing/docker-jobs">Docker Jobs Guide</a></li>
+<li><a href="https://chtc.cs.wisc.edu/uw-research-computing/apptainer-htc">Apptainer HTC Guide</a></li>
+</ul>
 
 
+</section>
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-title" data-direction="asc">
-          Title
-        </option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-     </select>
-  </div>
-</div>
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="OOD,Trustworthy AI" data-listing-file-modified-sort="1717686966187" data-listing-reading-time-sort="1" data-listing-word-count-sort="133">
-<a href="../Guides/OOD-detection/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img src="../images/OOD.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Out-of-distribution detection
-</h5>
-<div class="listing-reading-time card-text text-muted">
-1 min
-</div>
-<div class="card-text listing-description">
-The below tutorial from Sharon Li, an Assistant Professor in the Department of Computer Sciences at the University of Wisconsin-Madison, introduces a pervasive problem faced…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="Model sharing,Hugging Face,Reproducibility" data-listing-file-modified-sort="1717686966187" data-listing-reading-time-sort="3" data-listing-word-count-sort="571">
-<a href="../Guides/Model-sharing/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img src="../images/hugging-face.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Model sharing via Hugging Face
-</h5>
-<div class="listing-reading-time card-text text-muted">
-3 min
-</div>
-<div class="card-text listing-description">
-Model Sharing Via Hugging Face’s Model Hub
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="Version control,Reproducibility,Git/GitHub" data-listing-file-modified-sort="1717686966187" data-listing-reading-time-sort="11" data-listing-word-count-sort="2163">
-<a href="../Guides/github-desktop/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img src="../images/github-logo.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Intro to Git and GitHub Desktop
-</h5>
-<div class="listing-reading-time card-text text-muted">
-11 min
-</div>
-<div class="card-text listing-description">
-Navigating the world of version control systems like Git can initially feel daunting, especially for those new to programming or collaborative software development projects.…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="Deep learning,PyTorch,Workshop,Udacity,External" data-listing-file-modified-sort="1717686966187" data-listing-reading-time-sort="2" data-listing-word-count-sort="211">
-<a href="../Guides/Deep-learning_PyTorch/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img src="../images/pytorch.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Intro to Deep Learning with PyTorch (Udacity)
-</h5>
-<div class="listing-reading-time card-text text-muted">
-2 min
-</div>
-<div class="card-text listing-description">
-Udacity offers many free educational materials focused on tech-related topics. The Intro to Deep Learning with PyTorch workshop from Udacity will walk you through…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="4" data-categories="Deep learning,Keras,Workshop,Carpentries" data-listing-file-modified-sort="1717686966187" data-listing-reading-time-sort="3" data-listing-word-count-sort="432">
-<a href="../Guides/Deep-learning_Keras/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img src="../images/Keras.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Intro to Deep Learning with Keras (Carpentries)
-</h5>
-<div class="listing-reading-time card-text text-muted">
-3 min
-</div>
-<div class="card-text listing-description">
-The Intro to Deep Learning with Keras workshop from the Carpentries will walk you through introductory deep learning concepts as well as how to build a neural networks in…
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="5" data-categories="Graph neural networks" data-listing-file-modified-sort="1717686966187" data-listing-reading-time-sort="1" data-listing-word-count-sort="40">
-<a href="../Guides/Graph-neural-nets/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img src="../images/vincent-van-zalinge-mDohQISBnCk-unsplash.jpg" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Graph neural networks
-</h5>
-<div class="listing-reading-time card-text text-muted">
-1 min
-</div>
-<div class="card-text listing-description">
-<span class="citation" data-cites="TODO">@TODO</span>: ADD short blurb about why this tutorial was chosen and how it was helpful, any limitations, any other info that could be helpful.
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="6" data-categories="Compute,GPU" data-listing-file-modified-sort="1717686966187" data-listing-reading-time-sort="2" data-listing-word-count-sort="238">
-<a href="../Guides/CHTC-main/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img data-src="../images/CHTC.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Center for Highthroughput Computing (CHTC)
-</h5>
-<div class="listing-reading-time card-text text-muted">
-2 min
-</div>
-<div class="card-text listing-description">
-Established in 2006, the Center for High Throughput Computing (CHTC) is committed to democratizing access to powerful computing resources across all research domains. High…
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
-  <ul class="pagination"></ul>
-</nav>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1036,15 +866,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
+<nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../how-to-contribute.html" class="pagination-link" aria-label="How to contribute?">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">How to contribute?</span>
+      <a href="../../Resources/github-desktop/index.html" class="pagination-link" aria-label="Intro to Git and GitHub Desktop">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Intro to Git and GitHub Desktop</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Guides/Deep-learning_Keras/index.html" class="pagination-link" aria-label="Intro to Deep Learning with Keras (Carpentries)">
-        <span class="nav-page-text">Intro to Deep Learning with Keras (Carpentries)</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../Resources/OOD-detection/index.html" class="pagination-link" aria-label="Out-of-distribution detection">
+        <span class="nav-page-text">Out-of-distribution detection</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1053,4 +883,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Guides/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Resources/CHTC-main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
