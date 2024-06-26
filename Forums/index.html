@@ -6,11 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Ben Rush">
-<meta name="author" content="Jack Freeman">
-<meta name="dcterms.date" content="2023-12-12">
 
-<title>Nexus: Crowdsourced ML Resources - ML+X Forum: Exploring Science Communication and Drug Synergy Analysis using GPT</title>
+<title>Nexus: Crowdsourced ML Resources - Forums and seminars</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,6 +29,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -70,7 +69,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title','listing-description','listing-date','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -83,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">ML+X Forum: Exploring Science Communication and Drug Synergy Analysis using GPT</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Forums and seminars</li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -93,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -185,7 +242,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Seminars/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../Seminars/index.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Forums and seminars</span></a>
   </div>
 </li>
@@ -229,43 +286,20 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ML+X Forum: Exploring Science Communication and Drug Synergy Analysis using GPT</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">ML+X Forum</div>
-  </div>
-  </div>
-
-<div>
-  <div class="description">
-    <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/7Xcsr0mKj4A" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-  </div>
+<h1 class="title">Forums and seminars</h1>
 </div>
 
 
-<div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Presenters</div>
-    <div class="quarto-title-meta-contents">
-             <p>Ben Rush </p>
-             <p>Jack Freeman </p>
-          </div>
-  </div>
+<div class="quarto-title-meta column-page-right">
+
     
-    <div>
-    <div class="quarto-title-meta-heading">Date</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">December 12, 2023</p>
-    </div>
-  </div>
   
     
   </div>
@@ -275,15 +309,176 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Hosted by UW-Madison’s <a href="https://datascience.wisc.edu/ml-community">ML+X community</a>, each monthly forum highlights two machine learning applications that share a theme followed by communal discussions.</p>
-<ol type="1">
-<li><p>GPT for Science Communication: User-Interface and Developer Pipeline Approaches, Ben Rush, <a href="https://www.youtube.com/watch?v=7Xcsr0mKj4A&amp;list=PL90vX4e9ORqc8ZB1uL_gtLFFZc093m4CQ&amp;index=4&amp;t=10s">0:10</a></p></li>
-<li><p>Advancing Biomedical Research with GPT-4: A Novel Approach to Drug Synergy Analysis using Text Mining and Classification, Jack Freeman, <a href="https://www.youtube.com/watch?v=7Xcsr0mKj4A&amp;list=PL90vX4e9ORqc8ZB1uL_gtLFFZc093m4CQ&amp;index=4&amp;t=1678s">27:58</a></p></li>
-</ol>
 
 
 
-</main> <!-- /main -->
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+       <option value="" disabled="" selected="" hidden="">Order By</option>
+       <option value="index" data-direction="asc">Default</option>
+         <option value="listing-title" data-direction="asc">
+          Title
+        </option>
+         <option value="listing-date-sort" data-direction="asc">
+          Date - Oldest
+        </option>
+         <option value="listing-date-sort" data-direction="desc">
+          Date - Newest
+        </option>
+         <option value="listing-author" data-direction="asc">
+          Author
+        </option>
+     </select>
+  </div>
+</div>
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="ML+X Forum" data-listing-date-sort="1710201600000" data-listing-file-modified-sort="1719430869042" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="36">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../Forums/mlx_2024-03-12.html" class="no-external">ML+X Forum: Exploring Model Sharing in the Age of Foundation Models</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../Forums/mlx_2024-03-12.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="../Forums/mlx_2024-03-12.html" class="no-external"><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/zs1T3H80Fk4" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></a>
+</div>
+</div>
+<div class="metadata">
+<a href="../Forums/mlx_2024-03-12.html" class="no-external">
+<div class="listing-date">
+2024-03-12
+</div>
+<div class="listing-author">
+Chris Endemann, Haotian Liu
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="ML+X Forum" data-listing-date-sort="1707782400000" data-listing-file-modified-sort="1719430869042" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="43">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../Forums/mlx_2024-02-13.html" class="no-external">ML+X Forum: Navigating Gravitational Waves with AI Insights</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../Forums/mlx_2024-02-13.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="../Forums/mlx_2024-02-13.html" class="no-external"><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/LmKMhNiu5Fw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></a>
+</div>
+</div>
+<div class="metadata">
+<a href="../Forums/mlx_2024-02-13.html" class="no-external">
+<div class="listing-date">
+2024-02-13
+</div>
+<div class="listing-author">
+Chris Endemann, Bella Finkel
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="ML+X Forum" data-listing-date-sort="1702339200000" data-listing-file-modified-sort="1719430869042" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="53">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../Forums/mlx_2023-12-12.html" class="no-external">ML+X Forum: Exploring Science Communication and Drug Synergy Analysis using GPT</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../Forums/mlx_2023-12-12.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="../Forums/mlx_2023-12-12.html" class="no-external"><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/7Xcsr0mKj4A" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></a>
+</div>
+</div>
+<div class="metadata">
+<a href="../Forums/mlx_2023-12-12.html" class="no-external">
+<div class="listing-date">
+2023-12-12
+</div>
+<div class="listing-author">
+Ben Rush, Jack Freeman
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-categories="ML+X Forum" data-listing-date-sort="1699315200000" data-listing-file-modified-sort="1719430869042" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="44">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../Forums/mlx_2023-11-07.html" class="no-external">ML+X Forum: LLMS in Genomic and Health Coaching</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../Forums/mlx_2023-11-07.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="../Forums/mlx_2023-11-07.html" class="no-external"><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/P3bO2naMCD4" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></a>
+</div>
+</div>
+<div class="metadata">
+<a href="../Forums/mlx_2023-11-07.html" class="no-external">
+<div class="listing-date">
+2023-11-07
+</div>
+<div class="listing-author">
+Rohan Sonthalia, Michael Roytman
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-categories="ML+X Forum" data-listing-date-sort="1696896000000" data-listing-file-modified-sort="1719430869042" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="46">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../Forums/mlx_2023-10-10.html" class="no-external">ML+X Forum: Time-Series Analysis</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../Forums/mlx_2023-10-10.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="../Forums/mlx_2023-10-10.html" class="no-external"><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/MBGtl5lwyFA" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></a>
+</div>
+</div>
+<div class="metadata">
+<a href="../Forums/mlx_2023-10-10.html" class="no-external">
+<div class="listing-date">
+2023-10-10
+</div>
+<div class="listing-author">
+Peng Jiang, Sourav Pal
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="5" data-categories="ML+X Forum" data-listing-date-sort="1695081600000" data-listing-file-modified-sort="1719430869042" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="59">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../Forums/mlx_2023-09-19.html" class="no-external">ML+X Forum: Multimodal Learning</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../Forums/mlx_2023-09-19.html" class="no-external"></a>
+</div>
+<div class="listing-description">
+<a href="../Forums/mlx_2023-09-19.html" class="no-external"><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/W3h9s1CG35c" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></a>
+</div>
+</div>
+<div class="metadata">
+<a href="../Forums/mlx_2023-09-19.html" class="no-external">
+<div class="listing-date">
+2023-09-19
+</div>
+<div class="listing-author">
+Daifeng Wang, Zachary Huemann, Pedro Morgado
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -842,4 +1037,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Seminars/mlx_2023-12-12.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Forums/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
