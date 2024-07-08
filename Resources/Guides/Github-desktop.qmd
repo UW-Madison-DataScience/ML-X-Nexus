@@ -45,16 +45,17 @@ Becoming familiar with version control terminology is half the battle in becomin
 
 
 ## Setup
+In this section, we will walk you through setting up a GitHub repository for a collaborative software project. As an example case, imagine you and your team are preparing for a Kaggle competition and need a streamlined way to manage your code, track changes, and collaborate efficiently. By following the steps below, you'll learn how to create a new repository, add collaborators, set up secure access, and clone the repository to your local machine, ensuring everyone on your team is ready to contribute seamlessly.
 
 1. **Install GitHub Desktop**
     1. Visit [https://desktop.github.com/](https://desktop.github.com/) to install 
 2. **Create repo**
-    2. Visit [https://github.com/](https://github.com/) and sign in to your GitHub account
-    3. Click “new” to create a new repo
+    2. Visit [https://github.com/](https://github.com/) and sign in to your GitHub account (or [create an account](https://github.com/join))
+    3. Click the green “new” button to create a new repo
     4. Provide a name for the project, e.g., “my_kaggle_project”
     5. Give a description: “Git repo for collaborating on Kaggle project for MLM23.”
-    6. Set to private if you’re worried about having your work scooped
-    7. Add a README file: generally a good idea to have a README that explains how to use your code/repo
+    6. Set to private if you’re worried about having your work scooped. Otherwise set to public.
+    7. Add a README file: best practice is to include a README file that explains how to use your code/repo
     8. Choose a license: [https://choosealicense.com/](https://choosealicense.com/). MIT license is usually best for open-source projects.
 3. **Add collaborator(s)**
     9. From your repo homepage on GitHub, click the settings tab
@@ -81,14 +82,13 @@ Becoming familiar with version control terminology is half the battle in becomin
 
 
 ## Tracking changes
-
-
+Now that you have set up your collaborative Kaggle hackathon repository, it's time to start working on your project and track the changes you make. In this section, we will guide you through the process of adding files to your local repository, viewing and committing changes, and pushing those changes to the remote repository on GitHub. By understanding how to track changes effectively, you and your team can ensure that all contributions are recorded, reviewed, and integrated smoothly into the project.
 
 1. **Add a blank text file to your local repo**
     1. Right-click repo name in GitHub Desktop → show in explorer (show in Finder and go to the directory on Mac)
     2. Create a new text file and add to local repo folder
     3. Add a line of text to the file, e.g., “hello world” and save the file
-2. **View local changes **
+2. **View local changes**
     4. In GitHub desktop, you can view this change under the “Changes” tab. Notice that we see the new file and added text under this tab.
 3. **Commit the new file**
     5. Commits mark a checkpoint in the progress you have made to your repo. Provide a short summary message and optionally provide more information in the “Description” box.
@@ -96,12 +96,11 @@ Becoming familiar with version control terminology is half the battle in becomin
     6. Visit GitHub and notice that the change is not yet reflected on GitHub
 5. **Push the change to GitHub **
 6. **View remote changes**
-    7. Visit GitHub again and notice the change has now been transferred to GitHub
+    7. Visit GitHub again and notice the change has now been transferred to GitHub. Your collaborators can now access your changes through the remote repo (the repo stored on GitHub)
 
 
 ## Ignoring .ipynb files 
-
-
+As you collaborate on your Kaggle hackathon project, you may encounter challenges with tracking changes in Jupyter notebooks (.ipynb files) due to their complex JSON format. These files can include a lot of metadata that makes version control difficult and cluttered. In this section, we'll show you how to use Jupytext to convert your Jupyter notebooks into a more manageable format and configure your repository to ignore .ipynb files. This approach will help you maintain a cleaner version history and focus on the actual code changes, making collaboration more efficient.
 
 1. **Add jupyter lab file to repo**
     1. Open anaconda prompt and cd into your local repo folder
@@ -124,13 +123,10 @@ Becoming familiar with version control terminology is half the battle in becomin
 
 
 ## Pulling updates from GitHub
-
-Assuming your collaborators have recently added some code to GitHub, how can you retrieve these changes and pull them onto your local machine?
-
-
+As your team collaborates on the Kaggle hackathon project, it's essential to stay up-to-date with the latest changes made by your teammates. In this section, we'll explain how to pull updates from the remote repository on GitHub to your local machine. This process ensures that you always have the most recent version of the project and can integrate your work with the contributions of others seamlessly. By regularly pulling updates, you can avoid conflicts and ensure smooth collaboration throughout the project.
 
 1. Pretend you are a collaborator and visit GitHub to find your repo
-2. Add a new file to the repo: Add file → create new file
+2. Add a new file to the remote repo (the version stored on GitHub): Add file → create new file. 
 3. Commit the file to the repo
 4. Open your local repo folder and notice we don’t have this new file yet
 5. In GitHub Desktop, click “Fetch origin” by “Pull origin”
@@ -140,43 +136,86 @@ Assuming your collaborators have recently added some code to GitHub, how can you
 
 
 ## Reverting to a previous commit
+During the course of your Kaggle hackathon project, there may be times when you need to revert to a previous version of your code. This could be due to a bug, an unwanted change, or simply the need to return to a stable state. In this section, we'll guide you through the process of reverting to a previous commit using GitHub Desktop. Understanding how to revert to an earlier commit ensures that you can quickly and safely undo changes, helping your team maintain a stable and functional codebase throughout the competition.
 
-1. **Find the commit to revert to**
-    1. Open the GitHub Desktop "History" tab to view the commit history of your repository.
-    2. Locate and select the commit you want to revert to. You can do this by clicking on the specific commit in the history list.
-2. **Create a new branch from the selected commit**
-    3. With the commit selected, click on the "Create branch" button. This action will create a new branch starting from the selected commit and automatically switch to this branch
-3. **Commit the changes to the new branch**
-4. **Make any necessary changes in the new branch to resolve the issue or implement the desired changes. **
-5. **Commit and Push (“Publish branch”) **
-    4. In GitHub Desktop, commit the changes to the branch and push them to the remote repository. This will upload the new branch and its commits to GitHub
+1. **Find the Commit to Revert To**
+    1. Open GitHub Desktop and navigate to the repository you are working on.
+    2. Click on the "History" tab to view the commit history of your repository.
+    3. Scroll through the list of commits and locate the commit you want to revert to. Click on the specific commit to select it.
+2. **Create a New Branch from the Selected Commit**
+    1. With the desired commit selected, click on the "Branch" menu at the top of GitHub Desktop.
+    2. Select "New Branch" from the dropdown menu.
+    3. In the dialog box that appears, name your new branch (e.g., "revert-to-commit") and ensure that it is based on the selected commit. Click "Create Branch" to proceed.
+3. **Make Necessary Changes in the New Branch**
+    1. Switch to the newly created branch by clicking on the "Current Branch" dropdown menu and selecting your new branch.
+    2. Make any necessary changes in this branch to resolve issues or implement desired modifications.
+    3. Use your code editor or IDE to make and save these changes.
+4. **Commit the Changes to the New Branch**
+    1. Return to GitHub Desktop and navigate to the "Changes" tab.
+    2. Review the changes you made and provide a commit message summarizing them.
+    3. Click the "Commit to <your-branch-name>" button to commit these changes to the new branch.
+5. **Push the Changes to GitHub**
+    1. Click the "Publish branch" button in GitHub Desktop to push your changes to the remote repository on GitHub.
+    2. Wait for the push process to complete.
 6. **Create a Pull Request (Optional)**
-    5. If you want to merge these changes back into your main branch, you can create a pull request on GitHub. This is particularly useful if you are working with a team and need the changes reviewed.
-7. **Review and Merge (If Using a Pull Request):**
-    6. If you created a pull request, reviewers can examine your changes and merge them once they are satisfied.
-
+    1. If you want to merge these changes back into the main branch, go to your repository on GitHub.
+    2. Click on the "Pull requests" tab and then click the "New pull request" button.
+    3. Select your new branch as the source and the main branch as the destination. Review the changes and click "Create pull request."
+7. **Review and Merge (If Using a Pull Request)**
+    1. Reviewers can now examine the pull request on GitHub. They can leave comments, request changes, or approve the pull request.
+    2. Once the changes are approved, the pull request can be merged into the main branch by clicking the "Merge pull request" button on GitHub.
 
 ## Using “pull requests” to review each other's' work
+Pull requests are an essential feature of GitHub that facilitate collaborative development by allowing team members to propose changes to a codebase. They provide a structured way for team members to review, discuss, and approve changes before they are merged into the main branch. In this section, we will explore how to use pull requests effectively to ensure that your team's work is consistently high-quality and integrated smoothly. By following best practices for creating, reviewing, and merging pull requests, you can maintain a clean and stable codebase while fostering a collaborative and transparent development process.
+These instructions are clear and structured well, but a few refinements can enhance clarity and flow. Here's an improved version:
 
-Pull requests provide a structured way for team members to review and collaborate on code changes. They allow peers to inspect, discuss, and provide feedback on the proposed modifications before merging them into the main codebase.
+1. **Create a New Branch**:
+    1. Open GitHub Desktop and select your repository.
+    2. Click the "Current Branch" dropdown.
+    3. Select "New Branch" and give it a descriptive name (e.g., "feature-branch" or "collaborator-feature").
+    4. Choose the base branch, typically the default branch like main or master, and click "Create Branch."
 
+2. **Make Changes in the New Branch**:
+    1. Switch to the newly created branch by selecting it from the "Current Branch" dropdown.
+    2. Collaborators can now make changes in this new branch. They can create, edit, or delete files as needed.
 
-1. **Create a New Branch**: Click the "Current Branch" dropdown in GitHub Desktop. Select "New Branch" and give it a descriptive name (e.g., "feature-branch" or "collaborator-feature"). Choose the base branch, typically the default branch like main or master.
-2. **Make Changes in the New Branch**: Collaborators can now make changes in this new branch. They can create, edit, or delete files as needed. 
-3. **Commit and Push Changes**: Collaborators should commit their changes to the new branch and push them to the remote repository. 
-4. **Preview Pull Request**: In GitHub Desktop, click on "Preview Pull Request." This will inform you of which branch is being merged into the main code base.
-5. **Create Pull Request**: After confirming that the preview is correct, click “Create pull request”.
-6. **Review and Submit the Pull Request on GitHub**: Collaborators should review their changes and fill out the details for the pull request on the GitHub website. They can add a title, description, and assign reviewers (you and other collaborators) to review the changes. Collaborators can then submit the pull request. 
-7. **Review the Pull Request in GitHub Desktop**: You and other collaborators can now go back to GitHub Desktop and see the newly created pull request listed in the "Current Branch" dropdown. Click on the pull request to view the changes, comments, and review the code. Collaborators can respond to any feedback or comments in the GitHub Desktop interface.
-8. ** Accept or Request Changes**: After reviewing the code, you and other collaborators can either accept the pull request if it's good to merge or request changes if there are issues that need to be addressed. You can leave comments, suggestions, and feedback in the pull request. 
-9. **Collaborators Make Changes**: If changes are requested, collaborators can make the necessary adjustments in their branch and push the changes. The pull request will be automatically updated with the new commits. 
-10. **Close the Pull Request**: Once the pull request is approved and the changes have been successfully reviewed, the pull request can be merged, and the branch can be deleted. Using this workflow, you can efficiently collaborate with collaborators who have write access to the repository while ensuring that changes are reviewed and merged using pull requests in a controlled and organized manner.
+3. **Commit and Push Changes**:
+    1. After making changes, go to the "Changes" tab in GitHub Desktop.
+    2. Review the changes, provide a meaningful commit message, and click "Commit to <branch-name>".
+    3. Click "Push origin" to push the changes to the remote repository on GitHub.
 
+4. **Preview Pull Request**:
+    1. In GitHub Desktop, click on "Branch" in the menu bar.
+    2. Select "Create Pull Request" to open a preview. This will show which branch is being merged into the main code base.
 
-## Saving Kaggle Notebooks to Git
-[https://www.kaggle.com/discussions/product-feedback/295170](https://www.kaggle.com/discussions/product-feedback/295170) 
+5. **Create Pull Request**:
+    1. After confirming that the preview is correct, click “Create Pull Request”.
+    2. GitHub will open in your web browser. Fill out the details for the pull request, including a title and description.
+    3. Assign reviewers (e.g., you and other collaborators) to review the changes, then click "Create Pull Request."
+
+6. **Review and Submit the Pull Request on GitHub**:
+    1. Collaborators should review the pull request on the GitHub website.
+    2. They can add comments, suggestions, or request changes directly in the pull request interface.
+
+7. **Review the Pull Request in GitHub Desktop**:
+    1. Return to GitHub Desktop to see the newly created pull request listed in the "Current Branch" dropdown.
+    2. Click on the pull request to view the changes, comments, and review the code.
+    3. Respond to any feedback or comments in the GitHub Desktop interface.
+
+8. **Accept or Request Changes**:
+    1. After reviewing the code, you and other collaborators can either accept the pull request if it's ready to merge or request changes if there are issues to address.
+    2. Leave comments, suggestions, and feedback in the pull request.
+
+9. **Collaborators Make Changes**:
+    1. If changes are requested, collaborators can make the necessary adjustments in their branch and push the updates.
+    2. The pull request will automatically update with the new commits.
+
+10. **Close the Pull Request**:
+    1. Once the pull request is approved and the changes have been successfully reviewed, merge the pull request into the main branch.
+    2. After merging, you can delete the branch to keep the repository clean.
 
 ## Questions?
 If you any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
 
-
+## See also
+- [**Workshop**: Intro to Version Control with Git](https://www.youtube.com/playlist?list=PL90vX4e9ORqeE1wyMbST9pJ1-Mj45f2JY): If you're curious to learn how to use Git via shell commands (or just want to become more fluent with Git), check out this YouTube playlist from the Data Science Hub!
