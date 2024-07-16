@@ -23,3 +23,20 @@ toc-location: body
 page-layout: full
 title-block-banner: false
 ---
+
+<!-- MARKDOWN COMMENT: Attempt to add submenu items for Books, Workshops, Videos, etc. -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var url = new URL(window.location.href);
+    var category = url.hash.split('=')[1];
+    if (category) {
+      var listing = document.querySelectorAll('.listing-item');
+      listing.forEach(function(item) {
+        var categories = item.querySelector('.listing-categories');
+        if (!categories || !categories.innerHTML.includes(category)) {
+          item.style.display = 'none';
+        }
+      });
+    }
+  });
+</script>
