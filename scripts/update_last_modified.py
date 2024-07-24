@@ -7,7 +7,7 @@ def get_last_modified_date(file):
     result = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True, text=True)
     return result.stdout.strip()
 
-def update_last_modified(file):
+def update_date_modified(file):
     last_modified = get_last_modified_date(file)
     with open(file, 'r') as f:
         content = f.read()
@@ -17,8 +17,8 @@ def update_last_modified(file):
         parts = content.split('---', 2)
         if len(parts) >= 3:
             metadata = yaml.safe_load(parts[1])
-            if 'last_modified' in metadata and metadata['last_modified'] == "last-modified":
-                metadata['last_modified'] = last_modified
+            if 'date-modified' in metadata and metadata['date-modified'] == "last-modified":
+                metadata['date-modified'] = last_modified
                 new_content = f"---\n{yaml.safe_dump(metadata)}---{parts[2]}"
                 with open(file, 'w') as f:
                     f.write(new_content)
@@ -27,4 +27,4 @@ def update_last_modified(file):
 for root, dirs, files in os.walk('.'):
     for file in files:
         if file.endswith('.qmd'):
-            update_last_modified(os.path.join(root, file))
+            update_date_modified(os.path.join(root, file))
