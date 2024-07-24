@@ -14,6 +14,17 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Update last modified dates
+        run: python scripts/update_last_modified.py
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
