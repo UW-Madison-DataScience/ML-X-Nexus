@@ -1,5 +1,3 @@
-# scripts/update_last_modified.py
-
 import subprocess
 import os
 import yaml
@@ -15,17 +13,15 @@ def update_last_modified(file):
         content = f.read()
 
     # Parse YAML front matter
-    yaml_content = content.split('---', 2)
-    if len(yaml_content) < 3:
-        return
-
-    metadata = yaml.safe_load(yaml_content[1])
-    metadata['last_modified'] = last_modified
-
-    # Reconstruct the file with updated metadata
-    new_content = f"---\n{yaml.safe_dump(metadata)}---{yaml_content[2]}"
-    with open(file, 'w') as f:
-        f.write(new_content)
+    if content.startswith('---'):
+        parts = content.split('---', 2)
+        if len(parts) >= 3:
+            metadata = yaml.safe_load(parts[1])
+            if 'last_modified' in metadata and metadata['last_modified'] == "last-modified":
+                metadata['last_modified'] = last_modified
+                new_content = f"---\n{yaml.safe_dump(metadata)}---{parts[2]}"
+                with open(file, 'w') as f:
+                    f.write(new_content)
 
 # Apply the function to all .qmd files
 for root, dirs, files in os.walk('.'):
