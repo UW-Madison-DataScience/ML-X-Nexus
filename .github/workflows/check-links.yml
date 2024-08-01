@@ -1,0 +1,13 @@
+name: Check for broken links
+on:
+  workflow_dispatch: # allow manual trigger
+jobs:
+  crawl_for_broken_links:
+    runs-on: ubuntu-latest
+    name: Broken-Links-Crawler
+    steps:
+    - name: Checking Links
+      uses: ScholliYT/Broken-Links-Crawler-Action@v3.3.1
+      with:
+        website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
+        verbose: true
