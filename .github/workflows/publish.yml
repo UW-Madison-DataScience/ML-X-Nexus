@@ -23,3 +23,8 @@ jobs:
           target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run link checker
+        uses: lycheeverse/lychee-action@latest
+        with:
+          args: --verbose --exclude-all-private --include localhost
