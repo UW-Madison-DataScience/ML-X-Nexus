@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Dr.&nbsp;Sam Gelman">
+<meta name="dcterms.date" content="2024-06-18">
+<meta name="description" content="We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations.">
 
-<title>Videos – Nexus: Crowdsourced ML Resources</title>
+<title>A Biophysics-based Protein Language Model for Protein Engineering – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,10 +32,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Applications/index.html" rel="next">
-<link href="../../Resources/Workshops/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,65 +70,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +83,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Resources/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Resources/Videos/index.html">Videos</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">A Biophysics-based Protein Language Model for Protein Engineering</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +93,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -212,7 +153,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Resources/Videos/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Resources/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
@@ -276,20 +217,53 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Code-along">Code-along <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Deep learning">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Empirical patterns">Empirical patterns <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Git/GitHub">Git/GitHub <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Grokking">Grokking <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Guides">Guides <span class="quarto-category-count">(1)</span></div><div class="category" data-category="OOD detection">OOD detection <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Reproducibility">Reproducibility <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Trustworthy ML">Trustworthy ML <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Videos">Videos <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Workshops">Workshops <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#links" id="toc-links" class="nav-link active" data-scroll-target="#links">Links</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Highlights/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Resources/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Resources/Videos/index.html">Videos</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Videos</h1>
+<h1 class="title">A Biophysics-based Protein Language Model for Protein Engineering</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Cross Labs AI</div>
+    <div class="quarto-category">Transfer learning</div>
+    <div class="quarto-category">Biophysics</div>
+    <div class="quarto-category">Protein language models</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Protein engineering</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations.
+  </div>
 </div>
 
 
+<div class="quarto-title-meta">
 
-<div class="quarto-title-meta column-body">
-
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Sam Gelman </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Date</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 18, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -299,170 +273,59 @@ window.Quarto = {
 </header>
 
 
+<p>Video description from Cross Labs AI:</p>
+<blockquote class="blockquote">
+<p>Just as words combine to form sentences that convey meaning in human languages, the specific arrangement of amino acids in proteins can be viewed as an information-rich language describing molecular structure and behavior.</p>
+<p>Protein language models harness advances in natural language processing to decode intricate patterns and relationships within protein sequences. These models learn meaningful, low-dimensional representations that capture the semantic organization of protein space and have broad utility in protein engineering. However, while protein language models are powerful, they do not take advantage of the extensive knowledge of protein biophysics and molecular mechanisms acquired over the last century. Thus, they are largely unaware of the underlying physical principles governing protein function.</p>
+<p>We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations. We pretrain a transformer on millions of molecular simulations to capture the relationship between protein sequence, structure, energetics, and stability. We then finetune the neural network to harness these fundamental biophysical signals and apply them when predicting protein functional scores from experimental assays. METL excels in protein engineering tasks like generalizing from small training sets and extrapolating to new sequence positions. We demonstrate METL’s ability to design functional green fluorescent protein variants when trained on only 64 experimental examples.</p>
+</blockquote>
+<section id="links" class="level3">
+<h3 class="anchored" data-anchor-id="links">Links</h3>
+<ul>
+<li><p>About the Speaker → <a href="https://samgelman.com">samgelman.com</a></p></li>
+<li><p>Check out the <a href="https://www.biorxiv.org/content/10.1101/2024.03.15.585128v1">preprint</a> a #### Software A collection of METL software repositories is provided to reproduce the results of this manuscript and run METL on new data:</p></li>
+<li><p>https://github.com/gitter-lab/metl for pretraining and finetuning METL PLMs (archived at doi:10.5281/zenodo.10819483)</p></li>
+<li><p>https://github.com/gitter-lab/metl-sim for generating biophysical attributes with Rosetta (archived at doi:10.5281/zenodo.10819523)</p></li>
+<li><p>https://github.com/gitter-lab/metl-pretrained for making predictions with pretrained METL PLMs (archived at doi:10.5281/zenodo.10819499)</p></li>
+<li><p>https://github.com/gitter-lab/metl-pub for additional code and data to reproduce these results (archived at doi:10.5281/zenodo.10819536)</p></li>
+</ul>
+<p>All code is available under the MIT license.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/milM6-2RF18" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<section id="jump-to-section" class="level4">
+<h4 class="anchored" data-anchor-id="jump-to-section">Jump to section</h4>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=181s">3:01, Intro</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=307s">5:03, Proteins as nature’s molecular machines</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=360s">6:00, create or modify functions to fulfill new functions</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=360s">6:58, Proteins defined by a sequence of amino acides</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=634s">10:34 Challenge: Vastness of sequence space</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=678s">11:18: Navigating sequence space</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=712s">11:52, Challenge: Small changes can have a large impact</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=771s">12:51, Protein language models (PLMs)</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=957s">15:57, A different approach to PLMs: incorporating biophysics</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1053s">17:33, Mutational Effect Transfer Learning (METL)</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1190s">19:50, Simulating protein structures with Rosetta</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1270s">21:10, Local and global strategies for simulations</a>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1308s">21:48, Local simulated data</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1415s">23:35, Global simulated data</a></li>
+</ul></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1466s">24:26, Train transformer encoder to predict Rosetta scores</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1538s">25:38, Finetune to predict experimental fitness score</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1630s">27:10, Evaluation baselines (evolutionary models): METL, ESM, and EVE</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1706s">28:26, Generalizing from small datasets</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1868s">31:08, Extrapolating bond train set</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2030s">33:50, Simulating specific functions</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2146s">35:46, How much simulated/experimental data is needed?</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2281s">38:01, Engineering GFP variants with METL</a></li>
+<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2500s">41:40, Q&amp;A</a></li>
+</ul>
 
 
+</section>
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Deep learning,Empirical patterns,Grokking,Videos,Guides" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1722962526686" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="222">
-<a href="../../Resources/Videos/Grokking.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/grokking.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Grokking
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Deep learning'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Empirical patterns'); return false;">
-Empirical patterns
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Grokking'); return false;">
-Grokking
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Guides'); return false;">
-Guides
-</div>
-</div>
-<div class="card-text listing-description">
-The verb, “to grok”, was originally coined by Robert A. Heinlein in his 1961 science fiction novel “Stranger in a Strange Land,” where it meant to understand something so…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-26
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="Reproducibility,Videos" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1722962526686" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="205">
-<a href="../../Resources/Videos/Reproducibility-overview.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="https://i3.ytimg.com/vi/0MKlmtD4zts/maxresdefault.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Overview of Reproducibility Lecture
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Reproducibility'); return false;">
-Reproducibility
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-</div>
-<div class="card-text listing-description">
-Dr.&nbsp;Sarah Stevens’ lecture highlights the critical importance of reproducibility in computational and data science projects. She also shares best practices to ensure…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-12
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="Reproducibility,Git/GitHub,Workshops,Code-along,Videos" data-listing-date-sort="1720656000000" data-listing-file-modified-sort="1722962526686" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="370">
-<a href="../../Resources/Videos/Intro-git-github.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/git-github.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Version Control with Git and GitHub (Carpentries)
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Reproducibility'); return false;">
-Reproducibility
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Git/GitHub'); return false;">
-Git/GitHub
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Workshops'); return false;">
-Workshops
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Code-along'); return false;">
-Code-along
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-</div>
-<div class="card-text listing-description">
-The below video (and the 7 subsequent videos in the workshop playlist) will walk you through this introductory Git workshop from the Carpentries: Version Control with…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-11
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="OOD detection,Trustworthy ML,Videos" data-listing-date-sort="1720656000000" data-listing-file-modified-sort="1722962526686" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="164">
-<a href="../../Resources/Videos/OOD-detection.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/OOD.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Out-of-Distribution Detection
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('OOD detection'); return false;">
-OOD detection
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Trustworthy ML'); return false;">
-Trustworthy ML
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-</div>
-<div class="card-text listing-description">
-The below tutorial from Sharon Li, an Assistant Professor in the Department of Computer Sciences at the University of Wisconsin-Madison, introduces a pervasive problem faced…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-11
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1027,21 +890,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Resources/Workshops/index.html" class="pagination-link" aria-label="Workshops">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Workshops</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Applications/index.html" class="pagination-link" aria-label="Applications">
-        <span class="nav-page-text">Applications</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Resources/Videos/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Highlights/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
