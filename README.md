@@ -4,7 +4,7 @@
 
 Welcome to the GitHup repo for ML+X Nexus! Nexus is the ML+X community’s centralized hub for sharing machine learning (ML) resources. Visit the [ML+X website](https://datascience.wisc.edu/ml-community/) to learn more about the community, and join the [ML+X google group](https://datascience.wisc.edu/ml-community/#join) to stay informed on upcoming community events! 
 
-## About Nexus
+## About ML+X Nexus
 This platform serves as a centralized hub for individuals interested in advancing their knowledge and skills in machine learning (ML) and related fields (X). Whether you're a student, researcher, or industry professional, you'll find a wealth of curated resources tailored to various experience levels and areas of interest.  Visit the [ML+X Nexus website](https://uw-madison-datascience.github.io/ML-X-Nexus/) to begin exploring ML resources.
 
 ## Features:
