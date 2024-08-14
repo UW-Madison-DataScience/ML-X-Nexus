@@ -14,20 +14,19 @@ Special thanks to our contributors:
 The ML+X Nexus serves as a centralized resource hub for individuals interested in advancing their knowledge and skills in machine learning (ML) and related fields (X). Whether you're a student, researcher, or industry professional, you'll find a wealth of curated resources tailored to various experience levels and areas of interest.
 
 ## Features:
+Any content (original or external) that can help make the practice of ML more connected, accessible, efficient, and reproducible is welcome on the Nexus platform! This includes, but is not limited to:
 
-📜 Guides: Explore a vast library of ML guides covering a wide range of topics, from foundational concepts to advanced techniques. Written by experts, these guides offer clear explanations, practical examples, and actionable insights to help you navigate the complexities of ML with confidence.
+* 🧠 **Educational materials**: Explore a library of educational materials (workshops, guides, books, videos, etc.) covering a wide range of ML-related topics, tools, and workflows, from foundational concepts to advanced techniques. These materials offer clear explanations, practical examples, and actionable insights to help you navigate the complexities of ML with confidence.
 
-🏆 Best Practices: Discover a curated collection of best practices distilled from real-world experiences and lessons learned by ML practitioners. From data preprocessing techniques to model evaluation strategies, these best practices provide invaluable guidance to optimize your ML workflows.
+* 🧬 **Applications & stories**: Discover a curated collection of blogs, papers, and talks which dive into real-world ML applications and lessons learned by practitioners. This section also includes exploratory data analysis (EDA) case studies, which demonstrate the technical and domain knowledge needed to explore data from various fields.
 
-🚀 Starter Notebooks: Jumpstart your ML projects with our collection of starter notebooks, featuring ready-to-use code templates, sample datasets, and step-by-step tutorials. Whether you're exploring classification algorithms, natural language processing, or computer vision tasks, these notebooks provide a solid foundation for experimentation and learning.
-
-## Table of Contents: {Develop later}
+* 🛠 **Models, code, and more**: Learn about popular pretrained & foundation models, useful scripts, and datasets that you can leverage for your next ML project. Learn about their features, how to use them effectively, and see examples of them in action.
 
 ## Contributing:
 
 We welcome contributions from members of the ML+X community! Whether you'd like to share your own guides, best practices, or starter notebooks, or collaborate with others to refine existing resources, your contributions are highly valued and appreciated.
 
-To contribute, fork this repository, make your changes, and submit a pull request. Please ensure that your contributions adhere to our guidelines and maintain the high standards of quality and relevance upheld by the ML+X community.
+To contribute, fork this repository, make your changes, and submit a pull request. Please ensure that your contributions adhere to our guidelines and maintain the high standards of quality and relevance upheld by the ML+X community. For further guidance and starter templates, please check the [How to Contribute?](https://uw-madison-datascience.github.io/ML-X-Nexus/Resources/Guides/How-to-contribute.html) guide. 
 
 ## License:
 
