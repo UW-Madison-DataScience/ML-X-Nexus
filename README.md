@@ -2,16 +2,10 @@
 
 ![ML + X Banner](https://github.com/UW-Madison-DataScience/ML-X-Community/assets/59903252/b3dbe076-526d-4dbe-9525-f9c2f62bf27c)
 
-Welcome to the ML+X Nexus! This is a collaborative platform dedicated to crowdsourcing machine learning guides, best practices, and starter notebooks for practitioners across UW–Madison and beyond.
+Welcome to the GitHup repo for ML+X Nexus! Nexus is the ML+X community’s centralized hub for sharing machine learning (ML) resources. Visit the [ML+X website](https://datascience.wisc.edu/ml-community/) to learn more about the community, and join the [ML+X google group](https://datascience.wisc.edu/ml-community/#join) to stay informed on upcoming community events! 
 
-## Contributors
-Special thanks to our contributors:
-
-![Contributors graph](https://contrib.rocks/image?repo=UW-Madison-DataScience/ML-X-Nexus)
-
-## About ML+X Nexus:
-
-The ML+X Nexus serves as a centralized resource hub for individuals interested in advancing their knowledge and skills in machine learning (ML) and related fields (X). Whether you're a student, researcher, or industry professional, you'll find a wealth of curated resources tailored to various experience levels and areas of interest.
+## About Nexus
+This platform serves as a centralized hub for individuals interested in advancing their knowledge and skills in machine learning (ML) and related fields (X). Whether you're a student, researcher, or industry professional, you'll find a wealth of curated resources tailored to various experience levels and areas of interest.  Visit the [ML+X Nexus website](https://uw-madison-datascience.github.io/ML-X-Nexus/) to begin exploring ML resources.
 
 ## Features:
 Any content (original or external) that can help make the practice of ML more connected, accessible, efficient, and reproducible is welcome on the Nexus platform! This includes, but is not limited to:
