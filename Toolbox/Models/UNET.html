@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2024-09-16">
 
-<title>Videos – Nexus: Crowdsourced ML Resources</title>
+<title>U-Net: Convolutional Networks for Biomedical Image Segmentation – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,10 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Toolbox/index.html" rel="next">
-<link href="../../Learn/Workshops/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +82,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Videos/index.html">Videos</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">U-Net: Convolutional Networks for Biomedical Image Segmentation</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +92,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -212,7 +152,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
@@ -305,20 +245,49 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Code-along">Code-along <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Deep learning">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Empirical patterns">Empirical patterns <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Git/GitHub">Git/GitHub <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Grokking">Grokking <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Guides">Guides <span class="quarto-category-count">(1)</span></div><div class="category" data-category="OOD detection">OOD detection <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Reproducibility">Reproducibility <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Trustworthy ML">Trustworthy ML <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Videos">Videos <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Workshops">Workshops <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#timeline-context" id="toc-timeline-context" class="nav-link" data-scroll-target="#timeline-context">Timeline Context</a></li>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/UNET.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Videos/index.html">Videos</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Videos</h1>
-</div>
+<h1 class="title">U-Net: Convolutional Networks for Biomedical Image Segmentation</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Medical imaging</div>
+    <div class="quarto-category">Image segmentation</div>
+    <div class="quarto-category">Convolutional networks</div>
+    <div class="quarto-category">Models</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 16, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -328,170 +297,49 @@ window.Quarto = {
 </header>
 
 
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p>U-Net is a convolutional neural network architecture designed for biomedical image segmentation. Introduced in 2015 by Ronneberger and colleagues in the paper, “<a href="https://arxiv.org/abs/1505.04597">U-Net: Convolutional Networks for Biomedical Image Segmentation</a>”, U-Net’s encoder-decoder architecture, combined with skip connections, allows for high accuracy in pixel-wise classification tasks. It remains one of the most widely used models for segmentation across various domains, from medical imaging to satellite image analysis.</p>
+<section id="key-features" class="level4">
+<h4 class="anchored" data-anchor-id="key-features">Key Features</h4>
+<ul>
+<li><strong>Encoder-Decoder Architecture</strong>: U-Net utilizes a contracting path (encoder) for context and an expansive path (decoder) for localization, making it effective in segmentation tasks.</li>
+<li><strong>Skip Connections</strong>: These connections between encoder and decoder layers allow for the preservation of spatial information, leading to more accurate segmentation.</li>
+<li><strong>Data Efficiency</strong>: U-Net is effective even with relatively small datasets, a common scenario in medical and specialized imaging tasks.</li>
+</ul>
+</section>
+<section id="high-level-tips-for-effective-use" class="level4">
+<h4 class="anchored" data-anchor-id="high-level-tips-for-effective-use">High-Level Tips for Effective Use</h4>
+<ul>
+<li><strong>Data Augmentation</strong>: Employ data augmentation techniques when working with small datasets to improve model generalization.</li>
+<li><strong>Optimizing Loss Function</strong>: Use specialized loss functions such as Dice coefficient or Intersection over Union (IoU) for pixel-wise optimization.</li>
+<li><strong>Architectural Adjustments</strong>: Depending on your dataset size, experiment with deeper or shallower architectures to balance overfitting and underfitting risks.</li>
+</ul>
+</section>
+</section>
+<section id="timeline-context" class="level2">
+<h2 class="anchored" data-anchor-id="timeline-context">Timeline Context</h2>
+<p>U-Net has been pivotal in advancing image segmentation since its introduction in 2015. Here is a timeline placing U-Net in the broader context of computer vision model development:</p>
+<p>LeNet (1998) ➔ AlexNet (2012) ➔ VGGNet (2014) ➔ Fully Convolutional Networks (FCN) (2014) ➔ SegNet (2015) ➔ U-Net (2015) ➔ ResNet (2015) ➔ Mask R-CNN (2017) ➔ Vision Transformer (ViT) (2020) ➔ Swin Transformer (2021) ➔ Segment Anything (SAM) (2023)</p>
+</section>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html">Introduction to Deep Learning with PyTorch</a></li>
+</ul>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li>TODO: model card</li>
+<li>TODO: colab notebook (PyTorch)</li>
+<li>TODO: colab notebook (Keras)</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Deep learning,Empirical patterns,Grokking,Videos,Guides" data-listing-date-sort="1721952000000" data-listing-file-modified-sort="1726584019532" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="222">
-<a href="../../Learn/Videos/Grokking.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/grokking.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Grokking
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Deep learning'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Empirical patterns'); return false;">
-Empirical patterns
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Grokking'); return false;">
-Grokking
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Guides'); return false;">
-Guides
-</div>
-</div>
-<div class="card-text listing-description">
-The verb, “to grok”, was originally coined by Robert A. Heinlein in his 1961 science fiction novel “Stranger in a Strange Land,” where it meant to understand something so…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-26
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="Reproducibility,Videos" data-listing-date-sort="1720742400000" data-listing-file-modified-sort="1726584019532" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="205">
-<a href="../../Learn/Videos/Reproducibility-overview.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="https://i3.ytimg.com/vi/0MKlmtD4zts/maxresdefault.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Overview of Reproducibility Lecture
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Reproducibility'); return false;">
-Reproducibility
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-</div>
-<div class="card-text listing-description">
-Dr.&nbsp;Sarah Stevens’ lecture highlights the critical importance of reproducibility in computational and data science projects. She also shares best practices to ensure…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-12
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="Reproducibility,Git/GitHub,Workshops,Code-along,Videos" data-listing-date-sort="1720656000000" data-listing-file-modified-sort="1726584019532" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="442">
-<a href="../../Learn/Videos/Intro-git-github.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/git-github.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Version Control with Git and GitHub (Carpentries)
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Reproducibility'); return false;">
-Reproducibility
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Git/GitHub'); return false;">
-Git/GitHub
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Workshops'); return false;">
-Workshops
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Code-along'); return false;">
-Code-along
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-</div>
-<div class="card-text listing-description">
-The below video (and the 7 subsequent videos in the workshop playlist) will walk you through this introductory Git workshop from the Carpentries: Version Control with…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-11
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="OOD detection,Trustworthy ML,Videos" data-listing-date-sort="1720656000000" data-listing-file-modified-sort="1726584019532" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="164">
-<a href="../../Learn/Videos/OOD-detection.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/OOD.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Out-of-Distribution Detection
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('OOD detection'); return false;">
-OOD detection
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Trustworthy ML'); return false;">
-Trustworthy ML
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-</div>
-<div class="card-text listing-description">
-The below tutorial from Sharon Li, an Assistant Professor in the Department of Computer Sciences at the University of Wisconsin-Madison, introduces a pervasive problem faced…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-11
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1056,21 +904,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Learn/Workshops/index.html" class="pagination-link" aria-label="Workshops">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Workshops</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Toolbox/index.html" class="pagination-link" aria-label="Toolbox">
-        <span class="nav-page-text">Toolbox</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Videos/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/UNET.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
