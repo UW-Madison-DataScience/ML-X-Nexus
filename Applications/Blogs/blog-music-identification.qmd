@@ -24,21 +24,9 @@ categories:
 ---
 <!-- MARKDOWN COMMENT: Replace the instructions below with a brief summary of your blog post -->
 
-Deep learning (neural network training) can solve humanities challenges, too! Read about a successful project that trained a model to be able to identify Irish traditional dance tunes. (https://github.com/alanngnet/CoverHunterMPS)
+Deep learning (neural network training) can solve humanities challenges, too! Read about a successful project that trained a model to be able to identify Irish traditional dance tunes. 
 
-<!-- MARKDOWN COMMENT: If any prerequisite knowledge is required (e.g., Intro ML, Python, Intro Deep Learning), please also mention this — preferably by linking to existing materials on Nexus, e.g., ...
--->
-#### Prerequisites
-- [Prerequisite Resource 1](URL)
-- [Prerequisite Resource 2](URL)
-
-<!-- MARKDOWN COMMENT: Replace this section with the main content of your blog post. Break down your thoughts into clear sections or bullet points where possible for easy reading. -->
-Write your blog content here. Discuss the following (if applicable):
-
-- **Motivation**: What inspired this blog post?
-- **Problem/Challenge**: What specific problem or challenge are you addressing?
-- **Methods/Techniques**: Explain your approach or methodology (with code examples if relevant).
-- **Results**: What were the outcomes of your analysis or exploration? Share any graphs, findings, or key takeaways.
+Project GitHub: [github.com/alanngnet/CoverHunterMPS](https://github.com/alanngnet/CoverHunterMPS)
 
 # The Challenge
 
@@ -46,14 +34,14 @@ Hey, this AI stuff isn't just for hard-science people, we can solve humanities c
 
 I hope this blog post might inspire more use of data science and machine learning in the humanities, and maybe even gather some people who want to help me solve musicological mysteries using data science.
 
-The mystery I have been working on since about 1993 is how to systematically describe the Irish traditional dance music repertoire. This particular musical culture might be the healthiest European folk music tradition that has survived unbroken for centuries as an aurally transmitted culture, with something on the order of 10,000 musically distinct "tunes" (as musical works for dance use are called in this culture) and tens of thousands of active participants around the world. My main work is published at https://www.irishtune.info as a combination scholarly reference work and practical day-to-day tool for the global community of musicians at all levels.
+The mystery I have been working on since about 1993 is how to systematically describe the Irish traditional dance music repertoire. This particular musical culture might be the healthiest European folk music tradition that has survived unbroken for centuries as an aurally transmitted culture, with something on the order of 10,000 musically distinct "tunes" (as musical works for dance use are called in this culture) and tens of thousands of active participants around the world. My main work is published at [irishtune.info](https://www.irishtune.info) as a combination scholarly reference work and practical day-to-day tool for the global community of musicians at all levels.
 
 One side benefit of the manual work I've been doing for 30 years to carefully describe the contents of about a thousand albums of commercially published Irish traditional music is that I (only somewhat intentionally) created an ideal dataset for training a machine-learning solution that can do what only very few human experts can do after a lifetime of experience and use of large archival resources: **Hear any performance and identify what tune it is**. This is the core challenge I have tackled here.
 
 Background explanation: Folk musicians in aurally transmitted traditions generally do not know the "identity" of tunes they play, especially not in any kind of broadly reliable or generally agreed-upon way other than as often-contradictory informal assertions, each held within a subset of the global community. Welcome to the fuzziness of humanities research! :)
 
 The benefits of solving this challenge include:
-- Accelerate my work as a human expert as I expand the coverage of albums represented in irishtune.info, which in turn benefits the global community of musicians and the health of the tradition itself. This goal was accomplished as of July 27, 2024, but refinement continues.
+- Accelerate my work as a human expert as I expand the coverage of albums represented in [irishtune.info](https://www.irishtune.info), which in turn benefits the global community of musicians and the health of the tradition itself. This goal was accomplished as of July 27, 2024, but refinement continues.
 
 - Empower the global community of Irish traditional musicians to identify their own tunes and recordings. (I am currently looking for help with this technical challenge.)
 
@@ -61,11 +49,11 @@ The benefits of solving this challenge include:
 
 # The Solution
 
-For better or worse, commercial music is a big-money industry. That means there are both well-funded organizations involved as well as financial incentives to analyze and automate all sorts of business processes related to pop music. For example, social media platforms have to worry about copyright and licensing issues in any kind of social-media post that includes music in any form. Youtube or Tiktok, for example, need to make sure that your video of yourself singing a Taylor Swift song in the car doesn't get shared without the proper licensing fees being paid to the artist. And in order to do that, they needed to solve the problem of "What song is that?" in an automated way. So they have been funding CSI (Cover Song Identification) research for years, and that has occasionally shown up in public as open-source code repositories, like this ground-breaking one that appeared in July 2023 from an industry-funded team of researchers in China: https://github.com/Liu-Feng-deeplearning/CoverHunter
+For better or worse, commercial music is a big-money industry. That means there are both well-funded organizations involved as well as financial incentives to analyze and automate all sorts of business processes related to pop music. For example, social media platforms have to worry about copyright and licensing issues in any kind of social-media post that includes music in any form. Youtube or Tiktok, for example, need to make sure that your video of yourself singing a Taylor Swift song in the car doesn't get shared without the proper licensing fees being paid to the artist. And in order to do that, they needed to solve the problem of "What song is that?" in an automated way. So they have been funding CSI (Cover Song Identification) research for years, and that has occasionally shown up in public as open-source code repositories, like this ground-breaking one that appeared in July 2023 from an industry-funded team of researchers in China: [github.com/Liu-Feng-deeplearning/CoverHunter](https://github.com/Liu-Feng-deeplearning/CoverHunter)
 
 While humanities research would never get the resources to build a solution from scratch to, say, figure out a way to catalog 10,000 hours of audio in an Armenian folk song archive, we can certainly take advantage of big-industry solutions that solve similar problems.
 
-And that's exactly what I did. I forked that CoverHunter project and the result is published as https://github.com/alanngnet/CoverHunterMPS  
+And that's exactly what I did. I forked that CoverHunter project and the result is published as [github.com/alanngnet/CoverHunterMPS](https://github.com/alanngnet/CoverHunterMPS).
 
 It took about 6 months of:
 - Reverse-engineering the very poorly documented CoverHunter code to understand it enough to proceed.
@@ -89,7 +77,7 @@ In case you are interested in a more technical summary of the solution, it invol
 
 - A PyTorch-based implementation of a conformer neural network, a somewhat unusual or newer complex network that combines a CNN (convolutional neural network) for small-timescale learning of specific patterns with a transformer network that enables large-timescale and structurally flexible learning. You need the latter because real-world musicians (unlike, say, music played at the school level) are free to modify the structure of a work without hurting the musical identity of the work, and are free to improvise and vary within the structure, likewise without causing a human listener to fail to recognize the identity of the work.
 
-- Leveraging a "bag of tricks" of various neural-network training optimization techniques that the CoverHunter authors adapted from previous deep-learning research, including taking a lot of source code from various - often unidentified - open-source projects in the field of automated speech recognition. This amalgamation of code from many undocumented sources was a big part of why my first task of even understanding their code was so challenging. (I did fix a lot of that along the way.) 
+- Leveraging a "bag of tricks" of various neural-network training optimization techniques that the CoverHunter authors adapted from previous deep-learning research, including taking a lot of source code from various - often unidentified - open-source projects in the field of automated speech recognition. This amalgamation of code from many undocumented sources was a big part of why my first task of even understanding their code was so challenging (I did fix a lot of that along the way).
 
 - Output of a 128-dimensional tensor (a 1x128-element array of numbers) that uniquely describes an audio performance. The tune-identification solution basically does a mathematical comparison of the model-generated tensor for your mystery audio file against the model-generated tensors for all the known, identified audio files in your database, and finds the nearest neighbors for you.
 
@@ -97,24 +85,21 @@ In case you are interested in a more technical summary of the solution, it invol
 
 Here is a graph of mAP (mean average precision) during a late-August 2024 full training run using the K-fold cross-validation production-training tool in this project. 94% accuracy at identifying "easy reels" is very, very good! So is 74% accuracy for "hard reels," which are performances I selected as probably going to be challenging for any ML solution to be able to recognize. After using it in the real world in the last month to identify tunes on new audio recordings, I am confident that this solution performs better than any human expert will ever be able to, especially given that it spits out its best guess in a couple seconds! In this specialized niche, it is already "superhuman AI."
 
-![Graph of training results for a production training run, measured as mAP (mean average precision) against two test datasets.](/images/blog-music-identification-mAPresults.png)
+![Graph of training results for a production training run, measured as mAP (mean average precision) against two test datasets.](../../images/blog-content/blog-music-identification-mAPresults.png)
 
 # Value for Other Purposes
 
-- I'm hopeful this model will turn out to help solve other kinds of musicological mysteries than just tune identification. See https://github.com/alanngnet/CoverHunterMPS#coverhuntermps for some ideas I have.
+- I'm hopeful this model will turn out to help solve other kinds of musicological mysteries than just tune identification. See [github.com/alanngnet/CoverHunterMPS#coverhuntermps](https://github.com/alanngnet/CoverHunterMPS#coverhuntermps) for some ideas I have.
 
-- If you're looking for a high-level summary of the steps involved in preparing, training, evaluating, and productionizing any deep learning solution, consider the "Usage" section of the project Readme at https://github.com/alanngnet/CoverHunterMPS/blob/main/README.md
+- If you're looking for a high-level summary of the steps involved in preparing, training, evaluating, and productionizing any deep learning solution, consider the "Usage" section of the project Readme at [github.com/alanngnet/CoverHunterMPS/blob/main/README.md](https://github.com/alanngnet/CoverHunterMPS/blob/main/README.md)
 
 - Steal, borrow, and tweak the source code for your own purposes. There are a lot of generally useful bits in this project for any deep-learning classification solution. But even better would be to contribute improvements to this project to share your innovations more broadly. 
 
-- Feel free to contact me to tell this story if it can help expand the use of data science in the humanities.
+- Feel free to contact me ([alan@alan-ng.net](mailto:alan@alan-ng.net)) to tell this story if it can help expand the use of data science in the humanities.
 
 ## Questions?
 If you any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
 
 ## See also
-<!-- MARKDOWN COMMENT: Please Check the existing resources on Nexus to see if any other related resources (e.g., related books/videos, blog posts commenting on the resource, alternative approaches/frameworks, etc.) should be linked below. You may also link to resources which aren't currently on the Nexus platform, if applicable. However, if you're feeling ambitious, you may wish to post those to Nexus as well!  -->
-- [Related Resource 1](Link to related resource 1): Brief description of related resource 1.
-- [Related Resource 2](Link to related resource 2): Brief description of related resource 2.
-- [Related Resource 3](Link to related resource 3): Brief description of related resource 3.
+- Use "Improve this page" to add a related resource (on ML+X Nexus or elsewhere).
 
