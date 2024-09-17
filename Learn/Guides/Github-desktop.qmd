@@ -24,7 +24,14 @@ Version control is system that records changes to a file or set of files over ti
 Git is a free and open source version control system that has become the #1 choice for software developers both in research and industry. Unlike centralized version control systems where there is a single central repository, Git allows every user to have a full copy of the entire project history on their own machine. This distributed nature enables multiple people to work on a project simultaneously without interfering with each other’s work. Git stores the history of changes in a project, enabling users to track progress, revert to previous states, and manage branches for different features or versions of a project. 
 
 ### GitHub
-GitHub is a web-based platform that uses Git for version control. It provides a collaborative environment where users can host and review code, manage projects, and build software alongside millions of other developers. GitHub also offers additional features such as issue tracking, project management tools, and continuous integration workflows. 
+GitHub is a web-based platform that uses Git for version control. It provides a collaborative environment where users can host and review code, manage projects, and build software alongside millions of other developers. GitHub also offers additional features such as issue tracking, project management tools, and continuous integration (CI) workflows, which automate the process of testing and integrating new code to ensure that changes don’t break the project. As the most popular Git-based platform, GitHub has a larger user base and ecosystem, often making it the go-to choice for development collaboration.
+
+### Other platforms using Git
+While GitHub is the most widely used, other platforms also use Git for version control and may be preferred in certain contexts:
+
+**GitLab**: Known for its privacy and security features, GitLab is often favored for organization-wide code repositories, especially in enterprise environments that require tighter control over their codebase. While GitHub also offers robust CI tools, GitLab’s features make it a strong option for managing both public and private repositories across large organizations.
+
+**Bitbucket**: Another Git-based repository hosting service that integrates well with Atlassian products like Jira. While less popular than GitHub, Bitbucket is commonly used by teams that rely on the Atlassian ecosystem and need strong project management integration.
 
 ### GitHub Desktop
 GitHub Desktop is a graphical user interface (GUI) application that simplifies the use of Git and GitHub. It is designed for users who prefer not to use the command line interface, offering a more intuitive and visual approach to version control. With GitHub Desktop, you can easily perform common Git tasks such as committing changes, creating branches, and resolving merge conflicts, all within a user-friendly interface.
@@ -40,8 +47,9 @@ Becoming familiar with version control terminology is half the battle in becomin
 * **Push**: A git command that sends local changes (commits) stored in your local repo to the remote repo.
 * **Pull**: A git command that allows you to update your local repo based on changes made to the remote repo (e.g., if your colleague pushes to the remote repo)
 * **Branch**: A branch in Git is a parallel line of development that allows you to work on **features**, bug fixes, or experiments without affecting the main codebase. You can create and switch between branches to isolate your work.
-* **Merge**: Merging is the process of integrating changes from one branch into another. This is typically done to combine the changes made in a** feature branch** with the main branch (e.g., main or master).
-* **Pull Request (PR)**: A pull request is a feature provided by platforms like GitHub, GitLab, and Bitbucket. It's a way to propose changes (commits) to a project. Others can review the changes, and once approved, they can be merged into the main branch.
+* **Main branch**: The default branch in a git repository where the final, stable version of the project is maintained. It typically contains production-ready code, and new features or changes from other branches are merged into the main branch after being tested and reviewed. Historically, this branch was called master, but in recent years, there has been a shift to using main as the default name. This change reflects a move towards more inclusive language, as the term "master" can carry connotations of oppression, and many platforms, like GitHub, have adopted main to encourage more thoughtful and neutral terminology in coding environments.
+* **Merge**: Merging is the process of integrating changes from one branch into another. This is typically done to combine the changes made in a feature branch with the main branch.
+* **Pull Request (PR)**: A pull request is a feature provided by platforms like GitHub, GitLab, and Bitbucket. It's a way to propose changes (commits) to a project. Others can review the changes, and once approved, they can be merged into the main branch. If it's easier to remember, you can think of this as a "merge request", which is actually the terminiology GitLab uses.
 * **Fork**: Forking a repository means creating a copy of someone else's project in your GitHub account. This allows you to make changes independently and propose those changes back to the original project via pull requests. If everyone on your team has write-access to the repo, it’s best to use new branches instead of forks for pull requests. 
 * **Gitignore**: A .gitignore file is used to specify which files and directories should be excluded from version control. It's essential for preventing unnecessary or **sensitive files **(contains like API keys)  from being included in the repository.
 
@@ -63,7 +71,7 @@ In this section, we will walk you through setting up a GitHub repository for a c
     9. From your repo homepage on GitHub, click the settings tab
     10. Click on the “Collaborators” menu option shown in the left panel
     11. Click “Add people” and enter your collaborator’s username or GitHub email address
-4. **Setup SSH key**: SSH provides a secure way to authenticate and transfer data between your local machine and GitHub. You can also use HTTPS if you prefer, but it is less secure. HTTPS avoids having to generate an SSH key, but you will need to enter your GitHub login credentials from time to time.
+4. **Setup SSH key**: SSH provides a secure way to authenticate and transfer data between your local machine and GitHub. You can also use HTTPS if you prefer. HTTPS avoids having to generate an SSH key, but you may need to enter your GitHub login credentials from time to time.
     12. Open GitBash (windows) or terminal (Mac) and run the following commands replacing the example email with your GitHub email:
         1. ssh-keygen -t ed25519 -C "your_github_email@address.com"
         2. cat ~/.ssh/id_ed25519.pub
