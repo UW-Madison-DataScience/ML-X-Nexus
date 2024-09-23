@@ -28,7 +28,7 @@ Deep learning (neural network training) can solve humanities challenges, too! Re
 
 Project GitHub: [github.com/alanngnet/CoverHunterMPS](https://github.com/alanngnet/CoverHunterMPS)
 
-# The Challenge
+## The Challenge
 
 Hey, this AI stuff isn't just for hard-science people, we can solve humanities challenges with it, too!
 
@@ -48,7 +48,7 @@ Some benefits of solving this challenge:
 
 - Now that I have solved this for Irish traditional music, how do we enable musicologists and musicians interested in all the other folk musics on planet Earth to create the same kind of solution for those musical cultures?
 
-# The Solution
+## The Solution
 
 For better or worse, commercial music is a big-money industry. That means there are both well-funded organizations involved as well as financial incentives to analyze and automate all sorts of business processes related to pop music. For example, social media platforms have to worry about copyright and licensing issues in any kind of social-media post that includes music in any form. Youtube or Tiktok, for example, need to make sure that your video of yourself singing a Taylor Swift song in the car doesn't get shared without the proper licensing fees being paid to the artist. And in order to do that, they needed to solve the problem of "What song is that?" in an automated way. So they have been funding CSI (Cover Song Identification) research for years, and that has occasionally shown up in public as open-source code repositories, like this ground-breaking one that appeared in July 2023 from an industry-funded team of researchers in China: [github.com/Liu-Feng-deeplearning/CoverHunter](https://github.com/Liu-Feng-deeplearning/CoverHunter)
 
@@ -82,17 +82,17 @@ In case you are interested in a more technical summary of the solution, it invol
 
 - Output of a 128-dimensional tensor (a 1x128-element array of numbers) that uniquely describes an audio performance. The tune-identification solution basically does a relatively simple mathematical comparison of the model-generated tensor for your mystery audio file against the model-generated tensors for all the known, identified audio files in your database, and finds the nearest neighbors for you.
 
-# How Good Is It?
+## How Good Is It?
 
 Here is a graph of mAP (mean average precision) during a late-August 2024 full training run using the K-fold cross-validation production-training tool in this project. 94% accuracy at identifying "easy reels" is very, very good! So is 74% accuracy for "hard reels," which are performances I selected as probably going to be challenging for any ML solution to be able to recognize. After using it in the real world in the last month to identify tunes on new audio recordings, I am confident that this solution performs better than any human expert will ever be able to, especially given that it spits out its best guess in a couple seconds! In this specialized niche, it is already "superhuman AI."
 
 ![Graph of training results for a production training run, measured as mAP (mean average precision) against two test datasets.](../../images/blog-content/blog-music-identification-mAPresults.png)
 
-# How Did I Learn How to Do This?
+## How Did I Learn How to Do This?
 
 Before this project, I had zero machine-learning experience, only intermediate-level Python experience, and a 30-year gap of disuse since my undergraduate coursework in college-level math.
 
-## Human Helpers
+### Human Helpers
 
 My first step in later 2023 - see the next section for the backstory before then - was to reach out to the global community of users of irishtune.info, as well as to the ML+X community here in Madison, to seek collaborators and advisors. That effort netted me several useful connections. 
 
@@ -102,7 +102,7 @@ A couple other Irish musicians who work in the data-science/"AI" industry respon
 
 Probably the most useful help I got was from [Samuel Gaulthier](https://www.facebook.com/sam.concertina/), an Irish musician in France who is a professional Python developer, even though he had no experience in machine learning. He got hands-on with me directly in my GitHub project, especially cleaning up and improving a lot of the inscrutable and inefficient code that the CoverHunter authors had left as-is during their creative but messy work of combining good ideas from other open-source machine learning projects.
 
-## AI Chat Assistants
+### AI Chat Assistants
 
 AI chat-based assistants were absolutely crucial in my ability to do this project, much less in a mere 6 months as a side hobby. I needed them for everything from explaining cryptic bits of Python code to me at just the right level for my background, to teaching me exactly the right bits of data science and machine learning literacy that I needed for this project, to writing first-through-twentieth drafts of a lot of the Python code I needed to add.
 
@@ -112,11 +112,11 @@ During early-mid 2024, I did frequent comparisons between getting help from Chat
 
 Especially powerful was my use of the "Project" feature of Claude Pro that came out earlier this summer, in which I could give it my whole project full of Python code and have it write high-quality Python code that is compatible with and efficiently leverages the rest of project, without my having to explain the background context. For example, the embedding-generation script (tools/make_embeds.py) was written by Claude Pro from scratch as a single response to a single prompt that worked on the first try. (I did eventually modify it further both by hand and with further Claude assistance.)
 
-## Google CoLab
+### Google CoLab
 
 Google CoLab was uniquely helpful to me very early on when I first attempted to get the CoverHunter code working. Having an industry-standard, pre-configured set of hardware and software available in CoLab - for free! - helped me figure out what problems might be unique to my own computer and software vs. what were basic problems in the CoverHunter code. And I hope it might continue to be useful to others attempting the same learning curve, since any interested passer-by curious to try  out my project can do so without having to set up or even have access to any particular hardware and software of their own.
 
-# Value for Other Purposes
+## Value for Other Purposes
 
 - I'm hopeful that my project will turn out to help solve other kinds of musicological mysteries than just tune identification. See [github.com/alanngnet/CoverHunterMPS#coverhuntermps](https://github.com/alanngnet/CoverHunterMPS#coverhuntermps) for some ideas I have.
 
