@@ -4,7 +4,7 @@ date: 2024-09-16
 author: 
   - "Tyler Bradshaw, PhD"
 image: "https://img.youtube.com/vi/milM6-2RF18/maxresdefault.jpg"
-description: "We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations."
+description: "ML4MI Seminar"
 
 language: 
   title-block-author-single: "Presenter"
@@ -17,46 +17,28 @@ categories:
   - ViT
   - UNET
   - Computer vision
+  - CNN
   - LLM
   - Deep learning
   - Multimodal learning
 ---
 ### About this resource
-In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Tyler Bradshaw provides some of the historical context leading up to vision-language models, and these models tend to be used in the field of radiology. Some key points include:
+In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Tyler Bradshaw (PhD) discusses the historical context (e.g., CNN, VGG) leading up to the new era of multimodal learning (e.g., vision-language models), and explores how these models are currently being leveraged in the radiology field. Some key points include:
 
-- UNET is a rockstar model 
-- Vision transformers 
+- Vision Timeline: CNN (vision, ~1989-2018) -> UNET (segmentation, 2015) -> Transformer -> Vision transformer
+  - place convnext somewhere in here, plz, chatGPT
+  - include the segment anything model
+- CNNs are still competitive with more modern (e.g., Vision-transformers or ViTs) and larger models. ViTs tend to only do better than CNNs when you have a massively large dataset. For midsized datasets (e.g., most medical datasets), CNNs may still hold the edge.
+- More marginal gains with these models as time goes on
+- The future of vision models may include foundation models, which are very large models trained on very large and diverse datasets. With these models, the goal is for the models to acquire world knowledge across a variety of domains; such that the model can perform downstream tasks better than a model specificly trained on such a downstream task. This is an active area of research, and how "foundational" these models truly are remains to be seen.
+- In a medical context, we can better predict the presence of tumor cells from  PET images by incorporating PET images from both before/after patient receives treatment. This temporal timeline act as support in the model's prediciton of tumor cells when there is low tumor contrast (e.g., after receiving treatment). The temporal aspect of this data is well-suited to a transformer. Summary sentence: ViTs allow you to model longitudinal effects.
 
-### Links & code
-- About the Speaker → [samgelman.com](https://samgelman.com)
-- Check out the [preprint](https://www.biorxiv.org/content/10.1101/2024.03.15.585128v1) 
-- All code is available under the MIT license. A collection of METL software repositories is provided to reproduce the results of this manuscript and run METL on new data:
-  - [github.com/gitter-lab/metl](https://github.com/gitter-lab/metl) for pretraining and finetuning METL PLMs (archived at doi:10.5281/zenodo.10819483)
-  - [github.com/gitter-lab/metl-sim](https://github.com/gitter-lab/metl-sim) for generating biophysical attributes with Rosetta (archived at doi:10.5281/zenodo.10819523)
-  - [github.com/gitter-lab/metl-pretrained](https://github.com/gitter-lab/metl-pretrained) for making predictions with pretrained METL PLMs (archived at doi:10.5281/zenodo.10819499)
-  - [github.com/gitter-lab/metl-pub](https://github.com/gitter-lab/metl-pub) for additional code and data to reproduce these results (archived at doi:10.5281/zenodo.10819536)
+- Language Timeline: TF-IDF -> Word2Vec & GloVe, 2013 -> Transformer, 2017 -> Bert, 2018 -> GPT
+- Transformers and language models, in general, form embeddings that represent words/tokens. Words of similar meanings will be grouped together closely in this embedding space. 
+- These embeddings are contextually aware: words that have different meanings in different contexts can be encoded using the self-attention mechanism, which...
+- LLMs can be used for report summarization (e.g., compared to physicians)
 
-{{< video https://www.youtube.com/watch?v=milM6-2RF18 >}}
+**Video (requires UW netID)**: This talk is made available through UW-Madison's Kaltura Mediaspace and requires a NetID to view: [View 24-09-16 ML4MI Recording](https://mediaspace.wisc.edu/media/Vision%2C+Language%2C+and+Vision-Language+Modeling+in+Radiology+-+Tyler+Bradshaw+-+Sep+2024/1_metec4s2/355339002).
 
-### Jump to section
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=181s" target="_blank">[3:01] Intro</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=307s" target="_blank">[5:03] Proteins as nature's molecular machines</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=360s" target="_blank">[6:58] Proteins defined by a sequence of amino acids</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=634s" target="_blank">[10:34] Challenge: Vastness of sequence space</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=678s" target="_blank">[11:18] Navigating sequence space</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=712s" target="_blank">[11:52] Challenge: Small changes can have a large impact</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=771s" target="_blank">[12:51] Protein language models (PLMs)</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=957s" target="_blank">[15:57] Incorporating biophysics</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1053s" target="_blank">[17:33] Mutational Effect Transfer Learning (METL)</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1190s" target="_blank">[19:50] Simulating protein structures with Rosetta</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1270s" target="_blank">[21:10] Local and global strategies for simulations</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1466s" target="_blank">[24:26] Train transformer encoder to predict Rosetta scores</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1538s" target="_blank">[25:38] Finetune to predict experimental fitness score</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1630s" target="_blank">[27:10] Evaluation baselines (evolutionary models): METL, ESM, and EVE</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1706s" target="_blank">[28:26] Generalizing from small datasets</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=1868s" target="_blank">[31:08] Extrapolating beyond train set</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=2030s" target="_blank">[33:50] Simulating specific functions</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=2146s" target="_blank">[35:46] How much simulated/experimental data is needed?</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=2281s" target="_blank">[38:01] Engineering GFP variants with METL</a>
-- <a href="https://www.youtube.com/watch?v=milM6-2RF18&t=2500s" target="_blank">[41:40] Q&A</a>
-
+## See also
+- [**Model**: UNET](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html): Learn more about the UNET model.
