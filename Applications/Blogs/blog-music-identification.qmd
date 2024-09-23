@@ -41,6 +41,7 @@ One side benefit of the manual work I've been doing for 30 years to carefully de
 Background explanation: Folk musicians in aurally transmitted traditions generally do not know the "identity" of tunes they play, especially not in any kind of broadly reliable or generally agreed-upon way other than as often-contradictory informal assertions, each held within a subset of the global community. Welcome to the fuzziness of humanities research! :)
 
 Some benefits of solving this challenge:
+
 - Accelerate my work as a human expert as I expand the coverage of albums represented in [irishtune.info](https://www.irishtune.info), which in turn benefits the global community of musicians and the health of the tradition itself. This goal was accomplished as of July 27, 2024, but refinement continues.
 
 - Empower the global community of Irish traditional musicians to identify their own tunes and recordings. (I am currently looking for help with this technical challenge.)
@@ -56,6 +57,7 @@ While humanities research would never get the resources to build a solution from
 And that's exactly what I did. I forked that CoverHunter project and the result is published as [github.com/alanngnet/CoverHunterMPS](https://github.com/alanngnet/CoverHunterMPS).
 
 It took about 6 months of:
+
 - Reverse-engineering the very poorly documented CoverHunter code to understand it enough to proceed.
 
 - Teaching myself just enough about machine learning, neural network training, and just enough new Python skills to proceed.
@@ -69,6 +71,7 @@ It took about 6 months of:
 - Adding features to take the CoverHunter solution, which was only built out enough to generate the training metrics needed to claim success as a CSI research breakthough, and turn it into a reliable, easy-to-use solution that answers "What tune is this?" for any arbitrary audio input.
 
 In case you are interested in a more technical summary of the solution, it involves:
+
 - Conversion of raw audio data to CQT (Constant-Q Transform) 2-D arrays, representing time and frequency dimensions that can also be treated as a visual picture of the audio, so that visual machine-learning methods and models could also be leveraged. For example, a single-instrument melody appears as a line moving vertically higher for higher notes and lower for lower notes, and longer horizontally when notes are sustained for a longer time. CQT is a well-established method of audio analysis in the larger academic research field of MIR (music information retrieval).
 
 - A lot of artificial data augmentation done both in pre-training preprocessing as well as on-the-fly augmentation done during training. For each real-world audio sample you give to this solution, it will generate 4 other variants in pre-processing, and then during training each of those will in turn get augmented (modified) in different, partly random ways during each training step. So by the end of a full training run, the model may have seen hundreds of artificial variants of each real-world data sample.
