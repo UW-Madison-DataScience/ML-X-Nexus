@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2024-10-07">
+
+<title>Titanic Dataset – Nexus: Crowdsourced ML Resources</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Titanic Dataset</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+    <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to contribute?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learn</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workshops</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Toolbox</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compute</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/EDA-examples/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EDA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/Highlights/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Highlights</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Highlights/Forums/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forums</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Highlights/SILO/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SILO</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Playlists/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Playlists</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Category glossary</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#titanic-eda-notebook" id="toc-titanic-eda-notebook" class="nav-link active" data-scroll-target="#titanic-eda-notebook">Titanic EDA Notebook</a>
+  <ul class="collapse">
+  <li><a href="#data-problem-intro" id="toc-data-problem-intro" class="nav-link" data-scroll-target="#data-problem-intro">Data &amp; Problem Intro</a></li>
+  <li><a href="#step-0-looking-up-each-feature" id="toc-step-0-looking-up-each-feature" class="nav-link" data-scroll-target="#step-0-looking-up-each-feature">Step 0: Looking Up Each Feature</a>
+  <ul class="collapse">
+  <li><a href="#titanic-dataset-features" id="toc-titanic-dataset-features" class="nav-link" data-scroll-target="#titanic-dataset-features">Titanic Dataset Features:</a></li>
+  </ul></li>
+  <li><a href="#step-1-visualizing-data-in-its-rawest-form" id="toc-step-1-visualizing-data-in-its-rawest-form" class="nav-link" data-scroll-target="#step-1-visualizing-data-in-its-rawest-form">Step 1: Visualizing data in its rawest form</a>
+  <ul class="collapse">
+  <li><a href="#import-libraries-and-load-dataset" id="toc-import-libraries-and-load-dataset" class="nav-link" data-scroll-target="#import-libraries-and-load-dataset">Import libraries and load dataset</a></li>
+  <li><a href="#insights" id="toc-insights" class="nav-link" data-scroll-target="#insights">Insights:</a></li>
+  </ul></li>
+  <li><a href="#step-2-check-data-types" id="toc-step-2-check-data-types" class="nav-link" data-scroll-target="#step-2-check-data-types">Step 2: Check data types</a></li>
+  <li><a href="#step-3-basic-statistics" id="toc-step-3-basic-statistics" class="nav-link" data-scroll-target="#step-3-basic-statistics">Step 3: Basic Statistics</a>
+  <ul class="collapse">
+  <li><a href="#insights-1" id="toc-insights-1" class="nav-link" data-scroll-target="#insights-1">Insights:</a></li>
+  <li><a href="#insights-2" id="toc-insights-2" class="nav-link" data-scroll-target="#insights-2">Insights:</a></li>
+  </ul></li>
+  <li><a href="#step-2.1-identifying-rare-categories" id="toc-step-2.1-identifying-rare-categories" class="nav-link" data-scroll-target="#step-2.1-identifying-rare-categories">Step 2.1: Identifying Rare Categories</a>
+  <ul class="collapse">
+  <li><a href="#insights-3" id="toc-insights-3" class="nav-link" data-scroll-target="#insights-3">Insights:</a></li>
+  </ul></li>
+  <li><a href="#step-3-counting-missing-values-nans" id="toc-step-3-counting-missing-values-nans" class="nav-link" data-scroll-target="#step-3-counting-missing-values-nans">Step 3: Counting Missing Values (NaNs)</a></li>
+  <li><a href="#step-3.1-visualizing-missing-data" id="toc-step-3.1-visualizing-missing-data" class="nav-link" data-scroll-target="#step-3.1-visualizing-missing-data">Step 3.1: Visualizing Missing Data</a>
+  <ul class="collapse">
+  <li><a href="#insights-4" id="toc-insights-4" class="nav-link" data-scroll-target="#insights-4">Insights:</a></li>
+  <li><a href="#insights-5" id="toc-insights-5" class="nav-link" data-scroll-target="#insights-5">Insights:</a></li>
+  <li><a href="#remove-nans" id="toc-remove-nans" class="nav-link" data-scroll-target="#remove-nans">Remove NaNs</a></li>
+  </ul></li>
+  <li><a href="#step-4-identifying-outliers-across-multiple-features" id="toc-step-4-identifying-outliers-across-multiple-features" class="nav-link" data-scroll-target="#step-4-identifying-outliers-across-multiple-features">Step 4: Identifying Outliers (Across Multiple Features)</a>
+  <ul class="collapse">
+  <li><a href="#why-look-for-outliers" id="toc-why-look-for-outliers" class="nav-link" data-scroll-target="#why-look-for-outliers">Why Look for Outliers?</a></li>
+  <li><a href="#insights-6" id="toc-insights-6" class="nav-link" data-scroll-target="#insights-6">Insights:</a></li>
+  </ul></li>
+  <li><a href="#step-5.1-probability-density-plot-for-fare" id="toc-step-5.1-probability-density-plot-for-fare" class="nav-link" data-scroll-target="#step-5.1-probability-density-plot-for-fare">Step 5.1: Probability Density Plot for Fare</a>
+  <ul class="collapse">
+  <li><a href="#insights-7" id="toc-insights-7" class="nav-link" data-scroll-target="#insights-7">Insights:</a></li>
+  </ul></li>
+  <li><a href="#step-5.2-log-scaling-for-fare" id="toc-step-5.2-log-scaling-for-fare" class="nav-link" data-scroll-target="#step-5.2-log-scaling-for-fare">Step 5.2: Log Scaling for Fare</a></li>
+  <li><a href="#step-6-exploring-correlations" id="toc-step-6-exploring-correlations" class="nav-link" data-scroll-target="#step-6-exploring-correlations">Step 6: Exploring Correlations</a></li>
+  <li><a href="#step-6.1-encode-categoriecal-data-as-numeric" id="toc-step-6.1-encode-categoriecal-data-as-numeric" class="nav-link" data-scroll-target="#step-6.1-encode-categoriecal-data-as-numeric">Step 6.1: Encode categoriecal data as numeric</a>
+  <ul class="collapse">
+  <li><a href="#insights-8" id="toc-insights-8" class="nav-link" data-scroll-target="#insights-8">Insights:</a></li>
+  </ul></li>
+  <li><a href="#step-6.1-pairplot-for-visualizing-pairwise-relationships" id="toc-step-6.1-pairplot-for-visualizing-pairwise-relationships" class="nav-link" data-scroll-target="#step-6.1-pairplot-for-visualizing-pairwise-relationships">Step 6.1: Pairplot for Visualizing Pairwise Relationships</a>
+  <ul class="collapse">
+  <li><a href="#insights-9" id="toc-insights-9" class="nav-link" data-scroll-target="#insights-9">Insights:</a></li>
+  </ul></li>
+  <li><a href="#conclusion-next-steps-for-modeling-and-iterative-eda" id="toc-conclusion-next-steps-for-modeling-and-iterative-eda" class="nav-link" data-scroll-target="#conclusion-next-steps-for-modeling-and-iterative-eda">Conclusion: Next Steps for Modeling and Iterative EDA</a>
+  <ul class="collapse">
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways:</a></li>
+  <li><a href="#inspirational-next-steps" id="toc-inspirational-next-steps" class="nav-link" data-scroll-target="#inspirational-next-steps">Inspirational Next Steps:</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/EDA-examples/Titanic-Dataset.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Titanic Dataset</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">EDA</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 7, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="titanic-eda-notebook" class="level1">
+<h1>Titanic EDA Notebook</h1>
+<p>Author: Chris Endemann (endemann@wisc.edu)</p>
+<section id="data-problem-intro" class="level3">
+<h3 class="anchored" data-anchor-id="data-problem-intro">Data &amp; Problem Intro</h3>
+<p>The Titanic dataset is a well-known dataset that contains information about the passengers of the Titanic ship.It includes variables such as age, gender, class, fare, and whether each passenger survived.</p>
+<p>The problem we are exploring is binary classification: predicting whether a passenger survived based on their features.The goal of this EDA is to uncover insights that can guide our modeling decisions, such as identifying important features, handling missing data, and addressing bias in the dataset (e.g., imbalances in survival rate by gender or class).</p>
+</section>
+<section id="step-0-looking-up-each-feature" class="level2">
+<h2 class="anchored" data-anchor-id="step-0-looking-up-each-feature">Step 0: Looking Up Each Feature</h2>
+<p>Before diving into the analysis, it’s important to understand what each feature in the dataset represents. This ensures we’re interpreting the data correctly and allows us to make informed decisions during the analysis.</p>
+<section id="titanic-dataset-features" class="level3">
+<h3 class="anchored" data-anchor-id="titanic-dataset-features">Titanic Dataset Features:</h3>
+<ul>
+<li><strong>survived</strong>: Whether the passenger survived (0 = No, 1 = Yes).</li>
+<li><strong>pclass</strong>: Ticket class (1 = 1st, 2 = 2nd, 3 = 3rd).</li>
+<li><strong>sex</strong>: Gender of the passenger.</li>
+<li><strong>age</strong>: Age of the passenger in years. Some values are missing.</li>
+<li><strong>sibsp</strong>: Number of siblings/spouses aboard the Titanic.</li>
+<li><strong>parch</strong>: Number of parents/children aboard the Titanic.</li>
+<li><strong>fare</strong>: Passenger fare.</li>
+<li><strong>embarked</strong>: Port of embarkation (C = Cherbourg; Q = Queenstown; S = Southampton).</li>
+<li><strong>class</strong>: Duplicate of ‘pclass’ (used for plotting by Seaborn).</li>
+<li><strong>who</strong>: Describes whether the passenger is a man, woman, or child.</li>
+<li><strong>adult_male</strong>: Indicates whether the passenger is an adult male (True/False).</li>
+<li><strong>deck</strong>: The deck the passenger was on (missing for many passengers).</li>
+<li><strong>embark_town</strong>: The name of the town where the passenger boarded.</li>
+<li><strong>alive</strong>: Indicator of whether the passenger survived (Yes/No, derived from ‘survived’).</li>
+<li><strong>alone</strong>: Indicates whether the passenger was traveling alone (True/False).</li>
+</ul>
+</section>
+</section>
+<section id="step-1-visualizing-data-in-its-rawest-form" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-visualizing-data-in-its-rawest-form">Step 1: Visualizing data in its rawest form</h2>
+<p>Let’s take a look at a small sample of the dataset to understand the raw data we’re working with. This gives us a chance to spot obvious issues or patterns.</p>
+<section id="import-libraries-and-load-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="import-libraries-and-load-dataset">Import libraries and load dataset</h3>
+<div id="KwXSUvuxAU6f" class="cell" data-outputid="78324c3f-a518-4686-d059-97af32f58f42" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the Titanic dataset from seaborn</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> sns.load_dataset(<span class="st">'titanic'</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows of the dataset</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">survived</th>
+<th data-quarto-table-cell-role="th">pclass</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sibsp</th>
+<th data-quarto-table-cell-role="th">parch</th>
+<th data-quarto-table-cell-role="th">fare</th>
+<th data-quarto-table-cell-role="th">embarked</th>
+<th data-quarto-table-cell-role="th">class</th>
+<th data-quarto-table-cell-role="th">who</th>
+<th data-quarto-table-cell-role="th">adult_male</th>
+<th data-quarto-table-cell-role="th">deck</th>
+<th data-quarto-table-cell-role="th">embark_town</th>
+<th data-quarto-table-cell-role="th">alive</th>
+<th data-quarto-table-cell-role="th">alone</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>22.0</td>
+<td>1</td>
+<td>0</td>
+<td>7.2500</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>1</td>
+<td>female</td>
+<td>38.0</td>
+<td>1</td>
+<td>0</td>
+<td>71.2833</td>
+<td>C</td>
+<td>First</td>
+<td>woman</td>
+<td>False</td>
+<td>C</td>
+<td>Cherbourg</td>
+<td>yes</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1</td>
+<td>3</td>
+<td>female</td>
+<td>26.0</td>
+<td>0</td>
+<td>0</td>
+<td>7.9250</td>
+<td>S</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>1</td>
+<td>female</td>
+<td>35.0</td>
+<td>1</td>
+<td>0</td>
+<td>53.1000</td>
+<td>S</td>
+<td>First</td>
+<td>woman</td>
+<td>False</td>
+<td>C</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>35.0</td>
+<td>0</td>
+<td>0</td>
+<td>8.0500</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="Evcu5I2oBAPG" class="cell" data-outputid="88dd76e7-dbf5-4b1f-8a3e-b0606c932020" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show a small random sample of the data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Sample of 10 passengers:"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.sample(<span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample of 10 passengers:</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">survived</th>
+<th data-quarto-table-cell-role="th">pclass</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sibsp</th>
+<th data-quarto-table-cell-role="th">parch</th>
+<th data-quarto-table-cell-role="th">fare</th>
+<th data-quarto-table-cell-role="th">embarked</th>
+<th data-quarto-table-cell-role="th">class</th>
+<th data-quarto-table-cell-role="th">who</th>
+<th data-quarto-table-cell-role="th">adult_male</th>
+<th data-quarto-table-cell-role="th">deck</th>
+<th data-quarto-table-cell-role="th">embark_town</th>
+<th data-quarto-table-cell-role="th">alive</th>
+<th data-quarto-table-cell-role="th">alone</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">684</td>
+<td>0</td>
+<td>2</td>
+<td>male</td>
+<td>60.0</td>
+<td>1</td>
+<td>1</td>
+<td>39.0000</td>
+<td>S</td>
+<td>Second</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">68</td>
+<td>1</td>
+<td>3</td>
+<td>female</td>
+<td>17.0</td>
+<td>4</td>
+<td>2</td>
+<td>7.9250</td>
+<td>S</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">606</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>30.0</td>
+<td>0</td>
+<td>0</td>
+<td>7.8958</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">140</td>
+<td>0</td>
+<td>3</td>
+<td>female</td>
+<td>NaN</td>
+<td>0</td>
+<td>2</td>
+<td>15.2458</td>
+<td>C</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Cherbourg</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">662</td>
+<td>0</td>
+<td>1</td>
+<td>male</td>
+<td>47.0</td>
+<td>0</td>
+<td>0</td>
+<td>25.5875</td>
+<td>S</td>
+<td>First</td>
+<td>man</td>
+<td>True</td>
+<td>E</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">506</td>
+<td>1</td>
+<td>2</td>
+<td>female</td>
+<td>33.0</td>
+<td>0</td>
+<td>2</td>
+<td>26.0000</td>
+<td>S</td>
+<td>Second</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">413</td>
+<td>0</td>
+<td>2</td>
+<td>male</td>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>0.0000</td>
+<td>S</td>
+<td>Second</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">424</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>18.0</td>
+<td>1</td>
+<td>1</td>
+<td>20.2125</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">338</td>
+<td>1</td>
+<td>3</td>
+<td>male</td>
+<td>45.0</td>
+<td>0</td>
+<td>0</td>
+<td>8.0500</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">682</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>20.0</td>
+<td>0</td>
+<td>0</td>
+<td>9.2250</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">387</td>
+<td>1</td>
+<td>2</td>
+<td>female</td>
+<td>36.0</td>
+<td>0</td>
+<td>0</td>
+<td>13.0000</td>
+<td>S</td>
+<td>Second</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">657</td>
+<td>0</td>
+<td>3</td>
+<td>female</td>
+<td>32.0</td>
+<td>1</td>
+<td>1</td>
+<td>15.5000</td>
+<td>Q</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Queenstown</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">391</td>
+<td>1</td>
+<td>3</td>
+<td>male</td>
+<td>21.0</td>
+<td>0</td>
+<td>0</td>
+<td>7.7958</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">368</td>
+<td>1</td>
+<td>3</td>
+<td>female</td>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>7.7500</td>
+<td>Q</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Queenstown</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">246</td>
+<td>0</td>
+<td>3</td>
+<td>female</td>
+<td>25.0</td>
+<td>0</td>
+<td>0</td>
+<td>7.7750</td>
+<td>S</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">300</td>
+<td>1</td>
+<td>3</td>
+<td>female</td>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>7.7500</td>
+<td>Q</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Queenstown</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">505</td>
+<td>0</td>
+<td>1</td>
+<td>male</td>
+<td>18.0</td>
+<td>1</td>
+<td>0</td>
+<td>108.9000</td>
+<td>C</td>
+<td>First</td>
+<td>man</td>
+<td>True</td>
+<td>C</td>
+<td>Cherbourg</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">398</td>
+<td>0</td>
+<td>2</td>
+<td>male</td>
+<td>23.0</td>
+<td>0</td>
+<td>0</td>
+<td>10.5000</td>
+<td>S</td>
+<td>Second</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">862</td>
+<td>1</td>
+<td>1</td>
+<td>female</td>
+<td>48.0</td>
+<td>0</td>
+<td>0</td>
+<td>25.9292</td>
+<td>S</td>
+<td>First</td>
+<td>woman</td>
+<td>False</td>
+<td>D</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">366</td>
+<td>1</td>
+<td>1</td>
+<td>female</td>
+<td>60.0</td>
+<td>1</td>
+<td>0</td>
+<td>75.2500</td>
+<td>C</td>
+<td>First</td>
+<td>woman</td>
+<td>False</td>
+<td>D</td>
+<td>Cherbourg</td>
+<td>yes</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">467</td>
+<td>0</td>
+<td>1</td>
+<td>male</td>
+<td>56.0</td>
+<td>0</td>
+<td>0</td>
+<td>26.5500</td>
+<td>S</td>
+<td>First</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">776</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>7.7500</td>
+<td>Q</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>F</td>
+<td>Queenstown</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">807</td>
+<td>0</td>
+<td>3</td>
+<td>female</td>
+<td>18.0</td>
+<td>0</td>
+<td>0</td>
+<td>7.7750</td>
+<td>S</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">298</td>
+<td>1</td>
+<td>1</td>
+<td>male</td>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>30.5000</td>
+<td>S</td>
+<td>First</td>
+<td>man</td>
+<td>True</td>
+<td>C</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">201</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>NaN</td>
+<td>8</td>
+<td>2</td>
+<td>69.5500</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">564</td>
+<td>0</td>
+<td>3</td>
+<td>female</td>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>8.0500</td>
+<td>S</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>no</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">362</td>
+<td>0</td>
+<td>3</td>
+<td>female</td>
+<td>45.0</td>
+<td>0</td>
+<td>1</td>
+<td>14.4542</td>
+<td>C</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Cherbourg</td>
+<td>no</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">208</td>
+<td>1</td>
+<td>3</td>
+<td>female</td>
+<td>16.0</td>
+<td>0</td>
+<td>0</td>
+<td>7.7500</td>
+<td>Q</td>
+<td>Third</td>
+<td>woman</td>
+<td>False</td>
+<td>NaN</td>
+<td>Queenstown</td>
+<td>yes</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">664</td>
+<td>1</td>
+<td>3</td>
+<td>male</td>
+<td>20.0</td>
+<td>1</td>
+<td>0</td>
+<td>7.9250</td>
+<td>S</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Southampton</td>
+<td>yes</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">203</td>
+<td>0</td>
+<td>3</td>
+<td>male</td>
+<td>45.5</td>
+<td>0</td>
+<td>0</td>
+<td>7.2250</td>
+<td>C</td>
+<td>Third</td>
+<td>man</td>
+<td>True</td>
+<td>NaN</td>
+<td>Cherbourg</td>
+<td>no</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="insights" class="level3">
+<h3 class="anchored" data-anchor-id="insights">Insights:</h3>
+<ul>
+<li>We see various features such as age, sex, class, fare, and whether the passenger survived.</li>
+<li>This helps us get a quick overview of what kind of data we’re working with, including potential issues like missing values.</li>
+<li>Appears we have some redundant columns.</li>
+<li>Some NaNs clearly visible in deck and age.</li>
+</ul>
+<section id="remove-redundant-columns" class="level4">
+<h4 class="anchored" data-anchor-id="remove-redundant-columns">Remove redundant columns</h4>
+<p>It looks like alive and survived are identical. Same for embarked and emback_town. Let’s run a check to see if these columns are truly identical and remove them, if so.</p>
+<div id="4oth-qmMAkYm" class="cell" data-outputid="17836d3b-2e74-4d2f-dff4-171406fbd2b7" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the two columns are identical</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>are_identical <span class="op">=</span> df[<span class="st">'survived'</span>].equals(df[<span class="st">'alive'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="dv">1</span> <span class="cf">if</span> x <span class="op">==</span> <span class="st">'yes'</span> <span class="cf">else</span> <span class="dv">0</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Are 'survived' and 'alive' identical? </span><span class="sc">{</span>are_identical<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Are 'survived' and 'alive' identical? True</code></pre>
+</div>
+</div>
+<div id="Ths0um_ZBHto" class="cell" data-outputid="8057781d-6461-4b8e-e5be-4cf30065abfc" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check unique values in both columns</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Unique values in 'embarked':"</span>, df[<span class="st">'embarked'</span>].unique())</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Unique values in 'embark_town':"</span>, df[<span class="st">'embark_town'</span>].unique())</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Map 'embarked' codes to 'embark_town' names</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>embarked_mapping <span class="op">=</span> {<span class="st">'S'</span>: <span class="st">'Southampton'</span>, <span class="st">'C'</span>: <span class="st">'Cherbourg'</span>, <span class="st">'Q'</span>: <span class="st">'Queenstown'</span>}</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the mapping to the 'embarked' column</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'embarked_mapped'</span>] <span class="op">=</span> df[<span class="st">'embarked'</span>].<span class="bu">map</span>(embarked_mapping)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the mapped 'embarked' column is identical to 'embark_town'</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>are_identical <span class="op">=</span> df[<span class="st">'embarked_mapped'</span>].equals(df[<span class="st">'embark_town'</span>])</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Are 'embarked' and 'embark_town' identical? </span><span class="sc">{</span>are_identical<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unique values in 'embarked': ['S' 'C' 'Q' nan]
+Unique values in 'embark_town': ['Southampton' 'Cherbourg' 'Queenstown' nan]
+Are 'embarked' and 'embark_town' identical? True</code></pre>
+</div>
+</div>
+<div id="2ZIwIaWQA4j5" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.drop(<span class="st">'alive'</span>,axis<span class="op">=</span><span class="dv">1</span>,inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df.drop(<span class="st">'embark_town'</span>,axis<span class="op">=</span><span class="dv">1</span>,inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df.drop(<span class="st">'embarked_mapped'</span>,axis<span class="op">=</span><span class="dv">1</span>,inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df.drop(<span class="st">'class'</span>,axis<span class="op">=</span><span class="dv">1</span>,inplace<span class="op">=</span><span class="va">True</span>) <span class="co">#explicitly equiv. from documentation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="step-2-check-data-types" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-check-data-types">Step 2: Check data types</h2>
+<div id="BT1hyZ-pV8XF" class="cell" data-outputid="1cc28853-848e-49d6-884b-b0261cb25213" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df.dtypes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>survived         int64
+pclass           int64
+sex             object
+age            float64
+sibsp            int64
+parch            int64
+fare           float64
+embarked        object
+who             object
+adult_male        bool
+deck          category
+alone             bool
+dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="step-3-basic-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-basic-statistics">Step 3: Basic Statistics</h2>
+<p>Now we’ll summarize the numerical and categorical columns to better understand the central tendencies, variability, and potential missing data.</p>
+<p>When exploring numerical data: - <strong>Mean vs Median</strong>: Compare the mean and median. If the mean is much higher or lower than the median, this suggests skewness in the data, possibly due to outliers. - <strong>Min and Max</strong>: Look at the minimum and maximum values to detect extreme outliers or potential data entry errors. - <strong>Standard deviation</strong>: A high standard deviation indicates that the data points are spread out over a wide range of values, while a low standard deviation suggests that data points are clustered around the mean.</p>
+<p>When exploring <strong>categorical data</strong>: - <strong>Unique counts</strong>: Check the number of unique categories. For example, the ‘sex’ column has two unique categories (‘male’ and ‘female’), while ‘pclass’ has three. - <strong>Mode</strong>: The mode (most frequent category) helps us understand which category dominates the dataset. For example, if most passengers are male or most belong to a particular class, this would inform our analysis. - <strong>Frequency distribution</strong>: Look at the frequency of each category to identify potential imbalances. For example, are there more passengers from a particular class or embarkation point? Imbalanced categories can bias the model if not handled properly. - <strong>Missing or rare categories</strong>: If a category has very few occurrences, this might suggest noise or anomalies in the data.</p>
+<div id="NLLehBBTBE2a" class="cell" data-outputid="329798ee-a7a2-4853-b543-7c966b899d11" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the numerical and categorical columns</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Basic statistics for numerical columns:"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>df.describe(include<span class="op">=</span><span class="st">'all'</span>) <span class="co"># include='all' ensures both numeric and binary features are described</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Basic statistics for numerical columns:</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">survived</th>
+<th data-quarto-table-cell-role="th">pclass</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sibsp</th>
+<th data-quarto-table-cell-role="th">parch</th>
+<th data-quarto-table-cell-role="th">fare</th>
+<th data-quarto-table-cell-role="th">embarked</th>
+<th data-quarto-table-cell-role="th">who</th>
+<th data-quarto-table-cell-role="th">adult_male</th>
+<th data-quarto-table-cell-role="th">deck</th>
+<th data-quarto-table-cell-role="th">alone</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>891.000000</td>
+<td>891.000000</td>
+<td>891</td>
+<td>714.000000</td>
+<td>891.000000</td>
+<td>891.000000</td>
+<td>891.000000</td>
+<td>889</td>
+<td>891</td>
+<td>891</td>
+<td>203</td>
+<td>891</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">unique</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>2</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td>7</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">top</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>male</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>S</td>
+<td>man</td>
+<td>True</td>
+<td>C</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">freq</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>577</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>644</td>
+<td>537</td>
+<td>537</td>
+<td>59</td>
+<td>537</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>0.383838</td>
+<td>2.308642</td>
+<td>NaN</td>
+<td>29.699118</td>
+<td>0.523008</td>
+<td>0.381594</td>
+<td>32.204208</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">std</td>
+<td>0.486592</td>
+<td>0.836071</td>
+<td>NaN</td>
+<td>14.526497</td>
+<td>1.102743</td>
+<td>0.806057</td>
+<td>49.693429</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">min</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>NaN</td>
+<td>0.420000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>0.000000</td>
+<td>2.000000</td>
+<td>NaN</td>
+<td>20.125000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>7.910400</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>0.000000</td>
+<td>3.000000</td>
+<td>NaN</td>
+<td>28.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>14.454200</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>1.000000</td>
+<td>3.000000</td>
+<td>NaN</td>
+<td>38.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>31.000000</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">max</td>
+<td>1.000000</td>
+<td>3.000000</td>
+<td>NaN</td>
+<td>80.000000</td>
+<td>8.000000</td>
+<td>6.000000</td>
+<td>512.329200</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="insights-1" class="level3">
+<h3 class="anchored" data-anchor-id="insights-1">Insights:</h3>
+<ul>
+<li><strong>Age</strong>: The mean age is around 30, but with missing values and some extreme values (min = 0.42, max = 80). The mean and median are close, suggesting a fairly symmetric distribution for most passengers.</li>
+<li><strong>Fare</strong>: The fare has a wide range, from 0 to 512. This large range and the difference between mean and median (mean &gt; median) suggest the presence of outliers, with some passengers paying much higher fares.</li>
+<li><strong>Parch and SibSp</strong>: Most passengers had few or no relatives onboard, with a median of 0 for both columns.</li>
+<li><strong>Pclass</strong>: Most passengers are in 3rd class (mode: 3).</li>
+</ul>
+<p>The df.describe(include=‘object’) part of the code is used to generate summary statistics specifically for categorical (or object) columns in a DataFrame.</p>
+<div id="canVv40UFY57" class="cell" data-outputid="d4dd6b5f-2b74-40a9-c352-a73c5c86ac74" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Basic statistics for categorical columns:"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df.describe(include<span class="op">=</span><span class="st">'object'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Basic statistics for categorical columns:</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">embarked</th>
+<th data-quarto-table-cell-role="th">who</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>891</td>
+<td>889</td>
+<td>891</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">unique</td>
+<td>2</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">top</td>
+<td>male</td>
+<td>S</td>
+<td>man</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">freq</td>
+<td>577</td>
+<td>644</td>
+<td>537</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="insights-2" class="level3">
+<h3 class="anchored" data-anchor-id="insights-2">Insights:</h3>
+<ul>
+<li>A significant portion of passengers did not survive (survival rate is less than 50%).</li>
+<li>There are more males than females in this data, with adult males being the most common (vs boys)</li>
+<li>Southampton (S) is the most common embarkation point (out of three options)</li>
+</ul>
+<p>While this summary provides useful information, it does not reveal the distribution of all categories, especially the rare categories. For instance, it only shows the most frequent category (the mode) and its frequency, but it doesn’t show how the other categories are distributed, especially if there are categories with very few occurrences.</p>
+</section>
+</section>
+<section id="step-2.1-identifying-rare-categories" class="level2">
+<h2 class="anchored" data-anchor-id="step-2.1-identifying-rare-categories">Step 2.1: Identifying Rare Categories</h2>
+<p>To detect rare categories in the dataset, we will examine the frequency distribution of each categorical column. This will help us understand if there are categories with very few occurrences, which could either be noise or anomalies.</p>
+<p>Rare categories are important to identify because they can introduce bias or affect model performance if not handled properly.</p>
+<div id="LOzLR7QzCjj2" class="cell" data-outputid="97e1d61d-42f4-426e-c0cd-32dad7cdc744" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency distribution for categorical columns</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> df.select_dtypes(include<span class="op">=</span><span class="st">'object'</span>).columns</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> categorical_cols:</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Value counts for </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">:"</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(df[col].value_counts())</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Value counts for sex:
+sex
+male      577
+female    314
+Name: count, dtype: int64
+
+
+Value counts for embarked:
+embarked
+S    644
+C    168
+Q     77
+Name: count, dtype: int64
+
+
+Value counts for who:
+who
+man      537
+woman    271
+child     83
+Name: count, dtype: int64
+
+</code></pre>
+</div>
+</div>
+<section id="insights-3" class="level3">
+<h3 class="anchored" data-anchor-id="insights-3">Insights:</h3>
+<ul>
+<li><strong>Sex</strong>: No rare categories, with a fairly even distribution between males and females.</li>
+<li><strong>Pclass</strong>: Most passengers are in 3rd class, but no rare categories.</li>
+<li><strong>Embarked</strong>: The ‘C’ and ‘Q’ embarkation points are far less common than ‘S’ (Southampton).</li>
+</ul>
+</section>
+</section>
+<section id="step-3-counting-missing-values-nans" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-counting-missing-values-nans">Step 3: Counting Missing Values (NaNs)</h2>
+<p>To get a better understanding of where data is missing, we’ll count the number of NaN values in each column. This is important for understanding which features will need imputation or may need to be excluded from analysis.</p>
+<div id="zdavDF5TEOjh" class="cell" data-outputid="4f3a5444-ab2a-44d2-bd20-7adfd9183700" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of NaN values in each column</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Number of NaNs per column:"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.isna().<span class="bu">sum</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of NaNs per column:
+survived        0
+pclass          0
+sex             0
+age           177
+sibsp           0
+parch           0
+fare            0
+embarked        2
+who             0
+adult_male      0
+deck          688
+alone           0
+dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="step-3.1-visualizing-missing-data" class="level2">
+<h2 class="anchored" data-anchor-id="step-3.1-visualizing-missing-data">Step 3.1: Visualizing Missing Data</h2>
+<p>Visualizing missing data helps us understand how much data is missing and where. This informs how we should handle missing values during preprocessing.</p>
+<p>The ‘age’ column has many missing values, which could affect our analysis, especially when trying to assess survival rates across different age groups. One potential approach to deal with missing ‘age’ values is to use the ‘who’ feature, which categorizes passengers as men, women, or children. By looking at the distribution of age within each ‘who’ group, we could potentially im</p>
+<div id="9x2gPkaoIsdk" class="cell" data-outputid="b7ba76b1-cb30-478a-a991-89fe24535211" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> missingno <span class="im">as</span> msno</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize missing data using missingno</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>msno.matrix(df)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>msno.bar(df)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-12-output-1.png" width="1963" height="882" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-12-output-2.png" width="1972" height="919" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="insights-4" class="level3">
+<h3 class="anchored" data-anchor-id="insights-4">Insights:</h3>
+<ul>
+<li>The ‘age’ and ‘deck’ columns have a significant number of missing values.</li>
+<li>‘embarked’ has a couple of missing values</li>
+<li>We’ll need to decide how to handle these NaNs before proceeding with modeling. The ‘deck’ column may have too many missing values to be useful without significant imputation.</li>
+</ul>
+<div id="ocFGp75g6bOi" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove deck column (not enough info here)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df.drop([<span class="st">'deck'</span>],axis<span class="op">=</span><span class="dv">1</span>,inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="WxdildJSJgzT" class="cell" data-outputid="ba77c253-2a9f-47f9-cf58-68770813a65d" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's explore the relationship between 'who' and 'age' to see if we can use 'who' for imputing missing ages</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x<span class="op">=</span><span class="st">'who'</span>, y<span class="op">=</span><span class="st">'age'</span>, data<span class="op">=</span>df)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Age Distribution by Who (Men, Women, Children)"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-14-output-1.png" width="585" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="insights-5" class="level3">
+<h3 class="anchored" data-anchor-id="insights-5">Insights:</h3>
+<ul>
+<li>The ‘age’ column has many missing values, and visualizing the missing data shows that age is a significant feature with gaps. We need to address this issue to avoid biasing the model.</li>
+<li>By plotting ‘age’ against ‘who’, we see distinct distributions: children tend to be younger, while men and women have overlapping but distinct age ranges.</li>
+<li>A potential strategy is to impute missing age values based on the ‘who’ category, filling in likely ages for children, women, and men based on these distributions.</li>
+<li>This could provide a more accurate imputation than using the overall mean or median, especially in the case of children who are expected to have significantly lower ages.</li>
+</ul>
+</section>
+<section id="remove-nans" class="level3">
+<h3 class="anchored" data-anchor-id="remove-nans">Remove NaNs</h3>
+<p>Imputing age could be a good stratgey here. For simplicity, we will just remove the rows where age has any NaNs, but keep in mind that this effectively tosses out ~20% of the data/information we have. In a real-world scenario, imputing is worth testing out.</p>
+<div id="uK9r9VCi6_MV" class="cell" data-outputid="e9e2e9e7-a22b-4c81-9f34-214a7c294de4" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop all rows containing NaN values</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.shape)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df.dropna()</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>df_clean.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(891, 11)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>(712, 11)</code></pre>
+</div>
+</div>
+<div id="omXn0W2i-L5A" class="cell" data-outputid="963993a1-ba63-4073-f300-7059bb583e41" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of NaN values in each column</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Number of NaNs per column:"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_clean.isna().<span class="bu">sum</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of NaNs per column:
+survived      0
+pclass        0
+sex           0
+age           0
+sibsp         0
+parch         0
+fare          0
+embarked      0
+who           0
+adult_male    0
+alone         0
+dtype: int64</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="step-4-identifying-outliers-across-multiple-features" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-identifying-outliers-across-multiple-features">Step 4: Identifying Outliers (Across Multiple Features)</h2>
+<p>Outliers can distort model performance and influence the relationships between features. We will use boxplots to identify outliers across multiple numerical columns, including ‘age’, ‘fare’, ‘sibsp’, and ‘parch’.</p>
+<section id="why-look-for-outliers" class="level3">
+<h3 class="anchored" data-anchor-id="why-look-for-outliers">Why Look for Outliers?</h3>
+<ul>
+<li><strong>Age</strong>: Extreme values (e.g., very young or old passengers) might influence survival predictions.</li>
+<li><strong>Fare</strong>: We’ve already identified skewness in the fare data, and high fares could represent wealthy individuals who had better chances of survival.</li>
+</ul>
+<div id="Xj6XmP1UJ3zr" class="cell" data-outputid="4f036c94-ef62-4b3d-ba07-c44e36ed3136" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create boxplots for multiple numerical features to check for outliers</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>numerical_cols <span class="op">=</span> [<span class="st">'age'</span>, <span class="st">'fare'</span>]</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> numerical_cols:</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(x<span class="op">=</span>df_clean[col])</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Boxplot of </span><span class="sc">{</span>col<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-17-output-1.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-17-output-2.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="insights-6" class="level3">
+<h3 class="anchored" data-anchor-id="insights-6">Insights:</h3>
+<ul>
+<li><strong>Age</strong>: Most passengers fall within a reasonable range, but there are a few extreme values for older passengers. These could be outliers that might need special attention during modeling.</li>
+<li><strong>Fare</strong>: The boxplot confirms the presence of outliers, with several passengers paying significantly more than the majority.</li>
+</ul>
+</section>
+</section>
+<section id="step-5.1-probability-density-plot-for-fare" class="level2">
+<h2 class="anchored" data-anchor-id="step-5.1-probability-density-plot-for-fare">Step 5.1: Probability Density Plot for Fare</h2>
+<p>In addition to the boxplot for identifying outliers, we can draw a probability density plot (PDF) to visualize the overall distribution of the ‘fare’ column.</p>
+<p>This plot will show the likelihood of different fare values occurring, highlighting any skewness or concentration of values in certain ranges.</p>
+<div id="6o76wqE5LJxb" class="cell" data-outputid="cc39e8ba-618a-46bb-eacd-7cd69e0c35f3" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the probability density plot (PDF) for fare</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>sns.kdeplot(df_clean[<span class="st">'fare'</span>].dropna(), fill<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Plot for Fare"</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Fare"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-18-output-1.png" width="614" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="insights-7" class="level3">
+<h3 class="anchored" data-anchor-id="insights-7">Insights:</h3>
+<ul>
+<li>The PDF for the fare column shows a strong right skew, with most passengers paying lower fares, but a few passengers paying significantly higher fares.</li>
+<li>This confirms the presence of outliers at the higher end, which we also observed in the boxplot.</li>
+<li>The density plot helps visualize how fares are concentrated in lower ranges and taper off gradually toward the higher end.</li>
+</ul>
+</section>
+</section>
+<section id="step-5.2-log-scaling-for-fare" class="level2">
+<h2 class="anchored" data-anchor-id="step-5.2-log-scaling-for-fare">Step 5.2: Log Scaling for Fare</h2>
+<p>To deal with the strong skewness and outliers in the ‘fare’ column, we can apply a log transformation. This will compress the range of the fare values, reducing the influence of extreme outliers while keeping the relative differences intact.</p>
+<p>Log scaling is particularly useful for highly skewed distributions, making them more normal-like and easier for models to handle.</p>
+<div id="EmY3COTGLs77" class="cell" data-outputid="05ce6b1b-f3c7-403e-e11a-242b4f3aa8c1" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply log scaling to the fare column (adding 1 to avoid log(0))</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>df_clean.loc[:, <span class="st">'log_fare'</span>] <span class="op">=</span> df_clean[<span class="st">'fare'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: np.log(x <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the PDF for the log-transformed fare column</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>sns.kdeplot(df_clean[<span class="st">'log_fare'</span>].dropna(), fill<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Plot for Log-Scaled Fare"</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Log(Fare + 1)"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_2156/3551019692.py:3: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_clean.loc[:, 'log_fare'] = df_clean['fare'].apply(lambda x: np.log(x + 1))</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-19-output-2.png" width="589" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-6-exploring-correlations" class="level2">
+<h2 class="anchored" data-anchor-id="step-6-exploring-correlations">Step 6: Exploring Correlations</h2>
+<p>Next, we’ll check for correlations between numerical features. This helps us see whether some features are strongly related and could introduce multicollinearity.</p>
+<p>For example: - Correlations close to 1 or -1 indicate a strong relationship between features. - Correlations close to 0 indicate little to no linear relationship between features.</p>
+</section>
+<section id="step-6.1-encode-categoriecal-data-as-numeric" class="level2">
+<h2 class="anchored" data-anchor-id="step-6.1-encode-categoriecal-data-as-numeric">Step 6.1: Encode categoriecal data as numeric</h2>
+<p>Encoding the categorical data will allow us to measure correlations across different levels of our categorical variables. Encoded data is also needed for the modeling step. After encoding, you may want to visit some of the previous steps in this notebook to ensure there aren’t any problems with the encoded version of the data. Some people like to encode right after loading their data, but this can make the data unnecessarily complicated while we do some basic browsing of the data (e.g., check for redundnat columns, check for NaNs, check data types, etc.)</p>
+<p>Code explanation:</p>
+<ul>
+<li>pd.get_dummies(df, drop_first=True): This one-hot encodes all categorical columns, converting them into binary columns. The drop_first=True argument prevents multicollinearity by removing one of the categories in each column (since they are mutually exclusive).</li>
+</ul>
+<div id="lzdLJD_4ClnT" class="cell" data-outputid="4c3c907a-12e7-4a02-d884-9b3d4e5b621e" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One-hot encode the categorical columns in the dataset</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>df_encoded <span class="op">=</span> pd.get_dummies(df, drop_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>df_encoded.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">survived</th>
+<th data-quarto-table-cell-role="th">pclass</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sibsp</th>
+<th data-quarto-table-cell-role="th">parch</th>
+<th data-quarto-table-cell-role="th">fare</th>
+<th data-quarto-table-cell-role="th">adult_male</th>
+<th data-quarto-table-cell-role="th">alone</th>
+<th data-quarto-table-cell-role="th">sex_male</th>
+<th data-quarto-table-cell-role="th">embarked_Q</th>
+<th data-quarto-table-cell-role="th">embarked_S</th>
+<th data-quarto-table-cell-role="th">who_man</th>
+<th data-quarto-table-cell-role="th">who_woman</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>3</td>
+<td>22.0</td>
+<td>1</td>
+<td>0</td>
+<td>7.2500</td>
+<td>True</td>
+<td>False</td>
+<td>True</td>
+<td>False</td>
+<td>True</td>
+<td>True</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>1</td>
+<td>38.0</td>
+<td>1</td>
+<td>0</td>
+<td>71.2833</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1</td>
+<td>3</td>
+<td>26.0</td>
+<td>0</td>
+<td>0</td>
+<td>7.9250</td>
+<td>False</td>
+<td>True</td>
+<td>False</td>
+<td>False</td>
+<td>True</td>
+<td>False</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>1</td>
+<td>35.0</td>
+<td>1</td>
+<td>0</td>
+<td>53.1000</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>True</td>
+<td>False</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0</td>
+<td>3</td>
+<td>35.0</td>
+<td>0</td>
+<td>0</td>
+<td>8.0500</td>
+<td>True</td>
+<td>True</td>
+<td>True</td>
+<td>False</td>
+<td>True</td>
+<td>True</td>
+<td>False</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Code explanation.</p>
+<ul>
+<li>corr_matrix_encoded = df_encoded.corr(): This computes the correlation matrix for both the numerical and newly one-hot encoded features.</li>
+<li>Seaborn heatmap: The heatmap will visualize correlations across all features, both numerical and categorical (now encoded).</li>
+</ul>
+<div id="1_tWTPd_-yrm" class="cell" data-outputid="24739113-3d11-4883-8614-47db4bd8d8aa" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the correlation matrix for all features (including one-hot encoded)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>corr_matrix_encoded <span class="op">=</span> df_encoded.corr()</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the heatmap of the correlation matrix</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">12</span>))</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>sns.heatmap(corr_matrix_encoded, annot<span class="op">=</span><span class="va">False</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Correlation Matrix (Numerical and One-Hot Encoded Features)"</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>corr_matrix_encoded</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-21-output-1.png" width="1219" height="1020" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">survived</th>
+<th data-quarto-table-cell-role="th">pclass</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sibsp</th>
+<th data-quarto-table-cell-role="th">parch</th>
+<th data-quarto-table-cell-role="th">fare</th>
+<th data-quarto-table-cell-role="th">adult_male</th>
+<th data-quarto-table-cell-role="th">alone</th>
+<th data-quarto-table-cell-role="th">sex_male</th>
+<th data-quarto-table-cell-role="th">embarked_Q</th>
+<th data-quarto-table-cell-role="th">embarked_S</th>
+<th data-quarto-table-cell-role="th">who_man</th>
+<th data-quarto-table-cell-role="th">who_woman</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">survived</td>
+<td>1.000000</td>
+<td>-0.338481</td>
+<td>-0.077221</td>
+<td>-0.035322</td>
+<td>0.081629</td>
+<td>0.257307</td>
+<td>-0.557080</td>
+<td>-0.203367</td>
+<td>-0.543351</td>
+<td>0.003650</td>
+<td>-0.155660</td>
+<td>-0.557080</td>
+<td>0.506562</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">pclass</td>
+<td>-0.338481</td>
+<td>1.000000</td>
+<td>-0.369226</td>
+<td>0.083081</td>
+<td>0.018443</td>
+<td>-0.549500</td>
+<td>0.094035</td>
+<td>0.135207</td>
+<td>0.131900</td>
+<td>0.221009</td>
+<td>0.081720</td>
+<td>0.094035</td>
+<td>-0.177049</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">age</td>
+<td>-0.077221</td>
+<td>-0.369226</td>
+<td>1.000000</td>
+<td>-0.308247</td>
+<td>-0.189119</td>
+<td>0.096067</td>
+<td>0.280328</td>
+<td>0.198270</td>
+<td>0.093254</td>
+<td>-0.022405</td>
+<td>-0.032523</td>
+<td>0.280328</td>
+<td>0.105081</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sibsp</td>
+<td>-0.035322</td>
+<td>0.083081</td>
+<td>-0.308247</td>
+<td>1.000000</td>
+<td>0.414838</td>
+<td>0.159651</td>
+<td>-0.253586</td>
+<td>-0.584471</td>
+<td>-0.114631</td>
+<td>-0.026354</td>
+<td>0.070941</td>
+<td>-0.253586</td>
+<td>0.047071</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">parch</td>
+<td>0.081629</td>
+<td>0.018443</td>
+<td>-0.189119</td>
+<td>0.414838</td>
+<td>1.000000</td>
+<td>0.216225</td>
+<td>-0.349943</td>
+<td>-0.583398</td>
+<td>-0.245489</td>
+<td>-0.081228</td>
+<td>0.063036</td>
+<td>-0.349943</td>
+<td>0.150167</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">fare</td>
+<td>0.257307</td>
+<td>-0.549500</td>
+<td>0.096067</td>
+<td>0.159651</td>
+<td>0.216225</td>
+<td>1.000000</td>
+<td>-0.182024</td>
+<td>-0.271832</td>
+<td>-0.182333</td>
+<td>-0.117216</td>
+<td>-0.166603</td>
+<td>-0.182024</td>
+<td>0.191243</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">adult_male</td>
+<td>-0.557080</td>
+<td>0.094035</td>
+<td>0.280328</td>
+<td>-0.253586</td>
+<td>-0.349943</td>
+<td>-0.182024</td>
+<td>1.000000</td>
+<td>0.404744</td>
+<td>0.908578</td>
+<td>-0.076789</td>
+<td>0.112035</td>
+<td>1.000000</td>
+<td>-0.814281</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">alone</td>
+<td>-0.203367</td>
+<td>0.135207</td>
+<td>0.198270</td>
+<td>-0.584471</td>
+<td>-0.583398</td>
+<td>-0.271832</td>
+<td>0.404744</td>
+<td>1.000000</td>
+<td>0.303646</td>
+<td>0.086464</td>
+<td>0.024929</td>
+<td>0.404744</td>
+<td>-0.211036</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sex_male</td>
+<td>-0.543351</td>
+<td>0.131900</td>
+<td>0.093254</td>
+<td>-0.114631</td>
+<td>-0.245489</td>
+<td>-0.182333</td>
+<td>0.908578</td>
+<td>0.303646</td>
+<td>1.000000</td>
+<td>-0.074115</td>
+<td>0.125722</td>
+<td>0.908578</td>
+<td>-0.896214</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">embarked_Q</td>
+<td>0.003650</td>
+<td>0.221009</td>
+<td>-0.022405</td>
+<td>-0.026354</td>
+<td>-0.081228</td>
+<td>-0.117216</td>
+<td>-0.076789</td>
+<td>0.086464</td>
+<td>-0.074115</td>
+<td>1.000000</td>
+<td>-0.496624</td>
+<td>-0.076789</td>
+<td>0.100544</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">embarked_S</td>
+<td>-0.155660</td>
+<td>0.081720</td>
+<td>-0.032523</td>
+<td>0.070941</td>
+<td>0.063036</td>
+<td>-0.166603</td>
+<td>0.112035</td>
+<td>0.024929</td>
+<td>0.125722</td>
+<td>-0.496624</td>
+<td>1.000000</td>
+<td>0.112035</td>
+<td>-0.119217</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">who_man</td>
+<td>-0.557080</td>
+<td>0.094035</td>
+<td>0.280328</td>
+<td>-0.253586</td>
+<td>-0.349943</td>
+<td>-0.182024</td>
+<td>1.000000</td>
+<td>0.404744</td>
+<td>0.908578</td>
+<td>-0.076789</td>
+<td>0.112035</td>
+<td>1.000000</td>
+<td>-0.814281</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">who_woman</td>
+<td>0.506562</td>
+<td>-0.177049</td>
+<td>0.105081</td>
+<td>0.047071</td>
+<td>0.150167</td>
+<td>0.191243</td>
+<td>-0.814281</td>
+<td>-0.211036</td>
+<td>-0.896214</td>
+<td>0.100544</td>
+<td>-0.119217</td>
+<td>-0.814281</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="insights-8" class="level3">
+<h3 class="anchored" data-anchor-id="insights-8">Insights:</h3>
+<ul>
+<li>There is a strong correlation between ‘fare’ and ‘pclass’, which makes sense since higher-class tickets typically have higher fares.</li>
+<li>‘SibSp’ and ‘Parch’ have a weak positive correlation, indicating that larger families might be traveling together.</li>
+<li>There aren’t many strong correlations with ‘survived’, suggesting that more advanced feature engineering might be needed to improve model performance.</li>
+<li>who_man and adult_male are 100% correlated. We can remove one of these columns.</li>
+</ul>
+<p><strong>Pro-tip</strong>: The variance-inflation factor score can also be very helpful for assessing correlation. This measure looks at how well you can predict a given predictor (y) using all other predictors (X) as input variables to a linear regression model. The nice thing about it is that it gives you a different score for each predictor, which can be helpful when deciding which problematic features to remove.</p>
+<div id="qTvqsjJ6HYGa" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df_encoded.drop(<span class="st">'who_man'</span>,axis<span class="op">=</span><span class="dv">1</span>,inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="step-6.1-pairplot-for-visualizing-pairwise-relationships" class="level2">
+<h2 class="anchored" data-anchor-id="step-6.1-pairplot-for-visualizing-pairwise-relationships">Step 6.1: Pairplot for Visualizing Pairwise Relationships</h2>
+<p>We’ll use Seaborn’s pairplot to visualize pairwise relationships between the numerical features, colored by whether the passenger survived.</p>
+<p>This can help us identify any patterns or clusters that may inform our modeling decisions.</p>
+<div id="Egyidy8eMmDG" class="cell" data-outputid="008c9a0c-728c-44e7-e097-aed3ec3b310c" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pairplot to explore relationships between features, colored by 'survived'</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df_encoded, hue<span class="op">=</span><span class="st">'survived'</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Titanic-Dataset_files/figure-html/cell-23-output-1.png" width="2686" height="2593" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="insights-9" class="level3">
+<h3 class="anchored" data-anchor-id="insights-9">Insights:</h3>
+<ul>
+<li>The pairplot shows some separation between survivors and non-survivors for certain features, such as ‘pclass’ and ‘adult_male’</li>
+<li>The pairwise relationships between ‘age’, ‘fare’, and other numerical features are not perfectly linear, suggesting that non-linear models might perform better.</li>
+<li>Visualizing these relationships helps in identifying where additional feature engineering may be required to boost model performance.</li>
+</ul>
+</section>
+</section>
+<section id="conclusion-next-steps-for-modeling-and-iterative-eda" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-next-steps-for-modeling-and-iterative-eda">Conclusion: Next Steps for Modeling and Iterative EDA</h2>
+<p>Now that we’ve explored the Titanic dataset through extensive EDA, we’ve gained valuable insights that can guide our next steps in the modeling process. However, it’s important to remember that EDA is not a one-time process—it’s iterative and should continue as new patterns or issues arise during modeling.</p>
+<section id="key-takeaways" class="level3">
+<h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways:</h3>
+<ol type="1">
+<li><strong>Feature Engineering</strong>:
+<ul>
+<li>We’ve identified that the ‘fare’ and ‘pclass’ columns are strongly correlated, suggesting that we might combine or transform these features for better model performance.</li>
+<li>Log scaling ‘fare’ has helped reduce skewness, making this feature more suitable for modeling. We can apply similar transformations to other skewed features as necessary.</li>
+<li>Features like ‘who’ and ‘age’ might benefit from imputation or interaction terms to capture deeper relationships with survival outcomes.</li>
+</ul></li>
+<li><strong>Handling Missing Data</strong>:
+<ul>
+<li>‘Age’ and ‘deck’ have substantial missing values. Imputing missing values based on insights from other features (e.g., using ‘who’ to impute ‘age’) could improve model robustness. Alternatively, we could explore more advanced techniques like multiple imputation or train models that handle missing data natively.</li>
+</ul></li>
+<li><strong>Addressing Outliers</strong>:
+<ul>
+<li>The high outliers in ‘fare’ present a potential challenge for models like linear regression. In addition to log scaling, other techniques such as robust models or trimming/capping the extreme values could be useful.</li>
+</ul></li>
+<li><strong>Model Selection</strong>:
+<ul>
+<li>With weak correlations between ‘survived’ and other numerical features, we may need to consider more complex, non-linear models like random forests, gradient boosting, or even deep learning methods that can capture non-linear patterns and interactions.</li>
+<li>The insights from the pairplot suggest that non-linear relationships might exist between certain features, making tree-based models or ensemble methods a promising direction.</li>
+</ul></li>
+<li><strong>Iterative EDA</strong>:
+<ul>
+<li>EDA doesn’t end here. As we start building models, we may encounter unexpected patterns or issues (e.g., poor model performance on certain subgroups, overfitting due to outliers). This will prompt us to revisit the EDA, iterating on feature engineering, transforming variables, or handling missing data more effectively.</li>
+<li>Evaluating model performance through techniques like cross-validation will provide additional insights, leading to further refinements in both data preprocessing and feature selection.</li>
+</ul></li>
+</ol>
+</section>
+<section id="inspirational-next-steps" class="level3">
+<h3 class="anchored" data-anchor-id="inspirational-next-steps">Inspirational Next Steps:</h3>
+<ul>
+<li><strong>Begin Modeling</strong>: Start by testing simple models (e.g., logistic regression) with the current feature set to get a baseline understanding of model performance. Use these models as a foundation for experimenting with more advanced methods.</li>
+<li><strong>Keep Exploring</strong>: Stay curious and open to revisiting your EDA. As you iterate through feature engineering and model development, new questions will arise that could lead to even deeper insights.</li>
+<li><strong>Experiment</strong>: Try different combinations of features, scaling techniques, and models. Use the insights from the EDA to inform these decisions but be prepared to experiment and validate your assumptions.</li>
+<li><strong>Iterate and Improve</strong>: Each iteration of modeling and EDA will bring you closer to a robust solution. Keep refining your approach as new patterns emerge and as your understanding of the dataset deepens.</li>
+</ul>
+<p>Remember, successful data science projects are not linear—they involve constant refinement, exploration, and learning. Keep iterating, keep questioning, and keep improving!</p>
+<p>Good luck on your journey from EDA to building powerful predictive models!</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/UW-Madison-DataScience\.github\.io\/ML-X-Nexus\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/EDA-examples/Titanic-Dataset.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
