@@ -86,7 +86,6 @@ It looks like alive and survived are identical. Same for embarked and emback_tow
 ```{python}
 #| id: 4oth-qmMAkYm
 #| colab: {base_uri: 'https://localhost:8080/'}
-#| id: 4oth-qmMAkYm
 #| outputId: 17836d3b-2e74-4d2f-dff4-171406fbd2b7
 # Check if the two columns are identical
 are_identical = df['survived'].equals(df['alive'].apply(lambda x: 1 if x == 'yes' else 0))
@@ -98,7 +97,6 @@ print(f"Are 'survived' and 'alive' identical? {are_identical}")
 ```{python}
 #| id: Ths0um_ZBHto
 #| colab: {base_uri: 'https://localhost:8080/'}
-#| id: Ths0um_ZBHto
 #| outputId: 8057781d-6461-4b8e-e5be-4cf30065abfc
 # Check unique values in both columns
 print("Unique values in 'embarked':", df['embarked'].unique())
@@ -119,7 +117,6 @@ print(f"Are 'embarked' and 'embark_town' identical? {are_identical}")
 
 ```{python}
 #| id: 2ZIwIaWQA4j5
-#| id: 2ZIwIaWQA4j5
 df.drop('alive',axis=1,inplace=True)
 df.drop('embark_town',axis=1,inplace=True)
 df.drop('embarked_mapped',axis=1,inplace=True)
@@ -131,7 +128,6 @@ df.drop('class',axis=1,inplace=True) #explicitly equiv. from documentation
 ```{python}
 #| id: BT1hyZ-pV8XF
 #| colab: {base_uri: 'https://localhost:8080/', height: 429}
-#| id: BT1hyZ-pV8XF
 #| outputId: 1cc28853-848e-49d6-884b-b0261cb25213
 df.dtypes
 ```
@@ -153,7 +149,6 @@ When exploring **categorical data**:
 ```{python}
 #| id: NLLehBBTBE2a
 #| colab: {base_uri: 'https://localhost:8080/', height: 432}
-#| id: NLLehBBTBE2a
 #| outputId: 329798ee-a7a2-4853-b543-7c966b899d11
 # Summarize the numerical and categorical columns
 print("\nBasic statistics for numerical columns:")
@@ -172,7 +167,6 @@ The df.describe(include='object') part of the code is used to generate summary s
 ```{python}
 #| id: canVv40UFY57
 #| colab: {base_uri: 'https://localhost:8080/', height: 213}
-#| id: canVv40UFY57
 #| outputId: d4dd6b5f-2b74-40a9-c352-a73c5c86ac74
 print("\nBasic statistics for categorical columns:")
 df.describe(include='object')
@@ -194,7 +188,6 @@ Rare categories are important to identify because they can introduce bias or aff
 ```{python}
 #| id: LOzLR7QzCjj2
 #| colab: {base_uri: 'https://localhost:8080/'}
-#| id: LOzLR7QzCjj2
 #| outputId: 97e1d61d-42f4-426e-c0cd-32dad7cdc744
 # Frequency distribution for categorical columns
 categorical_cols = df.select_dtypes(include='object').columns
@@ -217,7 +210,6 @@ This is important for understanding which features will need imputation or may n
 ```{python}
 #| id: zdavDF5TEOjh
 #| colab: {base_uri: 'https://localhost:8080/'}
-#| id: zdavDF5TEOjh
 #| outputId: 4f3a5444-ab2a-44d2-bd20-7adfd9183700
 # Count the number of NaN values in each column
 print("Number of NaNs per column:")
@@ -232,7 +224,6 @@ The 'age' column has many missing values, which could affect our analysis, espec
 ```{python}
 #| id: 9x2gPkaoIsdk
 #| colab: {base_uri: 'https://localhost:8080/', height: 1000}
-#| id: 9x2gPkaoIsdk
 #| outputId: b7ba76b1-cb30-478a-a991-89fe24535211
 import missingno as msno
 
@@ -251,7 +242,6 @@ plt.show()
 
 ```{python}
 #| id: ocFGp75g6bOi
-#| id: ocFGp75g6bOi
 # remove deck column (not enough info here)
 df.drop(['deck'],axis=1,inplace=True)
 ```
@@ -259,7 +249,6 @@ df.drop(['deck'],axis=1,inplace=True)
 ```{python}
 #| id: WxdildJSJgzT
 #| colab: {base_uri: 'https://localhost:8080/', height: 472}
-#| id: WxdildJSJgzT
 #| outputId: ba77c253-2a9f-47f9-cf58-68770813a65d
 # Let's explore the relationship between 'who' and 'age' to see if we can use 'who' for imputing missing ages
 sns.boxplot(x='who', y='age', data=df)
@@ -279,7 +268,6 @@ Imputing age could be a good stratgey here. For simplicity, we will just remove 
 ```{python}
 #| id: uK9r9VCi6_MV
 #| colab: {base_uri: 'https://localhost:8080/'}
-#| id: uK9r9VCi6_MV
 #| outputId: e9e2e9e7-a22b-4c81-9f34-214a7c294de4
 # Drop all rows containing NaN values
 print(df.shape)
@@ -290,7 +278,6 @@ df_clean.shape
 ```{python}
 #| id: omXn0W2i-L5A
 #| colab: {base_uri: 'https://localhost:8080/'}
-#| id: omXn0W2i-L5A
 #| outputId: 963993a1-ba63-4073-f300-7059bb583e41
 # Count the number of NaN values in each column
 print("Number of NaNs per column:")
@@ -307,7 +294,6 @@ Outliers can distort model performance and influence the relationships between f
 ```{python}
 #| id: Xj6XmP1UJ3zr
 #| colab: {base_uri: 'https://localhost:8080/', height: 927}
-#| id: Xj6XmP1UJ3zr
 #| outputId: 4f036c94-ef62-4b3d-ba07-c44e36ed3136
 import seaborn as sns
 # Create boxplots for multiple numerical features to check for outliers
@@ -331,7 +317,6 @@ This plot will show the likelihood of different fare values occurring, highlight
 ```{python}
 #| id: 6o76wqE5LJxb
 #| colab: {base_uri: 'https://localhost:8080/', height: 472}
-#| id: 6o76wqE5LJxb
 #| outputId: cc39e8ba-618a-46bb-eacd-7cd69e0c35f3
 # Plot the probability density plot (PDF) for fare
 sns.kdeplot(df_clean['fare'].dropna(), fill=True)
@@ -354,7 +339,6 @@ Log scaling is particularly useful for highly skewed distributions, making them 
 ```{python}
 #| id: EmY3COTGLs77
 #| colab: {base_uri: 'https://localhost:8080/', height: 585}
-#| id: EmY3COTGLs77
 #| outputId: 05ce6b1b-f3c7-403e-e11a-242b4f3aa8c1
 import numpy as np
 # Apply log scaling to the fare column (adding 1 to avoid log(0))
@@ -386,7 +370,6 @@ Code explanation:
 ```{python}
 #| id: lzdLJD_4ClnT
 #| colab: {base_uri: 'https://localhost:8080/', height: 206}
-#| id: lzdLJD_4ClnT
 #| outputId: 4c3c907a-12e7-4a02-d884-9b3d4e5b621e
 # One-hot encode the categorical columns in the dataset
 df_encoded = pd.get_dummies(df, drop_first=True)
@@ -401,7 +384,6 @@ Code explanation.
 ```{python}
 #| id: 1_tWTPd_-yrm
 #| colab: {base_uri: 'https://localhost:8080/', height: 1000}
-#| id: 1_tWTPd_-yrm
 #| outputId: 24739113-3d11-4883-8614-47db4bd8d8aa
 # Calculate the correlation matrix for all features (including one-hot encoded)
 corr_matrix_encoded = df_encoded.corr()
@@ -424,7 +406,6 @@ corr_matrix_encoded
 
 ```{python}
 #| id: qTvqsjJ6HYGa
-#| id: qTvqsjJ6HYGa
 df_encoded.drop('who_man',axis=1,inplace=True)
 ```
 
@@ -436,7 +417,6 @@ This can help us identify any patterns or clusters that may inform our modeling 
 ```{python}
 #| id: Egyidy8eMmDG
 #| colab: {base_uri: 'https://localhost:8080/', height: 1000}
-#| id: Egyidy8eMmDG
 #| outputId: 008c9a0c-728c-44e7-e097-aed3ec3b310c
 # Pairplot to explore relationships between features, colored by 'survived'
 sns.pairplot(df_encoded, hue='survived', diag_kind='kde')
