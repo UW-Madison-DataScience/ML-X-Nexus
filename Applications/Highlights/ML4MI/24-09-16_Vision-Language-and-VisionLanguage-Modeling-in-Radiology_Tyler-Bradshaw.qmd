@@ -23,22 +23,49 @@ categories:
   - Multimodal learning
 ---
 ### About this resource
-In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Tyler Bradshaw (PhD) discusses the historical context (e.g., CNN, VGG) leading up to the new era of multimodal learning (e.g., vision-language models), and explores how these models are currently being leveraged in the radiology field. Some key points include:
-
-- Vision Timeline: CNN (vision, ~1989-2018) -> UNET (segmentation, 2015) -> Transformer -> Vision transformer
-  - place convnext somewhere in here, plz, chatGPT
-  - include the segment anything model
-- CNNs are still competitive with more modern (e.g., Vision-transformers or ViTs) and larger models. ViTs tend to only do better than CNNs when you have a massively large dataset. For midsized datasets (e.g., most medical datasets), CNNs may still hold the edge.
-- More marginal gains with these models as time goes on
-- The future of vision models may include foundation models, which are very large models trained on very large and diverse datasets. With these models, the goal is for the models to acquire world knowledge across a variety of domains; such that the model can perform downstream tasks better than a model specificly trained on such a downstream task. This is an active area of research, and how "foundational" these models truly are remains to be seen.
-- In a medical context, we can better predict the presence of tumor cells from  PET images by incorporating PET images from both before/after patient receives treatment. This temporal timeline act as support in the model's prediciton of tumor cells when there is low tumor contrast (e.g., after receiving treatment). The temporal aspect of this data is well-suited to a transformer. Summary sentence: ViTs allow you to model longitudinal effects.
-
-- Language Timeline: TF-IDF -> Word2Vec & GloVe, 2013 -> Transformer, 2017 -> Bert, 2018 -> GPT
-- Transformers and language models, in general, form embeddings that represent words/tokens. Words of similar meanings will be grouped together closely in this embedding space. 
-- These embeddings are contextually aware: words that have different meanings in different contexts can be encoded using the self-attention mechanism, which...
-- LLMs can be used for report summarization (e.g., compared to physicians)
+In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Tyler Bradshaw (PhD) discusses the historical context (e.g., CNN, VGG) leading up to the new era of multimodal learning (e.g., vision-language models), and explores how these models are currently being leveraged in the radiology field.
 
 **Video (requires UW netID)**: This talk is made available through UW-Madison's Kaltura Mediaspace and requires a NetID to view: [View 24-09-16 ML4MI Recording](https://mediaspace.wisc.edu/media/Vision%2C+Language%2C+and+Vision-Language+Modeling+in+Radiology+-+Tyler+Bradshaw+-+Sep+2024/1_metec4s2/355339002).
+
+### Key Points
+
+#### Vision Models
+- **Vision Timeline:** CNN (vision, ~1989-2018) → UNET (segmentation, 2015) → Transformer → Vision Transformer
+  - **ConvNext:** A convolutional network that refines CNN architectures for modern deep learning challenges. Introduced as a bridge between traditional CNNs and transformers, it maintains CNN's competitive performance while incorporating elements that make transformers excel in large data environments.
+  - **Segment Anything Model (SAM):** This model introduces a breakthrough in segmentation tasks by allowing for zero-shot generalization across a wide range of segmentation applications.
+  
+- CNNs remain competitive with more modern models like Vision Transformers (ViTs). ViTs tend to outperform CNNs only when there are very large datasets. For midsized datasets, especially in medical imaging, CNNs may still hold an advantage.
+  
+- **Future of Vision Models:** The future may include **foundation models**—very large models trained on extensive and diverse datasets. These models aim to acquire world knowledge across various domains, potentially outperforming models specifically trained on individual tasks. However, the extent to which these models will become "foundational" is still under research.
+  
+- **Medical Context Example:** We can better predict tumor presence from PET images by incorporating both pre-treatment and post-treatment images. This temporal timeline supports tumor prediction when contrast is low, and ViTs are well-suited to model these longitudinal effects.
+
+#### Language Models
+- **Language Timeline:** TF-IDF → Word2Vec & GloVe (2013) → Transformer (2017) → BERT and GPT (2018)
+  
+- Transformers and language models generate embeddings that represent words/tokens. Words with similar meanings are placed closer together in the embedding space.
+
+- These embeddings are **contextually aware**, allowing words with different meanings in different contexts to be encoded effectively using the self-attention mechanism.
+
+- LLMs can learn patterns in sequential data, making them broadly applicable for various tasks (e.g., text as sequences, images as sequences of pixels, videos as sequences of frames).
+
+- In medical settings, LLMs can be used for report summarization, offering comparisons to physician-generated reports.
+
+#### Vision-Language Models
+- **How are vision-language models developed?**
+
+- One popular approach for training multimodal models is **contrastive learning**. This method pairs image and text data, training the model to push similar pairs closer together in the embedding space while pulling dissimilar pairs apart. 
+
+- **CLIP (Contrastive Language-Image Pretraining):** This model represents one of the most prominent examples of a contrastive learning-based vision-language model. CLIP learns to associate images and text by mapping them into a shared embedding space, enabling zero-shot capabilities for tasks like image classification.
+
+- **Knowledge-Grounded Adaptation Strategy for Vision-Language Models:** One example is a unique case set built for screening mammograms for residents' training. This strategy uses knowledge-grounded adaptation to tailor VLMs for medical applications, enhancing the performance in specific tasks like mammogram screening.
+
+- **Late-Fusion VLM with Cross Attention (VilBERT):** Late-fusion VLMs like VilBERT use separate encoders for vision and text and apply cross-attention to fuse the information. This approach enables each modality to process information independently before fusing representations, often enhancing performance on tasks like Visual Question Answering (VQA).
+
+- **ConTEXTual Net:** This model combines text and PET scan data for segmentation tasks, leveraging the additional contextual information from text to improve accuracy in medical image analysis.
+
+- **Early-Fusion VLMs:** In early-fusion VLMs, image and text data are combined at an early stage in the model, allowing joint processing of the modalities. GPT-4 was trained using this approach, integrating images and text to enhance multimodal understanding. The **LLaVA (Large Language and Vision Assistant)** model also follows a similar training process, allowing for improved performance across multimodal tasks.
+
 
 ## See also
 - [**Model**: UNET](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html): Learn more about the UNET model.
