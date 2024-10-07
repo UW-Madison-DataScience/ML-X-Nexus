@@ -251,8 +251,13 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
   <li><a href="#timeline-context" id="toc-timeline-context" class="nav-link" data-scroll-target="#timeline-context">Timeline Context</a></li>
-  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  <li><a href="#u-net-variants" id="toc-u-net-variants" class="nav-link" data-scroll-target="#u-net-variants">U-Net Variants</a></li>
+  <li><a href="#sandbox" id="toc-sandbox" class="nav-link" data-scroll-target="#sandbox">Sandbox</a>
+  <ul class="collapse">
+  <li><a href="#tutorials-and-getting-started-notebooks" id="toc-tutorials-and-getting-started-notebooks" class="nav-link" data-scroll-target="#tutorials-and-getting-started-notebooks">Tutorials and Getting Started Notebooks</a></li>
+  <li><a href="#related-datasets-kaggle-challenges" id="toc-related-datasets-kaggle-challenges" class="nav-link" data-scroll-target="#related-datasets-kaggle-challenges">Related Datasets &amp; Kaggle Challenges</a></li>
+  </ul></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/UNET.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
@@ -308,32 +313,64 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Data Efficiency</strong>: U-Net is effective even with relatively small datasets, a common scenario in medical and specialized imaging tasks.</li>
 </ul>
 </section>
+</section>
+<section id="timeline-context" class="level2">
+<h2 class="anchored" data-anchor-id="timeline-context">Timeline Context</h2>
+<p>U-Net has been pivotal in advancing image segmentation since its introduction in 2015. Here is a timeline placing U-Net in the broader context of computer vision model development.</p>
+<ul>
+<li><strong><a href="http://yann.lecun.com/exdb/lenet/">LeNet (1998)</a></strong>: One of the first CNN architectures for digit recognition.</li>
+<li><strong><a href="https://dl.acm.org/doi/10.1145/3065386">AlexNet (2012)</a></strong>: Significantly improved CNN performance using deep learning and GPUs for large-scale image classification.</li>
+<li><strong><a href="https://arxiv.org/abs/1409.1556">VGGNet (2014)</a></strong>: Simplified CNN architecture by using small convolutional filters, deeper layers.</li>
+<li><strong><a href="https://arxiv.org/abs/1411.4038">Fully Convolutional Networks (FCN) (2014)</a></strong>: Pioneered fully convolutional networks for image segmentation.</li>
+<li><strong><a href="https://arxiv.org/abs/1511.00561">SegNet (2015)</a></strong>: Encoder-decoder architecture optimized for road scene segmentation.</li>
+<li><strong><a href="https://arxiv.org/abs/1505.04597">U-Net (2015)</a></strong>: Designed for biomedical image segmentation with an encoder-decoder architecture and skip connections.</li>
+<li><strong><a href="https://arxiv.org/abs/1512.03385">ResNet (2015)</a></strong>: Introduced residual learning to address vanishing gradient problems in deep networks.</li>
+<li><strong><a href="https://arxiv.org/abs/1703.06870">Mask R-CNN (2017)</a></strong>: Extended Faster R-CNN for pixel-level segmentation tasks.</li>
+<li><strong><a href="https://arxiv.org/abs/2010.11929">Vision Transformer (ViT) (2020)</a></strong>: Applied transformer models for image classification tasks.</li>
+<li><strong><a href="https://arxiv.org/abs/2103.14030">Swin Transformer (2021)</a></strong>: Hierarchical transformer for vision tasks with improved efficiency.</li>
+<li><strong><a href="https://segment-anything.com/">Segment Anything (SAM) (2023)</a></strong>: A foundation model for segmentation, offering high generalization across image domains.</li>
+</ul>
+</section>
+<section id="u-net-variants" class="level2">
+<h2 class="anchored" data-anchor-id="u-net-variants">U-Net Variants</h2>
+<ul>
+<li><strong>Attention U-Net</strong>: Introduces attention mechanisms to U-Net for more accurate segmentation.</li>
+<li><strong>3D U-Net</strong>: Designed for 3D medical imaging tasks such as volumetric segmentation.</li>
+<li><strong>ResUnet</strong>: Combines U-Net with residual connections for enhanced performance in complex tasks.</li>
+</ul>
+</section>
+<section id="sandbox" class="level2">
+<h2 class="anchored" data-anchor-id="sandbox">Sandbox</h2>
+<section id="tutorials-and-getting-started-notebooks" class="level3">
+<h3 class="anchored" data-anchor-id="tutorials-and-getting-started-notebooks">Tutorials and Getting Started Notebooks</h3>
+<ul>
+<li><strong>TODO</strong>: PyTorch tutorial using U-Net for semantic segmentation tasks. Other tutorials also welcome.</li>
+</ul>
+</section>
+<section id="related-datasets-kaggle-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="related-datasets-kaggle-challenges">Related Datasets &amp; Kaggle Challenges</h3>
+<ul>
+<li><strong><a href="http://medicaldecathlon.com/">Medical Decathlon Dataset</a></strong>: A popular benchmark dataset for biomedical image segmentation.</li>
+<li><strong><a href="https://www.kaggle.com/competitions/uw-madison-gi-tract-image-segmentation">UW Madison GI Tract Image Segmentation</a></strong>: Vehicle image segmentation challenge.</li>
+<li><strong><a href="https://challenge.isic-archive.com/">ISIC Skin Cancer Segmentation</a></strong>: Dataset and challenges for skin lesion segmentation.</li>
+</ul>
 <section id="high-level-tips-for-effective-use" class="level4">
 <h4 class="anchored" data-anchor-id="high-level-tips-for-effective-use">High-Level Tips for Effective Use</h4>
 <ul>
+<li><strong>Pre-trained Encoders</strong>: Consider using pre-trained encoders from models like ResNet or EfficientNet to improve performance.</li>
+<li><strong>Regularization Techniques</strong>: Apply dropout, early stopping, or weight decay to prevent overfitting, especially on small datasets.</li>
 <li><strong>Data Augmentation</strong>: Employ data augmentation techniques when working with small datasets to improve model generalization.</li>
 <li><strong>Optimizing Loss Function</strong>: Use specialized loss functions such as Dice coefficient or Intersection over Union (IoU) for pixel-wise optimization.</li>
 <li><strong>Architectural Adjustments</strong>: Depending on your dataset size, experiment with deeper or shallower architectures to balance overfitting and underfitting risks.</li>
 </ul>
 </section>
 </section>
-<section id="timeline-context" class="level2">
-<h2 class="anchored" data-anchor-id="timeline-context">Timeline Context</h2>
-<p>U-Net has been pivotal in advancing image segmentation since its introduction in 2015. Here is a timeline placing U-Net in the broader context of computer vision model development:</p>
-<p>LeNet (1998) ➔ AlexNet (2012) ➔ VGGNet (2014) ➔ Fully Convolutional Networks (FCN) (2014) ➔ SegNet (2015) ➔ U-Net (2015) ➔ ResNet (2015) ➔ Mask R-CNN (2017) ➔ Vision Transformer (ViT) (2020) ➔ Swin Transformer (2021) ➔ Segment Anything (SAM) (2023)</p>
-</section>
-<section id="prerequisites" class="level2">
-<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
-<ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html">Introduction to Deep Learning with PyTorch</a></li>
-</ul>
 </section>
 <section id="see-also" class="level2">
-<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<h2 class="anchored" data-anchor-id="see-also">See Also</h2>
 <ul>
-<li>TODO: model card</li>
-<li>TODO: colab notebook (PyTorch)</li>
-<li>TODO: colab notebook (Keras)</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/monai.html"><strong>Model hub</strong>: MONAI - Medical Open Network for AI</a></li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Introduction to Deep Learning with PyTorch</a></li>
 </ul>
 
 
