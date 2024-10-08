@@ -71,7 +71,7 @@ print("Sample of 10 passengers:")
 df.sample(30)
 ```
 
-### Insights:
+### Insights
 - We see various features such as age, sex, class, fare, and whether the passenger survived.
 - This helps us get a quick overview of what kind of data we're working with, including potential issues like missing values.
 - Appears we have some redundant columns.
@@ -152,7 +152,7 @@ print("\nBasic statistics for numerical columns:")
 df.describe(include='all') # include='all' ensures both numeric and binary features are described
 ```
 
-### Insights:
+### Insights
 - **Age**: The mean age is around 30, but with missing values and some extreme values (min = 0.42, max = 80). The mean and median are close, suggesting a fairly symmetric distribution for most passengers.
 - **Fare**: The fare has a wide range, from 0 to 512. This large range and the difference between mean and median (mean > median) suggest the presence of outliers, with some passengers paying much higher fares.
 - **Parch and SibSp**: Most passengers had few or no relatives onboard, with a median of 0 for both columns.
@@ -169,7 +169,7 @@ print("\nBasic statistics for categorical columns:")
 df.describe(include='object')
 ```
 
-### Insights:
+### Insights
 - A significant portion of passengers did not survive (survival rate is less than 50%).
 - There are more males than females in this data, with adult males being the most common (vs boys)
 - Southampton (S) is the most common embarkation point (out of three options)
@@ -195,7 +195,7 @@ for col in categorical_cols:
     print("\n")
 ```
 
-### Insights:
+### Insights
 - **Sex**: No rare categories, with a fairly even distribution between males and females.
 - **Pclass**: Most passengers are in 3rd class, but no rare categories.
 - **Embarked**: The 'C' and 'Q' embarkation points are far less common than 'S' (Southampton).
@@ -232,7 +232,7 @@ msno.bar(df)
 plt.show()
 ```
 
-### Insights:
+### Insights
 - The 'age' and 'deck' columns have a significant number of missing values.
 - 'embarked' has a couple of missing values
 - We'll need to decide how to handle these NaNs before proceeding with modeling. The 'deck' column may have too many missing values to be useful without significant imputation.
@@ -253,7 +253,7 @@ plt.title("Age Distribution by Who (Men, Women, Children)")
 plt.show()
 ```
 
-### Insights:
+### Insights
 - The 'age' column has many missing values, and visualizing the missing data shows that age is a significant feature with gaps. We need to address this issue to avoid biasing the model.
 - By plotting 'age' against 'who', we see distinct distributions: children tend to be younger, while men and women have overlapping but distinct age ranges.
 - A potential strategy is to impute missing age values based on the 'who' category, filling in likely ages for children, women, and men based on these distributions.
@@ -302,7 +302,7 @@ for col in numerical_cols:
     plt.show()
 ```
 
-### Insights:
+### Insights
 - **Age**: Most passengers fall within a reasonable range, but there are a few extreme values for older passengers. These could be outliers that might need special attention during modeling.
 - **Fare**: The boxplot confirms the presence of outliers, with several passengers paying significantly more than the majority.
 
@@ -323,7 +323,7 @@ plt.ylabel("Density")
 plt.show()
 ```
 
-### Insights:
+### Insights
 - The PDF for the fare column shows a strong right skew, with most passengers paying lower fares, but a few passengers paying significantly higher fares.
 - This confirms the presence of outliers at the higher end, which we also observed in the boxplot.
 - The density plot helps visualize how fares are concentrated in lower ranges and taper off gradually toward the higher end.
@@ -393,7 +393,7 @@ plt.show()
 corr_matrix_encoded
 ```
 
-### Insights:
+### Insights
 - There is a strong correlation between 'fare' and 'pclass', which makes sense since higher-class tickets typically have higher fares.
 - 'SibSp' and 'Parch' have a weak positive correlation, indicating that larger families might be traveling together.
 - There aren’t many strong correlations with 'survived', suggesting that more advanced feature engineering might be needed to improve model performance.
@@ -420,7 +420,7 @@ sns.pairplot(df_encoded, hue='survived', diag_kind='kde')
 plt.show()
 ```
 
-### Insights:
+### Insights
 - The pairplot shows some separation between survivors and non-survivors for certain features, such as 'pclass' and 'adult_male'
 - The pairwise relationships between 'age', 'fare', and other numerical features are not perfectly linear, suggesting that non-linear models might perform better.
 - Visualizing these relationships helps in identifying where additional feature engineering may be required to boost model performance.
