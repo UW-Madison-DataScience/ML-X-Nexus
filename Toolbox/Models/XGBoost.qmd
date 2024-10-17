@@ -1,0 +1,75 @@
+---
+title: "XGBoost: Tree-Based Gradient Boosting for Tabular Data"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+    
+date: 2024-10-17
+date-format: long
+image: "../../../images/XGBoost.png"
+
+categories: 
+  - Machine learning
+  - Gradient boosting
+  - Decision trees
+  - Tabular data
+  - Models
+---
+## About this resource
+
+XGBoost, or eXtreme Gradient Boosting, is a machine learning algorithm built upon the foundation of decision trees, extending their power through boosting. Originally introduced by Tianqi Chen in 2016, XGBoost has revolutionized predictive modeling, especially for tabular data, thanks to its efficiency, scalability, and performance. It is particularly well-suited for tasks like regression, classification, and ranking, where interpretability, speed, and precision are key.
+
+## Tree-based learning and enhancements in XGBoost
+At its core, XGBoost uses decision trees to model complex patterns in data, applying **gradient boosting** to improve model accuracy:
+
+- **Additive learning**: XGBoost builds trees sequentially, where each new tree focuses on the residuals (errors) of the previous trees.
+- **Gradient boosting**: By minimizing a loss function (using gradient descent), XGBoost creates an ensemble of decision trees that progressively improve predictions.
+
+### Enhancements
+- **Regularization**: XGBoost applies L1 (Lasso) and L2 (Ridge) regularization to control model complexity and reduce overfitting.
+- **Pruning**: Decision trees in XGBoost are pruned during training to avoid overfitting and maintain generalization ability.
+- **Missing data handling**: XGBoost can automatically handle missing data, making it particularly robust for real-world datasets.
+
+## Comparisons to deep learning
+While deep learning excels at tasks like image recognition and natural language processing, XGBoost often **outperforms deep learning models on tabular data**, especially in the following scenarios:
+
+- **Small to medium-sized datasets**: Deep learning models require large amounts of data to perform well, whereas XGBoost can achieve high accuracy even with smaller datasets.
+- **Medical contexts**: In medical datasets, where structured/tabular data is prevalent, XGBoost often outperforms deep learning due to its efficiency and the importance of feature engineering.
+- **Faster training Time**: XGBoost is much faster to train compared to deep learning models, making it ideal for applications with limited computational resources or time constraints.
+
+### Interpretability
+XGBoost offers greater interpretability than deep learning models, but it is less interpretable than simpler models like decision trees or linear regressions:
+
+- **Feature Importance**: XGBoost provides feature importance scores, showing which features contribute the most to model accuracy.
+- **Ensemble Complexity**: While individual trees in the XGBoost ensemble are interpretable, the combined model (with potentially hundreds of trees) can be difficult to fully explain.
+- **SHAP Values and LIME**: These tools allow you to understand how each feature influences predictions both locally (for individual instances) and globally (across the whole model).
+
+## Timeline context
+XGBoost builds on a rich history of decision tree-based models. Here's how it fits into the broader development of machine learning models that rely on trees:
+
+- **[CART (1984)](https://en.wikipedia.org/wiki/Decision_tree_learning)**: The foundation of decision tree algorithms, focusing on binary splits of data based on feature values.
+- **[Random Forest (2001)](https://en.wikipedia.org/wiki/Random_forest)**: Combines many independent decision trees for better accuracy and robustness by reducing variance through bootstrapping.
+- **[Gradient Boosting Machines (1999)](https://www.researchgate.net/publication/233878227_Gradient_Boosting_Machine_for_Classification)**: Introduces boosting, sequentially building trees that focus on correcting errors made by previous models.
+- **[XGBoost (2016)](https://arxiv.org/abs/1603.02754)**: An optimized implementation of gradient boosting, which leverages tree-based models and introduces regularization, parallelism, and handling of missing values.
+- **[CatBoost (2018)](https://arxiv.org/abs/1706.09516)**: Introduced categorical feature handling directly in gradient boosting.
+
+## XGBoost variants
+- **XGBoost with DART**: Modifies the traditional tree boosting approach by dropping trees randomly during training, preventing overfitting and improving generalization.
+- **XGBoost with Linear Booster**: Instead of building trees, this variant uses a linear model as the base learner, blending gradient boosting with linear regression or classification.
+
+## Model playground
+#### Tutorials and Getting Started Notebooks
+- **XGBoost**: Check out the [XGBoost Python Documentation](https://xgboost.readthedocs.io/en/latest/python/index.html) for installation, basic usage, and advanced tuning tips.
+
+#### High-level tips for effective sse
+- **Hyperparameter tuning**: Parameters like max depth and learning rate control the complexity and speed of the trees; tuning these is crucial for optimal performance.
+- **Handling missing Data**: XGBoost's ability to handle missing values natively means there’s no need for complex imputation strategies.
+- **Early stopping**: Use early stopping with cross-validation to prevent overfitting, especially when training deep trees.
+- **Imbalanced datasets**: Adjust the `scale_pos_weight` parameter to manage class imbalance in datasets, like those seen in fraud detection or rare event classification.
+  
+#### Related datasets & Kaggle challenges
+- **[Ames House Price Prediction](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)**: A regression task where XGBoost often outperforms deep learning due to the tabular nature of the data.
+- **[Disaster Tweets Classification](https://www.kaggle.com/c/nlp-getting-started)**: A classification task that involves text, but XGBoost can excel with good feature engineering.
+
+## Questions?
+If you have any lingering questions about this resource, feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
