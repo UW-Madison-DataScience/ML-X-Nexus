@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -262,8 +296,9 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#loading-data-in-python" id="toc-loading-data-in-python" class="nav-link" data-scroll-target="#loading-data-in-python">Loading data in Python</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
-  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Data/Gutenberg.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
@@ -314,39 +349,60 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
 <p>The <a href="https://www.gutenberg.org/">Project Gutenberg</a> dataset contains text from thousands of books, spanning a variety of genres and styles, and in some cases, corresponding audiobooks. Researchers and students working on machine learning applications can use this dataset to explore tasks such as language modeling, text classification, summarization, and speech synthesis. The dataset’s availability in both text and audio formats makes it suitable for multimodal learning tasks as well.</p>
 <section id="key-features" class="level4">
-<h4 class="anchored" data-anchor-id="key-features">Key Features</h4>
+<h4 class="anchored" data-anchor-id="key-features">Key features</h4>
 <ul>
-<li><strong>Text &amp; Audio</strong>: Many books in the Gutenberg collection have corresponding audiobooks (through Librivox), enabling both text and audio-based learning tasks.</li>
-<li><strong>Multilingual Content</strong>: While primarily in English, the dataset includes books in other languages such as French, German, and Spanish, providing opportunities for multilingual and cross-lingual research in NLP.</li>
-<li><strong>Long-Form Text</strong>: The dataset includes full-length novels, short stories, and essays, making it ideal for tasks that require understanding context over longer sequences of text.</li>
+<li><strong>Text &amp; audio</strong>: Many books in the Gutenberg collection have corresponding audiobooks (through Librivox), enabling both text and audio-based learning tasks.</li>
+<li><strong>Multilingual content</strong>: While primarily in English, the dataset includes books in other languages such as French, German, and Spanish, providing opportunities for multilingual and cross-lingual research in NLP.</li>
+<li><strong>Long-form text</strong>: The dataset includes full-length novels, short stories, and essays, making it ideal for tasks that require understanding context over longer sequences of text.</li>
 </ul>
 </section>
 <section id="key-applications" class="level4">
-<h4 class="anchored" data-anchor-id="key-applications">Key Applications</h4>
+<h4 class="anchored" data-anchor-id="key-applications">Key applications</h4>
 <ul>
-<li><strong>Language Modeling</strong>: With its vast variety of literary styles and genres, Gutenberg serves as a valuable resource for training and evaluating language models like <a href="https://openai.com/research/gpt-3">GPT</a> and <a href="https://arxiv.org/abs/1810.04805">BERT</a>. Pre-training on Gutenberg’s diverse text corpus allows models to capture nuanced linguistic patterns, which can later be fine-tuned for more specific NLP tasks.</li>
-<li><strong>Text Classification</strong>: The dataset can be applied to classification tasks such as genre classification or sentiment analysis. Researchers often use Gutenberg to train classifiers that distinguish between literary styles or detect emotional tone in texts.</li>
-<li><strong>Summarization and Translation</strong>: Due to the diversity in content, Gutenberg is commonly used to test summarization models (e.g., creating concise book summaries) and translation algorithms across different literary forms.</li>
-<li><strong>Topic Modeling</strong>: The diverse collection of texts allows for the exploration of underlying themes or topics through techniques like Latent Dirichlet Allocation (LDA) or Non-negative Matrix Factorization (NMF), enabling researchers to uncover hidden patterns in the literature.</li>
-<li><strong>Multimodal Learning</strong>: Paired with Librivox audiobooks, the Gutenberg dataset enables multimodal tasks like text-to-speech synthesis, speech recognition, and aligning spoken text with its written counterpart. This supports the development of models like <a href="https://google.github.io/tacotron/">Tacotron</a> and <a href="https://arxiv.org/abs/2006.11477">Wav2Vec</a>.</li>
-<li><strong>Transfer Learning</strong>: Researchers frequently fine-tune pre-trained language models on Gutenberg to test performance on literary and long-form text, often comparing results with models trained on broader corpora like <a href="https://commoncrawl.org/">Common Crawl</a>.</li>
-<li><strong>Data Augmentation</strong>: Gutenberg’s large-scale, structured text is ideal for augmenting smaller datasets and improving model robustness through data imputation or other generalization techniques.</li>
+<li><strong>Language modeling</strong>: With its vast variety of literary styles and genres, Gutenberg serves as a valuable resource for training and evaluating language models like <a href="https://openai.com/research/gpt-3">GPT</a> and <a href="https://arxiv.org/abs/1810.04805">BERT</a>. Pre-training on Gutenberg’s diverse text corpus allows models to capture nuanced linguistic patterns, which can later be fine-tuned for more specific NLP tasks.</li>
+<li><strong>Text classification</strong>: The dataset can be applied to classification tasks such as genre classification or sentiment analysis. Researchers often use Gutenberg to train classifiers that distinguish between literary styles or detect emotional tone in texts.</li>
+<li><strong>Summarization and translation</strong>: Due to the diversity in content, Gutenberg is commonly used to test summarization models (e.g., creating concise book summaries) and translation algorithms across different literary forms.</li>
+<li><strong>Topic modeling</strong>: The diverse collection of texts allows for the exploration of underlying themes or topics through techniques like Latent Dirichlet Allocation (LDA) or Non-negative Matrix Factorization (NMF), enabling researchers to uncover hidden patterns in the literature.</li>
+<li><strong>Multimodal learning</strong>: Paired with Librivox audiobooks, the Gutenberg dataset enables multimodal tasks like text-to-speech synthesis, speech recognition, and aligning spoken text with its written counterpart. This supports the development of models like <a href="https://google.github.io/tacotron/">Tacotron</a> and <a href="https://arxiv.org/abs/2006.11477">Wav2Vec</a>.</li>
+<li><strong>Transfer learning</strong>: Researchers frequently fine-tune pre-trained language models on Gutenberg to test performance on literary and long-form text, often comparing results with models trained on broader corpora like <a href="https://commoncrawl.org/">Common Crawl</a>.</li>
+<li><strong>Data augmentation</strong>: Gutenberg’s large-scale, structured text is ideal for augmenting smaller datasets and improving model robustness through data imputation or other generalization techniques.</li>
 </ul>
 </section>
 <section id="related-datasets-projects" class="level4">
-<h4 class="anchored" data-anchor-id="related-datasets-projects">Related Datasets &amp; Projects</h4>
+<h4 class="anchored" data-anchor-id="related-datasets-projects">Related datasets &amp; projects</h4>
 <ul>
 <li><strong><a href="https://librivox.org/">Librivox Audiobook Collection</a></strong>: Provides audiobooks to accompany the texts available in Project Gutenberg.</li>
 <li><strong><a href="https://commoncrawl.org/">Common Crawl</a></strong>: Large-scale web crawl dataset often used to pre-train language models. Gutenberg can provide a more structured and curated supplement to such datasets.</li>
 </ul>
 </section>
 </section>
+<section id="loading-data-in-python" class="level2">
+<h2 class="anchored" data-anchor-id="loading-data-in-python">Loading data in Python</h2>
+<p>You can easily load text data from Project Gutenberg in Python using the <code>gutenbergpy</code> or <code>requests</code> libraries. Here’s a basic example using <code>gutenbergpy</code>:</p>
+<ol type="1">
+<li>Install the <code>gutenbergpy</code> library:</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install gutenbergpy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>Load a book from Project Gutenberg You’ll need the Gutenberg Book ID, which you can find by searching the Gutenberg website for the book you want. The Book ID is the number found at the end of the book’s URL. For example, the URL https://www.gutenberg.org/ebooks/1342 corresponds to Pride and Prejudice, and the Book ID is 1342.</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gutenbergpy.textget <span class="im">import</span> get_text_by_id</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gutenbergpy.textget <span class="im">import</span> strip_headers</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace '1342' with the ID of the book you want to download</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>book_id <span class="op">=</span> <span class="dv">1342</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>book_text <span class="op">=</span> get_text_by_id(book_id)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>book_text_clean <span class="op">=</span> strip_headers(book_text).strip()</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the first 500 characters</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(book_text_clean[:<span class="dv">500</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 <section id="questions" class="level2">
 <h2 class="anchored" data-anchor-id="questions">Questions?</h2>
 <p>If you have any lingering questions about this resource, feel free to post them on the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">ML+X Nexus Q&amp;A</a> on GitHub. We will update this resource as new information or applications arise.</p>
 </section>
 <section id="see-also" class="level2">
-<h2 class="anchored" data-anchor-id="see-also">See Also</h2>
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html"><strong>Workshop</strong>: Intro to Text Analysis / NLP</a>: A hands-on introduction to natural language processing and how to extract insights from text data.</li>
 </ul>
