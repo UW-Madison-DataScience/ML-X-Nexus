@@ -22,27 +22,52 @@ categories:
 
 The [Project Gutenberg](https://www.gutenberg.org/) dataset contains text from thousands of books, spanning a variety of genres and styles, and in some cases, corresponding audiobooks. Researchers and students working on machine learning applications can use this dataset to explore tasks such as language modeling, text classification, summarization, and speech synthesis. The dataset's availability in both text and audio formats makes it suitable for multimodal learning tasks as well.
 
-#### Key Features
-- **Text & Audio**: Many books in the Gutenberg collection have corresponding audiobooks (through Librivox), enabling both text and audio-based learning tasks.
-- **Multilingual Content**: While primarily in English, the dataset includes books in other languages such as French, German, and Spanish, providing opportunities for multilingual and cross-lingual research in NLP.
-- **Long-Form Text**: The dataset includes full-length novels, short stories, and essays, making it ideal for tasks that require understanding context over longer sequences of text.
+#### Key features
+- **Text & audio**: Many books in the Gutenberg collection have corresponding audiobooks (through Librivox), enabling both text and audio-based learning tasks.
+- **Multilingual content**: While primarily in English, the dataset includes books in other languages such as French, German, and Spanish, providing opportunities for multilingual and cross-lingual research in NLP.
+- **Long-form text**: The dataset includes full-length novels, short stories, and essays, making it ideal for tasks that require understanding context over longer sequences of text.
 
-#### Key Applications 
-- **Language Modeling**: With its vast variety of literary styles and genres, Gutenberg serves as a valuable resource for training and evaluating language models like [GPT](https://openai.com/research/gpt-3) and [BERT](https://arxiv.org/abs/1810.04805). Pre-training on Gutenberg’s diverse text corpus allows models to capture nuanced linguistic patterns, which can later be fine-tuned for more specific NLP tasks.
-- **Text Classification**: The dataset can be applied to classification tasks such as genre classification or sentiment analysis. Researchers often use Gutenberg to train classifiers that distinguish between literary styles or detect emotional tone in texts.
-- **Summarization and Translation**: Due to the diversity in content, Gutenberg is commonly used to test summarization models (e.g., creating concise book summaries) and translation algorithms across different literary forms.
-- **Topic Modeling**: The diverse collection of texts allows for the exploration of underlying themes or topics through techniques like Latent Dirichlet Allocation (LDA) or Non-negative Matrix Factorization (NMF), enabling researchers to uncover hidden patterns in the literature.
-- **Multimodal Learning**: Paired with Librivox audiobooks, the Gutenberg dataset enables multimodal tasks like text-to-speech synthesis, speech recognition, and aligning spoken text with its written counterpart. This supports the development of models like [Tacotron](https://google.github.io/tacotron/) and [Wav2Vec](https://arxiv.org/abs/2006.11477).
-- **Transfer Learning**: Researchers frequently fine-tune pre-trained language models on Gutenberg to test performance on literary and long-form text, often comparing results with models trained on broader corpora like [Common Crawl](https://commoncrawl.org/).
-- **Data Augmentation**: Gutenberg's large-scale, structured text is ideal for augmenting smaller datasets and improving model robustness through data imputation or other generalization techniques.
+#### Key applications 
+- **Language modeling**: With its vast variety of literary styles and genres, Gutenberg serves as a valuable resource for training and evaluating language models like [GPT](https://openai.com/research/gpt-3) and [BERT](https://arxiv.org/abs/1810.04805). Pre-training on Gutenberg’s diverse text corpus allows models to capture nuanced linguistic patterns, which can later be fine-tuned for more specific NLP tasks.
+- **Text classification**: The dataset can be applied to classification tasks such as genre classification or sentiment analysis. Researchers often use Gutenberg to train classifiers that distinguish between literary styles or detect emotional tone in texts.
+- **Summarization and translation**: Due to the diversity in content, Gutenberg is commonly used to test summarization models (e.g., creating concise book summaries) and translation algorithms across different literary forms.
+- **Topic modeling**: The diverse collection of texts allows for the exploration of underlying themes or topics through techniques like Latent Dirichlet Allocation (LDA) or Non-negative Matrix Factorization (NMF), enabling researchers to uncover hidden patterns in the literature.
+- **Multimodal learning**: Paired with Librivox audiobooks, the Gutenberg dataset enables multimodal tasks like text-to-speech synthesis, speech recognition, and aligning spoken text with its written counterpart. This supports the development of models like [Tacotron](https://google.github.io/tacotron/) and [Wav2Vec](https://arxiv.org/abs/2006.11477).
+- **Transfer learning**: Researchers frequently fine-tune pre-trained language models on Gutenberg to test performance on literary and long-form text, often comparing results with models trained on broader corpora like [Common Crawl](https://commoncrawl.org/).
+- **Data augmentation**: Gutenberg's large-scale, structured text is ideal for augmenting smaller datasets and improving model robustness through data imputation or other generalization techniques.
 
-
-#### Related Datasets & Projects
+#### Related datasets & projects
 - **[Librivox Audiobook Collection](https://librivox.org/)**: Provides audiobooks to accompany the texts available in Project Gutenberg.
 - **[Common Crawl](https://commoncrawl.org/)**: Large-scale web crawl dataset often used to pre-train language models. Gutenberg can provide a more structured and curated supplement to such datasets.
+
+## Loading data in Python
+
+You can easily load text data from Project Gutenberg in Python using the `gutenbergpy` or `requests` libraries. Here's a basic example using `gutenbergpy`:
+
+1. Install the `gutenbergpy` library:
+
+```python
+!pip install gutenbergpy
+```
+
+2. Load a book from Project Gutenberg
+You’ll need the Gutenberg Book ID, which you can find by searching the Gutenberg website for the book you want. The Book ID is the number found at the end of the book's URL. For example, the URL https://www.gutenberg.org/ebooks/1342 corresponds to Pride and Prejudice, and the Book ID is 1342.
+
+```python
+from gutenbergpy.textget import get_text_by_id
+from gutenbergpy.textget import strip_headers
+
+# Replace '1342' with the ID of the book you want to download
+book_id = 1342
+book_text = get_text_by_id(book_id)
+book_text_clean = strip_headers(book_text).strip()
+
+# Print the first 500 characters
+print(book_text_clean[:500])
+```
 
 ## Questions?
 If you have any lingering questions about this resource, feel free to post them on the [ML+X Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will update this resource as new information or applications arise.
 
-## See Also
+## See also
 - [**Workshop**: Intro to Text Analysis / NLP](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html): A hands-on introduction to natural language processing and how to extract insights from text data.
