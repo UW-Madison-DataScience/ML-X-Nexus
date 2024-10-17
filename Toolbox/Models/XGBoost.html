@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2024-10-17">
 
-<title>SILO – Nexus: Crowdsourced ML Resources</title>
+<title>XGBoost: Tree-Based Gradient Boosting for Tabular Data – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +25,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../">
-<link href="../../../Applications/Videos/Other/index.html" rel="next">
-<link href="../../../Applications/Videos/ML4MI/index.html" rel="prev">
-<script src="../../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-author','listing-title','listing-description','listing-date','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +82,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/index.html">Videos</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/SILO/index.html">SILO</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">XGBoost: Tree-Based Gradient Boosting for Tabular Data</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,12 +92,12 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../../../index.html" class="sidebar-logo-link">
-      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -173,19 +113,19 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Learn/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learn</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -194,25 +134,25 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Workshops</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
@@ -220,7 +160,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -229,19 +169,19 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compute</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -249,7 +189,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Applications/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Applications</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -258,46 +198,46 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/EDA-examples/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/EDA-examples/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EDA</span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Forums</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML4MI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SILO</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other</span></a>
   </div>
 </li>
@@ -307,7 +247,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Category glossary</span></a>
   </div>
 </li>
@@ -317,20 +257,58 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Foundation models">Foundation models <span class="quarto-category-count">(1)</span></div><div class="category" data-category="LLM">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="LMM">LMM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Multimodal learning">Multimodal learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SILO">SILO <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VLM">VLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Videos">Videos <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#tree-based-learning-and-enhancements-in-xgboost" id="toc-tree-based-learning-and-enhancements-in-xgboost" class="nav-link" data-scroll-target="#tree-based-learning-and-enhancements-in-xgboost">Tree-based learning and enhancements in XGBoost</a>
+  <ul class="collapse">
+  <li><a href="#enhancements" id="toc-enhancements" class="nav-link" data-scroll-target="#enhancements">Enhancements</a></li>
+  </ul></li>
+  <li><a href="#comparisons-to-deep-learning" id="toc-comparisons-to-deep-learning" class="nav-link" data-scroll-target="#comparisons-to-deep-learning">Comparisons to deep learning</a>
+  <ul class="collapse">
+  <li><a href="#interpretability" id="toc-interpretability" class="nav-link" data-scroll-target="#interpretability">Interpretability</a></li>
+  </ul></li>
+  <li><a href="#timeline-context" id="toc-timeline-context" class="nav-link" data-scroll-target="#timeline-context">Timeline context</a></li>
+  <li><a href="#xgboost-variants" id="toc-xgboost-variants" class="nav-link" data-scroll-target="#xgboost-variants">XGBoost variants</a></li>
+  <li><a href="#model-playground" id="toc-model-playground" class="nav-link" data-scroll-target="#model-playground">Model playground</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/XGBoost.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/index.html">Videos</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/SILO/index.html">SILO</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">SILO</h1>
-</div>
+<h1 class="title">XGBoost: Tree-Based Gradient Boosting for Tabular Data</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Machine learning</div>
+    <div class="quarto-category">Gradient boosting</div>
+    <div class="quarto-category">Decision trees</div>
+    <div class="quarto-category">Tabular data</div>
+    <div class="quarto-category">Models</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 17, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -340,77 +318,95 @@ window.Quarto = {
 </header>
 
 
-<p>The <a href="https://silo.wisc.edu/">Systems, Information, Learning and Optimization (SILO)</a> research group at the University of Wisconsin-Madison hosts a weekly seminar that covers a variety of topics related to machine learning, optimization, and information theory. SILO breaks down the research “silos” created by academic department boundaries by providing time and space for researchers to present their work, interact, and find common threads.</p>
-<p>A non exhaustive list of recorded SILO seminars (feel free to add others!) can be found here on Nexus. Visit the <a href="https://silo.wisc.edu/past-talks/">SILO - Past Talks</a> page to explore additional talks of interest.</p>
-<section id="join-the-next-live-silo" class="level3">
-<h3 class="anchored" data-anchor-id="join-the-next-live-silo">Join the next live SILO!</h3>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p>XGBoost, or eXtreme Gradient Boosting, is a machine learning algorithm built upon the foundation of decision trees, extending their power through boosting. Originally introduced by Tianqi Chen in 2016, XGBoost has revolutionized predictive modeling, especially for tabular data, thanks to its efficiency, scalability, and performance. It is particularly well-suited for tasks like regression, classification, and ranking, where interpretability, speed, and precision are key.</p>
+</section>
+<section id="tree-based-learning-and-enhancements-in-xgboost" class="level2">
+<h2 class="anchored" data-anchor-id="tree-based-learning-and-enhancements-in-xgboost">Tree-based learning and enhancements in XGBoost</h2>
+<p>At its core, XGBoost uses decision trees to model complex patterns in data, applying <strong>gradient boosting</strong> to improve model accuracy:</p>
 <ul>
-<li><strong>Where</strong>: Orchard View Room (rm. 3280), <a href="https://www.map.wisc.edu/?initObj=0212">Discovery Building</a> &amp; via Zoom.</li>
-<li><strong>When</strong>: Check the <a href="https://silo.wisc.edu/upcoming-talks/">SILO schedule</a> and join the <a href="https://groups.google.com/a/g-groups.wisc.edu/g/silo/">Google group</a> to receive a calendar invite (with Zoom link) and other updates.</li>
+<li><strong>Additive learning</strong>: XGBoost builds trees sequentially, where each new tree focuses on the residuals (errors) of the previous trees.</li>
+<li><strong>Gradient boosting</strong>: By minimizing a loss function (using gradient descent), XGBoost creates an ensemble of decision trees that progressively improve predictions.</li>
 </ul>
-
+<section id="enhancements" class="level3">
+<h3 class="anchored" data-anchor-id="enhancements">Enhancements</h3>
+<ul>
+<li><strong>Regularization</strong>: XGBoost applies L1 (Lasso) and L2 (Ridge) regularization to control model complexity and reduce overfitting.</li>
+<li><strong>Pruning</strong>: Decision trees in XGBoost are pruned during training to avoid overfitting and maintain generalization ability.</li>
+<li><strong>Missing data handling</strong>: XGBoost can automatically handle missing data, making it particularly robust for real-world datasets.</li>
+</ul>
+</section>
+</section>
+<section id="comparisons-to-deep-learning" class="level2">
+<h2 class="anchored" data-anchor-id="comparisons-to-deep-learning">Comparisons to deep learning</h2>
+<p>While deep learning excels at tasks like image recognition and natural language processing, XGBoost often <strong>outperforms deep learning models on tabular data</strong>, especially in the following scenarios:</p>
+<ul>
+<li><strong>Small to medium-sized datasets</strong>: Deep learning models require large amounts of data to perform well, whereas XGBoost can achieve high accuracy even with smaller datasets.</li>
+<li><strong>Medical contexts</strong>: In medical datasets, where structured/tabular data is prevalent, XGBoost often outperforms deep learning due to its efficiency and the importance of feature engineering.</li>
+<li><strong>Faster training Time</strong>: XGBoost is much faster to train compared to deep learning models, making it ideal for applications with limited computational resources or time constraints.</li>
+</ul>
+<section id="interpretability" class="level3">
+<h3 class="anchored" data-anchor-id="interpretability">Interpretability</h3>
+<p>XGBoost offers greater interpretability than deep learning models, but it is less interpretable than simpler models like decision trees or linear regressions:</p>
+<ul>
+<li><strong>Feature Importance</strong>: XGBoost provides feature importance scores, showing which features contribute the most to model accuracy.</li>
+<li><strong>Ensemble Complexity</strong>: While individual trees in the XGBoost ensemble are interpretable, the combined model (with potentially hundreds of trees) can be difficult to fully explain.</li>
+<li><strong>SHAP Values and LIME</strong>: These tools allow you to understand how each feature influences predictions both locally (for individual instances) and globally (across the whole model).</li>
+</ul>
+</section>
+</section>
+<section id="timeline-context" class="level2">
+<h2 class="anchored" data-anchor-id="timeline-context">Timeline context</h2>
+<p>XGBoost builds on a rich history of decision tree-based models. Here’s how it fits into the broader development of machine learning models that rely on trees:</p>
+<ul>
+<li><strong><a href="https://en.wikipedia.org/wiki/Decision_tree_learning">CART (1984)</a></strong>: The foundation of decision tree algorithms, focusing on binary splits of data based on feature values.</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest (2001)</a></strong>: Combines many independent decision trees for better accuracy and robustness by reducing variance through bootstrapping.</li>
+<li><strong><a href="https://www.researchgate.net/publication/233878227_Gradient_Boosting_Machine_for_Classification">Gradient Boosting Machines (1999)</a></strong>: Introduces boosting, sequentially building trees that focus on correcting errors made by previous models.</li>
+<li><strong><a href="https://arxiv.org/abs/1603.02754">XGBoost (2016)</a></strong>: An optimized implementation of gradient boosting, which leverages tree-based models and introduces regularization, parallelism, and handling of missing values.</li>
+<li><strong><a href="https://arxiv.org/abs/1706.09516">CatBoost (2018)</a></strong>: Introduced categorical feature handling directly in gradient boosting.</li>
+</ul>
+</section>
+<section id="xgboost-variants" class="level2">
+<h2 class="anchored" data-anchor-id="xgboost-variants">XGBoost variants</h2>
+<ul>
+<li><strong>XGBoost with DART</strong>: Modifies the traditional tree boosting approach by dropping trees randomly during training, preventing overfitting and improving generalization.</li>
+<li><strong>XGBoost with Linear Booster</strong>: Instead of building trees, this variant uses a linear model as the base learner, blending gradient boosting with linear regression or classification.</li>
+</ul>
+</section>
+<section id="model-playground" class="level2">
+<h2 class="anchored" data-anchor-id="model-playground">Model playground</h2>
+<section id="tutorials-and-getting-started-notebooks" class="level4">
+<h4 class="anchored" data-anchor-id="tutorials-and-getting-started-notebooks">Tutorials and Getting Started Notebooks</h4>
+<ul>
+<li><strong>XGBoost</strong>: Check out the <a href="https://xgboost.readthedocs.io/en/latest/python/index.html">XGBoost Python Documentation</a> for installation, basic usage, and advanced tuning tips.</li>
+</ul>
+</section>
+<section id="high-level-tips-for-effective-sse" class="level4">
+<h4 class="anchored" data-anchor-id="high-level-tips-for-effective-sse">High-level tips for effective sse</h4>
+<ul>
+<li><strong>Hyperparameter tuning</strong>: Parameters like max depth and learning rate control the complexity and speed of the trees; tuning these is crucial for optimal performance.</li>
+<li><strong>Handling missing Data</strong>: XGBoost’s ability to handle missing values natively means there’s no need for complex imputation strategies.</li>
+<li><strong>Early stopping</strong>: Use early stopping with cross-validation to prevent overfitting, especially when training deep trees.</li>
+<li><strong>Imbalanced datasets</strong>: Adjust the <code>scale_pos_weight</code> parameter to manage class imbalance in datasets, like those seen in fraud detection or rare event classification.</li>
+</ul>
+</section>
+<section id="related-datasets-kaggle-challenges" class="level4">
+<h4 class="anchored" data-anchor-id="related-datasets-kaggle-challenges">Related datasets &amp; Kaggle challenges</h4>
+<ul>
+<li><strong><a href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques">Ames House Price Prediction</a></strong>: A regression task where XGBoost often outperforms deep learning due to the tabular nature of the data.</li>
+<li><strong><a href="https://www.kaggle.com/c/nlp-getting-started">Disaster Tweets Classification</a></strong>: A classification task that involves text, but XGBoost can excel with good feature engineering.</li>
+</ul>
+</section>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>If you have any lingering questions about this resource, feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
 
 
 </section>
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Videos,SILO,VLM,LLM,LMM,Multimodal learning,Foundation models" data-listing-date-sort="1700611200000" data-listing-file-modified-sort="1729191217117" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="451">
-<div class="thumbnail">
-<p><a href="../../../Applications/Videos/SILO/23-11-22_KennethMarino_ World-Knowledge-in-the-Time-of-Large-Models.html" class="no-external"></a></p><a href="../../../Applications/Videos/SILO/23-11-22_KennethMarino_ World-Knowledge-in-the-Time-of-Large-Models.html" class="no-external">
-<p><img loading="lazy" src="https://vumbnail.com/891935467.jpg" class="thumbnail-image" style="height: 150px;"></p>
-</a><p><a href="../../../Applications/Videos/SILO/23-11-22_KennethMarino_ World-Knowledge-in-the-Time-of-Large-Models.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../../../Applications/Videos/SILO/23-11-22_KennethMarino_ World-Knowledge-in-the-Time-of-Large-Models.html" class="no-external">World Knowledge in the Time of Large Models</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../../../Applications/Videos/SILO/23-11-22_KennethMarino_ World-Knowledge-in-the-Time-of-Large-Models.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('SILO'); return false;">
-SILO
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VLM'); return false;">
-VLM
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('LLM'); return false;">
-LLM
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('LMM'); return false;">
-LMM
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Multimodal learning'); return false;">
-Multimodal learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Foundation models'); return false;">
-Foundation models
-</div>
-</div>
-<div class="listing-description">
-<a href="../../../Applications/Videos/SILO/23-11-22_KennethMarino_ World-Knowledge-in-the-Time-of-Large-Models.html" class="no-external">This talk will discuss the massive shift that has come about in the vision and ML community as a result of the large pre-trained language and language and vision models such as Flamingo, GPT-4, and other models.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../../../Applications/Videos/SILO/23-11-22_KennethMarino_ World-Knowledge-in-the-Time-of-Large-Models.html" class="no-external">
-<div class="listing-date">
-November 22, 2023
-</div>
-<div class="listing-author">
-Kenneth Marino, PhD
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -975,21 +971,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../../Applications/Videos/ML4MI/index.html" class="pagination-link" aria-label="ML4MI">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">ML4MI</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../../Applications/Videos/Other/index.html" class="pagination-link" aria-label="Other">
-        <span class="nav-page-text">Other</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/SILO/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/XGBoost.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
