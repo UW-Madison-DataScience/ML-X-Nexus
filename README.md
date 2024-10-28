@@ -22,10 +22,6 @@ We welcome contributions from members of the ML+X community! Whether you'd like 
 
 To contribute, fork this repository, make your changes, and submit a pull request. Please ensure that your contributions adhere to our guidelines and maintain the high standards of quality and relevance upheld by the ML+X community. For further guidance and starter templates, please check the [How to Contribute?](https://uw-madison-datascience.github.io/ML-X-Nexus/Resources/Guides/How-to-contribute.html) guide. 
 
-## License:
-
-This repository is licensed under the {whatever license we want}. See the LICENSE file for more details.
-
 ## Let's Connect:
 
 [Join our Slack (#ml-community)](https://join.slack.com/t/data-science-hubgroup/shared_invite/zt-2e9ytpbdg-D5mQhujTvTT5eTccYPpN0g) to engage with fellow members, participate in discussions, and stay updated on the latest developments within the ML+X community.
