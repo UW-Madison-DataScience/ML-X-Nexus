@@ -34,3 +34,19 @@ jobs:
           target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Run the save_insights.py script
+      - name: Save GitHub Insights
+        env:
+          REPO_NAME: ${{ github.repository }}
+          TOKEN: ${{ secrets.GH_PAT }}
+        run: python insights/save_insights.py
+
+      # Commit and Push Insights
+      - name: Commit and Push Insights
+        run: |
+          git config --local user.email "endemann@wisc.edu"
+          git config --local user.name "qualiaMachine"
+          git add insights/
+          git commit -m "Save GitHub insights on publish"
+          git push
