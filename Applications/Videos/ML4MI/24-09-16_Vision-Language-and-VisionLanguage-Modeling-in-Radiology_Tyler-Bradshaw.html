@@ -263,7 +263,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
-  <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key Points</a></li>
+  <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key points</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/ML4MI/24-09-16_Vision-Language-and-VisionLanguage-Modeling-in-Radiology_Tyler-Bradshaw.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
@@ -327,40 +327,27 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Video (requires UW netID)</strong>: <a href="https://mediaspace.wisc.edu/media/Vision%2C+Language%2C+and+Vision-Language+Modeling+in+Radiology+-+Tyler+Bradshaw+-+Sep+2024/1_metec4s2/355339002">View 24-09-16 ML4MI Recording</a>.</p>
 </section>
 <section id="key-points" class="level3">
-<h3 class="anchored" data-anchor-id="key-points">Key Points</h3>
+<h3 class="anchored" data-anchor-id="key-points">Key points</h3>
 <section id="vision-models" class="level4">
-<h4 class="anchored" data-anchor-id="vision-models">Vision Models</h4>
+<h4 class="anchored" data-anchor-id="vision-models">Vision models</h4>
 <ul>
-<li><p><strong>Vision Timeline:</strong> CNN (vision, ~1989-2018) → UNET (segmentation, 2015) → Transformer → Vision Transformer</p>
+<li><p><strong>Vision timeline</strong>: CNN (vision, ~1989-2018) → UNET (segmentation, 2015) → Transformer (2017) → Vision Transformer (ViT, 2020) → ConvNext (2022) → Segment Anything Model (SAM, 2023)</p>
 <ul>
-<li><strong>ConvNext:</strong> A convolutional network that refines CNN architectures for modern deep learning challenges. Introduced as a bridge between traditional CNNs and transformers, it maintains CNN’s competitive performance while incorporating elements that make transformers excel in large data environments.</li>
-<li><strong>Segment Anything Model (SAM):</strong> This model introduces a breakthrough in segmentation tasks by allowing for zero-shot generalization across a wide range of segmentation applications.</li>
+<li><p><strong>ConvNext</strong>: A convolutional network that refines CNN architectures for modern deep learning challenges. Introduced as a bridge between traditional CNNs and transformers, it maintains CNN’s competitive performance while incorporating elements that make transformers excel in large data environments.</p></li>
+<li><p><strong>Segment Anything Model (SAM)</strong>: This model introduces a breakthrough in segmentation tasks by allowing for zero-shot generalization across a wide range of segmentation applications.</p></li>
 </ul></li>
 <li><p>CNNs remain competitive with more modern models like Vision Transformers (ViTs). ViTs tend to outperform CNNs only when there are very large datasets. For midsized datasets, especially in medical imaging, CNNs may still hold an advantage.</p></li>
-<li><p><strong>Future of Vision Models:</strong> The future may include <strong>foundation models</strong>—very large models trained on extensive and diverse datasets. These models aim to acquire world knowledge across various domains, potentially outperforming models specifically trained on individual tasks. However, the extent to which these models will become “foundational” is still under research.</p></li>
-<li><p><strong>Medical Context Example:</strong> We can better predict tumor presence from PET images by incorporating both pre-treatment and post-treatment images. This temporal timeline supports tumor prediction when contrast is low, and ViTs are well-suited to model these longitudinal effects.</p></li>
+<li><p><strong>Future of vision models</strong>: The future may include foundation models—very large models trained on extensive and diverse datasets. These models aim to acquire world knowledge across various domains, potentially outperforming models specifically trained on individual tasks. However, the extent to which these models will become “foundational” is still under research.</p></li>
+<li><p><strong>Medical context example</strong>: We can better predict tumor presence from PET images by incorporating both pre-treatment and post-treatment images. This temporal timeline supports tumor prediction when contrast is low, and ViTs are well-suited to model these longitudinal effects.</p></li>
 </ul>
 </section>
 <section id="language-models" class="level4">
-<h4 class="anchored" data-anchor-id="language-models">Language Models</h4>
+<h4 class="anchored" data-anchor-id="language-models">Language models</h4>
 <ul>
-<li><p><strong>Language Timeline:</strong> TF-IDF → Word2Vec &amp; GloVe (2013) → Transformer (2017) → BERT and GPT (2018)</p></li>
+<li><p><strong>Language timeline</strong>: TF-IDF → Word2Vec &amp; GloVe (2013) → Transformer (2017) → BERT and GPT (2018)</p></li>
 <li><p>Transformers and language models generate embeddings that represent words/tokens. Words with similar meanings are placed closer together in the embedding space.</p></li>
-<li><p>These embeddings are <strong>contextually aware</strong>, allowing words with different meanings in different contexts to be encoded effectively using the self-attention mechanism.</p></li>
+<li><p>These embeddings are contextually aware, allowing words with different meanings in different contexts to be encoded effectively using the self-attention mechanism.</p></li>
 <li><p>LLMs can learn patterns in sequential data, making them broadly applicable for various tasks (e.g., text as sequences, images as sequences of pixels, videos as sequences of frames).</p></li>
-<li><p>In medical settings, LLMs can be used for report summarization, offering comparisons to physician-generated reports.</p></li>
-</ul>
-</section>
-<section id="vision-language-models" class="level4">
-<h4 class="anchored" data-anchor-id="vision-language-models">Vision-Language Models</h4>
-<ul>
-<li><p><strong>How are vision-language models developed?</strong></p></li>
-<li><p>One popular approach for training multimodal models is <strong>contrastive learning</strong>. This method pairs image and text data, training the model to push similar pairs closer together in the embedding space while pulling dissimilar pairs apart.</p></li>
-<li><p><strong>CLIP (Contrastive Language-Image Pretraining):</strong> This model represents one of the most prominent examples of a contrastive learning-based vision-language model. CLIP learns to associate images and text by mapping them into a shared embedding space, enabling zero-shot capabilities for tasks like image classification.</p></li>
-<li><p><strong>Knowledge-Grounded Adaptation Strategy for Vision-Language Models:</strong> One example is a unique case set built for screening mammograms for residents’ training. This strategy uses knowledge-grounded adaptation to tailor VLMs for medical applications, enhancing the performance in specific tasks like mammogram screening.</p></li>
-<li><p><strong>Late-Fusion VLM with Cross Attention (VilBERT):</strong> Late-fusion VLMs like VilBERT use separate encoders for vision and text and apply cross-attention to fuse the information. This approach enables each modality to process information independently before fusing representations, often enhancing performance on tasks like Visual Question Answering (VQA).</p></li>
-<li><p><strong>ConTEXTual Net:</strong> This model combines text and PET scan data for segmentation tasks, leveraging the additional contextual information from text to improve accuracy in medical image analysis.</p></li>
-<li><p><strong>Early-Fusion VLMs:</strong> In early-fusion VLMs, image and text data are combined at an early stage in the model, allowing joint processing of the modalities. GPT-4 was trained using this approach, integrating images and text to enhance multimodal understanding. The <strong>LLaVA (Large Language and Vision Assistant)</strong> model also follows a similar training process, allowing for improved performance across multimodal tasks.</p></li>
 </ul>
 </section>
 </section>
