@@ -42,6 +42,43 @@ jobs:
           TOKEN: ${{ secrets.GH_PAT }}
         run: python insights/save_insights.py
 
+      # Check for changes in the insights directory
+      - name: Check for Changes
+        id: changes
+        run: |
+          git add insights/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            echo "::set-output name=changed::false"
+          else
+            echo "Changes detected"
+            echo "::set-output name=changed::true"
+          fi
+
+      # Commit and Push Insights if changes were detected
+      - name: Commit and Push Insights
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "endemann@wisc.edu"
+          git config --local user.name "qualiaMachine"
+          git commit -m "Save GitHub insights on publish"
+          git push
+
+
+
+
+
+
+
+
+
+      # Run the save_insights.py script
+      - name: Save GitHub Insights
+        env:
+          REPO_NAME: ${{ github.repository }}
+          TOKEN: ${{ secrets.GH_PAT }}
+        run: python insights/save_insights.py
+
       # Commit and Push Insights
       - name: Commit and Push Insights
         run: |
