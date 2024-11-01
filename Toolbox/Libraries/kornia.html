@@ -269,6 +269,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#about-this-library" id="toc-about-this-library" class="nav-link active" data-scroll-target="#about-this-library">About this Library</a></li>
   <li><a href="#integration-and-compatibility" id="toc-integration-and-compatibility" class="nav-link" data-scroll-target="#integration-and-compatibility">Integration and compatibility</a></li>
+  <li><a href="#why-mix-traditional-methods-with-transformers" id="toc-why-mix-traditional-methods-with-transformers" class="nav-link" data-scroll-target="#why-mix-traditional-methods-with-transformers">Why Mix Traditional Methods with Transformers?</a></li>
   <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use cases</a></li>
   <li><a href="#tutorials-and-resources" id="toc-tutorials-and-resources" class="nav-link" data-scroll-target="#tutorials-and-resources">Tutorials and resources</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
@@ -289,6 +290,10 @@ ul.task-list li input[type="checkbox"] {
     <div class="quarto-category">Deep learning</div>
     <div class="quarto-category">PyTorch</div>
     <div class="quarto-category">Image processing</div>
+    <div class="quarto-category">ViT</div>
+    <div class="quarto-category">SAM</div>
+    <div class="quarto-category">LoFTR</div>
+    <div class="quarto-category">RT-DETR</div>
   </div>
   </div>
 
@@ -326,7 +331,13 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><strong>Image augmentation</strong>: Standard image augmentation functionalities such as gaussian noise, random flips, and color jiggle.</li>
 <li><strong>Feature detection</strong>: Classical computer vision algorithms such hessian blobs, Harris corner detector, and difference of gaussians. Deep learning-based algorithms such as Dexined, KeyNet, DISK, and DeDoDe.</li>
-<li><strong>Transformer models</strong>: Optimized transformers-based computer vision models such as SAM, ViT, LoFTR, and RT-DETR</li>
+<li><strong>Transformer models</strong>: Optimized transformers-based computer vision models such as SAM, ViT, LoFTR, and RT-DETR
+<ul>
+<li><strong>SAM (Segment Anything Model)</strong>: A state-of-the-art segmentation model from Meta that can segment objects in images without predefined categories using self-supervised learning.</li>
+<li><strong>ViT (Vision Transformer)</strong>: Adapts the transformer architecture, traditionally used in NLP, to process images by dividing them into patches, leading to high performance on large datasets.</li>
+<li><strong>LoFTR (Local Feature Transformer)</strong>: A model for establishing correspondences between images through transformer-based attention, which is highly effective for tasks like image stitching and 3D reconstruction.</li>
+<li><strong>RT-DETR (Real-Time Detection Transformer)</strong>: An object detection model optimized for real-time processing, making it suitable for rapid detection tasks like video processing and autonomous navigation.</li>
+</ul></li>
 </ul>
 </section>
 </section>
@@ -337,6 +348,16 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Frameworks Supported</strong>: PyTorch, PyTorch-Lightning, and Fastai</li>
 <li><strong>Installation Instructions</strong>: <code>pip install kornia</code></li>
 </ul>
+</section>
+<section id="why-mix-traditional-methods-with-transformers" class="level2">
+<h2 class="anchored" data-anchor-id="why-mix-traditional-methods-with-transformers">Why Mix Traditional Methods with Transformers?</h2>
+<p>Blending traditional computer vision techniques with transformer-based models offers a balanced approach that can improve model performance, flexibility, and efficiency. More specificically, this allow us to…</p>
+<ol type="1">
+<li><p><strong>Leverage established techniques</strong>: Many traditional methods, like edge detection and keypoint matching, have been fine-tuned over decades and are computationally efficient. They often work well as preprocessing steps or for augmenting transformer-based models with reliable, low-complexity features.</p></li>
+<li><p><strong>Reduce computational costs</strong>: Transformers are data- and computation-intensive, especially for complex tasks. By using traditional methods in early or intermediate stages, you can reduce the workload on transformers, enabling real-time processing and lowering hardware requirements.</p></li>
+<li><p><strong>Improve generalization</strong>: Combining classical methods with transformers can provide models with a broader understanding of images, as they benefit from both deterministic feature engineering (traditional methods) and learned feature representations (transformers). This synergy often enhances the model’s generalization to varied datasets.</p></li>
+<li><p><strong>Targeted feature enhancement</strong>: Traditional feature detectors can focus on specific areas, like edges or corners, enhancing input data that transformers process. This combination can lead to improved performance on tasks such as image matching, object detection, and segmentation.</p></li>
+</ol>
 </section>
 <section id="use-cases" class="level2">
 <h2 class="anchored" data-anchor-id="use-cases">Use cases</h2>
