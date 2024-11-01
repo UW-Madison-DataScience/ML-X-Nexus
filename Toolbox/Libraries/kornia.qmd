@@ -15,7 +15,10 @@ categories:
   - Deep learning
   - PyTorch # E.g., PyTorch, Tensorflow
   - Image processing
-
+  - ViT
+  - SAM
+  - LoFTR 
+  - RT-DETR
 ---
 ## About this Library
 
@@ -25,12 +28,28 @@ Kornia is a differentiable library that allows classical computer vision to be i
 - **Image augmentation**: Standard image augmentation functionalities such as gaussian noise, random flips, and color jiggle.
 - **Feature detection**: Classical computer vision algorithms such hessian blobs, Harris corner detector, and difference of gaussians. Deep learning-based algorithms such as Dexined, KeyNet, DISK, and DeDoDe. 
 - **Transformer models**: Optimized transformers-based computer vision models such as SAM, ViT, LoFTR, and RT-DETR
+  - **SAM (Segment Anything Model)**: A state-of-the-art segmentation model from Meta that can segment objects in images without predefined categories using self-supervised learning.
+  - **ViT (Vision Transformer)**: Adapts the transformer architecture, traditionally used in NLP, to process images by dividing them into patches, leading to high performance on large datasets.
+  - **LoFTR (Local Feature Transformer)**: A model for establishing correspondences between images through transformer-based attention, which is highly effective for tasks like image stitching and 3D reconstruction.
+  - **RT-DETR (Real-Time Detection Transformer)**: An object detection model optimized for real-time processing, making it suitable for rapid detection tasks like video processing and autonomous navigation.
 
 ## Integration and compatibility
 Kornia is compatible with PyTorch and any libraries built on top of PyTorch. In addition, all features from Kornia can utilize the GPU of the host machine.
 
 - **Frameworks Supported**: PyTorch, PyTorch-Lightning, and Fastai
 - **Installation Instructions**: `pip install kornia`
+
+## Why Mix Traditional Methods with Transformers?
+
+Blending traditional computer vision techniques with transformer-based models offers a balanced approach that can improve model performance, flexibility, and efficiency. More specificically, this allow us to...
+
+1. **Leverage established techniques**: Many traditional methods, like edge detection and keypoint matching, have been fine-tuned over decades and are computationally efficient. They often work well as preprocessing steps or for augmenting transformer-based models with reliable, low-complexity features.
+   
+2. **Reduce computational costs**: Transformers are data- and computation-intensive, especially for complex tasks. By using traditional methods in early or intermediate stages, you can reduce the workload on transformers, enabling real-time processing and lowering hardware requirements.
+
+3. **Improve generalization**: Combining classical methods with transformers can provide models with a broader understanding of images, as they benefit from both deterministic feature engineering (traditional methods) and learned feature representations (transformers). This synergy often enhances the model’s generalization to varied datasets.
+
+4. **Targeted feature enhancement**: Traditional feature detectors can focus on specific areas, like edges or corners, enhancing input data that transformers process. This combination can lead to improved performance on tasks such as image matching, object detection, and segmentation.
 
 ## Use cases
 Here are some examples of how Kornia can be applied to different machine learning tasks.
