@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2024-11-07">
 
-<title>Other – Nexus: Crowdsourced ML Resources</title>
+<title>Intro to AWS SageMaker for Common ML/AI Procedures – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +25,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../">
-<link href="../../../glossary.html" rel="next">
-<link href="../../../Applications/Videos/SILO/index.html" rel="prev">
-<script src="../../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-author','listing-title','listing-description','listing-date','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +82,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/index.html">Videos</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/Other/index.html">Other</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Intro to AWS SageMaker for Common ML/AI Procedures</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,12 +92,12 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../../../index.html" class="sidebar-logo-link">
-      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -173,19 +113,19 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Learn/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learn</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -194,25 +134,25 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Workshops</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
@@ -220,7 +160,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -229,25 +169,25 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compute</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Libraries</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -255,7 +195,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Applications/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Applications</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -264,46 +204,46 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/EDA-examples/index.qmd" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/EDA-examples/index.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EDA</span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Forums</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML4MI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SILO</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other</span></a>
   </div>
 </li>
@@ -313,7 +253,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Category glossary</span></a>
   </div>
 </li>
@@ -323,20 +263,51 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Biophysics">Biophysics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Cross Labs AI">Cross Labs AI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Deep learning">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Foundation models">Foundation models <span class="quarto-category-count">(1)</span></div><div class="category" data-category="LLM">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Multidisciplinary">Multidisciplinary <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Playlists">Playlists <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Protein engineering">Protein engineering <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Protein language models">Protein language models <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Simulations">Simulations <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Transfer learning">Transfer learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UW-Madison">UW-Madison <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Videos">Videos <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Workshops/Intro-Amazon_SageMaker.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/index.html">Videos</a></li><li class="breadcrumb-item"><a href="../../../Applications/Videos/Other/index.html">Other</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Other</h1>
-</div>
+<h1 class="title">Intro to AWS SageMaker for Common ML/AI Procedures</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Workshops</div>
+    <div class="quarto-category">Code-along</div>
+    <div class="quarto-category">Compute</div>
+    <div class="quarto-category">AWS SageMaker</div>
+    <div class="quarto-category">HTC</div>
+    <div class="quarto-category">HPC</div>
+    <div class="quarto-category">Predictive modeling</div>
+    <div class="quarto-category">Machine learning</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 7, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -346,117 +317,40 @@ window.Quarto = {
 </header>
 
 
-<p>Explore talks from other groups besides ML+X, ML4MI, and SILO; on campus and beyond.</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p>This introductory <a href="https://uw-madison-datascience.github.io/ML_with_Amazon_SageMaker/index.html">Amazon SageMaker workshop</a> teaches core workflows for running predictive ML/AI models in Amazon SageMaker, an AWS-managed machine learning environment. Participants will learn to set up data, configure SageMaker Notebooks, manage code repositories, train and tune models, and optimize resource costs effectively within AWS. While currently tailored for 2024 Machine Learning Marathon participants, a more general version of the materials will be released in the coming months. The lesson is in the <strong>pre-alpha phase</strong>, meaning it is under development and has not yet been taught. Users will benefit from tips on controlling AWS expenses and scaling models efficiently, with real-world guidance on choosing appropriate CPU and GPU resources.</p>
+<section id="cost-estimate" class="level4">
+<h4 class="anchored" data-anchor-id="cost-estimate">Cost estimate</h4>
+<p>Running through this workshop should cost approximately <strong>$10-$15</strong> on AWS, assuming moderate usage of GPU instances and a few parallel jobs. For new AWS accounts, the <strong>AWS Free Tier</strong> may cover some of these costs, including 250 hours per month of the <code>ml.t2.medium</code> instance for the first two months, as well as some limited S3 storage. This means new users may be able to complete certain parts of the workshop for free or at a significantly reduced cost. We recommend monitoring usage through the AWS Billing Dashboard to stay within the free tier and manage any extra expenses effectively.</p>
+</section>
+<section id="prerequisites" class="level4">
+<h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html">Intro to Machine Learning</a></li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html">Basic Python Programming</a></li>
+</ul>
+</section>
+<section id="estimated-time-to-complete" class="level4">
+<h4 class="anchored" data-anchor-id="estimated-time-to-complete">Estimated time to complete</h4>
+<p><strong>3-5 hours</strong>: Based on running through training, tuning, and experimenting with example code setups.</p>
+</section>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>For any questions, please post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. Feedback is especially helpful in these early stages to improve workshop materials!</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://aws.amazon.com/free/">AWS Free Tier Guide</a>: An overview of the AWS Free Tier, including limitations and expected costs for beginner users.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">Center for High Throughput Computing (CHTC)</a>: CHTC at UW-Madison offers free compute resources to researchers.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Videos,Cross Labs AI,Transfer learning,Biophysics,Protein language models,Foundation models,LLM,Deep learning,Protein engineering,Simulations" data-listing-date-sort="1718668800000" data-listing-file-modified-sort="1730992967242" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="481">
-<div class="thumbnail">
-<p><a href="../../../Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.html" class="no-external"></a></p><a href="../../../Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.html" class="no-external">
-<p><img loading="lazy" src="https://img.youtube.com/vi/milM6-2RF18/maxresdefault.jpg" class="thumbnail-image" style="height: 150px;"></p>
-</a><p><a href="../../../Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../../../Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.html" class="no-external">A Biophysics-based Protein Language Model for Protein Engineering</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../../../Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Videos'); return false;">
-Videos
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Cross Labs AI'); return false;">
-Cross Labs AI
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Transfer learning'); return false;">
-Transfer learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Biophysics'); return false;">
-Biophysics
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Protein language models'); return false;">
-Protein language models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Foundation models'); return false;">
-Foundation models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('LLM'); return false;">
-LLM
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Deep learning'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Protein engineering'); return false;">
-Protein engineering
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Simulations'); return false;">
-Simulations
-</div>
-</div>
-<div class="listing-description">
-<a href="../../../Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.html" class="no-external">We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../../../Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.html" class="no-external">
-<div class="listing-date">
-June 18, 2024
-</div>
-<div class="listing-author">
-Sam Gelman, PhD
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="Multidisciplinary,UW-Madison,Playlists" data-listing-date-sort="1687478400000" data-listing-file-modified-sort="1730992967242" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="209">
-<div class="thumbnail">
-<p><a href="../../../Applications/Videos/Other/Exploring-AI-at-UW.html" class="no-external"></a></p><a href="../../../Applications/Videos/Other/Exploring-AI-at-UW.html" class="no-external">
-<p><img loading="lazy" src="../../../images/color-crest-red-bg.png" class="thumbnail-image" style="height: 150px;"></p>
-</a><p><a href="../../../Applications/Videos/Other/Exploring-AI-at-UW.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../../../Applications/Videos/Other/Exploring-AI-at-UW.html" class="no-external">Exploring AI at UW-Madison</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../../../Applications/Videos/Other/Exploring-AI-at-UW.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Multidisciplinary'); return false;">
-Multidisciplinary
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('UW-Madison'); return false;">
-UW-Madison
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Playlists'); return false;">
-Playlists
-</div>
-</div>
-<div class="listing-description">
-<a href="../../../Applications/Videos/Other/Exploring-AI-at-UW.html" class="no-external">A summer 2023 webinar series sponsored by the Division of Information Technology and the Data Science Institute.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../../../Applications/Videos/Other/Exploring-AI-at-UW.html" class="no-external">
-<div class="listing-date">
-June 23, 2023
-</div>
-<div class="listing-author">
-Chris Endemann
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1021,21 +915,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../../Applications/Videos/SILO/index.html" class="pagination-link" aria-label="SILO">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">SILO</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../../glossary.html" class="pagination-link" aria-label="Category glossary">
-        <span class="nav-page-text">Category glossary</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/Other/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Workshops/Intro-Amazon_SageMaker.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
