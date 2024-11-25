@@ -13,66 +13,18 @@ language:
 categories:
   - Videos
   - ML4MI
-  - Medical imaging
-  #- VLM
-  #- ViT
-  #- UNET
-  #- LLaVA
-  #- Computer vision
-  #- CNN
-  #- LLM
-  #- Deep learning
-  #- Multimodal learning
+  - NLP
+  - Text analysis
+  - EHR
+  - Boosting
+  - Decision trees
 ---
 ### About this resource
-In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Anoop Mayampurath (PhD) discusses 
-**Video (requires UW netID)**: [View 24-10-14 ML4MI Recording]().
+In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Anoop Mayampurath (PhD) discusses the use of electronic health record (EHR) data and machine learning to predict clinical deterioration in hospitalized children. The presentation explores how traditional methods like the Pediatric Early Warning System (PEWS) fall short and introduces a novel model, pCART, which significantly improves outcomes by enabling early and accurate detection of at-risk patients. pCART (Pediatric Cardiac Arrest Risk Tool) is a gradient boosted tree model designed to identify clinical deterioration in hospitalized children, particularly those at risk of requiring ICU transfers. Unlike traditional methods like the Pediatric Early Warning System (PEWS), which rely on static, age-dependent cutoffs and subjective assessments, pCART utilizes advanced analytics and continuous tracking to provide a more accurate and actionable risk assessment.
 
-### Key Points
-clinical deterioration in pediatric patients
-- 16,000 children per year suffer in-hospital cardiac arrests
-about 100,000 pediatric patients undergo deterioration cardiopulmonary compicattiper yaer
-- high risk of mortality
-- poor long-term health
-
-What happens when a pediatric ward patient deteriorates?
-- patient starts to deteriorate -> decline is recognized _> pediatric Emergency team (PET) activated 0> PET arrives and decides if patient should be transferred to ICU
-- the problem is that decline is not always recognized/obvious
-- Various early warning measurements (e.g., Bedside PEWS score): Given their age, consider heart rate, blood presurre, respriatory rate, and othe measurements. There are age-dependent cutoffs which are not sensitive enough to indivdual cases.There are also subjective components
-- in 2018, Parshuram et al., looked at efficacy of pediatric early warning system (large randomized clinical trial involving 21 hostials and 144,000 patients). PEWS was not reliable. # revisit this to add some detail
-- can ML help? A prediction model using vitals predicts direct ward-to-ICU transfers (simple logistic model). This vital sign model was more accurate than the Bedside PEWS measurement. 
-- Can we improve performance of this model? 
-- Used discrete-time survival analysis. Will patient be admitted to ICU within 12 hours?
-- Missing value imputation performed using last observed carry forward folowed by median iputation
-- Site1: 2009-2017 used to train. Validation: 2018-2019
-- Site2: external test cohort
-- from logistic regression with regularization to cubic splines to gradient boosted trees, performance improves.
-- call their model pCART, which stands for... #
-- pCART detect clinical events better than modified BesidePEWs
-- pCART can be utilized as a means for a more efficient healthcare intervention
-- implemented pCART at UChicago in April 2021
-- after a couple of years of implementing pCARD, how did we do? Analyze pre/post data (2 years prior implementation, 2 years post)
-  - criticalevents per 100 patients: mean 1.4 (pre), mean 0.4 (post). Implementaion was assocaited w/ decreased adverse events among high-risk children. 
-- some discussion of how this was implemented to get newer data during the implementation
-- discussion on the importance of longitudinal testing. How well does the model perform each year, given evolving clinical practices? What level of performance is acceptable?
-- how can we further improve pediatric outcomes?
-  - hospital-wide risk prediction of critical events (e.g., mechanical ventialation). Can we build a hospital-wide pediatric detrioration prediction model?
-    - using critical events as an outcome since transfer to ICU can be subjective
-    - continuus tracking of deterioration risk throughout a patient's journey
-    - unified score is better than siloed scores. Different sections (ED, ward, ICU) will have different risk scores. Unified score simplifies communication and may improve outcomes.
-    - challenge: patients in these different regions may represent distinct distributions
-    - all prediatric admissions to Comer Children's hospital from 2009-2019, Loyola Medical Center from 2006-2020, and AmFm Children's hospital from 2009-2021. 
-    - pCART still does better than BedsidePEWS. XGBoost does best.  XGBoost with RNN and RNN does not outperform XGBoost. The combined model actually out-performs the location-specific models
-    - incorporate model explainers: variable importance plot, shapley values
-- Methods to mine clinical notes: explaining pCART alerts through clinical text
-- at time t, Recorded data (e.g., vitals/labs)-> pCART -> High risk alert (yes/no)
-- at time t-12h, t: Unstructured clinical text -> CUI representations -> pCART explainer
-- high risk informs pCART explainer as well
-
-Conclusions
-- we developed a model to predicut ICU transfers in children admitted to the ward. IMplementation of our model led to improved pediatric outcomes
-- 3 others (return to)
+**Video (requires UW netID)**: [View 24-10-14 ML4MI Recording](https://mediaspace.wisc.edu/media/Using+Electronic+Health+Record+Data+to+Predict+Deterioration+in+Hospitalized+Children+-+Anoop+Mayampurath+-+Oct+2024/1_b1hhgnx4).
+Most videos on Nexus are publicly available on YouTube, but the #ML4MI ones require a netID.
 
 
 ## See also
-- [**TODO**]: Use "Improve this page" to add another related resource.
+- [**ML4MI**](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/): Explore other talks from the ML4MI group at UW-Madison.
