@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Anoop Mayampurath, PhD">
+<meta name="dcterms.date" content="2024-10-14">
+<meta name="description" content="In this ML4MI seminar, Anoop Mayampurath…">
 
-<title>Models – Nexus: Crowdsourced ML Resources</title>
+<title>Using Electronic Health Record Data to Predict Deterioriation Hostpitalized Children – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +26,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../Applications/index.html" rel="next">
-<link href="../../Toolbox/Libraries/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,65 +70,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +83,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/Models/index.html">Models</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Using Electronic Health Record Data to Predict Deterioriation Hostpitalized Children</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,12 +93,12 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../../index.html" class="sidebar-logo-link">
-      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../../../index.html" class="sidebar-logo-link">
+      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -173,19 +114,19 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Learn/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learn</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -194,25 +135,25 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Workshops</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
@@ -220,34 +161,34 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compute</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Libraries</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -255,7 +196,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Applications</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -264,19 +205,19 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/EDA/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/EDA/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EDA</span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -285,25 +226,25 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Forums</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML4MI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SILO</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other</span></a>
   </div>
 </li>
@@ -313,7 +254,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Category glossary</span></a>
   </div>
 </li>
@@ -323,20 +264,54 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="CNN">CNN <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Decision trees">Decision trees <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Deep learning">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Gradient boosting">Gradient boosting <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Image segmentation">Image segmentation <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Medical imaging">Medical imaging <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Models">Models <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Tabular">Tabular <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/ML4MI/24-10-14_Using-Electronic-Health-Record-Data-to-Predict-Deterioriation-in-Hostpitalized-Children_Anoop-Mayampurath.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/Models/index.html">Models</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Models</h1>
+<h1 class="title">Using Electronic Health Record Data to Predict Deterioriation Hostpitalized Children</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Videos</div>
+    <div class="quarto-category">ML4MI</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">Text analysis</div>
+    <div class="quarto-category">EHR</div>
+    <div class="quarto-category">Boosting</div>
+    <div class="quarto-category">Decision trees</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    In this ML4MI seminar, Anoop Mayampurath…
+  </div>
 </div>
 
 
+<div class="quarto-title-meta">
 
-<div class="quarto-title-meta column-body">
-
+    <div>
+    <div class="quarto-title-meta-heading">Presenter</div>
+    <div class="quarto-title-meta-contents">
+             <p>Anoop Mayampurath, PhD </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Date</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 14, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -346,99 +321,21 @@ window.Quarto = {
 </header>
 
 
-<p>Explore popular model architectures, pretrained models, and foundation models. You may wish to also check out <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/#category=Model%20exploration">Libraries: Model exploration</a> for libraries (e.g., MONAI, Kornia) that allow you to implement and test a variety of models with ease.</p>
+<section id="about-this-resource" class="level3">
+<h3 class="anchored" data-anchor-id="about-this-resource">About this resource</h3>
+<p>In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Anoop Mayampurath (PhD) discusses the use of electronic health record (EHR) data and machine learning to predict clinical deterioration in hospitalized children. The presentation explores how traditional methods like the Pediatric Early Warning System (PEWS) fall short and introduces a novel model, pCART, which significantly improves outcomes by enabling early and accurate detection of at-risk patients. pCART (Pediatric Cardiac Arrest Risk Tool) is a gradient boosted tree model designed to identify clinical deterioration in hospitalized children, particularly those at risk of requiring ICU transfers. Unlike traditional methods like the Pediatric Early Warning System (PEWS), which rely on static, age-dependent cutoffs and subjective assessments, pCART utilizes advanced analytics and continuous tracking to provide a more accurate and actionable risk assessment.</p>
+<p><strong>Video (requires UW netID)</strong>: <a href="https://mediaspace.wisc.edu/media/Using+Electronic+Health+Record+Data+to+Predict+Deterioration+in+Hospitalized+Children+-+Anoop+Mayampurath+-+Oct+2024/1_b1hhgnx4">View 24-10-14 ML4MI Recording</a>. Most videos on Nexus are publicly available on YouTube, but the #ML4MI ones require a netID.</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/"><strong>ML4MI</strong></a>: Explore other talks from the ML4MI group at UW-Madison.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Models,Gradient boosting,Decision trees,Tabular" data-listing-date-sort="1729123200000" data-listing-file-modified-sort="1732548834638" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="701">
-<a href="../../Toolbox/Models/XGBoost.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/XGBoost.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-XGBoost: Tree-Based Gradient Boosting for Tabular Data
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Models'); return false;">
-Models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Gradient boosting'); return false;">
-Gradient boosting
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Decision trees'); return false;">
-Decision trees
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Tabular'); return false;">
-Tabular
-</div>
-</div>
-<div class="card-text listing-description">
-XGBoost, or eXtreme Gradient Boosting, is a machine learning algorithm built upon the foundation of decision trees, extending their power through boosting. Originally…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-10-17
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="Models,Deep learning,Medical imaging,Image segmentation,CNN" data-listing-date-sort="1726444800000" data-listing-file-modified-sort="1732548834638" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="642">
-<a href="../../Toolbox/Models/UNET.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/U-Net.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-U-Net: Convolutional Networks for Biomedical Image Segmentation
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Models'); return false;">
-Models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Deep learning'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Medical imaging'); return false;">
-Medical imaging
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Image segmentation'); return false;">
-Image segmentation
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('CNN'); return false;">
-CNN
-</div>
-</div>
-<div class="card-text listing-description">
-U-Net is a convolutional neural network architecture designed for biomedical image segmentation. Introduced in 2015 by Ronneberger and colleagues in the paper, “U-Net…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-09-16
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1003,21 +900,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Toolbox/Libraries/index.html" class="pagination-link" aria-label="Libraries">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Libraries</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Applications/index.html" class="pagination-link" aria-label="Applications">
-        <span class="nav-page-text">Applications</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/ML4MI/24-10-14_Using-Electronic-Health-Record-Data-to-Predict-Deterioriation-in-Hostpitalized-Children_Anoop-Mayampurath.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
