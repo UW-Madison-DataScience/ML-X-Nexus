@@ -1,0 +1,88 @@
+---
+title: "PyTorch-OOD"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2024-12-03
+date-format: long
+image: ../../../images/PyTorch-OOD.png # Add a representative image for this library resource in the images folder.
+
+categories: 
+  - Libraries
+  - OOD detection
+  - Anomaly detection
+  - Novelty detection
+  - Open-set recognition
+  - Trustworthy AI
+  - Ethical AI
+  - Deep learning
+  - Computer vision
+  - NLP
+  - Tabular
+---
+
+## About this library
+
+PyTorch-OOD is an open-source Python library designed for **Out-of-Distribution (OOD) detection** and related tasks like anomaly detection, novelty detection, and open-set recognition. It provides a flexible framework for training, testing, and benchmarking OOD detection methods with PyTorch models. With a standardized workflow, the library enables reproducible research and easy integration into existing deep learning pipelines.
+
+PyTorch-OOD supports a range of detectors, datasets, and benchmarks, allowing researchers to experiment with various OOD methods across multiple domains, including image classification, segmentation, and text classification.
+
+#### Key features
+- **Comprehensive detector support**:
+  - Probability-based: Maximum Softmax Probability (MSP), Monte Carlo Dropout (MCD).
+  - Logit-based: Energy-Based OOD detection (EBO), Temperature Scaling.
+  - Feature-based: Mahalanobis Distance (MD), k-Nearest Neighbors (kNN).
+  - Activation pruning: ReAct, Activation Shaping (ASH).
+- **Dataset integration**: Auto-downloadable access to popular OOD datasets (e.g., CIFAR10-C, ImageNet-O, iNaturalist).
+- **Benchmarking tools**: Evaluate OOD detectors on standardized benchmarks for classification, segmentation, and text data.
+- **Unified API**: Common interface for all detectors with `fit` and `predict` methods, ensuring consistency and ease of use.
+- **Extensibility**: Modular design allows adding new datasets, detectors, and workflows.
+
+## Integration and compatibility
+
+PyTorch-OOD is fully compatible with PyTorch models and workflows. It provides a common interface for initializing and evaluating OOD detectors, making it a seamless addition to deep learning projects.
+
+- **Frameworks supported**: PyTorch
+- **Installation instructions**:
+  - For basic installation: `pip install pytorch-ood`
+  - For the latest development branch: 
+    ```bash
+    pip install git+ssh://git@github.com/kkirchheim/pytorch-ood.git@dev
+    ```
+
+## Extending PyTorch-OOD for various domains
+
+PyTorch-OOD's modular design and dataset integration make it versatile across different domains:
+
+1. **Computer vision**: OOD detection for image classification and segmentation tasks using datasets like TinyImageNet and LSUN. Feature-based methods like Mahalanobis Distance can enhance robustness.
+   
+2. **Natural language processing (NLP)**: Evaluate text models for OOD detection using datasets like 20 Newsgroups and Reuters. Text embeddings and logit-based detectors (e.g., Temperature Scaling) can be used for effective OOD classification.
+
+3. **Tabular data**: Simplify OOD detection in structured datasets by leveraging feature-based or probability-based detectors.
+
+## Why use PyTorch-OOD?
+
+1. **Standardized workflows**: Provides a clear three-step process: train a model, initialize an OOD detector, and evaluate performance.
+2. **Reproducibility**: Benchmark datasets and unified APIs ensure reproducible research.
+3. **Versatility**: Applicable across multiple domains, including computer vision, NLP, and tabular data.
+4. **Educational value**: An excellent resource for teaching OOD concepts and methods in machine learning.
+
+## Use cases
+- **Healthcare**: Detecting anomalies in medical images.
+- **Finance**: Identifying novel fraud patterns in transaction datasets.
+- **Autonomous driving**: Segmenting unexpected obstacles in road scenarios.
+- **NLP**: Evaluating robustness of sentiment analysis models to out-of-vocabulary inputs.
+
+## Tutorials and resources
+- **Getting started guide**: [PyTorch-OOD Documentation](https://github.com/kkirchheim/pytorch-ood)
+- **Example notebooks**: Explore examples for detectors, benchmarks, and datasets [here](https://github.com/kkirchheim/pytorch-ood/tree/main/examples).
+
+## Questions?
+For more assistance, visit the [GitHub repository](https://github.com/kkirchheim/pytorch-ood) or join the community for discussions and support.
+
+## See also
+- [**Talk**: Intro to Out-of-Distribution Detection](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html): Learn more about the pervasive problem of out-of-distribution data, and techniques available to mitigate this problem.
+- [**Talk**: Trustworthy LLMs & Ethical AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2024-05-11.html): Learn how DeTox can be used to remove toxic embeddings in LLMs.
+- [**Workshop**: Trustworthy AI: Explainability, Bias, Fairness, and Safety](https://carpentries-incubator.github.io/fair-explainable-ml/index.html): A beginner-friendly workshop on Trustworthy AI/ML concepts and mitigation tools, including AIF360, OOD detection, and explainability methods.
+- [**Library**: AI Fairness 360 (AIF360)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/AI-Fairness-360.html): AI Fairness 360 (AIF360) is a scikit-learn-compatible open-source Python library designed to detect and mitigate bias in machine learning models
