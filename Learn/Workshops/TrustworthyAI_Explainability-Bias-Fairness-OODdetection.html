@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2024-12-03">
 
-<title>Models – Nexus: Crowdsourced ML Resources</title>
+<title>Trustworthy AI - Explainability, Bias, Fairness, and Safety – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,10 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Applications/index.html" rel="next">
-<link href="../../Toolbox/Libraries/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +82,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/Models/index.html">Models</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Trustworthy AI - Explainability, Bias, Fairness, and Safety</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +92,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -222,11 +162,11 @@ window.Quarto = {
       <div class="sidebar-item-container"> 
             <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
@@ -247,7 +187,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -323,20 +263,61 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Qm9vc3Rpbmc=">Boosting <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q05O">CNN <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVjaXNpb24lMjB0cmVlcw==">Decision trees <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVlcCUyMGxlYXJuaW5n">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW1hZ2UlMjBzZWdtZW50YXRpb24=">Image segmentation <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWVkaWNhbCUyMGltYWdpbmc=">Medical imaging <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TW9kZWxz">Models <span class="quarto-category-count">(2)</span></div><div class="category" data-category="VGFidWxhcg==">Tabular <span class="quarto-category-count">(1)</span></div><div class="category" data-category="WEdCb29zdA==">XGBoost <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a>
+  <ul class="collapse">
+  <li><a href="#topics-covered" id="toc-topics-covered" class="nav-link" data-scroll-target="#topics-covered"><strong>Topics covered</strong></a></li>
+  <li><a href="#register-to-take-this-workshop-in-madison" id="toc-register-to-take-this-workshop-in-madison" class="nav-link" data-scroll-target="#register-to-take-this-workshop-in-madison">Register to take this workshop in Madison!</a></li>
+  <li><a href="#alternatively-work-through-the-materials-independently" id="toc-alternatively-work-through-the-materials-independently" class="nav-link" data-scroll-target="#alternatively-work-through-the-materials-independently">Alternatively, work through the materials independently!</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Workshops/TrustworthyAI_Explainability-Bias-Fairness-OODdetection.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/Models/index.html">Models</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Models</h1>
-</div>
+<h1 class="title">Trustworthy AI - Explainability, Bias, Fairness, and Safety</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Workshops</div>
+    <div class="quarto-category">Trustworthy AI</div>
+    <div class="quarto-category">Ethical AI</div>
+    <div class="quarto-category">Explainability</div>
+    <div class="quarto-category">Fairness</div>
+    <div class="quarto-category">Safety</div>
+    <div class="quarto-category">Bias mitigation</div>
+    <div class="quarto-category">Out-of-Distribution Detection</div>
+    <div class="quarto-category">AIF360</div>
+    <div class="quarto-category">PyTorch-OOD</div>
+    <div class="quarto-category">GradCAM</div>
+    <div class="quarto-category">Code-along</div>
+    <div class="quarto-category">Carpentries Incubator</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 3, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -346,102 +327,60 @@ window.Quarto = {
 </header>
 
 
-<p>Explore popular model architectures, pretrained models, and foundation models. You may wish to also check out <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/#category=Model%20exploration">Libraries: Model exploration</a> for libraries (e.g., MONAI, Kornia) that allow you to implement and test a variety of models with ease.</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p>The <strong>Trustworthy AI: Explainability, Bias, Fairness, and Safety</strong> workshop equips participants with practical skills to evaluate and improve the trustworthiness of machine learning models. Spanning <strong>structured data (tabular)</strong>, <strong>natural language processing (NLP)</strong>, and <strong>computer vision</strong>, this workshop integrates tools and techniques to enhance fairness, explainability, and reliability. Participants will explore real-world applications using cutting-edge libraries like <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/AI-Fairness-360.html">AIF360</a>, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/PyTorch-OOD.html">PyTorch-OOD</a>, and GradCAM.</p>
+<section id="topics-covered" class="level3">
+<h3 class="anchored" data-anchor-id="topics-covered"><strong>Topics covered</strong></h3>
+<ol type="1">
+<li><strong>Fairness</strong>: Hands-on bias detection and mitigation using AIF360.</li>
+<li><strong>Explainability</strong>: Techniques such as GradCAM and linear probes for visualizing model behavior.</li>
+<li><strong>Safety and Reliability</strong>: Out-of-distribution (OOD) detection with PyTorch-OOD.</li>
+<li><strong>Trustworthiness</strong>: Ensuring models are interpretable, reproducible, and aligned with ethical practices.</li>
+</ol>
+<section id="prerequisites" class="level4">
+<h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
+<p>Learners should have:</p>
+<ul>
+<li>Python programming experience.</li>
+<li>Familiarity with machine learning concepts like train/test splits and cross-validation.</li>
+<li>Exposure to neural networks and basic model training.</li>
+<li>A commitment to building trustworthy and ethical AI models.</li>
+</ul>
+</section>
+<section id="estimated-time-to-complete" class="level4">
+<h4 class="anchored" data-anchor-id="estimated-time-to-complete">Estimated time to complete</h4>
+<p>This workshop takes approximately 12 hours, divided across multiple hands-on episodes.</p>
+</section>
+</section>
+<section id="register-to-take-this-workshop-in-madison" class="level3">
+<h3 class="anchored" data-anchor-id="register-to-take-this-workshop-in-madison">Register to take this workshop in Madison!</h3>
+<p>This workshop is part of UW-Madison’s <a href="https://datascience.wisc.edu/uw-madison-carpentries-community/">local Carpentries community</a> efforts to develop advanced ML/AI educational materials. To stay updated about upcoming workshops, subscribe to the <a href="https://datascience.wisc.edu/newsletter/">Data Science @ UW Newsletter</a>.</p>
+</section>
+<section id="alternatively-work-through-the-materials-independently" class="level3">
+<h3 class="anchored" data-anchor-id="alternatively-work-through-the-materials-independently">Alternatively, work through the materials independently!</h3>
+<p>The full lesson is available as open-source materials. Visit the <a href="https://carpentries-incubator.github.io/fair-explainable-ml/">lesson materials</a> to explore on your own. If you’re at UW-Madison, join <a href="https://datascience.wisc.edu/hub/#dropin">Coding Meetup</a> (Tue/Thur, 2:30-4:30pm) for assistance.</p>
+</section>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>If you have questions about this workshop, visit the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. Feedback is welcome and will help improve future iterations of the workshop.</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/AI-Fairness-360.html"><strong>Library</strong>: AIF360</a>: Learn about fairness metrics and bias mitigation strategies for ML.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/PyTorch-OOD.html"><strong>Library</strong>: PyTorch-OOD</a>: Tools for detecting out-of-distribution data and anomalies.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html"><strong>Workshop</strong>: Intro to Machine Learning with Sklearn</a>: Once you master Python fundamentals, start using the scikit-learn package to begin exploring “classical” ML methods (e.g., regression, clustering, decision trees).</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: Dive into PyTorch as an alternative deep learning framework.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html"><strong>Talk</strong>: Intro to Out-of-Distribution Detection</a>: Learn more about the pervasive problem of out-of-distribution data, and techniques available to mitigate this problem.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2024-05-11.html"><strong>Talk</strong>: Trustworthy LLMs &amp; Ethical AI</a>: Learn how DeTox can be used to remove toxic embeddings in LLMs.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="TW9kZWxzJTJDQm9vc3RpbmclMkNYR0Jvb3N0JTJDRGVjaXNpb24lMjB0cmVlcyUyQ1RhYnVsYXI=" data-listing-date-sort="1729123200000" data-listing-file-modified-sort="1733250617796" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="701">
-<a href="../../Toolbox/Models/XGBoost.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/XGBoost.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-XGBoost: Tree-Based Gradient Boosting for Tabular Data
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('TW9kZWxz'); return false;">
-Models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9vc3Rpbmc='); return false;">
-Boosting
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('WEdCb29zdA=='); return false;">
-XGBoost
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('RGVjaXNpb24lMjB0cmVlcw=='); return false;">
-Decision trees
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VGFidWxhcg=='); return false;">
-Tabular
-</div>
-</div>
-<div class="card-text listing-description">
-XGBoost, or eXtreme Gradient Boosting, is a machine learning algorithm built upon the foundation of decision trees, extending their power through boosting. Originally…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-10-17
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="TW9kZWxzJTJDRGVlcCUyMGxlYXJuaW5nJTJDTWVkaWNhbCUyMGltYWdpbmclMkNJbWFnZSUyMHNlZ21lbnRhdGlvbiUyQ0NOTg==" data-listing-date-sort="1726444800000" data-listing-file-modified-sort="1733250617796" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="642">
-<a href="../../Toolbox/Models/UNET.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/U-Net.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-U-Net: Convolutional Networks for Biomedical Image Segmentation
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('TW9kZWxz'); return false;">
-Models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('TWVkaWNhbCUyMGltYWdpbmc='); return false;">
-Medical imaging
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('SW1hZ2UlMjBzZWdtZW50YXRpb24='); return false;">
-Image segmentation
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q05O'); return false;">
-CNN
-</div>
-</div>
-<div class="card-text listing-description">
-U-Net is a convolutional neural network architecture designed for biomedical image segmentation. Introduced in 2015 by Ronneberger and colleagues in the paper, “U-Net…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-09-16
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1003,21 +942,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Toolbox/Libraries/index.html" class="pagination-link" aria-label="Libraries">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Libraries</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Applications/index.html" class="pagination-link" aria-label="Applications">
-        <span class="nav-page-text">Applications</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Workshops/TrustworthyAI_Explainability-Bias-Fairness-OODdetection.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
