@@ -1,0 +1,89 @@
+---
+title: "AI Fairness 360 (AIF360)"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2024-12-03
+date-format: long
+image: ../../../images/aif360-logo.png # Add a representative image for this library resource in the images folder.
+
+categories: 
+  - Libraries
+  - Fairness
+  - Ethical ML
+  - Trustworthy ML
+  - Bias mitigation
+  - Group fairness
+  - Individual fairness
+  - Sklearn
+  - Tabular
+  - Computer vision
+  - NLP
+  - Text analysis
+---
+
+## About this library
+
+AI Fairness 360 (AIF360) is a scikit-learn-compatible open-source Python library designed to detect and mitigate bias in machine learning models. Its compatibility with scikit-learn pipelines allows seamless integration into workflows for tabular data tasks, which is the library's primary focus. Many of AIF360’s fairness metrics and mitigation algorithms operate directly on model outputs (`y_pred` and `y_true`), making it easy to adapt for use with other models, even outside the tabular domain.
+
+AIF360 is particularly suited for tasks where fairness is a critical concern. Its extensibility and modular design make it a powerful tool for ethical AI development across a range of applications, including preprocessing, in-processing, and post-processing bias mitigation.
+
+#### Key features
+- **Bias detection**: Comprehensive metrics to measure fairness at both individual and group levels.
+  - **Group fairness**: Metrics like disparate impact ratio and equal opportunity difference.
+  - **Individual fairness**: Measures such as consistency score to evaluate treatment of similar individuals.
+  - **Distributional fairness**: Metrics like generalized entropy error to quantify benefit distribution.
+- **Bias mitigation algorithms**:
+  - **Pre-processing**: Techniques like reweighing and learned fair representations to adjust data before training.
+  - **In-processing**: Models like adversarial debiasing to apply fairness constraints during training.
+  - **Post-processing**: Tools like reject option classifier for fair adjustments to model outputs.
+- **Dataset integration**: Includes commonly used datasets for fairness research (e.g., COMPAS).
+- **Scikit-learn compatibility**: Built with scikit-learn conventions, AIF360 integrates easily into standard pipelines, enabling compatibility with a wide range of estimators and transformers.
+- **Modular and extensible design**: Easily add new datasets, metrics, or algorithms.
+
+## Integration and compatibility
+
+AIF360 is fully compatible with scikit-learn pipelines, which explains its primary focus on tabular data. While scikit-learn is less commonly used for image and text tasks, AIF360's ability to operate directly on `y_pred` and `y_true` makes it versatile and easy to extend to other domains, such as computer vision and NLP.
+
+- **Frameworks supported**: Scikit-learn, Python, R
+- **Installation instructions**:
+  - For basic installation: `pip install aif360`
+  - For full functionality: `pip install 'aif360[all]'`
+  - For R: `install.packages("aif360")`
+
+## Extending AIF360 for computer vision and NLP
+
+Although AIF360 is focused on tabular data, its compatibility with `y_pred` and `y_true` outputs enables its fairness metrics and algorithms to be applied in other domains:
+
+1. **Computer vision**: Convert image-based predictions into tabular formats using model outputs and metadata (e.g., race, gender). This allows AIF360’s fairness metrics and mitigation strategies to evaluate bias in vision tasks, such as object detection.
+   
+2. **Natural language processing (NLP)**: Similarly, AIF360 can be used to assess fairness in text models by processing structured outputs, such as sentiment scores or embeddings. Combining AIF360 with libraries like FairSeq or Hugging Face Transformers offers powerful solutions for fairness in text applications.
+
+3. **General extensibility**: Since many metrics and algorithms in AIF360 require only `y_pred`, `y_true`, and protected attribute data, the library can be adapted to virtually any domain where these inputs are available.
+
+## Why use AIF360?
+
+1. **Ethical AI development**: Essential for ensuring fairness in AI models, reducing societal bias, and improving trustworthiness.
+2. **Scikit-learn compatibility**: Makes it easy to integrate fairness assessments and mitigation into existing workflows.
+3. **Extensibility**: Flexible design enables adaptation for custom datasets, metrics, and algorithms across domains.
+4. **Educational value**: A resourceful tool for teaching fairness concepts in machine learning.
+
+## Use cases
+- **Healthcare**: Ensuring fairness in predictive models for patient outcomes.
+- **Finance**: Mitigating bias in credit scoring models.
+- **Hiring**: Addressing bias in applicant ranking systems.
+- **Criminal justice**: Evaluating bias in risk assessment tools (e.g., COMPAS).
+- **Computer vision**: Adapting fairness metrics for image data (e.g., object detection outcomes and metadata).
+- **NLP**: Assessing fairness in text models using structured metadata or embeddings.
+
+## Tutorials and resources
+- **Getting started guide**: [AIF360 Documentation](https://aif360.readthedocs.io/en/latest/getting_started.html)
+- **Sample notebooks**: Explore examples on fairness metrics and mitigation [here](https://github.com/Trusted-AI/AIF360/tree/master/examples).
+
+## Questions?
+For more assistance, visit the [GitHub discussions](https://github.com/Trusted-AI/AIF360/discussions) page or join the AIF360 community for support.
+
+## See also
+- [**Workshop**: Trustworthy AI: Explainability, Bias, Fairness, and Safety](https://carpentries-incubator.github.io/fair-explainable-ml/index.html): A beginner-friendly workshop on Trustworthy AI/ML concepts and mitigation tools, including AIF360, OOD deteciton, and explainability methods.
+- [**Talk**: Trustworthy LLMs & Ethical AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2024-05-11.html): Learn how DeTox can be used to remove toxic embeddings in LLMs.
