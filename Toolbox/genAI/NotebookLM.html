@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2024-12-09">
 
-<title>Blogs – Nexus: Crowdsourced ML Resources</title>
+<title>NotebookLM: A GenAI Summarization Tool – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,10 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Applications/EDA/index.html" rel="next">
-<link href="../../Applications/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-author','listing-title','listing-description','listing-date','listing-reading-time','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +82,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../Applications/Blogs/index.html">Blogs</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">NotebookLM: A GenAI Summarization Tool</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +92,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -257,14 +197,14 @@ window.Quarto = {
       <div class="sidebar-item-container"> 
             <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Applications</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
@@ -323,20 +263,48 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QXVkaW8=">Audio <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QmxvZ3M=">Blogs <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q05O">CNN <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1NJ">CSI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29uZm9ybWVy">Conformer <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVlcCUyMGxlYXJuaW5n">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SHVtYW5pdGllcw==">Humanities <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TXVzaWM=">Music <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2lnbmFsJTIwcHJvY2Vzc2luZw==">Signal processing <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3BlY3RyYWwlMjBhbmFseXNpcw==">Spectral analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGltZS1zZXJpZXM=">Time-series <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXI=">Transformer <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/genAI/NotebookLM.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../Applications/Blogs/index.html">Blogs</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blogs</h1>
-</div>
+<h1 class="title">NotebookLM: A GenAI Summarization Tool</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">GenAI</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">Summarization</div>
+    <div class="quarto-category">Gemini 1.5</div>
+    <div class="quarto-category">LLM</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 9, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -346,95 +314,41 @@ window.Quarto = {
 </header>
 
 
-<section id="share-your-ml-story" class="level3">
-<h3 class="anchored" data-anchor-id="share-your-ml-story">Share your ML story!</h3>
-<p>Are you currently immersed in an exciting ML project? We want to hear about it! Share your insights, challenges, and successes by contributing a blog post to Nexus, the ML+X resource sharing platform.</p>
-<p>Whether you’re exploring ML applications in biology, engineering, social sciences, or any other field, your unique perspective is invaluable. Showcase your innovation, research, and creativity to inspire others in the ML+X community.</p>
-<p>Get started by posting a brief summary of your blog idea as an <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/issues">Issue on GitHub</a>! The Nexus development team will follow-up with further instructions.</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p><a href="https://notebooklm.google.com">NotebookLM</a> is a generative AI tool designed to assist with understanding dense, complex texts, including research papers in machine learning and AI. Developed by Google Labs and powered by the Gemini 1.5 Pro large language model (LLM), NotebookLM leverages advanced AI capabilities to provide summaries, answer questions, and generate audio versions of summaries. This makes it an invaluable resource for practitioners looking to dive into highly technical material.</p>
+<section id="key-features" class="level4">
+<h4 class="anchored" data-anchor-id="key-features">Key features</h4>
+<ul>
+<li><strong>Summarization (Text and Audio)</strong>: Quickly generate concise textual summaries of dense ML/AI papers and convert them into a podcast-like audio summary. As an example, check out this <a href="https://drive.google.com/file/d/12Pau9rj68ppmUgW7dYuBn43qhe4386_G/view?usp=sharing">audio summary</a> of the paper, <a href="https://arxiv.org/html/2408.03314v1">Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters</a>, by researchers at DeepMind.</li>
+<li><strong>Interactive Q&amp;A</strong>: Ask specific questions about uploaded papers and receive detailed answers tailored to the content of the document.</li>
+<li><strong>Gemini 1.5 Pro’s strengths</strong>: Provides advanced contextual understanding and reasoning across diverse content, making it well-suited for technical and research documents.</li>
+<li><strong>Generative flexibility</strong>: Capable of handling complex queries and summarization tasks without requiring fine-tuning for specific domains.</li>
+</ul>
 </section>
-<section id="explore-blogs" class="level3">
-<h3 class="anchored" data-anchor-id="explore-blogs">Explore blogs</h3>
-
+<section id="high-level-tips-pitfalls" class="level4">
+<h4 class="anchored" data-anchor-id="high-level-tips-pitfalls">High-level tips &amp; pitfalls</h4>
+<ul>
+<li><strong>Iterative interaction</strong>: Don’t hesitate to refine questions or dig deeper into concepts for thorough understanding.</li>
+<li><strong>Over-reliance on summaries</strong>: While summaries are helpful, always cross-check details in the original document for accuracy.</li>
+<li><strong>Data privacy</strong>: Avoid uploading proprietary or sensitive documents, as NotebookLM’s privacy practices are tied to Google’s terms of use.</li>
+</ul>
+</section>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>Have questions about using NotebookLM? Join the discussion on the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">ML+X Nexus Q&amp;A</a>.</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><strong>TODO</strong>: Use “Improve this page” to add a related resource.</li>
+</ul>
 
 
 </section>
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="QmxvZ3MlMkNEZWVwJTIwbGVhcm5pbmclMkNDb25mb3JtZXIlMkNUcmFuc2Zvcm1lciUyQ0NOTiUyQ0h1bWFuaXRpZXMlMkNBdWRpbyUyQ011c2ljJTJDQ1NJJTJDVGltZS1zZXJpZXMlMkNTaWduYWwlMjBwcm9jZXNzaW5nJTJDU3BlY3RyYWwlMjBhbmFseXNpcw==" data-listing-date-sort="1726012800000" data-listing-file-modified-sort="1733838172774" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2613">
-<div class="thumbnail">
-<p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a></p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">
-<p><img loading="lazy" src="../../images/blog-music-identification.jpg" class="thumbnail-image" style="height: 150px;"></p>
-</a><p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">What Tune Is That? A Humanities Application of Deep Learning</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('QmxvZ3M='); return false;">
-Blogs
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q29uZm9ybWVy'); return false;">
-Conformer
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmb3JtZXI='); return false;">
-Transformer
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q05O'); return false;">
-CNN
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('SHVtYW5pdGllcw=='); return false;">
-Humanities
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8='); return false;">
-Audio
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('TXVzaWM='); return false;">
-Music
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q1NJ'); return false;">
-CSI
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VGltZS1zZXJpZXM='); return false;">
-Time-series
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('U2lnbmFsJTIwcHJvY2Vzc2luZw=='); return false;">
-Signal processing
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('U3BlY3RyYWwlMjBhbmFseXNpcw=='); return false;">
-Spectral analysis
-</div>
-</div>
-<div class="listing-description">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">Deep learning (neural network training) can solve humanities challenges, too! Read about a successful project that trained a model to be able to identify Irish traditional…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">
-<div class="listing-date">
-2024-09-11
-</div>
-<div class="listing-author">
-Alan Ng
-</div>
-<div class="listing-reading-time">
-14 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -996,21 +910,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Applications/index.html" class="pagination-link" aria-label="Applications">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Applications</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Applications/EDA/index.html" class="pagination-link" aria-label="EDA">
-        <span class="nav-page-text">EDA</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Blogs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/genAI/NotebookLM.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
