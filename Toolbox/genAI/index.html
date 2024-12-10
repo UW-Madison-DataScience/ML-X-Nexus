@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Chris Endemann">
-<meta name="dcterms.date" content="2024-07-12">
 
-<title>Overview of Reproducibility Lecture – Nexus: Crowdsourced ML Resources</title>
+<title>GenAI – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,6 +29,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-listing/list.min.js"></script>
+<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -69,7 +69,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -82,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Overview of Reproducibility Lecture</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">GenAI</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -92,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -269,45 +327,20 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
-  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
-  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Videos/Reproducibility-overview.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R2VtaW5pJTIwMS41">Gemini 1.5 <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R2VuQUk=">GenAI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3VtbWFyaXphdGlvbg==">Summarization <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-body" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Overview of Reproducibility Lecture</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">Videos</div>
-    <div class="quarto-category">Reproducibility</div>
-  </div>
-  </div>
+<h1 class="title">GenAI</h1>
+</div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-body">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">July 12, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -317,36 +350,60 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="about-this-resource" class="level2">
-<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
-<p>Dr.&nbsp;Sarah Stevens’ lecture highlights the critical importance of reproducibility in computational and data science projects. She also shares best practices to ensure reproducible results including:</p>
-<ul>
-<li>How to organize your project</li>
-<li>Good names for files/folders</li>
-<li>Documenting your work and README files</li>
-<li>How to organize data in spreadsheets and use data dictionaries</li>
-<li>Automation with scripts</li>
-<li>Version control</li>
-<li>Licensing</li>
-<li>Creating backups</li>
-</ul>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/0MKlmtD4zts?si=WmAsc5p2tVL1NoQc" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-</section>
-<section id="questions" class="level2">
-<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
-<p>If you any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
-</section>
-<section id="see-also" class="level2">
-<h2 class="anchored" data-anchor-id="see-also">See also</h2>
-<ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/Github-desktop.html"><strong>Guide</strong>: Version Control with GitHub Desktop</a>: GitHub Desktop is a graphical user interface (GUI) application that simplifies the use of Git and GitHub. It is designed for users who prefer not to use the command line interface, offering a more intuitive and visual approach to version control. With GitHub Desktop, you can easily perform common Git tasks such as committing changes, creating branches, and resolving merge conflicts, all within a user-friendly interface.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/Intro-git-github.html"><strong>Workshop</strong>: Intro to Version Control with Git</a>: If you’re curious to learn how to use Git via shell commands (or just want to become more fluent with Git), check out this YouTube playlist from the Data Science Hub!</li>
-</ul>
+<p>Explore genAI tools that you can leverage for your next AI/ML project.</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-categories="R2VuQUklMkNOTFAlMkNTdW1tYXJpemF0aW9uJTJDR2VtaW5pJTIwMS41JTJDTExN" data-listing-date-sort="1733702400000" data-listing-file-modified-sort="1733839150125" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="254">
+<a href="../../Toolbox/genAI/NotebookLM.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="../../images/NotebookLM.jpg" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+NotebookLM: A GenAI Summarization Tool
+</h5>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">
+GenAI
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">
+NLP
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('U3VtbWFyaXphdGlvbg=='); return false;">
+Summarization
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('R2VtaW5pJTIwMS41'); return false;">
+Gemini 1.5
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">
+LLM
+</div>
+</div>
+<div class="card-text listing-description">
+NotebookLM is a generative AI tool designed to assist with understanding dense, complex texts, including research papers in machine learning and AI. Developed by Google Labs…
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Chris Endemann
+</div>
+<div class="listing-date">
+2024-12-09
+</div>
+</div>
+</div>
+</div>
+</a>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -913,4 +970,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Videos/Reproducibility-overview.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/genAI/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
