@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Kangwook Lee, PhD">
+<meta name="dcterms.date" content="2023-09-11">
 
-<title>Blogs – Nexus: Crowdsourced ML Resources</title>
+<title>Exploring Generative AI: An Introduction to Large Language Models and Diffusion Models – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +25,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../Applications/EDA/index.html" rel="next">
-<link href="../../Applications/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-dd50d11148f45b766861c2603f055860.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-7fdd1c50e7530c216fbd31876f0e8f74.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-dd50d11148f45b766861c2603f055860.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-dark-7fdd1c50e7530c216fbd31876f0e8f74.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-author','listing-title','listing-description','listing-date','listing-reading-time','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +82,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../Applications/Blogs/index.html">Blogs</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Exploring Generative AI: An Introduction to Large Language Models and Diffusion Models</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,12 +92,12 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../../index.html" class="sidebar-logo-link">
-      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../../../index.html" class="sidebar-logo-link">
+      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -173,19 +113,19 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Learn/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learn</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -194,31 +134,31 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Workshops</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
@@ -226,7 +166,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -235,31 +175,31 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compute</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GenAI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Libraries</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -267,28 +207,28 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Applications</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/EDA/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/EDA/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EDA</span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -297,31 +237,31 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">AI @ UW</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML+X</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML4MI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SILO</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other</span></a>
   </div>
 </li>
@@ -331,7 +271,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Category glossary</span></a>
   </div>
 </li>
@@ -341,20 +281,52 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QXVkaW8=">Audio <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QXVkaW8lMjBkYXRh">Audio data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QXVkaW8lMjBzZWFyY2g=">Audio search <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QmxvZ3M=">Blogs <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q05O">CNN <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1NJ">CSI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29uZm9ybWVy">Conformer <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVlcCUyMGxlYXJuaW5n">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SHVtYW5pdGllcw==">Humanities <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TXVzaWM=">Music <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHlUb3JjaA==">PyTorch <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2lnbmFsJTIwcHJvY2Vzc2luZw==">Signal processing <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3BlY3RyYWwlMjBhbmFseXNpcw==">Spectral analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGltZS1zZXJpZXM=">Time-series <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXI=">Transformer <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../Applications/Blogs/index.html">Blogs</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blogs</h1>
-</div>
+<h1 class="title">Exploring Generative AI: An Introduction to Large Language Models and Diffusion Models</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Videos</div>
+    <div class="quarto-category">ML4MI</div>
+    <div class="quarto-category">UW-Madison</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">VLM</div>
+    <div class="quarto-category">LLaVA</div>
+    <div class="quarto-category">GenAI</div>
+    <div class="quarto-category">Diffusion</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Multimodal learning</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Presenter</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kangwook Lee, PhD </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Date</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 11, 2023</p>
+    </div>
+  </div>
   
     
   </div>
@@ -364,104 +336,24 @@ window.Quarto = {
 </header>
 
 
-<section id="share-your-ml-story" class="level3">
-<h3 class="anchored" data-anchor-id="share-your-ml-story">Share your ML story!</h3>
-<p>Are you currently immersed in an exciting ML project? We want to hear about it! Share your insights, challenges, and successes by contributing a blog post to Nexus, the ML+X resource sharing platform.</p>
-<p>Whether you’re exploring ML applications in biology, engineering, social sciences, or any other field, your unique perspective is invaluable. Showcase your innovation, research, and creativity to inspire others in the ML+X community.</p>
-<p>Get started by posting a brief summary of your blog idea as an <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/issues">Issue on GitHub</a>! The Nexus development team will follow-up with further instructions.</p>
+<section id="about-this-resource" class="level3">
+<h3 class="anchored" data-anchor-id="about-this-resource">About this resource</h3>
+<p>In this talk from the Machine Learning for Medical Imaging (ML4MI) community, Kangwook Lee, PhD, provides a comprehensive introduction to generative AI through the lens of Large Language Models (LLMs) and diffusion-based models.</p>
+<p>Dr.&nbsp;Lee begins by tracing the historical context leading to the development of modern LLMs, such as GPT, and explores how these models serve as universal interfaces to general intelligence through next-word prediction. By presenting key examples, including applications in software development and medical imaging, he demonstrates their transformative potential across diverse domains.</p>
+<p>The talk also delves into Language-Interfaced Fine-Tuning (LIFT), a method for adapting LLMs to non-language machine learning tasks, and highlights Visual Instruction Tuning (VIT) work by Haotian Liu, showing how these advancements push the boundaries of multimodal learning.</p>
+<p>In the second part of the presentation, Dr.&nbsp;Lee introduces diffusion-based generative models. He explains core concepts behind these models, emphasizing their unique approach to data synthesis and generative tasks. Additionally, topics such as LoRA (Low-Rank Adaptation) are briefly covered, showcasing methods to make training and fine-tuning efficient for large-scale models.</p>
+<p><strong>A netID is required to view ML4MI videos</strong>: <a href="https://mediaspace.wisc.edu/media/Exploring+Generative+AI%3A+An+Introduction+to+Large+Language+Models+and+Diffusion+Models+-+Kangwook+Lee+-+Sep+2023/1_t5kux56c">View 2023-09 ML4MI recording</a>.</p>
 </section>
-<section id="explore-blogs" class="level3">
-<h3 class="anchored" data-anchor-id="explore-blogs">Explore blogs</h3>
-
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/UNET.html"><strong>Application - Video</strong>: Exploring Model Sharing in the Age of Foundation Models</a>: Learn more about the LLaVA model.</li>
+</ul>
 
 
 </section>
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="QXVkaW8lMjBzZWFyY2glMkNCbG9ncyUyQ0RlZXAlMjBsZWFybmluZyUyQ0NvbmZvcm1lciUyQ1RyYW5zZm9ybWVyJTJDQ05OJTJDSHVtYW5pdGllcyUyQ0F1ZGlvJTJDQXVkaW8lMjBkYXRhJTJDTXVzaWMlMkNQeVRvcmNoJTJDQ1NJJTJDVGltZS1zZXJpZXMlMkNTaWduYWwlMjBwcm9jZXNzaW5nJTJDU3BlY3RyYWwlMjBhbmFseXNpcw==" data-listing-date-sort="1726012800000" data-listing-file-modified-sort="1737144270244" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2585">
-<div class="thumbnail">
-<p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a></p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">
-<p><img loading="lazy" src="../../images/blog-music-identification.jpg" class="thumbnail-image" style="height: 150px;"></p>
-</a><p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">What Tune Is That? A Humanities Application of Deep Learning</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8lMjBzZWFyY2g='); return false;">
-Audio search
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QmxvZ3M='); return false;">
-Blogs
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q29uZm9ybWVy'); return false;">
-Conformer
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmb3JtZXI='); return false;">
-Transformer
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q05O'); return false;">
-CNN
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('SHVtYW5pdGllcw=='); return false;">
-Humanities
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8='); return false;">
-Audio
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8lMjBkYXRh'); return false;">
-Audio data
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('TXVzaWM='); return false;">
-Music
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('UHlUb3JjaA=='); return false;">
-PyTorch
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q1NJ'); return false;">
-CSI
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VGltZS1zZXJpZXM='); return false;">
-Time-series
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('U2lnbmFsJTIwcHJvY2Vzc2luZw=='); return false;">
-Signal processing
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('U3BlY3RyYWwlMjBhbmFseXNpcw=='); return false;">
-Spectral analysis
-</div>
-</div>
-<div class="listing-description">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">Deep learning (neural network training) can solve humanities challenges, too! Read about a successful project that trained a model to be able to identify Irish traditional…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">
-<div class="listing-date">
-2024-09-11
-</div>
-<div class="listing-author">
-Alan Ng
-</div>
-<div class="listing-reading-time">
-13 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1023,21 +915,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Applications/index.html" class="pagination-link" aria-label="Applications">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Applications</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Applications/EDA/index.html" class="pagination-link" aria-label="EDA">
-        <span class="nav-page-text">EDA</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Blogs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
