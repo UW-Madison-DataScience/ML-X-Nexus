@@ -1,20 +1,55 @@
-name: Check for broken links
+# -------------------------------------------------------------------------------------
+# GitHub Actions Workflow: Check for Broken Links on GitHub Pages Site
+# -------------------------------------------------------------------------------------
+# This file defines a GitHub Actions *workflow* — a full automation process.
+# It includes triggers (when it runs), and jobs (what it does).
+#
+# Inside the job, we *use an action* — a reusable piece of automation that handles 
+# one task (in this case, link checking).
+#
+# Reminder: Workflows are made up of jobs, and jobs are made up of steps. 
+# Steps often *use actions*, which are prebuilt helper tools.
+
+name: Check for broken links  # Workflow name (appears in GitHub's Actions UI)
+
 on:
-  workflow_dispatch: # allow manual trigger
-  workflow_run: # Run after GH Pages deployment
+  # Allows this workflow to be run manually from the GitHub UI
+  workflow_dispatch:
+
+  # Automatically run this workflow *after* the GitHub Pages site has been built and deployed.
+  # The `pages-build-deployment` workflow is automatically created by GitHub when Pages is enabled.
+  workflow_run:
     workflows:
       - pages-build-deployment
     types:
-      - completed
+      - completed  # Only trigger after that deployment workflow finishes
+
+  # Scheduled run using cron syntax (minute hour day month weekday)
   schedule:
-    - cron: '49 11 * * 1' # Run every Monday at 11:40 UTC (6:49 AM CDT)
+    - cron: '49 11 * * 1'  # Run every Monday at 11:49 UTC (6:49 AM CDT)
+
+# -------------------------------------------------------------------------------------
+# Job: A self-contained unit of work run on a specific virtual machine (runner).
+# -------------------------------------------------------------------------------------
 jobs:
   crawl_for_broken_links:
+    # Specify the operating system environment where this job runs.
+    # This is required — GitHub needs to know which kind of runner to use.
+    #
+    # `ubuntu-latest` is the most common and has many pre-installed tools.
     runs-on: ubuntu-latest
+
+    # Optional display name (helpful if your workflow has multiple jobs)
     name: Broken-Links-Crawler
+
     steps:
-    - name: Checking Links
-      uses: ScholliYT/Broken-Links-Crawler-Action@v3.3.1
-      with:
-        website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
-        verbose: true
+      - name: Checking Links
+        # Use a prebuilt *action* — a reusable task from the GitHub Marketplace.
+        # This one crawls the site and detects broken hyperlinks.
+        #
+        # Source: https://github.com/ScholliYT/Broken-Links-Crawler-Action
+        uses: ScholliYT/Broken-Links-Crawler-Action@v3.3.1
+
+        with:
+          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'  # GitHub Pages site to crawl
+          verbose: true  # Print detailed output to the logs
