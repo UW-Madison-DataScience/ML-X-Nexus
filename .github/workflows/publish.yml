@@ -1,48 +1,71 @@
-on:
-  workflow_dispatch:
-  push:
-    branches: main
+# -------------------------------------------------------------------------------------
+# GitHub Actions Workflow: Build and Publish Quarto Site + Save GitHub Insights
+# -------------------------------------------------------------------------------------
+# This workflow does the following:
+# 1. Renders and publishes a Quarto site to GitHub Pages
+# 2. Runs a script to save GitHub repo insights (e.g., contributors, commit data)
+# 3. Commits and pushes any changes made by the script
+#
+# It runs on:
+# - Pushes to the `main` branch
+# - Manual runs from the GitHub UI (workflow_dispatch)
+# -------------------------------------------------------------------------------------
 
-name: Quarto Publish
+on:
+  workflow_dispatch:  # Allow manual execution from the GitHub UI
+  push:
+    branches: main    # Automatically run on pushes to the main branch
+
+name: Quarto Publish  # Display name for the workflow
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # GitHub-hosted Ubuntu runner with common tools pre-installed
+
     permissions:
-      contents: write
+      contents: write        # Needed to commit and push changes to the repo
+
     steps:
+      # Step 1: Pull down the repository code
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # Step 2: Set up Python environment (for running the insights script)
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
 
+      # Step 3: Install Python dependencies
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip install pandas numpy matplotlib seaborn scikit-learn scipy statsmodels jupyter nbformat missingno
+          pip install pandas numpy matplotlib seaborn scikit-learn \
+                      scipy statsmodels jupyter nbformat missingno
 
-
+      # Step 4: Install the Quarto CLI
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      # Step 5: Render and publish the Quarto site to GitHub Pages
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
         env:
+          # GITHUB_TOKEN is automatically provided and scoped to this repo.
+          # It’s sufficient for publishing and pushing to GitHub Pages.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Run the save_insights.py script
+      # Step 6: Run a script to save GitHub insights (e.g., repo stats, contributors)
       - name: Save GitHub Insights
         env:
           REPO_NAME: ${{ github.repository }}
-          TOKEN: ${{ secrets.GH_PAT }}
+          # Use the built-in GITHUB_TOKEN for GitHub API access within this repo
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python insights/save_insights.py
 
-      # Check for changes in the insights directory
+      # Step 7: Check for modified files in the insights/ directory
       - name: Check for Changes
         id: changes
         run: |
@@ -53,9 +76,8 @@ jobs:
           else
             echo "Changes detected"
             echo "::set-output name=changed::true"
-          fi
 
-      # Commit and Push Insights if changes were detected
+      # Step 8: Commit and push changes if the script updated any files
       - name: Commit and Push Insights
         if: steps.changes.outputs.changed == 'true'
         run: |
@@ -63,7 +85,3 @@ jobs:
           git config --local user.name "qualiaMachine"
           git commit -m "Save GitHub insights on publish"
           git push
-
-
-
-
