@@ -1,0 +1,82 @@
+---
+title: "INQUIRE"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2025-03-26
+date-format: long
+image: "../../../images/inquire-ecological-retrieval.jpg"
+
+categories: 
+  - Data
+  - Image
+  - Multimodal
+  - Computer Vision
+  - Retrieval
+  - Zero-shot Learning
+  - Benchmarking
+  - Multimodal learning
+  - ViT
+  - LLM
+  - Biology
+  - Ecology
+  - Image data
+  - Hugging Face
+---
+
+## About this resource
+**INQUIRE** is a benchmark dataset designed to test image retrieval models on complex ecological queries using real-world biodiversity data. Built on top of a 5-million-image subset of iNaturalist 2024 (iNat24), INQUIRE includes 250 expert-authored natural language queries (e.g., *“A sick cassava plant”*, *“An ornamented bowerbird nest”*, *“Tamandua back-brooding its young”*) linked to over 33,000 labeled images.
+
+While it’s designed for evaluating large vision-language models (like CLIP, GPT-4o, LLaVA), it’s also a powerful tool for ecologists who want to search for visual signals in nature at scale—without manually combing through thousands of photos.
+
+## Research questions this dataset can help answer
+
+- **Species-specific behavior tracking**  
+  How often do we observe a species performing a specific behavior (e.g., courtship, predation, carrying young)?
+
+- **Visual documentation of rare phenomena**  
+  Can retrieval models help surface rare ecological events like parasitism, disease, or injury in citizen science datasets?
+
+- **Bias in community-contributed data**  
+  Which types of behaviors or species are over- or underrepresented in iNaturalist photos?
+
+- **Tool use and anthropogenic interaction**  
+  How frequently do animals interact with human-made objects (e.g., crabs using plastic as shells)?
+
+- **Detection of ecological indicators**  
+  Can symptoms of plant disease or ecosystem disruption be automatically surfaced from large-scale image corpora?
+
+- **Building visual vocabularies for under-documented species**  
+  Can we generate better descriptions or visual understanding for species with sparse text labels?
+
+## Key features
+
+- **Expert-generated natural language queries**: Based on interviews with ecologists, ornithologists, entomologists, and other field experts
+- **Massive biodiversity image pool**: 5 million real-world images from iNaturalist 2024 (iNat24), with over 33,000 labeled as relevant across 250 ecological queries
+- **Two tasks for evaluation and exploration**:
+  - *INQUIRE-Fullrank*: Retrieve from the full 5M image pool
+  - *INQUIRE-Rerank*: Reorder a fixed 100-image set per query (20k total images), ready-to-use on Hugging Face
+
+## Key applications 
+
+- **Image Retrieval**: Evaluate models’ ability to find relevant images based on long-form natural language descriptions
+- **Zero-shot Learning**: Test zero-shot performance of CLIP, GPT-4o, LLaVA, and more
+- **Multimodal Learning**: Benchmark how well vision-language models align text prompts with field photos
+- **Transfer Learning**: Fine-tune or validate biodiversity-aware models using a robust natural dataset
+- **Rapid exploratory analysis**: Use INQUIRE queries as search probes to extract meaningful image subsets from large-scale datasets
+
+## Related datasets & projects
+
+- **iNaturalist 2024 (iNat24)**: The underlying image base behind INQUIRE—5 million images spanning 10,000+ species. [GitHub link](https://github.com/brandontanoto/inquire#inat2024-dataset)
+- **WildCLIP and BioCLIP**: Retrieval models trained on nature-specific or bio-specific data distributions
+- **Hugging Face demo**: Try your own prompts and explore the INQUIRE image set interactively [here](https://huggingface.co/spaces/sbeery/inquire-demo)
+
+## Questions?
+If you have any lingering questions about this resource, feel free to post them on the [ML+X Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will update this resource as new information or applications arise.
+
+## See also
+
+- [INQUIRE Leaderboards](https://github.com/brandontanoto/inquire#leaderboards): See how top models like GPT-4o and VILA perform on ecological image retrieval
+- [INQUIRE-Rerank Dataset on Hugging Face](https://huggingface.co/datasets/sbeery/inquire-rerank): Download and experiment with the smaller reranking benchmark
+- [INQUIRE Demo](https://huggingface.co/spaces/sbeery/inquire-demo): Try running your own queries interactively
