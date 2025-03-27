@@ -49,7 +49,7 @@ INQUIRE provides a structured way to evaluate whether retrieval systems are read
 
 INQUIRE supports two evaluation tasks:
 
-- **Fullrank**: Search across all 5 million iNat24 images using a model like CLIP to retrieve a ranked list of results. You can optionally apply a second-stage reranker (e.g., GPT-4o) to reorder your top-k results. This task measures a model’s ability to surface relevant images from scratch.
+- **Fullrank**: Search across all 5 million iNat24 images using a model like CLIP to retrieve a ranked list of results. You can optionally apply a second-stage reranker (e.g., GPT-4o) to reorder your top-k results. This task measures a model's ability to surface relevant images from scratch.
 
 - **Rerank**: Work with a fixed set of 100 candidate images per query (retrieved using a baseline CLIP model). Your model's job is to reorder these candidates so the most relevant matches are at the top. This setup is faster, requires fewer compute resources, and is hosted on Hugging Face.
 
@@ -57,7 +57,7 @@ Both tasks include labeled relevance judgments and are benchmarked using metrics
 
 ### The role of CLIP
 
-CLIP (Contrastive Language-Image Pretraining) is central to INQUIRE’s design and evaluation:
+CLIP (Contrastive Language-Image Pretraining) is central to INQUIRE's design and evaluation:
 
 - CLIP embeddings are used in both retrieval and reranking tasks
 - Most baseline systems use CLIP or open-source CLIP variants (e.g., OpenCLIP)
@@ -69,11 +69,11 @@ To learn more, check out our [CLIP resource post](#) (coming soon).
 
 ### INQUIRE demo vs benchmark
 
-The [INQUIRE demo](https://huggingface.co/spaces/sbeery/inquire-demo) on Hugging Face lets you run your own queries using zero-shot CLIP retrieval over iNat24. However:
+The [INQUIRE demo](http://inquire-demo.csail.mit.edu/) lets you run your own queries using zero-shot CLIP retrieval over iNat24. However:
 
 - It uses CLIP embeddings trained on **web data**, not fine-tuned for ecology
-- Returned results may include **images outside the benchmark’s labeled ground truth**
-- Results are approximate and may reflect CLIP’s known limitations or biases
+- Returned results may include **images outside the benchmark's labeled ground truth**
+- Results are approximate and may reflect CLIP's known limitations or biases
 
 The demo is ideal for exploring what CLIP "sees" — but not for comparing benchmark performance.
 
@@ -82,7 +82,7 @@ The demo is ideal for exploring what CLIP "sees" — but not for comparing bench
 - How often do specific animal behaviors (e.g., parenting, foraging, aggression) show up in community-contributed data?
 - Can we surface rare or hard-to-label events like parasitism, injury, or environmental degradation?
 - What types of organisms or behaviors are over- or underrepresented in public biodiversity datasets?
-- Can retrieval models help scientists find subtle indicators, like sick plants or tagged animals, that aren’t captured in structured labels?
+- Can retrieval models help scientists find subtle indicators, like sick plants or tagged animals, that aren't captured in structured labels?
 - How do current AI models perform when interpreting domain-specific visual queries?
 
 ### Applications
