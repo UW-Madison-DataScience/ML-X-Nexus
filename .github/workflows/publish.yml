@@ -69,19 +69,26 @@ jobs:
       - name: Check for Changes
         id: changes
         run: |
-          git add insights/
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-            echo "::set-output name=changed::false"
+          if [ -d "insights" ]; then
+            git add insights/
+            if git diff --cached --quiet; then
+              echo "No changes to commit"
+              echo "changed=false" >> $GITHUB_ENV
+            else
+              echo "Changes detected"
+              echo "changed=true" >> $GITHUB_ENV
+            fi
           else
-            echo "Changes detected"
-            echo "::set-output name=changed::true"
+            echo "No insights directory found, skipping."
+            echo "changed=false" >> $GITHUB_ENV
+          fi
 
       # Step 8: Commit and push changes if the script updated any files
       - name: Commit and Push Insights
-        if: steps.changes.outputs.changed == 'true'
+        if: env.changed == 'true'
         run: |
           git config --local user.email "endemann@wisc.edu"
           git config --local user.name "qualiaMachine"
           git commit -m "Save GitHub insights on publish"
           git push
+
