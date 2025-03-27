@@ -1,0 +1,111 @@
+---
+title: "INQUIRE"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2025-03-26
+date-format: long
+image: "../../../images/inquire-ecological-retrieval.jpg"
+
+categories: 
+  - Data
+  - Image
+  - Multimodal
+  - Computer Vision
+  - Retrieval
+  - Zero-shot Learning
+  - Benchmarking
+  - Multimodal learning
+  - ViT
+  - LLM
+  - Biology
+  - Ecology
+  - Image data
+  - Hugging Face
+---
+
+## About this resource
+
+[INQUIRE](https://inquire-benchmark.github.io/) is a benchmark for evaluating text-to-image retrieval models on expert-level ecological queries. Built on a 5-million-image subset of iNaturalist 2024 (iNat24), it includes 250 natural language prompts developed with domain experts — such as "a sick cassava plant" or "a hermit crab using plastic trash as its shell." Each query is paired with a comprehensively labeled set of relevant images (over 33,000 in total), drawn from real-world biodiversity data.
+
+INQUIRE goes beyond traditional retrieval tasks by focusing on scientifically meaningful concepts. Its goal is to push AI systems toward supporting ecological and biodiversity research, helping researchers find specific behaviors, species traits, or environmental conditions in large image corpora.
+
+## Why this benchmark matters
+
+Many AI benchmarks rely on generic internet content. INQUIRE challenges vision-language models to match complex, expert-level queries that require ecological reasoning and domain-specific knowledge.
+
+Query categories include:
+- Species identification  
+- Visual appearance  
+- Behavior  
+- Contextual or environmental cues
+
+Even top-performing models — including CLIP ViT-H with GPT-4o reranking — fail to achieve mean average precision (mAP@50) above 50%. This reflects the difficulty of bridging general-purpose vision-language modeling with the nuance required for real-world science.
+
+INQUIRE provides a structured way to evaluate whether retrieval systems are ready to assist with challenges like species monitoring, environmental analysis, and automated ecological observation.
+
+## Retrieval tasks: Fullrank and Rerank
+
+INQUIRE supports two evaluation tasks:
+
+- **Fullrank**: Search across all 5 million iNat24 images using a model like CLIP to retrieve a ranked list of results. You can optionally apply a second-stage reranker (e.g., GPT-4o) to reorder your top-k results. This task measures a model’s ability to surface relevant images from scratch.
+
+- **Rerank**: Work with a fixed set of 100 candidate images per query (retrieved using a baseline CLIP model). Your model's job is to reorder these candidates so the most relevant matches are at the top. This setup is faster, requires fewer compute resources, and is hosted on Hugging Face.
+
+Both tasks include labeled relevance judgments and are benchmarked using metrics like mAP@50. See the [leaderboards](https://github.com/brandontanoto/inquire#leaderboards) for results across recent models.
+
+## The role of CLIP
+
+CLIP (Contrastive Language-Image Pretraining) is central to INQUIRE’s design and evaluation:
+
+- CLIP embeddings are used in both retrieval and reranking tasks
+- Most baseline systems use CLIP or open-source CLIP variants (e.g., OpenCLIP)
+- INQUIRE measures how well CLIP-style models generalize to ecological domains
+
+If you're new to CLIP, it learns a shared embedding space for text and images via contrastive learning. This allows models to rank images based on their semantic similarity to a text query — a powerful capability, but one that may struggle with fine-grained ecological detail.
+
+To learn more, check out our [CLIP resource post](#) (coming soon).
+
+## INQUIRE demo vs benchmark
+
+The [INQUIRE demo](https://huggingface.co/spaces/sbeery/inquire-demo) on Hugging Face lets you run your own queries using zero-shot CLIP retrieval over iNat24. However:
+
+- It uses CLIP embeddings trained on **web data**, not fine-tuned for ecology
+- Returned results may include **images outside the benchmark’s labeled ground truth**
+- Results are approximate and may reflect CLIP’s known limitations or biases
+
+The demo is ideal for exploring what CLIP "sees" — but not for comparing benchmark performance.
+
+## Research questions this dataset can help answer
+
+- How often do specific animal behaviors (e.g., parenting, foraging, aggression) show up in community-contributed data?
+- Can we surface rare or hard-to-label events like parasitism, injury, or environmental degradation?
+- What types of organisms or behaviors are over- or underrepresented in public biodiversity datasets?
+- Can retrieval models help scientists find subtle indicators, like sick plants or tagged animals, that aren’t captured in structured labels?
+- How do current AI models perform when interpreting domain-specific visual queries?
+
+## Applications
+
+- Building retrieval tools for ecologists and conservation scientists
+- Developing multimodal models for biodiversity datasets
+- Testing zero-shot generalization of vision-language models on real-world visual data
+- Constructing image subsets for training, analysis, or monitoring using query-based filtering
+- Supporting research workflows that require specific ecological visual evidence
+
+## Related datasets & projects
+
+- **iNaturalist 2024 (iNat24)**: The underlying dataset behind INQUIRE — 5 million real-world species images. [GitHub link](https://github.com/brandontanoto/inquire#inat2024-dataset)
+- **CLIP**: The core retrieval model used in most INQUIRE baselines. See OpenAI CLIP and open-source versions like OpenCLIP.
+- **WildCLIP / BioCLIP**: CLIP variants trained on ecological or biological image corpora
+- **INQUIRE Leaderboards**: Compare model performance [here](https://github.com/brandontanoto/inquire#leaderboards)
+- **INQUIRE Rerank on Hugging Face**: Download the pre-packaged reranking benchmark [here](https://huggingface.co/datasets/sbeery/inquire-rerank)
+
+## Questions?
+
+If you're using INQUIRE or want to ask about its structure, performance metrics, or use cases, feel free to post in the [ML+X Nexus Q&A forum](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a). We're always interested in sharing new ways this benchmark is being applied.
+
+## See also
+
+- [Official INQUIRE website](https://inquire-benchmark.github.io/): Dataset overview, paper, leaderboard, and code
+- [INQUIRE demo](https://huggingface.co/spaces/sbeery/inquire-demo): Try live retrieval using zero-shot CLIP
