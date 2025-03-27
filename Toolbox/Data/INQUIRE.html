@@ -285,13 +285,15 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a>
+  <ul class="collapse">
   <li><a href="#why-this-benchmark-matters" id="toc-why-this-benchmark-matters" class="nav-link" data-scroll-target="#why-this-benchmark-matters">Why this benchmark matters</a></li>
   <li><a href="#retrieval-tasks-fullrank-and-rerank" id="toc-retrieval-tasks-fullrank-and-rerank" class="nav-link" data-scroll-target="#retrieval-tasks-fullrank-and-rerank">Retrieval tasks: Fullrank and Rerank</a></li>
   <li><a href="#the-role-of-clip" id="toc-the-role-of-clip" class="nav-link" data-scroll-target="#the-role-of-clip">The role of CLIP</a></li>
   <li><a href="#inquire-demo-vs-benchmark" id="toc-inquire-demo-vs-benchmark" class="nav-link" data-scroll-target="#inquire-demo-vs-benchmark">INQUIRE demo vs benchmark</a></li>
   <li><a href="#research-questions-this-dataset-can-help-answer" id="toc-research-questions-this-dataset-can-help-answer" class="nav-link" data-scroll-target="#research-questions-this-dataset-can-help-answer">Research questions this dataset can help answer</a></li>
   <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications">Applications</a></li>
+  </ul></li>
   <li><a href="#related-datasets-projects" id="toc-related-datasets-projects" class="nav-link" data-scroll-target="#related-datasets-projects">Related datasets &amp; projects</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
@@ -352,19 +354,24 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
 <p><a href="https://inquire-benchmark.github.io/">INQUIRE</a> is a benchmark for evaluating text-to-image retrieval models on expert-level ecological queries. Built on a 5-million-image subset of iNaturalist 2024 (iNat24), it includes 250 natural language prompts developed with domain experts — such as “a sick cassava plant” or “a hermit crab using plastic trash as its shell.” Each query is paired with a comprehensively labeled set of relevant images (over 33,000 in total), drawn from real-world biodiversity data.</p>
 <p>INQUIRE goes beyond traditional retrieval tasks by focusing on scientifically meaningful concepts. Its goal is to push AI systems toward supporting ecological and biodiversity research, helping researchers find specific behaviors, species traits, or environmental conditions in large image corpora.</p>
-</section>
-<section id="why-this-benchmark-matters" class="level2">
-<h2 class="anchored" data-anchor-id="why-this-benchmark-matters">Why this benchmark matters</h2>
+<section id="why-this-benchmark-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-benchmark-matters">Why this benchmark matters</h3>
 <p>Many AI benchmarks rely on generic internet content. INQUIRE challenges vision-language models to match complex, expert-level queries that require ecological reasoning and domain-specific knowledge.</p>
-<p>Query categories include: - Species identification<br>
-- Visual appearance<br>
-- Behavior<br>
-- Contextual or environmental cues</p>
+<p>Query categories include:</p>
+<ul>
+<li>Species identification<br>
+</li>
+<li>Visual appearance<br>
+</li>
+<li>Behavior<br>
+</li>
+<li>Contextual or environmental cues</li>
+</ul>
 <p>Even top-performing models — including CLIP ViT-H with GPT-4o reranking — fail to achieve mean average precision (mAP@50) above 50%. This reflects the difficulty of bridging general-purpose vision-language modeling with the nuance required for real-world science.</p>
 <p>INQUIRE provides a structured way to evaluate whether retrieval systems are ready to assist with challenges like species monitoring, environmental analysis, and automated ecological observation.</p>
 </section>
-<section id="retrieval-tasks-fullrank-and-rerank" class="level2">
-<h2 class="anchored" data-anchor-id="retrieval-tasks-fullrank-and-rerank">Retrieval tasks: Fullrank and Rerank</h2>
+<section id="retrieval-tasks-fullrank-and-rerank" class="level3">
+<h3 class="anchored" data-anchor-id="retrieval-tasks-fullrank-and-rerank">Retrieval tasks: Fullrank and Rerank</h3>
 <p>INQUIRE supports two evaluation tasks:</p>
 <ul>
 <li><p><strong>Fullrank</strong>: Search across all 5 million iNat24 images using a model like CLIP to retrieve a ranked list of results. You can optionally apply a second-stage reranker (e.g., GPT-4o) to reorder your top-k results. This task measures a model’s ability to surface relevant images from scratch.</p></li>
@@ -372,8 +379,8 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>Both tasks include labeled relevance judgments and are benchmarked using metrics like mAP@50. See the <a href="https://github.com/brandontanoto/inquire#leaderboards">leaderboards</a> for results across recent models.</p>
 </section>
-<section id="the-role-of-clip" class="level2">
-<h2 class="anchored" data-anchor-id="the-role-of-clip">The role of CLIP</h2>
+<section id="the-role-of-clip" class="level3">
+<h3 class="anchored" data-anchor-id="the-role-of-clip">The role of CLIP</h3>
 <p>CLIP (Contrastive Language-Image Pretraining) is central to INQUIRE’s design and evaluation:</p>
 <ul>
 <li>CLIP embeddings are used in both retrieval and reranking tasks</li>
@@ -383,8 +390,8 @@ ul.task-list li input[type="checkbox"] {
 <p>If you’re new to CLIP, it learns a shared embedding space for text and images via contrastive learning. This allows models to rank images based on their semantic similarity to a text query — a powerful capability, but one that may struggle with fine-grained ecological detail.</p>
 <p>To learn more, check out our <a href="#">CLIP resource post</a> (coming soon).</p>
 </section>
-<section id="inquire-demo-vs-benchmark" class="level2">
-<h2 class="anchored" data-anchor-id="inquire-demo-vs-benchmark">INQUIRE demo vs benchmark</h2>
+<section id="inquire-demo-vs-benchmark" class="level3">
+<h3 class="anchored" data-anchor-id="inquire-demo-vs-benchmark">INQUIRE demo vs benchmark</h3>
 <p>The <a href="https://huggingface.co/spaces/sbeery/inquire-demo">INQUIRE demo</a> on Hugging Face lets you run your own queries using zero-shot CLIP retrieval over iNat24. However:</p>
 <ul>
 <li>It uses CLIP embeddings trained on <strong>web data</strong>, not fine-tuned for ecology</li>
@@ -393,8 +400,8 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>The demo is ideal for exploring what CLIP “sees” — but not for comparing benchmark performance.</p>
 </section>
-<section id="research-questions-this-dataset-can-help-answer" class="level2">
-<h2 class="anchored" data-anchor-id="research-questions-this-dataset-can-help-answer">Research questions this dataset can help answer</h2>
+<section id="research-questions-this-dataset-can-help-answer" class="level3">
+<h3 class="anchored" data-anchor-id="research-questions-this-dataset-can-help-answer">Research questions this dataset can help answer</h3>
 <ul>
 <li>How often do specific animal behaviors (e.g., parenting, foraging, aggression) show up in community-contributed data?</li>
 <li>Can we surface rare or hard-to-label events like parasitism, injury, or environmental degradation?</li>
@@ -403,8 +410,8 @@ ul.task-list li input[type="checkbox"] {
 <li>How do current AI models perform when interpreting domain-specific visual queries?</li>
 </ul>
 </section>
-<section id="applications" class="level2">
-<h2 class="anchored" data-anchor-id="applications">Applications</h2>
+<section id="applications" class="level3">
+<h3 class="anchored" data-anchor-id="applications">Applications</h3>
 <ul>
 <li>Building retrieval tools for ecologists and conservation scientists</li>
 <li>Developing multimodal models for biodiversity datasets</li>
@@ -412,6 +419,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Constructing image subsets for training, analysis, or monitoring using query-based filtering</li>
 <li>Supporting research workflows that require specific ecological visual evidence</li>
 </ul>
+</section>
 </section>
 <section id="related-datasets-projects" class="level2">
 <h2 class="anchored" data-anchor-id="related-datasets-projects">Related datasets &amp; projects</h2>
