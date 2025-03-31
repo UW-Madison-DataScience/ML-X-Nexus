@@ -52,12 +52,10 @@ jobs:
 
         with:
           # URL to start crawling from — in this case, the homepage of your GitHub Pages site
-          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'  
-          verbose: true  # Print detailed output to the logs
-
-          # List of URLs to ignore that are causing false positives (403s or 404s)
-          # These may be behind paywalls, restricted, or temporarily inaccessible
-          ignore_urls: |
+          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
+          verbose: true
+          # Using full URLs to "whitelist" these
+          exclude_url_prefix: |
             https://dl.acm.org/doi/10.1145/3065386
             https://openai.com/research/
             https://www.sciencedirect.com/science/article/abs/pii/S0168169922006603
