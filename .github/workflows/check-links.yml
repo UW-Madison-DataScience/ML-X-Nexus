@@ -51,5 +51,20 @@ jobs:
         uses: ScholliYT/Broken-Links-Crawler-Action@v3.3.1
 
         with:
-          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'  # GitHub Pages site to crawl
+          # URL to start crawling from — in this case, the homepage of your GitHub Pages site
+          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'  
           verbose: true  # Print detailed output to the logs
+
+          # List of URLs to ignore that are causing false positives (403s or 404s)
+          # These may be behind paywalls, restricted, or temporarily inaccessible
+          ignore_urls: |
+            https://dl.acm.org/doi/10.1145/3065386
+            https://openai.com/research/
+            https://www.sciencedirect.com/science/article/abs/pii/S0168169922006603
+            https://www.kaggle.com/c/house-prices-advanced-regression-techniques
+            https://www.kaggle.com/c/cifar-10/
+            https://www.kaggle.com/competitions/infected-tomato-leaf-vein-segmentation
+            https://www.kaggle.com/c/nlp-getting-started
+            https://www.kaggle.com/competitions/uw-madison-gi-tract-image-segmentation
+            https://mediaspace.wisc.edu/media/Racism+in+AI%3A+Exploring+Artificial+Intelligence+%40+UW-Madison/1_y0uludm8
+            https://it.wisc.edu/exploring-artificial-intelligence-uw-madison/
