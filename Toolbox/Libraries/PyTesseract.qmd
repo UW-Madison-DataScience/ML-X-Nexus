@@ -1,0 +1,126 @@
+---
+title: "Pytesseract: OCR with Tesseract in Python"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2025-04-05
+date-format: long
+image: "../../../images/PyTesseract.jpeg"
+
+categories: 
+  - Libraries
+  - OCR
+  - NLP
+  - Computer vision
+  - Text extraction
+  - Multilingual
+  - LSTM
+---
+
+## About this resource
+
+[Pytesseract](https://pypi.org/project/pytesseract/) is a Python wrapper for [Google’s Tesseract OCR engine](https://github.com/tesseract-ocr/tesseract), used for recognizing and extracting text from images. It works on a wide range of image types (e.g., JPEG, PNG, TIFF) and supports over 100 languages, including Chinese, Arabic, and Devanagari.
+
+Tesseract uses a character-level LSTM model and runs entirely on CPU, making it easy to deploy in low-resource environments. While it’s not state-of-the-art for complex layout or scene text, it’s fast, scriptable, and widely supported — ideal for lightweight OCR use cases.
+
+## Key features
+
+- Reads printed text from standard image formats
+- Works with file paths, Pillow/PIL (Python Imaging Library), or OpenCV arrays
+- Supports multilingual text recognition
+- Outputs plain text, bounding boxes, PDFs, TSV, and XML formats
+- Fast CPU-based inference with no GPU dependencies
+
+## Model architecture
+
+Tesseract relies on an LSTM pipeline trained on character-level text. It performs well when the input is clean and straightforward — such as scanned documents or forms — but struggles with visual ambiguity, clutter, or layout-sensitive content.
+
+For more robust use cases, newer models like [TrOCR](https://huggingface.co/microsoft/trocr-base-stage1), [Donut](https://github.com/clovaai/donut), and [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) use **Vision Transformers (ViTs)**. PaddleOCR in particular includes both CNN- and transformer-based backends. These models are better suited for tasks where text is visually entangled with surrounding context — like reading overlaid labels on maps or structured forms.
+
+## Installation and usage
+
+To use pytesseract, you need to install both the Tesseract OCR engine and the Python wrapper.
+
+### Ubuntu / Debian
+
+```bash
+sudo apt update
+sudo apt install tesseract-ocr
+pip install pytesseract
+```
+
+### macOS
+
+```bash
+brew install tesseract
+pip install pytesseract
+```
+
+### Windows
+
+1. Download and install the Tesseract binary from the [UB Mannheim builds](https://github.com/UB-Mannheim/tesseract/wiki)  
+2. Note the install location, typically:
+   ```
+   C:\Program Files\Tesseract-OCR\tesseract.exe
+   ```
+3. Either add this location to your system PATH, or set it manually in your script:
+
+```python
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+```
+
+4. Install the Python wrapper:
+
+```bash
+pip install pytesseract
+```
+
+### Basic usage
+
+```python
+from PIL import Image  # Pillow is the Python Imaging Library
+import pytesseract
+
+# Extract plain text
+text = pytesseract.image_to_string(Image.open("example.png"))
+
+# Structured output with positions and confidences
+df = pytesseract.image_to_data(Image.open("example.png"), output_type=pytesseract.Output.DATAFRAME)
+
+# Character-level bounding boxes
+boxes = pytesseract.image_to_boxes(Image.open("example.png"))
+```
+
+Replace `"example.png"` with your own image file containing text. Pytesseract supports both in-memory images and file paths.
+
+## Pros and limitations
+
+| Pros | Limitations |
+|------|-------------|
+| Easy to install and use on most systems | No GPU acceleration — slower on large datasets |
+| Multilingual out of the box | Cannot be fine-tuned or retrained |
+| Good for simple forms and documents | Struggles with complex layouts or visual context |
+| CPU-only — works in low-resource environments | Lower accuracy than transformer-based models on cluttered or noisy inputs |
+
+Tesseract’s fast CPU performance and no-frills setup make it great for small-scale OCR, but it’s not optimized for high-volume pipelines or scene text recognition.
+
+## When to use
+
+- You need fast OCR on clean documents or small image batches
+- You want to automate extraction from scanned forms, labels, or tables
+- You’re working in a CPU-only or resource-constrained environment
+- You want a scriptable fallback tool before reaching for ViT-based OCR
+
+## See also
+
+- [GitHub repo: madmaze/pytesseract](https://github.com/madmaze/pytesseract) – Source code and examples
+- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) – End-to-end OCR with detection, recognition, and layout modeling (CNN and ViT backends)
+- [TrOCR](https://huggingface.co/microsoft/trocr-base-stage1) – Transformer-based OCR with multilingual support
+- [Donut](https://github.com/clovaai/donut) – OCR + document understanding via vision-language modeling
+- [EasyOCR](https://github.com/JaidedAI/EasyOCR) – Lightweight OCR tool with CNN + LSTM backends
+
+## Questions?
+
+Working on OCR for maps, handwritten notes, or multilingual scans? Curious whether Tesseract is the right fit for your pipeline? Post in the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) to share examples or get advice.
