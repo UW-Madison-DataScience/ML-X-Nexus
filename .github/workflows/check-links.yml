@@ -51,5 +51,24 @@ jobs:
         uses: ScholliYT/Broken-Links-Crawler-Action@v3.3.1
 
         with:
-          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'  # GitHub Pages site to crawl
-          verbose: true  # Print detailed output to the logs
+          # URL to start crawling from — in this case, the homepage of your GitHub Pages site
+          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
+          verbose: true
+          # Using full URLs to "whitelist" these
+          exclude_url_prefix: >
+            "mailto,
+            mailto:,
+            https://dl.acm.org/doi/10.1145/3065386,
+            https://openai.com/research/,
+            https://www.sciencedirect.com/science/article/abs/pii/S0168169922006603,
+            https://www.kaggle.com/c/house-prices-advanced-regression-techniques,
+            https://www.kaggle.com/c/cifar-10/,
+            https://www.kaggle.com/competitions/infected-tomato-leaf-vein-segmentation,
+            https://www.kaggle.com/c/nlp-getting-started,
+            https://www.kaggle.com/competitions/uw-madison-gi-tract-image-segmentation,
+            https://mediaspace.wisc.edu/,
+            https://kb.wisc.edu/,
+            https://vimeo.com/,
+            https://player.vimeo.com/,
+            https://it.wisc.edu/exploring-artificial-intelligence-uw-madison/"
+          exclude_url_suffix: '.qmd'
