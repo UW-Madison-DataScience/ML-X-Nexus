@@ -1,0 +1,97 @@
+---
+title: "DeepForest: A Toolkit of Models for Tree and Wildlife Detection in Aerial Imagery"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2025-04-03
+date-format: long
+image: "../../../images/DeepForest.png"
+
+categories: 
+  - Models
+  - Object detection
+  - Remote sensing
+  - Ecology
+  - Forest monitoring
+  - Geospatial data
+  - Computer vision
+---
+
+## About this resource
+
+[DeepForest](https://deepforest.readthedocs.io/en/latest/) is an open-source Python library for object detection in aerial RGB imagery, designed for ecological applications such as identifying tree crowns (the visible upper portion of trees), tracking wildlife, and monitoring habitat. Rather than a single model, DeepForest provides a toolkit of pretrained deep learning models and utilities for training, evaluation, and geospatial integration.
+
+Developed by Ben Weinstein, Sergio Marconi, Mélaine Aubry-Kientz, and Ethan White, DeepForest is maintained by the [Weecology Lab](https://www.weecology.org/). It supports multiple object types, including trees, birds, and livestock, and is built on top of RetinaNet and PyTorch Lightning.
+
+### Key features
+
+- Pretrained (CNN) models for tree crowns, birds, livestock, and alive/dead tree detection  
+- Supports bounding boxes, polygons, and point annotations  
+- Reads common geospatial formats: CSV, shapefiles, GeoPackages, COCO, VOC  
+- Compatible with tile-based prediction and raster workflows  
+- Built on RetinaNet with PyTorch Lightning for scalable training
+
+## Timeline context
+
+DeepForest builds on progress in object detection and remote sensing for ecological applications:
+
+## Timeline context
+
+DeepForest builds on progress in object detection and remote sensing for ecological applications:
+
+- [Faster R-CNN (2015)](https://arxiv.org/abs/1506.01497): Introduced region-based object detection  
+- [RetinaNet (2017)](https://arxiv.org/abs/1708.02002): Backbone architecture for DeepForest; introduced focal loss to improve accuracy on dense, small-object scenes  
+- [DeepForest 1.0 (2019)](https://www.mdpi.com/2072-4292/11/11/1309): Released with a pretrained tree crown detection model using RGB imagery  
+- [DeepForest 1.4–1.5 (2023–2025)](https://deepforest.readthedocs.io/en/latest/release_notes.html): Added support for polygons, PyTorch Lightning, and new models for birds, livestock, and tree health
+
+
+## Model playground
+
+All pretrained models are currently based on RetinaNet and convolutional neural networks (CNNs); no ViTs or transformer-based models (yet).
+Pretrained  models are available via Hugging Face:
+
+- `weecology/deepforest-tree`: General tree crown detection  
+- `weecology/deepforest-bird`: Aerial bird detection  
+- `weecology/deepforest-livestock`: Detects large mammals in farmland  
+- Alive/dead classifier: Distinguishes dead trees based on RGB appearance  
+
+To use these models, you must install the DeepForest Python package:
+
+```bash
+pip install deepforest
+```
+
+The models are downloaded from Hugging Face but are loaded and run using DeepForest’s own API—not through Hugging Face’s `transformers` or `pipeline` tools. 
+Data can be loaded from shapefiles, CSVs, GeoPackages, and other formats using DeepForest’s `read_file` utility, which standardizes annotations. The package supports both full-image and tile-based inference.
+
+Try the [DeepForest demo on Hugging Face](https://huggingface.co/spaces/weecology/deepforest-demo) to test the model in your browser using single-image uploads.
+
+### Transfer learning and fine-tuning
+
+DeepForest supports fine-tuning and transfer learning through its PyTorch Lightning backbone. You can:
+
+- Fine-tune pretrained models using your own labeled data  
+- Customize training behavior by subclassing the DeepForest module  
+- Use custom PyTorch dataloaders for advanced workflows (e.g., WILDS-style datasets)  
+- Extend the package with new architectures if needed  
+
+This makes it easy to adapt DeepForest to new regions, forest types, or species with relatively small amounts of local data.
+
+## Performance expectations
+
+- Tree crown model: F1-scores between 0.73 and 0.95 depending on site and canopy structure ([Weinstein et al. (2019), Remote Sensing, DOI: 10.3390/rs11111309](https://www.mdpi.com/2072-4292/11/11/1309))
+- Bird model: ~65% recall on new data; ~84% recall with just 1,000 local annotations  ([Weinstein et al. (2022), Ecological Applications, DOI: 10.1002/eap.2694](https://doi.org/10.1002/eap.2694))
+- Alive/dead classifier: 95.8% accuracy on held-out image crops ([Hugginf Face model card](https://huggingface.co/weecology/cropmodel-deadtrees)) 
+
+Performance varies by imagery quality, tree species, and geographic region. Fine-tuning is recommended for most new applications.
+
+## Questions?
+
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## See also
+
+- [Documentation: DeepForest User Guide](https://deepforest.readthedocs.io/en/latest/): Full instructions for loading, training, evaluating, and customizing models  
+- [**Model**: U-Net](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/unet.html): A foundational segmentation model used in ecological and medical applications  
+- [**Talk**: Automating Scientific Discovery](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-03-04.html): Discusses retrieval and large-scale image analysis in ecology; mentions DeepForest among supporting tools.
