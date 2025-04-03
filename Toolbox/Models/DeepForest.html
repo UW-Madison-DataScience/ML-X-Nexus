@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2025-04-03">
 
-<title>Blogs – Nexus: Crowdsourced ML Resources</title>
+<title>DeepForest: A Toolkit of Models for Tree and Wildlife Detection in Aerial Imagery – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -29,10 +65,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Applications/EDA/index.html" rel="next">
-<link href="../../Applications/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,65 +103,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-author','listing-title','listing-description','listing-date','listing-reading-time','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +116,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../Applications/Blogs/index.html">Blogs</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">DeepForest: A Toolkit of Models for Tree and Wildlife Detection in Aerial Imagery</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +126,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -276,7 +250,7 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
@@ -341,20 +315,60 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QXVkaW8=">Audio <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QXVkaW8lMjBkYXRh">Audio data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QXVkaW8lMjBzZWFyY2g=">Audio search <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QmxvZ3M=">Blogs <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q05O">CNN <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q1NJ">CSI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29uZm9ybWVy">Conformer <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVlcCUyMGxlYXJuaW5n">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SHVtYW5pdGllcw==">Humanities <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TXVzaWM=">Music <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHlUb3JjaA==">PyTorch <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2lnbmFsJTIwcHJvY2Vzc2luZw==">Signal processing <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3BlY3RyYWwlMjBhbmFseXNpcw==">Spectral analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGltZS1zZXJpZXM=">Time-series <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXI=">Transformer <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a>
+  <ul class="collapse">
+  <li><a href="#key-features" id="toc-key-features" class="nav-link" data-scroll-target="#key-features">Key features</a></li>
+  </ul></li>
+  <li><a href="#timeline-context" id="toc-timeline-context" class="nav-link" data-scroll-target="#timeline-context">Timeline context</a></li>
+  <li><a href="#timeline-context-1" id="toc-timeline-context-1" class="nav-link" data-scroll-target="#timeline-context-1">Timeline context</a></li>
+  <li><a href="#model-playground" id="toc-model-playground" class="nav-link" data-scroll-target="#model-playground">Model playground</a>
+  <ul class="collapse">
+  <li><a href="#transfer-learning-and-fine-tuning" id="toc-transfer-learning-and-fine-tuning" class="nav-link" data-scroll-target="#transfer-learning-and-fine-tuning">Transfer learning and fine-tuning</a></li>
+  </ul></li>
+  <li><a href="#performance-expectations" id="toc-performance-expectations" class="nav-link" data-scroll-target="#performance-expectations">Performance expectations</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/DeepForest.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Applications/index.html">Applications</a></li><li class="breadcrumb-item"><a href="../../Applications/Blogs/index.html">Blogs</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blogs</h1>
-</div>
+<h1 class="title">DeepForest: A Toolkit of Models for Tree and Wildlife Detection in Aerial Imagery</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Models</div>
+    <div class="quarto-category">Object detection</div>
+    <div class="quarto-category">Remote sensing</div>
+    <div class="quarto-category">Ecology</div>
+    <div class="quarto-category">Forest monitoring</div>
+    <div class="quarto-category">Geospatial data</div>
+    <div class="quarto-category">Computer vision</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 3, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -364,104 +378,100 @@ window.Quarto = {
 </header>
 
 
-<section id="share-your-ml-story" class="level3">
-<h3 class="anchored" data-anchor-id="share-your-ml-story">Share your ML story!</h3>
-<p>Are you currently immersed in an exciting ML project? We want to hear about it! Share your insights, challenges, and successes by contributing a blog post to Nexus, the ML+X resource sharing platform.</p>
-<p>Whether you’re exploring ML applications in biology, engineering, social sciences, or any other field, your unique perspective is invaluable. Showcase your innovation, research, and creativity to inspire others in the ML+X community.</p>
-<p>Get started by posting a brief summary of your blog idea as an <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/issues">Issue on GitHub</a>! The Nexus development team will follow-up with further instructions.</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p><a href="https://deepforest.readthedocs.io/en/latest/">DeepForest</a> is an open-source Python library for object detection in aerial RGB imagery, designed for ecological applications such as identifying tree crowns (the visible upper portion of trees), tracking wildlife, and monitoring habitat. Rather than a single model, DeepForest provides a toolkit of pretrained deep learning models and utilities for training, evaluation, and geospatial integration.</p>
+<p>Developed by Ben Weinstein, Sergio Marconi, Mélaine Aubry-Kientz, and Ethan White, DeepForest is maintained by the <a href="https://www.weecology.org/">Weecology Lab</a>. It supports multiple object types, including trees, birds, and livestock, and is built on top of RetinaNet and PyTorch Lightning.</p>
+<section id="key-features" class="level3">
+<h3 class="anchored" data-anchor-id="key-features">Key features</h3>
+<ul>
+<li>Pretrained (CNN) models for tree crowns, birds, livestock, and alive/dead tree detection<br>
+</li>
+<li>Supports bounding boxes, polygons, and point annotations<br>
+</li>
+<li>Reads common geospatial formats: CSV, shapefiles, GeoPackages, COCO, VOC<br>
+</li>
+<li>Compatible with tile-based prediction and raster workflows<br>
+</li>
+<li>Built on RetinaNet with PyTorch Lightning for scalable training</li>
+</ul>
 </section>
-<section id="explore-blogs" class="level3">
-<h3 class="anchored" data-anchor-id="explore-blogs">Explore blogs</h3>
-
+</section>
+<section id="timeline-context" class="level2">
+<h2 class="anchored" data-anchor-id="timeline-context">Timeline context</h2>
+<p>DeepForest builds on progress in object detection and remote sensing for ecological applications:</p>
+</section>
+<section id="timeline-context-1" class="level2">
+<h2 class="anchored" data-anchor-id="timeline-context-1">Timeline context</h2>
+<p>DeepForest builds on progress in object detection and remote sensing for ecological applications:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1506.01497">Faster R-CNN (2015)</a>: Introduced region-based object detection<br>
+</li>
+<li><a href="https://arxiv.org/abs/1708.02002">RetinaNet (2017)</a>: Backbone architecture for DeepForest; introduced focal loss to improve accuracy on dense, small-object scenes<br>
+</li>
+<li><a href="https://www.mdpi.com/2072-4292/11/11/1309">DeepForest 1.0 (2019)</a>: Released with a pretrained tree crown detection model using RGB imagery<br>
+</li>
+<li><a href="https://deepforest.readthedocs.io/en/latest/release_notes.html">DeepForest 1.4–1.5 (2023–2025)</a>: Added support for polygons, PyTorch Lightning, and new models for birds, livestock, and tree health</li>
+</ul>
+</section>
+<section id="model-playground" class="level2">
+<h2 class="anchored" data-anchor-id="model-playground">Model playground</h2>
+<p>All pretrained models are currently based on RetinaNet and convolutional neural networks (CNNs); no ViTs or transformer-based models (yet). Pretrained models are available via Hugging Face:</p>
+<ul>
+<li><code>weecology/deepforest-tree</code>: General tree crown detection<br>
+</li>
+<li><code>weecology/deepforest-bird</code>: Aerial bird detection<br>
+</li>
+<li><code>weecology/deepforest-livestock</code>: Detects large mammals in farmland<br>
+</li>
+<li>Alive/dead classifier: Distinguishes dead trees based on RGB appearance</li>
+</ul>
+<p>To use these models, you must install the DeepForest Python package:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install deepforest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The models are downloaded from Hugging Face but are loaded and run using DeepForest’s own API—not through Hugging Face’s <code>transformers</code> or <code>pipeline</code> tools. Data can be loaded from shapefiles, CSVs, GeoPackages, and other formats using DeepForest’s <code>read_file</code> utility, which standardizes annotations. The package supports both full-image and tile-based inference.</p>
+<p>Try the <a href="https://huggingface.co/spaces/weecology/deepforest-demo">DeepForest demo on Hugging Face</a> to test the model in your browser using single-image uploads.</p>
+<section id="transfer-learning-and-fine-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="transfer-learning-and-fine-tuning">Transfer learning and fine-tuning</h3>
+<p>DeepForest supports fine-tuning and transfer learning through its PyTorch Lightning backbone. You can:</p>
+<ul>
+<li>Fine-tune pretrained models using your own labeled data<br>
+</li>
+<li>Customize training behavior by subclassing the DeepForest module<br>
+</li>
+<li>Use custom PyTorch dataloaders for advanced workflows (e.g., WILDS-style datasets)<br>
+</li>
+<li>Extend the package with new architectures if needed</li>
+</ul>
+<p>This makes it easy to adapt DeepForest to new regions, forest types, or species with relatively small amounts of local data.</p>
+</section>
+</section>
+<section id="performance-expectations" class="level2">
+<h2 class="anchored" data-anchor-id="performance-expectations">Performance expectations</h2>
+<ul>
+<li>Tree crown model: F1-scores between 0.73 and 0.95 depending on site and canopy structure (<a href="https://www.mdpi.com/2072-4292/11/11/1309">Weinstein et al.&nbsp;(2019), Remote Sensing, DOI: 10.3390/rs11111309</a>)</li>
+<li>Bird model: ~65% recall on new data; ~84% recall with just 1,000 local annotations (<a href="https://doi.org/10.1002/eap.2694">Weinstein et al.&nbsp;(2022), Ecological Applications, DOI: 10.1002/eap.2694</a>)</li>
+<li>Alive/dead classifier: 95.8% accuracy on held-out image crops (<a href="https://huggingface.co/weecology/cropmodel-deadtrees">Hugginf Face model card</a>)</li>
+</ul>
+<p>Performance varies by imagery quality, tree species, and geographic region. Fine-tuning is recommended for most new applications.</p>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>If you have any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://deepforest.readthedocs.io/en/latest/">Documentation: DeepForest User Guide</a>: Full instructions for loading, training, evaluating, and customizing models<br>
+</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/unet.html"><strong>Model</strong>: U-Net</a>: A foundational segmentation model used in ecological and medical applications<br>
+</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-03-04.html"><strong>Talk</strong>: Automating Scientific Discovery</a>: Discusses retrieval and large-scale image analysis in ecology; mentions DeepForest among supporting tools.</li>
+</ul>
 
 
 </section>
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="QXVkaW8lMjBzZWFyY2glMkNCbG9ncyUyQ0RlZXAlMjBsZWFybmluZyUyQ0NvbmZvcm1lciUyQ1RyYW5zZm9ybWVyJTJDQ05OJTJDSHVtYW5pdGllcyUyQ0F1ZGlvJTJDQXVkaW8lMjBkYXRhJTJDTXVzaWMlMkNQeVRvcmNoJTJDQ1NJJTJDVGltZS1zZXJpZXMlMkNTaWduYWwlMjBwcm9jZXNzaW5nJTJDU3BlY3RyYWwlMjBhbmFseXNpcw==" data-listing-date-sort="1726012800000" data-listing-file-modified-sort="1743707394920" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2585">
-<div class="thumbnail">
-<p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a></p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">
-<p><img loading="lazy" src="../../images/blog-music-identification.jpg" class="thumbnail-image" style="height: 150px;"></p>
-</a><p><a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">What Tune Is That? A Humanities Application of Deep Learning</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8lMjBzZWFyY2g='); return false;">
-Audio search
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QmxvZ3M='); return false;">
-Blogs
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">
-Deep learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q29uZm9ybWVy'); return false;">
-Conformer
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmb3JtZXI='); return false;">
-Transformer
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q05O'); return false;">
-CNN
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('SHVtYW5pdGllcw=='); return false;">
-Humanities
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8='); return false;">
-Audio
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8lMjBkYXRh'); return false;">
-Audio data
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('TXVzaWM='); return false;">
-Music
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('UHlUb3JjaA=='); return false;">
-PyTorch
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Q1NJ'); return false;">
-CSI
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('VGltZS1zZXJpZXM='); return false;">
-Time-series
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('U2lnbmFsJTIwcHJvY2Vzc2luZw=='); return false;">
-Signal processing
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('U3BlY3RyYWwlMjBhbmFseXNpcw=='); return false;">
-Spectral analysis
-</div>
-</div>
-<div class="listing-description">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">Deep learning (neural network training) can solve humanities challenges, too! Read about a successful project that trained a model to be able to identify Irish traditional…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../../Applications/Blogs/blog-music-identification.html" class="no-external">
-<div class="listing-date">
-2024-09-11
-</div>
-<div class="listing-author">
-Alan Ng
-</div>
-<div class="listing-reading-time">
-13 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1023,21 +1033,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Applications/index.html" class="pagination-link" aria-label="Applications">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Applications</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Applications/EDA/index.html" class="pagination-link" aria-label="EDA">
-        <span class="nav-page-text">EDA</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Blogs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Models/DeepForest.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
