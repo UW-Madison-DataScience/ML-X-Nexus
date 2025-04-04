@@ -32,6 +32,24 @@ Tesseract uses a character-level LSTM model and runs entirely on CPU, making it 
 - Outputs plain text, bounding boxes, PDFs, TSV, and XML formats
 - Fast CPU-based inference with no GPU dependencies
 
+## When to use
+
+- You need fast OCR on clean documents or small image batches
+- You want to automate extraction from scanned forms, labels, or tables
+- You're working in a CPU-only or resource-constrained environment
+- You want a scriptable fallback tool before reaching for ViT-based OCR
+
+## Pros and limitations
+
+| Pros | Limitations |
+|------|-------------|
+| Easy to install and use on most systems | No GPU acceleration — slower on large datasets |
+| Multilingual out of the box | Cannot be fine-tuned or retrained |
+| Good for simple forms and documents | Struggles with complex layouts or visual context |
+| CPU-only — works in low-resource environments | Lower accuracy than transformer-based models on cluttered or noisy inputs |
+
+Tesseract's fast CPU performance and no-frills setup make it great for small-scale OCR, but it's not optimized for high-volume pipelines or scene text recognition.
+
 ## Model architecture
 
 Tesseract relies on an LSTM pipeline trained on character-level text. It performs well when the input is clean and straightforward — such as scanned documents or forms — but struggles with visual ambiguity, clutter, or layout-sensitive content.
@@ -95,23 +113,7 @@ boxes = pytesseract.image_to_boxes(Image.open("example.png"))
 
 Replace `"example.png"` with your own image file containing text. Pytesseract supports both in-memory images and file paths.
 
-## Pros and limitations
 
-| Pros | Limitations |
-|------|-------------|
-| Easy to install and use on most systems | No GPU acceleration — slower on large datasets |
-| Multilingual out of the box | Cannot be fine-tuned or retrained |
-| Good for simple forms and documents | Struggles with complex layouts or visual context |
-| CPU-only — works in low-resource environments | Lower accuracy than transformer-based models on cluttered or noisy inputs |
-
-Tesseract's fast CPU performance and no-frills setup make it great for small-scale OCR, but it's not optimized for high-volume pipelines or scene text recognition.
-
-## When to use
-
-- You need fast OCR on clean documents or small image batches
-- You want to automate extraction from scanned forms, labels, or tables
-- You're working in a CPU-only or resource-constrained environment
-- You want a scriptable fallback tool before reaching for ViT-based OCR
 
 ## See also
 
