@@ -321,6 +321,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
   <li><a href="#key-features" id="toc-key-features" class="nav-link" data-scroll-target="#key-features">Key features</a></li>
+  <li><a href="#when-to-use" id="toc-when-to-use" class="nav-link" data-scroll-target="#when-to-use">When to use</a></li>
+  <li><a href="#pros-and-limitations" id="toc-pros-and-limitations" class="nav-link" data-scroll-target="#pros-and-limitations">Pros and limitations</a></li>
   <li><a href="#model-architecture" id="toc-model-architecture" class="nav-link" data-scroll-target="#model-architecture">Model architecture</a></li>
   <li><a href="#installation-and-usage" id="toc-installation-and-usage" class="nav-link" data-scroll-target="#installation-and-usage">Installation and usage</a>
   <ul class="collapse">
@@ -329,8 +331,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#windows" id="toc-windows" class="nav-link" data-scroll-target="#windows">Windows</a></li>
   <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage">Basic usage</a></li>
   </ul></li>
-  <li><a href="#pros-and-limitations" id="toc-pros-and-limitations" class="nav-link" data-scroll-target="#pros-and-limitations">Pros and limitations</a></li>
-  <li><a href="#when-to-use" id="toc-when-to-use" class="nav-link" data-scroll-target="#when-to-use">When to use</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
   </ul>
@@ -394,6 +394,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Fast CPU-based inference with no GPU dependencies</li>
 </ul>
 </section>
+<section id="when-to-use" class="level2">
+<h2 class="anchored" data-anchor-id="when-to-use">When to use</h2>
+<ul>
+<li>You need fast OCR on clean documents or small image batches</li>
+<li>You want to automate extraction from scanned forms, labels, or tables</li>
+<li>You’re working in a CPU-only or resource-constrained environment</li>
+<li>You want a scriptable fallback tool before reaching for ViT-based OCR</li>
+</ul>
+</section>
+<section id="pros-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="pros-and-limitations">Pros and limitations</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pros</th>
+<th>Limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Easy to install and use on most systems</td>
+<td>No GPU acceleration — slower on large datasets</td>
+</tr>
+<tr class="even">
+<td>Multilingual out of the box</td>
+<td>Cannot be fine-tuned or retrained</td>
+</tr>
+<tr class="odd">
+<td>Good for simple forms and documents</td>
+<td>Struggles with complex layouts or visual context</td>
+</tr>
+<tr class="even">
+<td>CPU-only — works in low-resource environments</td>
+<td>Lower accuracy than transformer-based models on cluttered or noisy inputs</td>
+</tr>
+</tbody>
+</table>
+<p>Tesseract’s fast CPU performance and no-frills setup make it great for small-scale OCR, but it’s not optimized for high-volume pipelines or scene text recognition.</p>
+</section>
 <section id="model-architecture" class="level2">
 <h2 class="anchored" data-anchor-id="model-architecture">Model architecture</h2>
 <p>Tesseract relies on an LSTM pipeline trained on character-level text. It performs well when the input is clean and straightforward — such as scanned documents or forms — but struggles with visual ambiguity, clutter, or layout-sensitive content.</p>
@@ -444,49 +487,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>boxes <span class="op">=</span> pytesseract.image_to_boxes(Image.<span class="bu">open</span>(<span class="st">"example.png"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Replace <code>"example.png"</code> with your own image file containing text. Pytesseract supports both in-memory images and file paths.</p>
 </section>
-</section>
-<section id="pros-and-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="pros-and-limitations">Pros and limitations</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 31%">
-<col style="width: 68%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Pros</th>
-<th>Limitations</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Easy to install and use on most systems</td>
-<td>No GPU acceleration — slower on large datasets</td>
-</tr>
-<tr class="even">
-<td>Multilingual out of the box</td>
-<td>Cannot be fine-tuned or retrained</td>
-</tr>
-<tr class="odd">
-<td>Good for simple forms and documents</td>
-<td>Struggles with complex layouts or visual context</td>
-</tr>
-<tr class="even">
-<td>CPU-only — works in low-resource environments</td>
-<td>Lower accuracy than transformer-based models on cluttered or noisy inputs</td>
-</tr>
-</tbody>
-</table>
-<p>Tesseract’s fast CPU performance and no-frills setup make it great for small-scale OCR, but it’s not optimized for high-volume pipelines or scene text recognition.</p>
-</section>
-<section id="when-to-use" class="level2">
-<h2 class="anchored" data-anchor-id="when-to-use">When to use</h2>
-<ul>
-<li>You need fast OCR on clean documents or small image batches</li>
-<li>You want to automate extraction from scanned forms, labels, or tables</li>
-<li>You’re working in a CPU-only or resource-constrained environment</li>
-<li>You want a scriptable fallback tool before reaching for ViT-based OCR</li>
-</ul>
 </section>
 <section id="see-also" class="level2">
 <h2 class="anchored" data-anchor-id="see-also">See also</h2>
