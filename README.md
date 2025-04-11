@@ -20,7 +20,7 @@ Any content (original or external) that can help make the practice of ML more co
 
 We welcome contributions from members of the ML+X community! Whether you'd like to share your own guides, best practices, or starter notebooks, or collaborate with others to refine existing resources, your contributions are highly valued and appreciated.
 
-To contribute, fork this repository, make your changes, and submit a pull request. Please ensure that your contributions adhere to our guidelines and maintain the high standards of quality and relevance upheld by the ML+X community. For further guidance and starter templates, please check the [How to Contribute?](https://uw-madison-datascience.github.io/ML-X-Nexus/Resources/Guides/How-to-contribute.html) guide. 
+To contribute, fork this repository, make your changes, and submit a pull request. Please ensure that your contributions adhere to our guidelines and maintain the high standards of quality and relevance upheld by the ML+X community. For further guidance and starter templates, please check the [How to Contribute?](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/How-to-contribute.html) guide. 
 
 ## Let's Connect:
 
