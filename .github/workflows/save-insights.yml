@@ -47,24 +47,15 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python insights/save_insights.py
 
-      - name: Check for Changes
-        id: changes
-        run: |
-          if [ -d "insights" ]; then
-            git add insights/
-            if git diff --cached --quiet; then
-              echo "changed=false" >> $GITHUB_ENV
-            else
-              echo "changed=true" >> $GITHUB_ENV
-            fi
-          else
-            echo "changed=false" >> $GITHUB_ENV
-          fi
-
       - name: Commit and Push Insights
-        if: env.changed == 'true'
         run: |
           git config --local user.email "endemann@wisc.edu"
           git config --local user.name "qualiaMachine"
-          git commit -m "Save GitHub insights (scheduled)"
-          git push
+          git add insights/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Save GitHub insights (scheduled)"
+            git push
+          fi
+
