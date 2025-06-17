@@ -1,0 +1,661 @@
+---
+title: "Exploring Fact-Based QA with RAG: Romeo and Juliet"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2025-05-07
+image: "../../../images/rag-demo.png"
+categories:
+  - Workshops
+  - RAG
+  - Retrieval
+  - NLP
+  - LLM
+  - Embeddings
+  - Text analysis
+  - Deep learning
+  - Prompt engineering
+  - Code-along
+jupyter: python3
+---
+
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Applications/RAG/RAG-Romeo-Juliet.ipynb)
+
+
+> **Note:** This notebook was demoed at [ML+Coffee](https://hub.datascience.wisc.edu/communities/mlx/#mlcoffee) on **May 7, 2025**.  
+> It's an early work in progress, but I hope it's useful in its current state!  
+>  
+> We plan to integrate this tutorial into either our [Intro to NLP workshop](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html)  
+> or into a new, dedicated workshop focused on RAG pipelines. Stay tuned — and subscribe to the [ML Community of Practice Google Group](https://groups.google.com/a/g-groups.wisc.edu/g/ml-community-of-practice)  
+> to stay informed about updates and new workshops.
+
+# Part 1: Factual Retrieval Demo (Romeo and Juliet)
+
+This notebook demonstrates the use of a Retrieval-Augmented Generation (RAG) system to answer **factual questions** from Shakespeare's *Romeo and Juliet*.
+
+Our long-term goal is to build a RAG-powered chatbot that supports literary exploration—helping readers investigate character dynamics, thematic development, and emotional subtext.
+
+In this first part of the demo, we focus on low-hanging fruit: factual, quote-supported questions that a RAG pipeline can answer reliably. These examples will help us introduce key RAG components, and set a performance baseline before tackling more interpretive questions.
+
+### Learning Objectives
+
+By the end of this notebook, you should be able to:
+
+- Identify the key components of a basic Retrieval-Augmented Generation (RAG) system.
+- Use a sentence-transformer model to create embeddings from text passages.
+- Run simple retrieval using vector similarity and evaluate retrieved chunks.
+- Generate answers to factual questions using retrieved content as context.
+- Understand early limitations of RAG pipelines and motivate future improvements.
+
+### Step-by-Step Overview
+
+1. **Load the Corpus**
+   - We use Shakespeare texts from the workshop's `data.csv` file.
+
+2. **Split Text into Chunks**
+   - Long texts are broken into smaller passages (~200 words) so they're easier to search and analyze.
+
+3. **Create Embeddings**
+   - Each chunk is converted into a vector — a mathematical representation of its meaning — using a pretrained model from `sentence-transformers`.
+
+4. **Retrieve Relevant Chunks**
+   - When you ask a question, we embed the question and compare it to the embedded text chunks to find the most similar passages.
+
+5. **Ask a Language Model**
+   - We take the most relevant passages and feed them (along with your question) into a pretrained language model (like GPT-2) to generate an answer.
+
+This is not training a model from scratch — it's a lightweight, modular way to build smart question-answering tools on top of your own text collection.
+
+We'll explore the strengths and limitations of this approach along the way.
+
+## Step 1: Load the corpus
+In this example, we'll use "Romeo and Juliet" as our text corpus. This text is freely available via [Project Gutenberg](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/Gutenberg.html).
+
+Preview the file
+
+```{python}
+# Download Romeo and Juliet from Project Gutenberg
+import requests
+
+url = 'https://www.gutenberg.org/files/1112/1112-0.txt'
+response = requests.get(url)
+file_contents = response.text
+
+# Preview first 3000 characters
+preview_len = 3000
+print(file_contents[:preview_len])
+```
+
+## Step 2: Split text into "chunks"
+Next, we define a function to split the corpus into smaller chunks based on word count. The simplest "chunking" approach is to chunk by word count or character count.
+
+```{python}
+def chunk_text(text, max_words=200):
+    import re  # Regular expressions will help us split the text more precisely
+
+    # Use regex to tokenize the text:
+    # This pattern splits the text into:
+    #   - words (\w+)
+    #   - whitespace (\s+)
+    #   - punctuation or other non-whitespace symbols ([^\w\s])
+    words = re.findall(r'\w+|\s+|[^\w\s]', text)
+
+    chunks = []  # List to store the resulting text chunks
+    chunk = []   # Temporary buffer to build up each chunk
+
+    # Iterate through each token (word, space, or punctuation)
+    for word in words:
+        chunk.append(word)  # Add token to the current chunk
+        if len(chunk) >= max_words:
+            # Once we reach the max word count, join tokens into a string and store the chunk
+            chunks.append("".join(chunk))  # Use "".join() to preserve punctuation/spacing
+            chunk = []  # Reset for the next chunk
+
+    # If there's leftover content after the loop, add the final chunk
+    if chunk:
+        chunks.append("".join(chunk))
+
+    return chunks  # Return list of chunks
+```
+
+We then apply our chunking function to the corpus.
+
+```{python}
+# Apply the chunking function to your full text file
+chunks = chunk_text(file_contents, max_words=200)
+
+# Show how many chunks were created
+print(f"Number of chunks: {len(chunks)}")
+
+# Preview one of the chunks (by index)
+chunk_ex_ind = 1  # Feel free to change this number to explore different parts of the text
+print(f"Chunk {chunk_ex_ind} \n{chunks[chunk_ex_ind]}")
+```
+
+## Step 3: Embed Chunks with Sentence Transformers
+
+To enable semantic search, we need to convert our text chunks into numerical vectors—high-dimensional representations that capture meaning beyond simple keyword overlap. This process is called *embedding*, and it allows us to compare the semantic similarity between a user's question and the contents of a document.
+
+This is done using an **encoder-only transformer model**. Unlike decoder or encoder-decoder models, encoder-only models are not designed to generate text. Instead, they are optimized for understanding input sequences and producing meaningful vector representations. These models take in text and output fixed-size embeddings that capture semantic content—ideal for tasks like search, retrieval, and clustering.
+
+We'll use:
+
+- The [`sentence-transformers`](https://www.sbert.net/) library  
+  - A widely used library that wraps encoder-only transformer models for generating sentence- and paragraph-level embeddings.
+  - It provides a simple interface (`model.encode()`) and is optimized for performance and batching, making it well-suited for retrieval-augmented generation (RAG) workflows.
+  - It supports both short queries and longer document chunks, embedding them into the same shared vector space.
+
+- A pretrained model: [`multi-qa-MiniLM-L6-cos-v1`](https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1)  
+  - A compact encoder-only model (6 layers) designed for semantic search and question answering.
+  - Trained using contrastive learning on query-passage pairs, so it learns to embed related questions and answers close together in vector space.
+  - It's efficient enough to run on CPUs or entry-level GPUs, making it great for experimentation and prototyping.
+
+### Why embeddings matter in RAG
+
+In a RAG system, embeddings are the foundation for connecting a user's question to the most relevant content in your corpus.
+
+Rather than relying on exact keyword matches, embeddings represent both queries and document chunks in the same semantic space. When a user asks a question, we:
+1. Convert the user's question into a vector using the same encoder-only embedding model that was used to encode the document chunks.
+2. Compute similarity scores (e.g., cosine similarity) between the query vector and each chunk vector.
+3. Retrieve the top-matching chunks to pass along as context to the language model.
+
+This allows the system to surface text that is meaningfully related to the question—even if it doesn't use the same words.
+
+For example, a question like "*What does Juliet think of Romeo?*" might retrieve a passage describing her inner turmoil or emotional reaction, even if the words "think" or "Romeo" aren't explicitly present.
+
+Embedding-based retrieval improves relevance, flexibility, and ultimately the quality of the answers your language model can generate.
+
+```{python}
+from sentence_transformers import SentenceTransformer
+import numpy as np
+import torch
+
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu' # make sure you have GPU enabled in colab to speed things up!
+print(f'device={device}')
+
+model = SentenceTransformer('multi-qa-MiniLM-L6-cos-v1', device=device)
+embeddings = model.encode(chunks, device=device)
+
+print(f"Shape of embedding matrix: {np.array(embeddings).shape}")
+```
+
+**Note**: The shape of our embedding matrix is (283, 384) — representing the 283 chunks we prepared, and the 384 features describing each chunk. These are neural network derived features, lacking direct interpretability.
+
+## Step 4: Retrieve Relevant Chunks
+
+In this step, we demonstrate a core component of a RAG (Retrieval-Augmented Generation) pipeline — finding the most relevant pieces of text to answer a user's question. Here's how it works:
+
+- We take the user's question and convert it into a vector embedding using the *same model* we used to embed the original text chunks.
+- Then we use cosine similarity to compare the question's embedding to all text chunk embeddings.
+- We select the top *N* most similar chunks to use as context for the language model.
+
+### Are question embeddings and chunk embeddings really comparable?
+
+We're assuming that the embedding model (e.g., `all-MiniLM-L6-v2`) was trained in such a way that *questions and answers occupy the same semantic space*. That is:
+- If a question and a passage are semantically aligned (e.g., about the same topic or fact), their embeddings should be close.
+- This assumption holds reasonably well for general-purpose models trained on sentence pairs.
+- But it's not perfect — especially for very abstract or indirect questions.
+  - If a model was only trained to embed statements, it may not align questions correctly.
+  - You might retrieve chunks that are **related but not directly useful** for answering the question.
+
+```{python}
+from sklearn.metrics.pairwise import cosine_similarity
+
+def retrieve_relevant_chunks(model, query, chunks, embeddings, top_n=3):
+    query_embedding = model.encode([query])
+    scores = cosine_similarity(query_embedding, embeddings)[0]
+    top_indices = scores.argsort()[-top_n:][::-1]
+    results = [(chunks[i], scores[i]) for i in top_indices]
+    return results
+```
+
+```{python}
+question = "Who kills Mercutio?" # Answer: Tybalt, Juliet's cousin
+top_chunks = retrieve_relevant_chunks(model, question, chunks, embeddings)
+
+for i, (chunk, score) in enumerate(top_chunks, 1):
+    print(f"\n\n############ CHUNK {i} ############")
+    print(f"Score: {score:.4f}")
+    print(chunk)
+```
+
+### Summary: Retrieval Results for Factual Query
+
+The following output shows how a RAG system handles the factual question "Who kills Mercutio?" using a chunked version of *Romeo and Juliet*. While no chunk explicitly states "Tybalt kills Mercutio" in modern phrasing, the system successfully retrieves highly relevant context. The Project Gutenberg edition uses the older spelling "Tibalt", which the retriever still resolves semantically.
+
+* **Chunk 1** is the most direct and useful. It captures the aftermath of the duel, with citizens exclaiming:
+  * "*Which way ran he that kild Mercutio? Tibalt that Murtherer, which way ran he?*". Despite the archaic spelling and phrasing, this chunk effectively provides the answer when interpreted in context.
+
+* **Chunk 2** sets up the conflict. It includes Mercutio and Benvolio discussing that:
+  * "*Tibalt, the kinsman to old Capulet, hath sent a Letter*" ... "*A challenge on my life*". While it doesn't answer the question directly, it reinforces that Tibalt is the antagonist and establishes his role in escalating the violence.
+
+* **Chunk 3** presents the Prince's legal judgment:
+  * "*Romeo, Prince, he was Mercutios Friend… The life of Tibalt*." The Prince confirms that Tybalt (Tibalt) has been killed in consequence of Mercutio's death. This chunk emphasizes closure rather than causality, but still supports the factual chain.
+
+### Observations
+
+- Early modern spelling (e.g., *Tibalt*) doesn't hinder embedding-based retrieval — a strength of semantic models.
+- No chunk contains a complete "question + answer" sentence, but together they establish who killed whom, why, and what happened next.
+- The system retrieves scenes with narrative and legal resolution, not just the killing itself.
+
+This result demonstrates how chunk-level RAG with sentence-transformer embeddings can surface relevant evidence across spelling and stylistic variation, even when chunk boundaries split key action and dialogue.
+
+### Run a few additional queries & report top-ranked chunk
+
+```{python}
+# Run a few factual queries and inspect the top-ranked chunks
+factual_questions = [
+    "Who kills Mercutio?", # Tybalt
+    "Where does Romeo meet Juliet?", # Capulet's masquerade ball (party), which takes place at the Capulet family home in Verona
+    "What punishment does the Prince give Romeo?" # exile / banishment
+]
+
+for q in factual_questions:
+    print(f"\n=== Query: {q} ===")
+    results = retrieve_relevant_chunks(model, q, chunks, embeddings, top_n=1)
+    for i, (chunk, score) in enumerate(results, 1):
+        print(f"\n--- CHUNK {i} (Score: {score:.4f}) ---")
+        print(chunk[:800])  # print first ~800 chars for readability
+```
+
+### Improving Retrieved Chunks
+
+Before we move on to having a language model generate answers, we need to take a closer look at the quality of the retrieved content.
+
+As we just saw, our current retrieval method brings back passages that are topically related but often miss the actual moment where the answer appears. In some cases, the correct chunk is nearby but not retrieved. In others, key information may be split across multiple chunks or surrounded by distracting dialogue.
+
+To address this, we'll focus on a key area of improvement: **refining the chunking strategy**.
+
+#### Why chunking matters
+
+The current approach uses a simple method such as splitting the text by a fixed word count. While this works for general purposes, it often cuts across meaningful dramatic units:
+- A character's speech may be interrupted mid-line
+- A fight scene may be split just before or after a critical action
+- A conversation between characters may be split across chunks
+
+This leads to less coherent retrieval and lowers the chance that a single chunk can fully answer the question.
+
+Here are two practical adjustments we can use to improve the retrievals:
+
+1. **Group complete speaker turns into chunks**: Instead of arbitrary lengths, we can group text based on who is speaking. This ensures each chunk preserves the flow and tone of the conversation.
+
+2. **Use scene- or event-aware chunking**: By chunking based on scene boundaries or key events (e.g. "Romeo kills Tybalt"), we improve the chance that retrieved content captures complete dramatic moments, not just pieces of them.
+
+These changes don't require a new model—they just help the existing model work with more meaningful input.
+
+
+Next, we'll apply dialogue-aware chunking and rerun one of our earlier factual queries to see whether the results improve.
+
+### Refining chunking strategy
+Our current chunks are only based on word length. Instead, we can create chunks that are more tuned to the dataset and potential questions we might ask by defining a chunk as a "dialogue block", i.e.,  as a group of N full speaker turns (e.g., JULIET. + her lines, ROMEO. + his lines, etc.).
+
+Let's give this a shot to see how it impacts retrieval.
+
+```{python}
+import re
+
+def chunk_by_speaker_blocks(text, block_size=4):
+    # This regex matches short speaker tags at the beginning of lines, e.g., "Ben." or "Rom."
+    # Followed by speech text (either same line or indented on next)
+    speaker_line_pattern = re.compile(r'^\s{0,3}([A-Z][a-z]+)\.\s+(.*)', re.MULTILINE)
+
+    dialogue_blocks = []
+    current_speaker = None
+    current_lines = []
+
+    for line in text.splitlines():
+        match = speaker_line_pattern.match(line)
+        if match:
+            # Save previous speaker block if one was accumulating
+            if current_speaker:
+                dialogue_blocks.append(f"{current_speaker}.\n" + "\n".join(current_lines).strip())
+            current_speaker = match.group(1)
+            current_lines = [match.group(2)]
+        elif current_speaker and line.strip():
+            # Indented continuation of the same speaker
+            current_lines.append(line)
+        else:
+            # Blank line or noise: treat as boundary
+            if current_speaker and current_lines:
+                dialogue_blocks.append(f"{current_speaker}.\n" + "\n".join(current_lines).strip())
+                current_speaker = None
+                current_lines = []
+
+    # Add last block if exists
+    if current_speaker and current_lines:
+        dialogue_blocks.append(f"{current_speaker}.\n" + "\n".join(current_lines).strip())
+
+    # Chunk into groups of speaker turns
+    grouped_chunks = []
+    for i in range(0, len(dialogue_blocks), block_size):
+        chunk = "\n\n".join(dialogue_blocks[i:i + block_size])
+        grouped_chunks.append(chunk.strip())
+
+    return grouped_chunks
+```
+
+```{python}
+speaker_chunks = chunk_by_speaker_blocks(file_contents, block_size=4)
+print(f"Total speaker_chunks: {len(speaker_chunks)}")
+print(f"Preview of first chunk:\n\n{speaker_chunks[0]}")
+```
+
+Our chunks have now been improved so that we aren't cutting off any diagloue mid-sentence, and each chunk contains a few turns between speakers -- allowing us to better capture the overall semantics of short passages from *Romeo and Juliet*.
+
+```{python}
+dialogue_embeddings = model.encode(speaker_chunks)
+
+print(f"Shape of dialogue_embeddings matrix: {np.array(dialogue_embeddings).shape}")
+```
+
+```{python}
+# Run a few factual queries and inspect the top-ranked chunks
+factual_questions = [
+    "Who kills Mercutio?", # Tybalt
+    "Where does Romeo meet Juliet?", # Capulet's masquerade ball (party), which takes place at the Capulet family home in Verona
+    "What punishment does the Prince give Romeo?" # exile / banishment
+]
+
+for q in factual_questions:
+    print(f"\n=== Query: {q} ===")
+    results = retrieve_relevant_chunks(model, q, speaker_chunks, dialogue_embeddings, top_n=1)
+    for i, (chunk, score) in enumerate(results, 1):
+        print(f"\n--- CHUNK {i} (Score: {score:.4f}) ---")
+        print(chunk)  # print first ~800 chars for readability
+```
+
+## Takeaway
+
+Refining our chunking strategy to preserve full speaker turns—and grouping several turns together—has already improved the relevance of the chunks retrieved. The content is more coherent, more complete, and better aligned with the structure of a play. This shows how much retrieval quality depends not just on the model, but on the way we prepare and represent the source material.
+
+That said, even with better chunks, retrieval doesn't always land on the exact moment that answers the question. Sometimes it gets close but stops short; other times it picks up a scene with similar characters or themes, but not the one we need.
+
+This points to a deeper challenge: *semantic similarity alone doesn't always capture answer relevance*. The chunk that's closest in meaning isn't always the one that answers the question. One way to address this is through a process called **reranking**.
+
+### What is reranking?
+
+Reranking means retrieving a small set of candidate chunks—say, the top 5—and then using an additional method to determine which of those is the best fit for the question.
+
+That method could be:
+- A custom scoring function (e.g., based on keyword overlap, speaker identity, or chunk metadata),
+- Or—more powerfully—a *separate language model*.
+
+This separate model can be small or large, depending on your resource availability:
+- A smaller open-source model (like `mistral`, `falcon`, or `phi`) can often handle basic ranking tasks at low cost.
+- A larger LLM (like GPT-3.5 or GPT-4) may be better at reasoning through subtleties and weighing relevance when answers are indirect or distributed across lines.
+
+You might ask this model something like:
+
+> Here are three passages. Which one best answers the question: "Who kills Mercutio?"
+
+At first, it might feel strange to use one language model to support another—but this layered setup is common in production RAG pipelines. It separates concerns:
+- The retriever quickly narrows down the universe of text,
+- The reranker evaluates those chunks more deeply, focusing on which is most likely to be useful.
+
+We won't implement this yet, but it's worth introducing now. As we start exploring more ambiguous or emotionally driven questions in later sections, reranking becomes one of the key techniques for bridging the gap between retrieval and meaningful response.
+
+For now, we've established a strong foundation: well-structured chunks that carry clear speaker information and preserve narrative flow. That's a critical step toward building a RAG system that doesn't just respond, but interprets.
+
+## Upgrading Our "Retrieval Model"
+
+The model we've used so far, [`multi-qa-MiniLM-L6-cos-v1`](https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1), is a solid starting point for retrieval-augmented generation (RAG) pipelines, it is relatively lightweight (22M parameters, ~500–800 MB GPU memory), which makes it efficient but less expressive than larger models.
+
+However, larger embedding models have more capacity to capture subtle semantic relationships, including indirect phrasing or domain-specific language. This can make a dramatic difference in tasks like matching Shakespearean dialogue to modern questions—something smaller models often struggle with.
+
+Let's try a slightly larger model with 109 M parameters, [`all-mpnet-base-v2`](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)
+
+```{python}
+from sentence_transformers import SentenceTransformer
+
+# Load the dot-product version of the same model
+model_larger = SentenceTransformer('all-mpnet-base-v2', device=device) # larger model
+
+# Generate embeddings for all chunks
+dialogue_embeddings = model_larger.encode(speaker_chunks,
+                                              device=device,
+                                              convert_to_numpy=True,
+                                              normalize_embeddings=False) # dot-product scoring expects unnormalized vectors.
+```
+
+```{python}
+# Run a few factual queries and inspect the top-ranked chunks
+factual_questions = [
+    "Who kills Mercutio?", # Tybalt
+    "Where does Romeo meet Juliet?", # Capulet's masquerade ball (party), which takes place at the Capulet family home in Verona
+    "What punishment does the Prince give Romeo?" # exile / banishment
+]
+
+for q in factual_questions:
+    print(f"\n=== Query: {q} ===")
+    results = retrieve_relevant_chunks(model_larger, q, speaker_chunks, dialogue_embeddings, top_n=1)
+    for i, (chunk, score) in enumerate(results, 1):
+        print(f"\n--- CHUNK {i} (Score: {score:.4f}) ---")
+        print(chunk)  # print first ~800 chars for readability
+```
+
+If you're interested in exploring more powerful options for RAG pipelines, consider:
+
+- [`intfloat/e5-large-v2`](https://huggingface.co/intfloat/e5-large-v2): A 24‑layer encoder (335M params) fine-tuned for dense retrieval with `query:` / `passage:` formatting.
+- [`BAAI/bge-large-en-v1.5`](https://huggingface.co/BAAI/bge-large-en-v1.5): A high-performing English retriever (335M params) that tops MTEB benchmarks.
+- [`deepseek-ai/DeepSeek-V2`](https://huggingface.co/deepseek-ai/DeepSeek-V2): A large-scale mixture-of-experts model (236 B params) pioneering efficient retrieval architectures, but note it's not a small encoder model—it's listed here to showcase advanced retrieval methods.
+
+All of these are trained for dot-product similarity and work best with a high-performance index like `faiss.IndexFlatIP`.
+
+**Note:** We didn't use FAISS in this notebook, since our dataset is small enough for brute-force similarity search. But once you move to larger models or bigger corpora, FAISS becomes essential for scalable and efficient retrieval.
+
+## Step 5: Ask an LLM using Retrieved Context
+
+### Putting It All Together: Answering a Question with a Language Model
+
+Now that we've improved our chunking and retrieval process, we're ready to pass the retrieved content to *yet another* language model and generate an answer.
+
+This step completes the typical RAG (Retrieval-Augmented Generation) workflow:
+1. Retrieve the top-ranked passage(s) using a retrieval LLM to embed the corpus into a Q&A semantic space
+2. Concatenate retrieved results them into a structured prompt
+3. Ask a (generative) language model to answer the user's question using only that retrieved context
+
+This approach grounds the model's answer in specific evidence from the text, making it more trustworthy than asking the model to "hallucinate" an answer from general pretraining.
+
+
+#### The Prompt Format
+
+We use a basic prompt like this:
+
+```
+Passages: [Top retrieved chunk(s) go here]
+Question: [your question]
+Answer:
+```
+
+By framing the input this way, we signal to the model that it should focus only on the retrieved content. We're not asking it to draw from general knowledge of the play—just from the selected passages.
+
+Let's begin assembling the full prompt:
+
+```{python}
+question = "Who killed Mercutio?" # Tybalt/Tibalt
+```
+
+```{python}
+top_dialgoue_chunks = retrieve_relevant_chunks(model_larger, question, speaker_chunks, dialogue_embeddings, top_n=3)
+
+# Extract only the chunk text from (chunk, score) tuples
+context = "\n".join(chunk for chunk, score in top_dialgoue_chunks)
+print(context)
+```
+
+```{python}
+prompt = f"Use the following passage to answer this question.\nBEGIN_PASSAGE:\n{context}\nEND_PASSAGE\nQUESTION: {question}\nANSWER:"
+print(prompt)
+```
+
+### Language Model for Generation
+
+For this section, we're using [`tiiuae/falcon-rw-1b`](https://huggingface.co/tiiuae/falcon-rw-1b), a small 1.3B parameter decoder-only model trained on the RefinedWeb dataset. It's designed for general-purpose text continuation, not for answering questions or following instructions.
+
+This makes it a good baseline for testing how much a generative model can do with only retrieved context and minimal guidance. As we'll see, its output often reflects surface-level patterns or recent tokens, rather than accurate reasoning grounded in the text.
+
+```{python}
+from transformers import pipeline
+
+llm = pipeline("text-generation", model="tiiuae/falcon-rw-1b", device_map="auto")
+```
+
+#### Model Parameters and Generation Behavior
+
+When we call the language model, we specify parameters like:
+- `max_new_tokens`: Limits how much it can generate (e.g., 100 tokens)
+- `do_sample=True`: Enables creative variation rather than deterministic output. For the purposes of getting a reproducible result, we'll set this to `False`
+
+These parameters influence not just length, but also how literal or speculative the answer might be. Sampling increases variety but can also introduce tangents or continuation artifacts.
+
+```{python}
+result = llm(prompt, max_new_tokens=10, do_sample=False)[0]["generated_text"]
+```
+
+```{python}
+print(result)
+```
+
+### Why the Model Output Includes the Prompt
+
+When using a decoder-only language model (like Falcon or GPT) with the Hugging Face `pipeline("text-generation")`, the output will include the entire input prompt followed by the model's generated continuation.
+
+This happens because decoder-only models are trained to predict the *next token given all previous tokens*, not to separate a prompt from a response. So when you pass in a prompt, the model simply continues generating text — it doesn't know where "input" ends and "output" begins.
+
+As a result, the `pipeline` will return a string that contains both:
+```
+[prompt] + [generated text]
+```
+
+If you're only interested in the generated part (e.g., the model's answer), you'll need to remove the prompt manually after generation.
+
+We can strip off the final answer / generated result with the next code cell.
+
+```{python}
+generated_answer = result[len(prompt):].strip()
+print(generated_answer)
+```
+
+#### Why the Output Might Drift or Repeat
+
+Even though we ask just one question, you might see the model:
+- Answer multiple questions in a row
+- Invent follow-up questions and answers
+- Continue in a Q&A or list format beyond what was asked
+
+This usually happens when:
+- The passage is long or covers multiple narrative beats
+- The model detects a repeated pattern (e.g., “Question: … Answer: …”) and keeps going
+
+For example, with a passage that includes both a fight and a romantic scene, the model might output:
+
+Question: Who kills Mercutio?
+Answer: Romeo.
+Question: What does Juliet say about fate?
+Answer: She curses fortune.
+
+Even though we only asked the first question.
+
+To limit this behavior, you can:
+- Set a lower `max_new_tokens`
+- Add a `stop` sequence after the first answer (if supported)
+- Use a tighter or more explicit prompt style
+
+```{python}
+result = llm(prompt, max_new_tokens=1, do_sample=False)[0]["generated_text"] # adjust to inlcude max of 1 new tokens
+generated_answer = result[len(prompt):].strip()
+print(generated_answer)
+```
+
+### Note on model accuracy and hallucination
+
+Smaller decoder-only models like `tiiuae/falcon-rw-1b` are fast and lightweight, but they can make factual errors, especially when summarizing events from structured texts like plays or historical records.
+
+For example, when asked "Who killed Mercutio?", the model incorrectly responded:
+
+"Romeo killed Mercutio"
+
+This is not correct. Mercutio is killed by Tybalt during a street duel. Romeo kills Tybalt afterward in retaliation.
+
+Interestingly, the correct information was present in the top retrieved chunk, but the phrasing may have confused the model:
+
+> Mer.  
+> I am hurt.  
+> A plague a both the Houses, I am sped:  
+> Is he gone and hath nothing?
+
+> Ben.  
+> What art thou hurt?
+
+> Prin.  
+> Romeo slew him, he slew Mercutio,  
+> Who now the price of his deare blood doth owe
+
+> Cap.  
+> Not Romeo Prince, he was Mercutio’s Friend,  
+> His fault concludes, but what the law should end,  
+> The life of Tybalt
+
+#### Instruction tuning improves perfomance
+To improve factual accuracy in your RAG pipeline, it's helpful to use an **instruction-tuned** model rather than a base language model. You've been using `falcon-rw-1b` (where "rw" stands for “Refined Web”), which is trained only to continue text — not to follow specific question-and-answer instructions. That's why it often hallucinates factual events.
+
+A lightweight upgrade is to instead use `tiiuae/Falcon3-1B-Instruct`, an instruction-tuned version of Falcon. It still runs on modest hardware but is trained to follow prompts and answer questions in a focused way.
+
+```{python}
+from transformers import pipeline
+
+llm = pipeline(
+    "text-generation",
+    model="tiiuae/falcon3-1b-instruct",
+    device_map="auto",
+    torch_dtype="auto",  # optional, helps with GPU memory
+)
+```
+
+```{python}
+# NOTE: We use max_new_tokens=3 here because words like "Tybalt" may be split into multiple tokens (e.g., "Ty", "b", "alt").
+# It's often tricky to get exactly one word due to subword tokenization.
+result = llm(prompt, max_new_tokens=3, do_sample=False)[0]["generated_text"]
+
+# extract answer from full result, as before
+generated_answer = result[len(prompt):].strip()
+print(generated_answer)
+```
+
+If all else fails, we can start to try larger models to handle the answer generation step. Other models you could substitute here depending on your resources include:
+- `mistralai/Mistral-7B-Instruct-v0.1` — for stronger instruction-following
+- `meta-llama/Meta-Llama-3-8B-Instruct` — for more fluent answers
+- `openai/gpt-3.5-turbo` — via API (not Hugging Face)
+
+For most open-source models, using `transformers` + `pipeline()` allows easy swapping once your retrieval system is set up.
+
+Keep in mind:
+- Larger models require more memory (ideally a 12–16GB GPU)
+- Instruction-tuned models typically follow prompts more reliably than base models
+- You may still need to post-process outputs to extract just the answer
+
+If you're working in Colab, consider using quantized models (e.g., via `bitsandbytes`) or calling the model via Hugging Face's hosted Inference API.
+
+### Concluding Remarks
+
+This notebook introduced a basic Retrieval-Augmented Generation (RAG) pipeline for factual question answering using *Romeo and Juliet*. The goal was to build a simple but functioning system and surface practical lessons about how to improve performance.
+
+**For retrieval**, we explored and discussed improvements such as:
+- Using stronger embedding models (e.g., upgrading from `MiniLM` to `all-mpnet-base-v2`).
+- Adopting a question-aligned chunking strategy, where chunks were grouped by speaker turns to better match the structure of expected queries.
+- Implementing cosine similarity retrieval, which better handles variation in chunk lengths and embedding magnitudes.
+- Briefly mentioning reranking as a next step, though not yet implemented.
+
+**For generation**, we found that:
+- Instruction-tuned language models yield more precise and context-sensitive answers.
+- Prompt formatting significantly affects the clarity and relevance of the generated output.
+- Post-processing may be necessary for trimming or cleaning model responses, especially in short-form QA tasks.
+
+While larger models consistently improve both retrieval and generation, thoughtful design choices—such as aligning chunk structure to question types, using the right embedding normalization, and writing effective prompts—can yield substantial gains, even in smaller pipelines.
+
+This notebook serves as a first step in a broader RAG workflow. Future notebooks will experiment with more flexible chunking, incorporate reranking, and test the system’s ability to handle interpretive or subjective questions.
+
+```{python}
+
+```
