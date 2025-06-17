@@ -25,6 +25,9 @@ jobs:
             quarto convert "$file" --to ipynb --output "${file%.qmd}.ipynb"
           done
 
+      - name: Install nbformat
+        run: pip install nbformat
+        
       - name: Remove YAML frontmatter from notebooks
         run: |
           python3 - <<'EOF'
