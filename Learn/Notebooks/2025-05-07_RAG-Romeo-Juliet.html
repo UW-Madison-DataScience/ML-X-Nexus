@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2025-05-07">
+
+<title>Exploring Fact-Based QA with RAG: Romeo and Juliet – Nexus: Crowdsourced ML Resources</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-04295ab5d254036c8b2bb88c9c9877ad.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Exploring Fact-Based QA with RAG: Romeo and Juliet</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+    <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to contribute?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learn</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workshops</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notebooks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Toolbox</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compute</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GenAI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Libraries</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/EDA/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EDA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI @ UW</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML+X</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML4MI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SILO</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Other</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Category glossary</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#part-1-factual-retrieval-demo-romeo-and-juliet" id="toc-part-1-factual-retrieval-demo-romeo-and-juliet" class="nav-link active" data-scroll-target="#part-1-factual-retrieval-demo-romeo-and-juliet">Part 1: Factual Retrieval Demo (Romeo and Juliet)</a>
+  <ul class="collapse">
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#step-by-step-overview" id="toc-step-by-step-overview" class="nav-link" data-scroll-target="#step-by-step-overview">Step-by-Step Overview</a></li>
+  <li><a href="#step-1-load-the-corpus" id="toc-step-1-load-the-corpus" class="nav-link" data-scroll-target="#step-1-load-the-corpus">Step 1: Load the corpus</a></li>
+  <li><a href="#step-2-split-text-into-chunks" id="toc-step-2-split-text-into-chunks" class="nav-link" data-scroll-target="#step-2-split-text-into-chunks">Step 2: Split text into “chunks”</a></li>
+  <li><a href="#step-3-embed-chunks-with-sentence-transformers" id="toc-step-3-embed-chunks-with-sentence-transformers" class="nav-link" data-scroll-target="#step-3-embed-chunks-with-sentence-transformers">Step 3: Embed Chunks with Sentence Transformers</a>
+  <ul class="collapse">
+  <li><a href="#why-embeddings-matter-in-rag" id="toc-why-embeddings-matter-in-rag" class="nav-link" data-scroll-target="#why-embeddings-matter-in-rag">Why embeddings matter in RAG</a></li>
+  </ul></li>
+  <li><a href="#step-4-retrieve-relevant-chunks" id="toc-step-4-retrieve-relevant-chunks" class="nav-link" data-scroll-target="#step-4-retrieve-relevant-chunks">Step 4: Retrieve Relevant Chunks</a>
+  <ul class="collapse">
+  <li><a href="#are-question-embeddings-and-chunk-embeddings-really-comparable" id="toc-are-question-embeddings-and-chunk-embeddings-really-comparable" class="nav-link" data-scroll-target="#are-question-embeddings-and-chunk-embeddings-really-comparable">Are question embeddings and chunk embeddings really comparable?</a></li>
+  <li><a href="#summary-retrieval-results-for-factual-query" id="toc-summary-retrieval-results-for-factual-query" class="nav-link" data-scroll-target="#summary-retrieval-results-for-factual-query">Summary: Retrieval Results for Factual Query</a></li>
+  <li><a href="#observations" id="toc-observations" class="nav-link" data-scroll-target="#observations">Observations</a></li>
+  <li><a href="#run-a-few-additional-queries-report-top-ranked-chunk" id="toc-run-a-few-additional-queries-report-top-ranked-chunk" class="nav-link" data-scroll-target="#run-a-few-additional-queries-report-top-ranked-chunk">Run a few additional queries &amp; report top-ranked chunk</a></li>
+  <li><a href="#improving-retrieved-chunks" id="toc-improving-retrieved-chunks" class="nav-link" data-scroll-target="#improving-retrieved-chunks">Improving Retrieved Chunks</a></li>
+  <li><a href="#refining-chunking-strategy" id="toc-refining-chunking-strategy" class="nav-link" data-scroll-target="#refining-chunking-strategy">Refining chunking strategy</a></li>
+  </ul></li>
+  <li><a href="#takeaway" id="toc-takeaway" class="nav-link" data-scroll-target="#takeaway">Takeaway</a>
+  <ul class="collapse">
+  <li><a href="#what-is-reranking" id="toc-what-is-reranking" class="nav-link" data-scroll-target="#what-is-reranking">What is reranking?</a></li>
+  </ul></li>
+  <li><a href="#upgrading-our-retrieval-model" id="toc-upgrading-our-retrieval-model" class="nav-link" data-scroll-target="#upgrading-our-retrieval-model">Upgrading Our “Retrieval Model”</a></li>
+  <li><a href="#step-5-ask-an-llm-using-retrieved-context" id="toc-step-5-ask-an-llm-using-retrieved-context" class="nav-link" data-scroll-target="#step-5-ask-an-llm-using-retrieved-context">Step 5: Ask an LLM using Retrieved Context</a>
+  <ul class="collapse">
+  <li><a href="#putting-it-all-together-answering-a-question-with-a-language-model" id="toc-putting-it-all-together-answering-a-question-with-a-language-model" class="nav-link" data-scroll-target="#putting-it-all-together-answering-a-question-with-a-language-model">Putting It All Together: Answering a Question with a Language Model</a></li>
+  <li><a href="#language-model-for-generation" id="toc-language-model-for-generation" class="nav-link" data-scroll-target="#language-model-for-generation">Language Model for Generation</a></li>
+  <li><a href="#why-the-model-output-includes-the-prompt" id="toc-why-the-model-output-includes-the-prompt" class="nav-link" data-scroll-target="#why-the-model-output-includes-the-prompt">Why the Model Output Includes the Prompt</a></li>
+  <li><a href="#note-on-model-accuracy-and-hallucination" id="toc-note-on-model-accuracy-and-hallucination" class="nav-link" data-scroll-target="#note-on-model-accuracy-and-hallucination">Note on model accuracy and hallucination</a></li>
+  <li><a href="#concluding-remarks" id="toc-concluding-remarks" class="nav-link" data-scroll-target="#concluding-remarks">Concluding Remarks</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exploring Fact-Based QA with RAG: Romeo and Juliet</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Workshops</div>
+    <div class="quarto-category">RAG</div>
+    <div class="quarto-category">Retrieval</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">Embeddings</div>
+    <div class="quarto-category">Text analysis</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Prompt engineering</div>
+    <div class="quarto-category">Code-along</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 7, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Applications/RAG/RAG-Romeo-Juliet.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> This notebook was demoed at <a href="https://hub.datascience.wisc.edu/communities/mlx/#mlcoffee">ML+Coffee</a> on <strong>May 7, 2025</strong>.<br>
+It’s an early work in progress, but I hope it’s useful in its current state!</p>
+<p>We plan to integrate this tutorial into either our <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html">Intro to NLP workshop</a><br>
+or into a new, dedicated workshop focused on RAG pipelines. Stay tuned — and subscribe to the <a href="https://groups.google.com/a/g-groups.wisc.edu/g/ml-community-of-practice">ML Community of Practice Google Group</a><br>
+to stay informed about updates and new workshops.</p>
+</blockquote>
+<section id="part-1-factual-retrieval-demo-romeo-and-juliet" class="level1">
+<h1>Part 1: Factual Retrieval Demo (Romeo and Juliet)</h1>
+<p>This notebook demonstrates the use of a Retrieval-Augmented Generation (RAG) system to answer <strong>factual questions</strong> from Shakespeare’s <em>Romeo and Juliet</em>.</p>
+<p>Our long-term goal is to build a RAG-powered chatbot that supports literary exploration—helping readers investigate character dynamics, thematic development, and emotional subtext.</p>
+<p>In this first part of the demo, we focus on low-hanging fruit: factual, quote-supported questions that a RAG pipeline can answer reliably. These examples will help us introduce key RAG components, and set a performance baseline before tackling more interpretive questions.</p>
+<section id="learning-objectives" class="level3">
+<h3 class="anchored" data-anchor-id="learning-objectives">Learning Objectives</h3>
+<p>By the end of this notebook, you should be able to:</p>
+<ul>
+<li>Identify the key components of a basic Retrieval-Augmented Generation (RAG) system.</li>
+<li>Use a sentence-transformer model to create embeddings from text passages.</li>
+<li>Run simple retrieval using vector similarity and evaluate retrieved chunks.</li>
+<li>Generate answers to factual questions using retrieved content as context.</li>
+<li>Understand early limitations of RAG pipelines and motivate future improvements.</li>
+</ul>
+</section>
+<section id="step-by-step-overview" class="level3">
+<h3 class="anchored" data-anchor-id="step-by-step-overview">Step-by-Step Overview</h3>
+<ol type="1">
+<li><strong>Load the Corpus</strong>
+<ul>
+<li>We use Shakespeare texts from the workshop’s <code>data.csv</code> file.</li>
+</ul></li>
+<li><strong>Split Text into Chunks</strong>
+<ul>
+<li>Long texts are broken into smaller passages (~200 words) so they’re easier to search and analyze.</li>
+</ul></li>
+<li><strong>Create Embeddings</strong>
+<ul>
+<li>Each chunk is converted into a vector — a mathematical representation of its meaning — using a pretrained model from <code>sentence-transformers</code>.</li>
+</ul></li>
+<li><strong>Retrieve Relevant Chunks</strong>
+<ul>
+<li>When you ask a question, we embed the question and compare it to the embedded text chunks to find the most similar passages.</li>
+</ul></li>
+<li><strong>Ask a Language Model</strong>
+<ul>
+<li>We take the most relevant passages and feed them (along with your question) into a pretrained language model (like GPT-2) to generate an answer.</li>
+</ul></li>
+</ol>
+<p>This is not training a model from scratch — it’s a lightweight, modular way to build smart question-answering tools on top of your own text collection.</p>
+<p>We’ll explore the strengths and limitations of this approach along the way.</p>
+</section>
+<section id="step-1-load-the-corpus" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-load-the-corpus">Step 1: Load the corpus</h2>
+<p>In this example, we’ll use “Romeo and Juliet” as our text corpus. This text is freely available via <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/Gutenberg.html">Project Gutenberg</a>.</p>
+<p>Preview the file</p>
+<div id="9761d4e3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download Romeo and Juliet from Project Gutenberg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://www.gutenberg.org/files/1112/1112-0.txt'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>file_contents <span class="op">=</span> response.text</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview first 3000 characters</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>preview_len <span class="op">=</span> <span class="dv">3000</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(file_contents[:preview_len])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-2-split-text-into-chunks" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-split-text-into-chunks">Step 2: Split text into “chunks”</h2>
+<p>Next, we define a function to split the corpus into smaller chunks based on word count. The simplest “chunking” approach is to chunk by word count or character count.</p>
+<div id="93b4fd3f" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chunk_text(text, max_words<span class="op">=</span><span class="dv">200</span>):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> re  <span class="co"># Regular expressions will help us split the text more precisely</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use regex to tokenize the text:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This pattern splits the text into:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   - words (\w+)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   - whitespace (\s+)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   - punctuation or other non-whitespace symbols ([^\w\s])</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> re.findall(<span class="vs">r'</span><span class="dv">\w</span><span class="op">+</span><span class="cf">|</span><span class="dv">\s</span><span class="op">+</span><span class="cf">|</span><span class="pp">[^</span><span class="dv">\w\s</span><span class="pp">]</span><span class="vs">'</span>, text)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    chunks <span class="op">=</span> []  <span class="co"># List to store the resulting text chunks</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    chunk <span class="op">=</span> []   <span class="co"># Temporary buffer to build up each chunk</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate through each token (word, space, or punctuation)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word <span class="kw">in</span> words:</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        chunk.append(word)  <span class="co"># Add token to the current chunk</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(chunk) <span class="op">&gt;=</span> max_words:</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Once we reach the max word count, join tokens into a string and store the chunk</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            chunks.append(<span class="st">""</span>.join(chunk))  <span class="co"># Use "".join() to preserve punctuation/spacing</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            chunk <span class="op">=</span> []  <span class="co"># Reset for the next chunk</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If there's leftover content after the loop, add the final chunk</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> chunk:</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        chunks.append(<span class="st">""</span>.join(chunk))</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> chunks  <span class="co"># Return list of chunks</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We then apply our chunking function to the corpus.</p>
+<div id="660e3f25" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the chunking function to your full text file</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>chunks <span class="op">=</span> chunk_text(file_contents, max_words<span class="op">=</span><span class="dv">200</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Show how many chunks were created</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of chunks: </span><span class="sc">{</span><span class="bu">len</span>(chunks)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview one of the chunks (by index)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>chunk_ex_ind <span class="op">=</span> <span class="dv">1</span>  <span class="co"># Feel free to change this number to explore different parts of the text</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Chunk </span><span class="sc">{</span>chunk_ex_ind<span class="sc">}</span><span class="ss"> </span><span class="ch">\n</span><span class="sc">{</span>chunks[chunk_ex_ind]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-3-embed-chunks-with-sentence-transformers" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-embed-chunks-with-sentence-transformers">Step 3: Embed Chunks with Sentence Transformers</h2>
+<p>To enable semantic search, we need to convert our text chunks into numerical vectors—high-dimensional representations that capture meaning beyond simple keyword overlap. This process is called <em>embedding</em>, and it allows us to compare the semantic similarity between a user’s question and the contents of a document.</p>
+<p>This is done using an <strong>encoder-only transformer model</strong>. Unlike decoder or encoder-decoder models, encoder-only models are not designed to generate text. Instead, they are optimized for understanding input sequences and producing meaningful vector representations. These models take in text and output fixed-size embeddings that capture semantic content—ideal for tasks like search, retrieval, and clustering.</p>
+<p>We’ll use:</p>
+<ul>
+<li>The <a href="https://www.sbert.net/"><code>sentence-transformers</code></a> library
+<ul>
+<li>A widely used library that wraps encoder-only transformer models for generating sentence- and paragraph-level embeddings.</li>
+<li>It provides a simple interface (<code>model.encode()</code>) and is optimized for performance and batching, making it well-suited for retrieval-augmented generation (RAG) workflows.</li>
+<li>It supports both short queries and longer document chunks, embedding them into the same shared vector space.</li>
+</ul></li>
+<li>A pretrained model: <a href="https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1"><code>multi-qa-MiniLM-L6-cos-v1</code></a>
+<ul>
+<li>A compact encoder-only model (6 layers) designed for semantic search and question answering.</li>
+<li>Trained using contrastive learning on query-passage pairs, so it learns to embed related questions and answers close together in vector space.</li>
+<li>It’s efficient enough to run on CPUs or entry-level GPUs, making it great for experimentation and prototyping.</li>
+</ul></li>
+</ul>
+<section id="why-embeddings-matter-in-rag" class="level3">
+<h3 class="anchored" data-anchor-id="why-embeddings-matter-in-rag">Why embeddings matter in RAG</h3>
+<p>In a RAG system, embeddings are the foundation for connecting a user’s question to the most relevant content in your corpus.</p>
+<p>Rather than relying on exact keyword matches, embeddings represent both queries and document chunks in the same semantic space. When a user asks a question, we: 1. Convert the user’s question into a vector using the same encoder-only embedding model that was used to encode the document chunks. 2. Compute similarity scores (e.g., cosine similarity) between the query vector and each chunk vector. 3. Retrieve the top-matching chunks to pass along as context to the language model.</p>
+<p>This allows the system to surface text that is meaningfully related to the question—even if it doesn’t use the same words.</p>
+<p>For example, a question like “<em>What does Juliet think of Romeo?</em>” might retrieve a passage describing her inner turmoil or emotional reaction, even if the words “think” or “Romeo” aren’t explicitly present.</p>
+<p>Embedding-based retrieval improves relevance, flexibility, and ultimately the quality of the answers your language model can generate.</p>
+<div id="63357cac" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">'cuda'</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">'cpu'</span> <span class="co"># make sure you have GPU enabled in colab to speed things up!</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'device=</span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SentenceTransformer(<span class="st">'multi-qa-MiniLM-L6-cos-v1'</span>, device<span class="op">=</span>device)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> model.encode(chunks, device<span class="op">=</span>device)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shape of embedding matrix: </span><span class="sc">{</span>np<span class="sc">.</span>array(embeddings)<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Note</strong>: The shape of our embedding matrix is (283, 384) — representing the 283 chunks we prepared, and the 384 features describing each chunk. These are neural network derived features, lacking direct interpretability.</p>
+</section>
+</section>
+<section id="step-4-retrieve-relevant-chunks" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-retrieve-relevant-chunks">Step 4: Retrieve Relevant Chunks</h2>
+<p>In this step, we demonstrate a core component of a RAG (Retrieval-Augmented Generation) pipeline — finding the most relevant pieces of text to answer a user’s question. Here’s how it works:</p>
+<ul>
+<li>We take the user’s question and convert it into a vector embedding using the <em>same model</em> we used to embed the original text chunks.</li>
+<li>Then we use cosine similarity to compare the question’s embedding to all text chunk embeddings.</li>
+<li>We select the top <em>N</em> most similar chunks to use as context for the language model.</li>
+</ul>
+<section id="are-question-embeddings-and-chunk-embeddings-really-comparable" class="level3">
+<h3 class="anchored" data-anchor-id="are-question-embeddings-and-chunk-embeddings-really-comparable">Are question embeddings and chunk embeddings really comparable?</h3>
+<p>We’re assuming that the embedding model (e.g., <code>all-MiniLM-L6-v2</code>) was trained in such a way that <em>questions and answers occupy the same semantic space</em>. That is: - If a question and a passage are semantically aligned (e.g., about the same topic or fact), their embeddings should be close. - This assumption holds reasonably well for general-purpose models trained on sentence pairs. - But it’s not perfect — especially for very abstract or indirect questions. - If a model was only trained to embed statements, it may not align questions correctly. - You might retrieve chunks that are <strong>related but not directly useful</strong> for answering the question.</p>
+<div id="2d8cd34c" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> retrieve_relevant_chunks(model, query, chunks, embeddings, top_n<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    query_embedding <span class="op">=</span> model.encode([query])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> cosine_similarity(query_embedding, embeddings)[<span class="dv">0</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    top_indices <span class="op">=</span> scores.argsort()[<span class="op">-</span>top_n:][::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> [(chunks[i], scores[i]) <span class="cf">for</span> i <span class="kw">in</span> top_indices]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e0bfdd68" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"Who kills Mercutio?"</span> <span class="co"># Answer: Tybalt, Juliet's cousin</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>top_chunks <span class="op">=</span> retrieve_relevant_chunks(model, question, chunks, embeddings)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (chunk, score) <span class="kw">in</span> <span class="bu">enumerate</span>(top_chunks, <span class="dv">1</span>):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n\n</span><span class="ss">############ CHUNK </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> ############"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Score: </span><span class="sc">{</span>score<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(chunk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="summary-retrieval-results-for-factual-query" class="level3">
+<h3 class="anchored" data-anchor-id="summary-retrieval-results-for-factual-query">Summary: Retrieval Results for Factual Query</h3>
+<p>The following output shows how a RAG system handles the factual question “Who kills Mercutio?” using a chunked version of <em>Romeo and Juliet</em>. While no chunk explicitly states “Tybalt kills Mercutio” in modern phrasing, the system successfully retrieves highly relevant context. The Project Gutenberg edition uses the older spelling “Tibalt”, which the retriever still resolves semantically.</p>
+<ul>
+<li><strong>Chunk 1</strong> is the most direct and useful. It captures the aftermath of the duel, with citizens exclaiming:
+<ul>
+<li>“<em>Which way ran he that kild Mercutio? Tibalt that Murtherer, which way ran he?</em>”. Despite the archaic spelling and phrasing, this chunk effectively provides the answer when interpreted in context.</li>
+</ul></li>
+<li><strong>Chunk 2</strong> sets up the conflict. It includes Mercutio and Benvolio discussing that:
+<ul>
+<li>“<em>Tibalt, the kinsman to old Capulet, hath sent a Letter</em>” … “<em>A challenge on my life</em>”. While it doesn’t answer the question directly, it reinforces that Tibalt is the antagonist and establishes his role in escalating the violence.</li>
+</ul></li>
+<li><strong>Chunk 3</strong> presents the Prince’s legal judgment:
+<ul>
+<li>“<em>Romeo, Prince, he was Mercutios Friend… The life of Tibalt</em>.” The Prince confirms that Tybalt (Tibalt) has been killed in consequence of Mercutio’s death. This chunk emphasizes closure rather than causality, but still supports the factual chain.</li>
+</ul></li>
+</ul>
+</section>
+<section id="observations" class="level3">
+<h3 class="anchored" data-anchor-id="observations">Observations</h3>
+<ul>
+<li>Early modern spelling (e.g., <em>Tibalt</em>) doesn’t hinder embedding-based retrieval — a strength of semantic models.</li>
+<li>No chunk contains a complete “question + answer” sentence, but together they establish who killed whom, why, and what happened next.</li>
+<li>The system retrieves scenes with narrative and legal resolution, not just the killing itself.</li>
+</ul>
+<p>This result demonstrates how chunk-level RAG with sentence-transformer embeddings can surface relevant evidence across spelling and stylistic variation, even when chunk boundaries split key action and dialogue.</p>
+</section>
+<section id="run-a-few-additional-queries-report-top-ranked-chunk" class="level3">
+<h3 class="anchored" data-anchor-id="run-a-few-additional-queries-report-top-ranked-chunk">Run a few additional queries &amp; report top-ranked chunk</h3>
+<div id="44a6bf96" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a few factual queries and inspect the top-ranked chunks</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>factual_questions <span class="op">=</span> [</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Who kills Mercutio?"</span>, <span class="co"># Tybalt</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Where does Romeo meet Juliet?"</span>, <span class="co"># Capulet's masquerade ball (party), which takes place at the Capulet family home in Verona</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"What punishment does the Prince give Romeo?"</span> <span class="co"># exile / banishment</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> q <span class="kw">in</span> factual_questions:</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">=== Query: </span><span class="sc">{</span>q<span class="sc">}</span><span class="ss"> ==="</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> retrieve_relevant_chunks(model, q, chunks, embeddings, top_n<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, (chunk, score) <span class="kw">in</span> <span class="bu">enumerate</span>(results, <span class="dv">1</span>):</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- CHUNK </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> (Score: </span><span class="sc">{</span>score<span class="sc">:.4f}</span><span class="ss">) ---"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(chunk[:<span class="dv">800</span>])  <span class="co"># print first ~800 chars for readability</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="improving-retrieved-chunks" class="level3">
+<h3 class="anchored" data-anchor-id="improving-retrieved-chunks">Improving Retrieved Chunks</h3>
+<p>Before we move on to having a language model generate answers, we need to take a closer look at the quality of the retrieved content.</p>
+<p>As we just saw, our current retrieval method brings back passages that are topically related but often miss the actual moment where the answer appears. In some cases, the correct chunk is nearby but not retrieved. In others, key information may be split across multiple chunks or surrounded by distracting dialogue.</p>
+<p>To address this, we’ll focus on a key area of improvement: <strong>refining the chunking strategy</strong>.</p>
+<section id="why-chunking-matters" class="level4">
+<h4 class="anchored" data-anchor-id="why-chunking-matters">Why chunking matters</h4>
+<p>The current approach uses a simple method such as splitting the text by a fixed word count. While this works for general purposes, it often cuts across meaningful dramatic units: - A character’s speech may be interrupted mid-line - A fight scene may be split just before or after a critical action - A conversation between characters may be split across chunks</p>
+<p>This leads to less coherent retrieval and lowers the chance that a single chunk can fully answer the question.</p>
+<p>Here are two practical adjustments we can use to improve the retrievals:</p>
+<ol type="1">
+<li><p><strong>Group complete speaker turns into chunks</strong>: Instead of arbitrary lengths, we can group text based on who is speaking. This ensures each chunk preserves the flow and tone of the conversation.</p></li>
+<li><p><strong>Use scene- or event-aware chunking</strong>: By chunking based on scene boundaries or key events (e.g.&nbsp;“Romeo kills Tybalt”), we improve the chance that retrieved content captures complete dramatic moments, not just pieces of them.</p></li>
+</ol>
+<p>These changes don’t require a new model—they just help the existing model work with more meaningful input.</p>
+<p>Next, we’ll apply dialogue-aware chunking and rerun one of our earlier factual queries to see whether the results improve.</p>
+</section>
+</section>
+<section id="refining-chunking-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="refining-chunking-strategy">Refining chunking strategy</h3>
+<p>Our current chunks are only based on word length. Instead, we can create chunks that are more tuned to the dataset and potential questions we might ask by defining a chunk as a “dialogue block”, i.e., as a group of N full speaker turns (e.g., JULIET. + her lines, ROMEO. + his lines, etc.).</p>
+<p>Let’s give this a shot to see how it impacts retrieval.</p>
+<div id="f3f616e0" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chunk_by_speaker_blocks(text, block_size<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This regex matches short speaker tags at the beginning of lines, e.g., "Ben." or "Rom."</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Followed by speech text (either same line or indented on next)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    speaker_line_pattern <span class="op">=</span> re.<span class="bu">compile</span>(<span class="vs">r'</span><span class="dv">^\s</span><span class="op">{0,3}</span><span class="kw">(</span><span class="pp">[A-Z][a-z]</span><span class="op">+</span><span class="kw">)</span><span class="ch">\.</span><span class="dv">\s</span><span class="op">+</span><span class="kw">(</span><span class="dv">.</span><span class="op">*</span><span class="kw">)</span><span class="vs">'</span>, re.MULTILINE)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    dialogue_blocks <span class="op">=</span> []</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    current_speaker <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    current_lines <span class="op">=</span> []</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> text.splitlines():</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        match <span class="op">=</span> speaker_line_pattern.match(line)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> match:</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Save previous speaker block if one was accumulating</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> current_speaker:</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                dialogue_blocks.append(<span class="ss">f"</span><span class="sc">{</span>current_speaker<span class="sc">}</span><span class="ss">.</span><span class="ch">\n</span><span class="ss">"</span> <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(current_lines).strip())</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>            current_speaker <span class="op">=</span> match.group(<span class="dv">1</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>            current_lines <span class="op">=</span> [match.group(<span class="dv">2</span>)]</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> current_speaker <span class="kw">and</span> line.strip():</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Indented continuation of the same speaker</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>            current_lines.append(line)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Blank line or noise: treat as boundary</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> current_speaker <span class="kw">and</span> current_lines:</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>                dialogue_blocks.append(<span class="ss">f"</span><span class="sc">{</span>current_speaker<span class="sc">}</span><span class="ss">.</span><span class="ch">\n</span><span class="ss">"</span> <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(current_lines).strip())</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>                current_speaker <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>                current_lines <span class="op">=</span> []</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add last block if exists</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> current_speaker <span class="kw">and</span> current_lines:</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        dialogue_blocks.append(<span class="ss">f"</span><span class="sc">{</span>current_speaker<span class="sc">}</span><span class="ss">.</span><span class="ch">\n</span><span class="ss">"</span> <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(current_lines).strip())</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Chunk into groups of speaker turns</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    grouped_chunks <span class="op">=</span> []</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(dialogue_blocks), block_size):</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        chunk <span class="op">=</span> <span class="st">"</span><span class="ch">\n\n</span><span class="st">"</span>.join(dialogue_blocks[i:i <span class="op">+</span> block_size])</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        grouped_chunks.append(chunk.strip())</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> grouped_chunks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="60308545" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>speaker_chunks <span class="op">=</span> chunk_by_speaker_blocks(file_contents, block_size<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total speaker_chunks: </span><span class="sc">{</span><span class="bu">len</span>(speaker_chunks)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Preview of first chunk:</span><span class="ch">\n\n</span><span class="sc">{</span>speaker_chunks[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Our chunks have now been improved so that we aren’t cutting off any diagloue mid-sentence, and each chunk contains a few turns between speakers – allowing us to better capture the overall semantics of short passages from <em>Romeo and Juliet</em>.</p>
+<div id="1e602086" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dialogue_embeddings <span class="op">=</span> model.encode(speaker_chunks)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shape of dialogue_embeddings matrix: </span><span class="sc">{</span>np<span class="sc">.</span>array(dialogue_embeddings)<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1ad092d7" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a few factual queries and inspect the top-ranked chunks</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>factual_questions <span class="op">=</span> [</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Who kills Mercutio?"</span>, <span class="co"># Tybalt</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Where does Romeo meet Juliet?"</span>, <span class="co"># Capulet's masquerade ball (party), which takes place at the Capulet family home in Verona</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"What punishment does the Prince give Romeo?"</span> <span class="co"># exile / banishment</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> q <span class="kw">in</span> factual_questions:</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">=== Query: </span><span class="sc">{</span>q<span class="sc">}</span><span class="ss"> ==="</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> retrieve_relevant_chunks(model, q, speaker_chunks, dialogue_embeddings, top_n<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, (chunk, score) <span class="kw">in</span> <span class="bu">enumerate</span>(results, <span class="dv">1</span>):</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- CHUNK </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> (Score: </span><span class="sc">{</span>score<span class="sc">:.4f}</span><span class="ss">) ---"</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(chunk)  <span class="co"># print first ~800 chars for readability</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
+<p>Refining our chunking strategy to preserve full speaker turns—and grouping several turns together—has already improved the relevance of the chunks retrieved. The content is more coherent, more complete, and better aligned with the structure of a play. This shows how much retrieval quality depends not just on the model, but on the way we prepare and represent the source material.</p>
+<p>That said, even with better chunks, retrieval doesn’t always land on the exact moment that answers the question. Sometimes it gets close but stops short; other times it picks up a scene with similar characters or themes, but not the one we need.</p>
+<p>This points to a deeper challenge: <em>semantic similarity alone doesn’t always capture answer relevance</em>. The chunk that’s closest in meaning isn’t always the one that answers the question. One way to address this is through a process called <strong>reranking</strong>.</p>
+<section id="what-is-reranking" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-reranking">What is reranking?</h3>
+<p>Reranking means retrieving a small set of candidate chunks—say, the top 5—and then using an additional method to determine which of those is the best fit for the question.</p>
+<p>That method could be: - A custom scoring function (e.g., based on keyword overlap, speaker identity, or chunk metadata), - Or—more powerfully—a <em>separate language model</em>.</p>
+<p>This separate model can be small or large, depending on your resource availability: - A smaller open-source model (like <code>mistral</code>, <code>falcon</code>, or <code>phi</code>) can often handle basic ranking tasks at low cost. - A larger LLM (like GPT-3.5 or GPT-4) may be better at reasoning through subtleties and weighing relevance when answers are indirect or distributed across lines.</p>
+<p>You might ask this model something like:</p>
+<blockquote class="blockquote">
+<p>Here are three passages. Which one best answers the question: “Who kills Mercutio?”</p>
+</blockquote>
+<p>At first, it might feel strange to use one language model to support another—but this layered setup is common in production RAG pipelines. It separates concerns: - The retriever quickly narrows down the universe of text, - The reranker evaluates those chunks more deeply, focusing on which is most likely to be useful.</p>
+<p>We won’t implement this yet, but it’s worth introducing now. As we start exploring more ambiguous or emotionally driven questions in later sections, reranking becomes one of the key techniques for bridging the gap between retrieval and meaningful response.</p>
+<p>For now, we’ve established a strong foundation: well-structured chunks that carry clear speaker information and preserve narrative flow. That’s a critical step toward building a RAG system that doesn’t just respond, but interprets.</p>
+</section>
+</section>
+<section id="upgrading-our-retrieval-model" class="level2">
+<h2 class="anchored" data-anchor-id="upgrading-our-retrieval-model">Upgrading Our “Retrieval Model”</h2>
+<p>The model we’ve used so far, <a href="https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1"><code>multi-qa-MiniLM-L6-cos-v1</code></a>, is a solid starting point for retrieval-augmented generation (RAG) pipelines, it is relatively lightweight (22M parameters, ~500–800 MB GPU memory), which makes it efficient but less expressive than larger models.</p>
+<p>However, larger embedding models have more capacity to capture subtle semantic relationships, including indirect phrasing or domain-specific language. This can make a dramatic difference in tasks like matching Shakespearean dialogue to modern questions—something smaller models often struggle with.</p>
+<p>Let’s try a slightly larger model with 109 M parameters, <a href="https://huggingface.co/sentence-transformers/all-mpnet-base-v2"><code>all-mpnet-base-v2</code></a></p>
+<div id="6900ca23" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dot-product version of the same model</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>model_larger <span class="op">=</span> SentenceTransformer(<span class="st">'all-mpnet-base-v2'</span>, device<span class="op">=</span>device) <span class="co"># larger model</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate embeddings for all chunks</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>dialogue_embeddings <span class="op">=</span> model_larger.encode(speaker_chunks,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                                              device<span class="op">=</span>device,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                                              convert_to_numpy<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                                              normalize_embeddings<span class="op">=</span><span class="va">False</span>) <span class="co"># dot-product scoring expects unnormalized vectors.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="493bb4cd" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a few factual queries and inspect the top-ranked chunks</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>factual_questions <span class="op">=</span> [</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Who kills Mercutio?"</span>, <span class="co"># Tybalt</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Where does Romeo meet Juliet?"</span>, <span class="co"># Capulet's masquerade ball (party), which takes place at the Capulet family home in Verona</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"What punishment does the Prince give Romeo?"</span> <span class="co"># exile / banishment</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> q <span class="kw">in</span> factual_questions:</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">=== Query: </span><span class="sc">{</span>q<span class="sc">}</span><span class="ss"> ==="</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> retrieve_relevant_chunks(model_larger, q, speaker_chunks, dialogue_embeddings, top_n<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, (chunk, score) <span class="kw">in</span> <span class="bu">enumerate</span>(results, <span class="dv">1</span>):</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- CHUNK </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> (Score: </span><span class="sc">{</span>score<span class="sc">:.4f}</span><span class="ss">) ---"</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(chunk)  <span class="co"># print first ~800 chars for readability</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you’re interested in exploring more powerful options for RAG pipelines, consider:</p>
+<ul>
+<li><a href="https://huggingface.co/intfloat/e5-large-v2"><code>intfloat/e5-large-v2</code></a>: A 24‑layer encoder (335M params) fine-tuned for dense retrieval with <code>query:</code> / <code>passage:</code> formatting.</li>
+<li><a href="https://huggingface.co/BAAI/bge-large-en-v1.5"><code>BAAI/bge-large-en-v1.5</code></a>: A high-performing English retriever (335M params) that tops MTEB benchmarks.</li>
+<li><a href="https://huggingface.co/deepseek-ai/DeepSeek-V2"><code>deepseek-ai/DeepSeek-V2</code></a>: A large-scale mixture-of-experts model (236 B params) pioneering efficient retrieval architectures, but note it’s not a small encoder model—it’s listed here to showcase advanced retrieval methods.</li>
+</ul>
+<p>All of these are trained for dot-product similarity and work best with a high-performance index like <code>faiss.IndexFlatIP</code>.</p>
+<p><strong>Note:</strong> We didn’t use FAISS in this notebook, since our dataset is small enough for brute-force similarity search. But once you move to larger models or bigger corpora, FAISS becomes essential for scalable and efficient retrieval.</p>
+</section>
+<section id="step-5-ask-an-llm-using-retrieved-context" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-ask-an-llm-using-retrieved-context">Step 5: Ask an LLM using Retrieved Context</h2>
+<section id="putting-it-all-together-answering-a-question-with-a-language-model" class="level3">
+<h3 class="anchored" data-anchor-id="putting-it-all-together-answering-a-question-with-a-language-model">Putting It All Together: Answering a Question with a Language Model</h3>
+<p>Now that we’ve improved our chunking and retrieval process, we’re ready to pass the retrieved content to <em>yet another</em> language model and generate an answer.</p>
+<p>This step completes the typical RAG (Retrieval-Augmented Generation) workflow: 1. Retrieve the top-ranked passage(s) using a retrieval LLM to embed the corpus into a Q&amp;A semantic space 2. Concatenate retrieved results them into a structured prompt 3. Ask a (generative) language model to answer the user’s question using only that retrieved context</p>
+<p>This approach grounds the model’s answer in specific evidence from the text, making it more trustworthy than asking the model to “hallucinate” an answer from general pretraining.</p>
+<section id="the-prompt-format" class="level4">
+<h4 class="anchored" data-anchor-id="the-prompt-format">The Prompt Format</h4>
+<p>We use a basic prompt like this:</p>
+<pre><code>Passages: [Top retrieved chunk(s) go here]
+Question: [your question]
+Answer:</code></pre>
+<p>By framing the input this way, we signal to the model that it should focus only on the retrieved content. We’re not asking it to draw from general knowledge of the play—just from the selected passages.</p>
+<p>Let’s begin assembling the full prompt:</p>
+<div id="7af909f4" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"Who killed Mercutio?"</span> <span class="co"># Tybalt/Tibalt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="682fb1df" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>top_dialgoue_chunks <span class="op">=</span> retrieve_relevant_chunks(model_larger, question, speaker_chunks, dialogue_embeddings, top_n<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract only the chunk text from (chunk, score) tuples</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>context <span class="op">=</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(chunk <span class="cf">for</span> chunk, score <span class="kw">in</span> top_dialgoue_chunks)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(context)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ed5ff2e8" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"Use the following passage to answer this question.</span><span class="ch">\n</span><span class="ss">BEGIN_PASSAGE:</span><span class="ch">\n</span><span class="sc">{</span>context<span class="sc">}</span><span class="ch">\n</span><span class="ss">END_PASSAGE</span><span class="ch">\n</span><span class="ss">QUESTION: </span><span class="sc">{</span>question<span class="sc">}</span><span class="ch">\n</span><span class="ss">ANSWER:"</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(prompt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="language-model-for-generation" class="level3">
+<h3 class="anchored" data-anchor-id="language-model-for-generation">Language Model for Generation</h3>
+<p>For this section, we’re using <a href="https://huggingface.co/tiiuae/falcon-rw-1b"><code>tiiuae/falcon-rw-1b</code></a>, a small 1.3B parameter decoder-only model trained on the RefinedWeb dataset. It’s designed for general-purpose text continuation, not for answering questions or following instructions.</p>
+<p>This makes it a good baseline for testing how much a generative model can do with only retrieved context and minimal guidance. As we’ll see, its output often reflects surface-level patterns or recent tokens, rather than accurate reasoning grounded in the text.</p>
+<div id="daac4bc4" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>llm <span class="op">=</span> pipeline(<span class="st">"text-generation"</span>, model<span class="op">=</span><span class="st">"tiiuae/falcon-rw-1b"</span>, device_map<span class="op">=</span><span class="st">"auto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="model-parameters-and-generation-behavior" class="level4">
+<h4 class="anchored" data-anchor-id="model-parameters-and-generation-behavior">Model Parameters and Generation Behavior</h4>
+<p>When we call the language model, we specify parameters like: - <code>max_new_tokens</code>: Limits how much it can generate (e.g., 100 tokens) - <code>do_sample=True</code>: Enables creative variation rather than deterministic output. For the purposes of getting a reproducible result, we’ll set this to <code>False</code></p>
+<p>These parameters influence not just length, but also how literal or speculative the answer might be. Sampling increases variety but can also introduce tangents or continuation artifacts.</p>
+<div id="3a0e0443" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> llm(prompt, max_new_tokens<span class="op">=</span><span class="dv">10</span>, do_sample<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>][<span class="st">"generated_text"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="78810b4c" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="why-the-model-output-includes-the-prompt" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-model-output-includes-the-prompt">Why the Model Output Includes the Prompt</h3>
+<p>When using a decoder-only language model (like Falcon or GPT) with the Hugging Face <code>pipeline("text-generation")</code>, the output will include the entire input prompt followed by the model’s generated continuation.</p>
+<p>This happens because decoder-only models are trained to predict the <em>next token given all previous tokens</em>, not to separate a prompt from a response. So when you pass in a prompt, the model simply continues generating text — it doesn’t know where “input” ends and “output” begins.</p>
+<p>As a result, the <code>pipeline</code> will return a string that contains both:</p>
+<pre><code>[prompt] + [generated text]</code></pre>
+<p>If you’re only interested in the generated part (e.g., the model’s answer), you’ll need to remove the prompt manually after generation.</p>
+<p>We can strip off the final answer / generated result with the next code cell.</p>
+<div id="792a66f9" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>generated_answer <span class="op">=</span> result[<span class="bu">len</span>(prompt):].strip()</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(generated_answer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="why-the-output-might-drift-or-repeat" class="level4">
+<h4 class="anchored" data-anchor-id="why-the-output-might-drift-or-repeat">Why the Output Might Drift or Repeat</h4>
+<p>Even though we ask just one question, you might see the model: - Answer multiple questions in a row - Invent follow-up questions and answers - Continue in a Q&amp;A or list format beyond what was asked</p>
+<p>This usually happens when: - The passage is long or covers multiple narrative beats - The model detects a repeated pattern (e.g., “Question: … Answer: …”) and keeps going</p>
+<p>For example, with a passage that includes both a fight and a romantic scene, the model might output:</p>
+<p>Question: Who kills Mercutio? Answer: Romeo. Question: What does Juliet say about fate? Answer: She curses fortune.</p>
+<p>Even though we only asked the first question.</p>
+<p>To limit this behavior, you can: - Set a lower <code>max_new_tokens</code> - Add a <code>stop</code> sequence after the first answer (if supported) - Use a tighter or more explicit prompt style</p>
+<div id="82c4a0ba" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> llm(prompt, max_new_tokens<span class="op">=</span><span class="dv">1</span>, do_sample<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>][<span class="st">"generated_text"</span>] <span class="co"># adjust to inlcude max of 1 new tokens</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>generated_answer <span class="op">=</span> result[<span class="bu">len</span>(prompt):].strip()</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(generated_answer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="note-on-model-accuracy-and-hallucination" class="level3">
+<h3 class="anchored" data-anchor-id="note-on-model-accuracy-and-hallucination">Note on model accuracy and hallucination</h3>
+<p>Smaller decoder-only models like <code>tiiuae/falcon-rw-1b</code> are fast and lightweight, but they can make factual errors, especially when summarizing events from structured texts like plays or historical records.</p>
+<p>For example, when asked “Who killed Mercutio?”, the model incorrectly responded:</p>
+<p>“Romeo killed Mercutio”</p>
+<p>This is not correct. Mercutio is killed by Tybalt during a street duel. Romeo kills Tybalt afterward in retaliation.</p>
+<p>Interestingly, the correct information was present in the top retrieved chunk, but the phrasing may have confused the model:</p>
+<blockquote class="blockquote">
+<p>Mer.<br>
+I am hurt.<br>
+A plague a both the Houses, I am sped:<br>
+Is he gone and hath nothing?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Ben.<br>
+What art thou hurt?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Prin.<br>
+Romeo slew him, he slew Mercutio,<br>
+Who now the price of his deare blood doth owe</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Cap.<br>
+Not Romeo Prince, he was Mercutio’s Friend,<br>
+His fault concludes, but what the law should end,<br>
+The life of Tybalt</p>
+</blockquote>
+<section id="instruction-tuning-improves-perfomance" class="level4">
+<h4 class="anchored" data-anchor-id="instruction-tuning-improves-perfomance">Instruction tuning improves perfomance</h4>
+<p>To improve factual accuracy in your RAG pipeline, it’s helpful to use an <strong>instruction-tuned</strong> model rather than a base language model. You’ve been using <code>falcon-rw-1b</code> (where “rw” stands for “Refined Web”), which is trained only to continue text — not to follow specific question-and-answer instructions. That’s why it often hallucinates factual events.</p>
+<p>A lightweight upgrade is to instead use <code>tiiuae/Falcon3-1B-Instruct</code>, an instruction-tuned version of Falcon. It still runs on modest hardware but is trained to follow prompts and answer questions in a focused way.</p>
+<div id="ab4b5cf2" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>llm <span class="op">=</span> pipeline(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text-generation"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"tiiuae/falcon3-1b-instruct"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    device_map<span class="op">=</span><span class="st">"auto"</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    torch_dtype<span class="op">=</span><span class="st">"auto"</span>,  <span class="co"># optional, helps with GPU memory</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="64d1055e" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: We use max_new_tokens=3 here because words like "Tybalt" may be split into multiple tokens (e.g., "Ty", "b", "alt").</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># It's often tricky to get exactly one word due to subword tokenization.</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> llm(prompt, max_new_tokens<span class="op">=</span><span class="dv">3</span>, do_sample<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>][<span class="st">"generated_text"</span>]</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># extract answer from full result, as before</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>generated_answer <span class="op">=</span> result[<span class="bu">len</span>(prompt):].strip()</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(generated_answer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If all else fails, we can start to try larger models to handle the answer generation step. Other models you could substitute here depending on your resources include: - <code>mistralai/Mistral-7B-Instruct-v0.1</code> — for stronger instruction-following - <code>meta-llama/Meta-Llama-3-8B-Instruct</code> — for more fluent answers - <code>openai/gpt-3.5-turbo</code> — via API (not Hugging Face)</p>
+<p>For most open-source models, using <code>transformers</code> + <code>pipeline()</code> allows easy swapping once your retrieval system is set up.</p>
+<p>Keep in mind: - Larger models require more memory (ideally a 12–16GB GPU) - Instruction-tuned models typically follow prompts more reliably than base models - You may still need to post-process outputs to extract just the answer</p>
+<p>If you’re working in Colab, consider using quantized models (e.g., via <code>bitsandbytes</code>) or calling the model via Hugging Face’s hosted Inference API.</p>
+</section>
+</section>
+<section id="concluding-remarks" class="level3">
+<h3 class="anchored" data-anchor-id="concluding-remarks">Concluding Remarks</h3>
+<p>This notebook introduced a basic Retrieval-Augmented Generation (RAG) pipeline for factual question answering using <em>Romeo and Juliet</em>. The goal was to build a simple but functioning system and surface practical lessons about how to improve performance.</p>
+<p><strong>For retrieval</strong>, we explored and discussed improvements such as: - Using stronger embedding models (e.g., upgrading from <code>MiniLM</code> to <code>all-mpnet-base-v2</code>). - Adopting a question-aligned chunking strategy, where chunks were grouped by speaker turns to better match the structure of expected queries. - Implementing cosine similarity retrieval, which better handles variation in chunk lengths and embedding magnitudes. - Briefly mentioning reranking as a next step, though not yet implemented.</p>
+<p><strong>For generation</strong>, we found that: - Instruction-tuned language models yield more precise and context-sensitive answers. - Prompt formatting significantly affects the clarity and relevance of the generated output. - Post-processing may be necessary for trimming or cleaning model responses, especially in short-form QA tasks.</p>
+<p>While larger models consistently improve both retrieval and generation, thoughtful design choices—such as aligning chunk structure to question types, using the right embedding normalization, and writing effective prompts—can yield substantial gains, even in smaller pipelines.</p>
+<p>This notebook serves as a first step in a broader RAG workflow. Future notebooks will experiment with more flexible chunking, incorporate reranking, and test the system’s ability to handle interpretive or subjective questions.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/UW-Madison-DataScience\.github\.io\/ML-X-Nexus\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>

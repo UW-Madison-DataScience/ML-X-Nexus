@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Chris Endemann">
-<meta name="dcterms.date" content="2024-07-26">
 
-<title>Grokking – Nexus: Crowdsourced ML Resources</title>
+<title>Notebooks – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,6 +29,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../Learn/Videos/index.html" rel="next">
+<link href="../../Learn/Workshops/index.html" rel="prev">
+<script src="../../site_libs/quarto-listing/list.min.js"></script>
+<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -68,7 +70,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -81,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Grokking</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Notebooks/index.html">Notebooks</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -91,7 +151,7 @@ ul.task-list li input[type="checkbox"] {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -156,7 +216,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Notebooks</span></a>
   </div>
 </li>
@@ -285,49 +345,20 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a>
-  <ul class="collapse">
-  <li><a href="#grokking-generalization-beyond-overfitting-on-small-algorithmic-datasets-paper-explained" id="toc-grokking-generalization-beyond-overfitting-on-small-algorithmic-datasets-paper-explained" class="nav-link" data-scroll-target="#grokking-generalization-beyond-overfitting-on-small-algorithmic-datasets-paper-explained">Grokking: Generalization beyond overfitting on small algorithmic datasets (paper explained)</a></li>
-  </ul></li>
-  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Videos/Grokking.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29kZS1hbG9uZw==">Code-along <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVlcCUyMGxlYXJuaW5n">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RW1iZWRkaW5ncw==">Embeddings <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJvbXB0JTIwZW5naW5lZXJpbmc=">Prompt engineering <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UkFH">RAG <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmV0cmlldmFs">Retrieval <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGV4dCUyMGFuYWx5c2lz">Text analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="V29ya3Nob3Bz">Workshops <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-body" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Notebooks/index.html">Notebooks</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Grokking</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">Videos</div>
-    <div class="quarto-category">Deep learning</div>
-    <div class="quarto-category">Empirical patterns</div>
-    <div class="quarto-category">Grokking</div>
-  </div>
-  </div>
+<h1 class="title">Notebooks</h1>
+</div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-body">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">July 26, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -337,23 +368,66 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="about-this-resource" class="level2">
-<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
-<p>The verb, “to grok”, was originally coined by Robert A. Heinlein in his 1961 science fiction novel “Stranger in a Strange Land,” where it meant to understand something so thoroughly that it becomes a part of oneself. In the context of machine learning, “grokking” refers to the phenomenon whereby a model, after extensive training, suddenly shifts from merely memorizing data to achieving a deep and intuitive understanding, allowing it to generalize effectively to new, unseen data. Observing this phenomenon requires a significantly large increase in training iterations, often far beyond the usual training duration expected for a model to reach acceptable performance. This prolonged training period initially shows no improvement in generalization, making the eventual transition to grokking both surprising and significant.</p>
-<p>The grokking phenomenon was recently investigated in a notable paper from OpenAI (<a href="https://mathai-iclr.github.io/papers/papers/MATHAI_29_paper.pdf">Power et al., 2021</a>). The video you’ll be watching will explain OpenAI’s findings on this transition to generalization, highlighting the dramatic increase in iterations needed and providing a deeper understanding of the process and its implications for developing more robust and reliable machine learning models.</p>
-<section id="grokking-generalization-beyond-overfitting-on-small-algorithmic-datasets-paper-explained" class="level3">
-<h3 class="anchored" data-anchor-id="grokking-generalization-beyond-overfitting-on-small-algorithmic-datasets-paper-explained">Grokking: Generalization beyond overfitting on small algorithmic datasets (paper explained)</h3>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/dND-7llwrpw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-</section>
-</section>
-<section id="questions" class="level2">
-<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
-<p>If you any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
+<p>This section features short, runnable notebooks designed to help you explore specific ML/AI concepts, tools, and workflows. Many can be launched directly via Google Colab using the “Open in Colab” button included at the top of each page.</p>
+<p>These notebooks are meant to be lightweight, interactive learning materials. Some may eventually evolve into full workshops using the <a href="https://github.com/carpentries/workbench-template-md">Carpentries workbench template</a>, but each stands on its own as a handy introduction to key ML/AI ideas.</p>
+<p>Have a notebook that helped you or your team learn something new? We welcome community contributions! <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/How-to-contribute.html">Submit your notebook</a> to help others learn and explore ML/AI more effectively.</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-categories="V29ya3Nob3BzJTJDUkFHJTJDUmV0cmlldmFsJTJDTkxQJTJDTExNJTJDRW1iZWRkaW5ncyUyQ1RleHQlMjBhbmFseXNpcyUyQ0RlZXAlMjBsZWFybmluZyUyQ1Byb21wdCUyMGVuZ2luZWVyaW5nJTJDQ29kZS1hbG9uZw==" data-listing-date-sort="1746576000000" data-listing-file-modified-sort="1750130166759" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4992">
+<a href="../../Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="../../images/rag-demo.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Exploring Fact-Based QA with RAG: Romeo and Juliet
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('V29ya3Nob3Bz'); return false;">Workshops</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UkFH'); return false;">RAG</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmV0cmlldmFs'); return false;">Retrieval</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RW1iZWRkaW5ncw=='); return false;">Embeddings</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VGV4dCUyMGFuYWx5c2lz'); return false;">Text analysis</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJvbXB0JTIwZW5naW5lZXJpbmc='); return false;">Prompt engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
+
+</div>
+<div class="card-text listing-description delink">
+<strong>Note:</strong> This notebook was demoed at ML+Coffee on <strong>May 7, 2025</strong>.<br>
+It’s an early work in progress, but I hope it’s useful in its current state!
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Chris Endemann
+</div>
+<div class="listing-date">
+2025-05-07
+</div>
+</div>
+</div>
+</div></a>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -753,9 +827,21 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
+<nav class="page-navigation column-body">
+  <div class="nav-page nav-page-previous">
+      <a href="../../Learn/Workshops/index.html" class="pagination-link" aria-label="Workshops">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Workshops</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../Learn/Videos/index.html" class="pagination-link" aria-label="Videos">
+        <span class="nav-page-text">Videos</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Videos/Grokking.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
