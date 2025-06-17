@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------------------
-# GitHub Actions Workflow: Build and Publish Quarto Site + Save GitHub Insights
+# GitHub Actions Workflow: Build and Publish Quarto Site
 # -------------------------------------------------------------------------------------
 # This workflow does the following:
 # 1. Renders and publishes a Quarto site to GitHub Pages
@@ -56,39 +56,4 @@ jobs:
           # GITHUB_TOKEN is automatically provided and scoped to this repo.
           # It’s sufficient for publishing and pushing to GitHub Pages.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Step 6: Run a script to save GitHub insights (e.g., repo stats, contributors)
-      - name: Save GitHub Insights
-        env:
-          REPO_NAME: ${{ github.repository }}
-          # Use the built-in GITHUB_TOKEN for GitHub API access within this repo
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python insights/save_insights.py
-
-      # Step 7: Check for modified files in the insights/ directory
-      - name: Check for Changes
-        id: changes
-        run: |
-          if [ -d "insights" ]; then
-            git add insights/
-            if git diff --cached --quiet; then
-              echo "No changes to commit"
-              echo "changed=false" >> $GITHUB_ENV
-            else
-              echo "Changes detected"
-              echo "changed=true" >> $GITHUB_ENV
-            fi
-          else
-            echo "No insights directory found, skipping."
-            echo "changed=false" >> $GITHUB_ENV
-          fi
-
-      # Step 8: Commit and push changes if the script updated any files
-      - name: Commit and Push Insights
-        if: env.changed == 'true'
-        run: |
-          git config --local user.email "endemann@wisc.edu"
-          git config --local user.name "qualiaMachine"
-          git commit -m "Save GitHub insights on publish"
-          git push
 
