@@ -200,7 +200,7 @@ We're assuming that the embedding model (e.g., `all-MiniLM-L6-v2`) was trained i
 from sklearn.metrics.pairwise import cosine_similarity
 
 def retrieve_relevant_chunks(model, query, chunks, embeddings, top_n=3):
-    query_embedding = model.encode([query])
+    query_embedding = model.encode([query],device=device)
     scores = cosine_similarity(query_embedding, embeddings)[0]
     top_indices = scores.argsort()[-top_n:][::-1]
     results = [(chunks[i], scores[i]) for i in top_indices]
@@ -342,7 +342,7 @@ print(f"Preview of first chunk:\n\n{speaker_chunks[0]}")
 Our chunks have now been improved so that we aren't cutting off any diagloue mid-sentence, and each chunk contains a few turns between speakers -- allowing us to better capture the overall semantics of short passages from *Romeo and Juliet*.
 
 ```{python}
-dialogue_embeddings = model.encode(speaker_chunks)
+dialogue_embeddings = model.encode(speaker_chunks, device=device)
 
 print(f"Shape of dialogue_embeddings matrix: {np.array(dialogue_embeddings).shape}")
 ```
@@ -413,10 +413,7 @@ from sentence_transformers import SentenceTransformer
 model_larger = SentenceTransformer('all-mpnet-base-v2', device=device) # larger model
 
 # Generate embeddings for all chunks
-dialogue_embeddings = model_larger.encode(speaker_chunks,
-                                              device=device,
-                                              convert_to_numpy=True,
-                                              normalize_embeddings=False) # dot-product scoring expects unnormalized vectors.
+dialogue_embeddings = model_larger.encode(speaker_chunks, device=device)
 ```
 
 ```{python}
