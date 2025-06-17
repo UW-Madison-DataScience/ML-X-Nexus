@@ -27,16 +27,17 @@ jobs:
 
       - name: Remove YAML frontmatter from notebooks
         run: |
-          python3 <<EOF
-import nbformat, glob
-for path in glob.glob('Learn/Notebooks/**/*.ipynb', recursive=True):
-    with open(path, 'r', encoding='utf-8') as f:
-        nb = nbformat.read(f, as_version=4)
-    if nb.cells and nb.cells[0].cell_type == 'markdown' and nb.cells[0].source.strip().startswith('---'):
-        nb.cells.pop(0)
-        with open(path, 'w', encoding='utf-8') as f:
-            nbformat.write(nb, f)
-EOF
+          python3 - <<'EOF'
+          import nbformat, glob
+          for path in glob.glob('Learn/Notebooks/**/*.ipynb', recursive=True):
+              with open(path, 'r', encoding='utf-8') as f:
+                  nb = nbformat.read(f, as_version=4)
+              if nb.cells and nb.cells[0].cell_type == 'markdown' and nb.cells[0].source.strip().startswith('---'):
+                  nb.cells.pop(0)
+                  with open(path, 'w', encoding='utf-8') as f:
+                      nbformat.write(nb, f)
+          EOF
+
 
       - name: Commit and push .ipynb files
         run: |
