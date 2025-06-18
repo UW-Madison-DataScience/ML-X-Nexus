@@ -22,6 +22,7 @@ jobs:
         run: |
           shopt -s globstar nullglob
           for file in Learn/Notebooks/**/*.qmd; do
+            [[ "$(basename "$file")" == "index.qmd" ]] && continue
             echo "Converting $file"
             quarto convert "$file" -o "${file%.qmd}.ipynb"
           done
