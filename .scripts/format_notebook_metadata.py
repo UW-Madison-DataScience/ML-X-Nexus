@@ -20,7 +20,13 @@ for ipynb_path in glob.glob('Learn/Notebooks/**/*.ipynb', recursive=True):
 
     title = metadata.get("title", "")
     authors = metadata.get("author", [])
-    author_str = ', '.join(f'{a.get("name", "")} ({a.get("email", "")})' for a in authors)
+    if isinstance(authors, dict):
+        author_str = f'{authors.get("name", "")}, {authors.get("email", "")}'
+    else:
+        author_str = ', '.join(
+            f'{a.get("name", "")}' + (f', {a.get("email", "")}' if a.get("email") else '')
+            for a in authors
+        )
     date = metadata.get("date", "")
     categories = metadata.get("categories", [])
 
@@ -28,7 +34,7 @@ for ipynb_path in glob.glob('Learn/Notebooks/**/*.ipynb', recursive=True):
 
     meta_md = f"""# {title}
 ### {author_str}
-### [{html_url}]({html_url})
+### [Nexus version]({html_url})
 ### Categories
 {chr(10).join(f"- {cat}" for cat in categories)}
 """
