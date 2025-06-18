@@ -5,6 +5,7 @@ on:
     paths:
       - 'Learn/Notebooks/**/*.qmd'
       - '.github/workflows/qmd-to-ipynb.yml'
+      - '.scripts/format_notebook_metadata.py'
   workflow_dispatch:
 
 jobs:
@@ -27,8 +28,11 @@ jobs:
             quarto convert "$file" -o "${file%.qmd}.ipynb"
           done
 
-      - name: Install nbformat
-        run: pip install nbformat
+      - name: Install dependencies  for formatting notebook
+        run: pip install nbformat pyyaml
+
+      - name: Format notebook metadata (strip YAML + inject header cell)
+        run: python3 .scripts/format_notebook_metadata.py
 
       - name: Commit and push .ipynb files
         run: |
