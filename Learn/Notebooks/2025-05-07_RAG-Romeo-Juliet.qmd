@@ -36,7 +36,7 @@ Our long-term goal is to build a RAG-powered chatbot that supports literary expl
 
 In this first part of the demo, we focus on low-hanging fruit: factual, quote-supported questions that a RAG pipeline can answer reliably. These examples will help us introduce key RAG components, and set a performance baseline before tackling more interpretive questions. 
 
-### Learning Objectives
+### Learning objectives
 
 By the end of this notebook, you should be able to:
 
@@ -46,21 +46,21 @@ By the end of this notebook, you should be able to:
 - Generate answers to factual questions using retrieved content as context.
 - Understand early limitations of RAG pipelines and motivate future improvements.
 
-### Step-by-Step Overview
+### Step-by-step overview
 
-1. **Load the Corpus**
+1. **Load the corpus**
    - We use Shakespeare texts from the workshop's `data.csv` file.
 
-2. **Split Text into Chunks**
+2. **Split text into chunks**
    - Long texts are broken into smaller passages (~200 words) so they're easier to search and analyze.
 
-3. **Create Embeddings**
+3. **Create embeddings**
    - Each chunk is converted into a vector — a mathematical representation of its meaning — using a pretrained model from `sentence-transformers`.
 
-4. **Retrieve Relevant Chunks**
+4. **Retrieve relevant chunks**
    - When you ask a question, we embed the question and compare it to the embedded text chunks to find the most similar passages.
 
-5. **Ask a Language Model**
+5. **Ask a language model**
    - We take the most relevant passages and feed them (along with your question) into a pretrained language model (like GPT-2) to generate an answer.
 
 This is not training a model from scratch — it's a lightweight, modular way to build smart question-answering tools on top of your own text collection.
@@ -131,7 +131,7 @@ chunk_ex_ind = 1  # Feel free to change this number to explore different parts o
 print(f"Chunk {chunk_ex_ind} \n{chunks[chunk_ex_ind]}")
 ```
 
-## Step 3: Embed Chunks with Sentence Transformers
+## Step 3: Embed chunks with sentence transformers
 
 To enable semantic search, we need to convert our text chunks into numerical vectors—high-dimensional representations that capture meaning beyond simple keyword overlap. This process is called *embedding*, and it allows us to compare the semantic similarity between a user's question and the contents of a document.
 
@@ -188,13 +188,7 @@ In this step, we demonstrate a core component of a RAG (Retrieval-Augmented Gene
 
 ### Are question embeddings and chunk embeddings really comparable?
 
-We're assuming that the embedding model (e.g., `all-MiniLM-L6-v2`) was trained in such a way that *questions and answers occupy the same semantic space*. That is:
-
-- If a question and a passage are semantically aligned (e.g., about the same topic or fact), their embeddings should be close.
-- This assumption holds reasonably well for general-purpose models trained on sentence pairs.
-- But it's not perfect — especially for very abstract or indirect questions.
-  - If a model was only trained to embed statements, it may not align questions correctly.
-  - You might retrieve chunks that are **related but not directly useful** for answering the question.
+We're assuming that the embedding model (e.g., `all-MiniLM-L6-v2`) was trained in such a way that *questions and answers occupy the same semantic space*. That is, if a question and a passage are semantically aligned (e.g., about the same topic or fact), their embeddings should be close. This assumption holds reasonably well for general-purpose models trained on sentence pairs, but it's not perfect — especially for very abstract or indirect questions. If a model was only trained to embed statements, it may not align questions correctly. You might retrieve chunks that are **related but not directly useful** for answering the question.
 
 ```{python}
 from sklearn.metrics.pairwise import cosine_similarity
@@ -217,7 +211,7 @@ for i, (chunk, score) in enumerate(top_chunks, 1):
     print(chunk)
 ```
 
-### Summary: Retrieval Results for Factual Query
+### Summary: Retrieval results for factual query
 
 The following output shows how a RAG system handles the factual question "Who kills Mercutio?" using a chunked version of *Romeo and Juliet*. While no chunk explicitly states "Tybalt kills Mercutio" in modern phrasing, the system successfully retrieves highly relevant context. The Project Gutenberg edition uses the older spelling "Tibalt", which the retriever still resolves semantically.
 
@@ -256,7 +250,7 @@ for q in factual_questions:
         print(chunk[:800])  # print first ~800 chars for readability
 ```
 
-### Improving Retrieved Chunks
+### Improving retrieved chunks
 
 Before we move on to having a language model generate answers, we need to take a closer look at the quality of the retrieved content.
 
@@ -277,11 +271,9 @@ This leads to less coherent retrieval and lowers the chance that a single chunk 
 Here are two practical adjustments we can use to improve the retrievals:
 
 1. **Group complete speaker turns into chunks**: Instead of arbitrary lengths, we can group text based on who is speaking. This ensures each chunk preserves the flow and tone of the conversation.
-
 2. **Use scene- or event-aware chunking**: By chunking based on scene boundaries or key events (e.g. "Romeo kills Tybalt"), we improve the chance that retrieved content captures complete dramatic moments, not just pieces of them.
 
 These changes don't require a new model—they just help the existing model work with more meaningful input.
-
 
 Next, we'll apply dialogue-aware chunking and rerun one of our earlier factual queries to see whether the results improve.
 
@@ -398,7 +390,7 @@ We won't implement this yet, but it's worth introducing now. As we start explori
 
 For now, we've established a strong foundation: well-structured chunks that carry clear speaker information and preserve narrative flow. That's a critical step toward building a RAG system that doesn't just respond, but interprets.
 
-### Upgrading Our "Retrieval Model"
+### Upgrading our retrieval model
 
 The model we've used so far, [`multi-qa-MiniLM-L6-cos-v1`](https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1), is a solid starting point for retrieval-augmented generation (RAG) pipelines, it is relatively lightweight (22M parameters, ~500–800 MB GPU memory), which makes it efficient but less expressive than larger models.
 
@@ -442,31 +434,33 @@ All of these are trained for dot-product similarity and work best with a high-pe
 
 **Note:** We didn't use FAISS in this notebook, since our dataset is small enough for brute-force similarity search. But once you move to larger models or bigger corpora, FAISS becomes essential for scalable and efficient retrieval.
 
-## Step 5: Ask an LLM using Retrieved Context
+## Step 5: Generate answer using retrieved context
 
-### Putting It All Together: Answering a Question with a Language Model
+### Putting it all together: Answering a question with a language model
 
 Now that we've improved our chunking and retrieval process, we're ready to pass the retrieved content to *yet another* language model and generate an answer.
 
 This step completes the typical RAG (Retrieval-Augmented Generation) workflow:
-1. Retrieve the top-ranked passage(s) using a retrieval LLM to embed the corpus into a Q&A semantic space
+
+1. Retrieve the top-ranked passage(s) using a retrieval language model to embed the corpus into a Q&A semantic space
 2. Concatenate retrieved results them into a structured prompt
 3. Ask a (generative) language model to answer the user's question using only that retrieved context
 
 This approach grounds the model's answer in specific evidence from the text, making it more trustworthy than asking the model to "hallucinate" an answer from general pretraining.
 
 
-#### The Prompt Format
+#### The prompt format
 
 We use a basic prompt like this:
 
 ```
-Passages: [Top retrieved chunk(s) go here]
-Question: [your question]
-Answer:
+Use only the following passage to answer this question.
+BEGIN_PASSAGE: [Top retrieved chunk(s) go here] END_PASSAGE 
+QUESTION: [your question]
+ANSWER:
 ```
 
-By framing the input this way, we signal to the model that it should focus only on the retrieved content. We're not asking it to draw from general knowledge of the play—just from the selected passages.
+By framing the input this way, we signal to the model that it should focus only on the retrieved content. We're not asking it to draw from general knowledge of the play—just from the selected passages. 
 
 Let's begin assembling the full prompt:
 
@@ -487,7 +481,7 @@ prompt = f"Use the following passage to answer this question.\nBEGIN_PASSAGE:\n{
 print(prompt)
 ```
 
-### Language Model for Generation
+### Language model for generation
 
 For this section, we're using [`tiiuae/falcon-rw-1b`](https://huggingface.co/tiiuae/falcon-rw-1b), a small 1.3B parameter decoder-only model trained on the RefinedWeb dataset. It's designed for general-purpose text continuation, not for answering questions or following instructions.
 
@@ -499,9 +493,10 @@ from transformers import pipeline
 llm = pipeline("text-generation", model="tiiuae/falcon-rw-1b", device_map="auto")
 ```
 
-#### Model Parameters and Generation Behavior
+#### Model parameters and generation behavior
 
 When we call the language model, we specify parameters like:
+
 - `max_new_tokens`: Limits how much it can generate (e.g., 100 tokens)
 - `do_sample=True`: Enables creative variation rather than deterministic output. For the purposes of getting a reproducible result, we'll set this to `False`
 
@@ -515,7 +510,7 @@ result = llm(prompt, max_new_tokens=10, do_sample=False)[0]["generated_text"]
 print(result)
 ```
 
-### Why the Model Output Includes the Prompt
+### Why the model output inludes the prompt
 
 When using a decoder-only language model (like Falcon or GPT) with the Hugging Face `pipeline("text-generation")`, the output will include the entire input prompt followed by the model's generated continuation.
 
@@ -535,27 +530,30 @@ generated_answer = result[len(prompt):].strip()
 print(generated_answer)
 ```
 
-#### Why the Output Might Drift or Repeat
+#### Why the output might drift or repeat
 
 Even though we ask just one question, you might see the model:
+
 - Answer multiple questions in a row
 - Invent follow-up questions and answers
 - Continue in a Q&A or list format beyond what was asked
 
 This usually happens when:
+
 - The passage is long or covers multiple narrative beats
 - The model detects a repeated pattern (e.g., “Question: … Answer: …”) and keeps going
 
 For example, with a passage that includes both a fight and a romantic scene, the model might output:
-
+```
 Question: Who kills Mercutio?
 Answer: Romeo.
 Question: What does Juliet say about fate?
 Answer: She curses fortune.
-
+```
 Even though we only asked the first question.
 
 To limit this behavior, you can:
+
 - Set a lower `max_new_tokens`
 - Add a `stop` sequence after the first answer (if supported)
 - Use a tighter or more explicit prompt style
@@ -568,12 +566,10 @@ print(generated_answer)
 
 ### Note on model accuracy and hallucination
 
-Smaller decoder-only models like `tiiuae/falcon-rw-1b` are fast and lightweight, but they can make factual errors, especially when summarizing events from structured texts like plays or historical records.
-
-For example, when asked "Who killed Mercutio?", the model incorrectly responded:
-
+Smaller decoder-only models like `tiiuae/falcon-rw-1b` are fast and lightweight, but they can make factual errors, especially when summarizing events from structured texts like plays or historical records. For example, when asked "Who killed Mercutio?", the model incorrectly responded:
+```
 "Romeo killed Mercutio"
-
+```
 This is not correct. Mercutio is killed by Tybalt during a street duel. Romeo kills Tybalt afterward in retaliation.
 
 Interestingly, the correct information was present in the top retrieved chunk, but the phrasing may have confused the model:
@@ -622,6 +618,7 @@ print(generated_answer)
 ```
 
 If all else fails, we can start to try larger models to handle the answer generation step. Other models you could substitute here depending on your resources include:
+
 - `mistralai/Mistral-7B-Instruct-v0.1` — for stronger instruction-following
 - `meta-llama/Meta-Llama-3-8B-Instruct` — for more fluent answers
 - `openai/gpt-3.5-turbo` — via API (not Hugging Face)
@@ -629,23 +626,26 @@ If all else fails, we can start to try larger models to handle the answer genera
 For most open-source models, using `transformers` + `pipeline()` allows easy swapping once your retrieval system is set up.
 
 Keep in mind:
+
 - Larger models require more memory (ideally a 12–16GB GPU)
 - Instruction-tuned models typically follow prompts more reliably than base models
 - You may still need to post-process outputs to extract just the answer
 
 If you're working in Colab, consider using quantized models (e.g., via `bitsandbytes`) or calling the model via Hugging Face's hosted Inference API.
 
-## Concluding Remarks
+## Concluding remarks
 
 This notebook introduced a basic Retrieval-Augmented Generation (RAG) pipeline for factual question answering using *Romeo and Juliet*. The goal was to build a simple but functioning system and surface practical lessons about how to improve performance.
 
 **For retrieval**, we explored and discussed improvements such as:
+
 - Using stronger embedding models (e.g., upgrading from `MiniLM` to `all-mpnet-base-v2`).
 - Adopting a question-aligned chunking strategy, where chunks were grouped by speaker turns to better match the structure of expected queries.
 - Implementing cosine similarity retrieval, which better handles variation in chunk lengths and embedding magnitudes.
 - Briefly mentioning reranking as a next step, though not yet implemented.
 
 **For generation**, we found that:
+
 - Instruction-tuned language models yield more precise and context-sensitive answers.
 - Prompt formatting significantly affects the clarity and relevance of the generated output.
 - Post-processing may be necessary for trimming or cleaning model responses, especially in short-form QA tasks.
