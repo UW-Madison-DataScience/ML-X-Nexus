@@ -211,7 +211,7 @@ for i, (chunk, score) in enumerate(top_chunks, 1):
     print(chunk)
 ```
 
-### Summary: Retrieval Results for Factual Query
+### Summary: Retrieval results for factual query
 
 The following output shows how a RAG system handles the factual question "Who kills Mercutio?" using a chunked version of *Romeo and Juliet*. While no chunk explicitly states "Tybalt kills Mercutio" in modern phrasing, the system successfully retrieves highly relevant context. The Project Gutenberg edition uses the older spelling "Tibalt", which the retriever still resolves semantically.
 
@@ -250,7 +250,7 @@ for q in factual_questions:
         print(chunk[:800])  # print first ~800 chars for readability
 ```
 
-### Improving Retrieved Chunks
+### Improving retrieved chunks
 
 Before we move on to having a language model generate answers, we need to take a closer look at the quality of the retrieved content.
 
@@ -392,7 +392,7 @@ We won't implement this yet, but it's worth introducing now. As we start explori
 
 For now, we've established a strong foundation: well-structured chunks that carry clear speaker information and preserve narrative flow. That's a critical step toward building a RAG system that doesn't just respond, but interprets.
 
-### Upgrading Our "Retrieval Model"
+### Upgrading our retrieval model
 
 The model we've used so far, [`multi-qa-MiniLM-L6-cos-v1`](https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1), is a solid starting point for retrieval-augmented generation (RAG) pipelines, it is relatively lightweight (22M parameters, ~500–800 MB GPU memory), which makes it efficient but less expressive than larger models.
 
@@ -436,14 +436,14 @@ All of these are trained for dot-product similarity and work best with a high-pe
 
 **Note:** We didn't use FAISS in this notebook, since our dataset is small enough for brute-force similarity search. But once you move to larger models or bigger corpora, FAISS becomes essential for scalable and efficient retrieval.
 
-## Step 5: Ask an LLM using Retrieved Context
+## Step 5: Generate answer using retrieved context
 
-### Putting It All Together: Answering a Question with a Language Model
+### Putting it all together: Answering a question with a language model
 
 Now that we've improved our chunking and retrieval process, we're ready to pass the retrieved content to *yet another* language model and generate an answer.
 
 This step completes the typical RAG (Retrieval-Augmented Generation) workflow:
-1. Retrieve the top-ranked passage(s) using a retrieval LLM to embed the corpus into a Q&A semantic space
+1. Retrieve the top-ranked passage(s) using a retrieval language model to embed the corpus into a Q&A semantic space
 2. Concatenate retrieved results them into a structured prompt
 3. Ask a (generative) language model to answer the user's question using only that retrieved context
 
@@ -455,12 +455,13 @@ This approach grounds the model's answer in specific evidence from the text, mak
 We use a basic prompt like this:
 
 ```
-Passages: [Top retrieved chunk(s) go here]
-Question: [your question]
-Answer:
+Use only the following passage to answer this question.
+BEGIN_PASSAGE: [Top retrieved chunk(s) go here] END_PASSAGE 
+QUESTION: [your question]
+ANSWER:
 ```
 
-By framing the input this way, we signal to the model that it should focus only on the retrieved content. We're not asking it to draw from general knowledge of the play—just from the selected passages.
+By framing the input this way, we signal to the model that it should focus only on the retrieved content. We're not asking it to draw from general knowledge of the play—just from the selected passages. 
 
 Let's begin assembling the full prompt:
 
