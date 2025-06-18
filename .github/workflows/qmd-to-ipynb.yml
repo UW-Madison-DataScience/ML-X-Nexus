@@ -23,7 +23,7 @@ jobs:
           shopt -s globstar nullglob
           for file in Learn/Notebooks/**/*.qmd; do
             echo "Converting $file"
-            quarto convert "$file" --to ipynb --output "${file%.qmd}.ipynb"
+            quarto convert "$file" -o "${file%.qmd}.ipynb"
           done
 
       - name: Install nbformat
