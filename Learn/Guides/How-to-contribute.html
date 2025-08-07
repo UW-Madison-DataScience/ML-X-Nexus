@@ -334,6 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#how-to-make-a-new-post-with-github" id="toc-how-to-make-a-new-post-with-github" class="nav-link" data-scroll-target="#how-to-make-a-new-post-with-github">How to make a new post with GitHub?</a>
   <ul class="collapse">
+  <li><a href="#prerequisites-1" id="toc-prerequisites-1" class="nav-link" data-scroll-target="#prerequisites-1">Prerequisites</a></li>
   <li><a href="#github-collaboration-model" id="toc-github-collaboration-model" class="nav-link" data-scroll-target="#github-collaboration-model">GitHub collaboration model</a></li>
   </ul></li>
   <li><a href="#how-to-improve-an-existing-post" id="toc-how-to-improve-an-existing-post" class="nav-link" data-scroll-target="#how-to-improve-an-existing-post">How to improve an existing post?</a></li>
@@ -451,16 +452,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="how-to-make-a-new-post-with-github" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-make-a-new-post-with-github">How to make a new post with GitHub?</h2>
+<section id="prerequisites-1" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites-1">Prerequisites</h3>
+<p>You do not necessarily need specific training in anything, but you will need to use git and GitHub:</p>
+<ul>
+<li>Some familiarity with git or GitHub Desktop (<code>clone</code>, <code>pull</code>, <code>commit</code>, <code>push</code>)</li>
+<li>A GitHub account and some familiarity with GitHub (Fork, Issues, Pull Request)</li>
+</ul>
+</section>
 <section id="github-collaboration-model" class="level3">
 <h3 class="anchored" data-anchor-id="github-collaboration-model">GitHub collaboration model</h3>
-<p>We follow GitHub’s collaboration model, so the general idea to make a post or edit a document is the same. The high-level steps include:</p>
+<p>We follow GitHub’s collaboration model, so the general idea to make a post or edit a document is the same. The high-level steps include :</p>
 <ol type="1">
+<li>Get started with git and GitHub</li>
 <li>Create an issue announcing your plan to add a resource — see <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/issues">ML+X Nexus Issues</a></li>
 <li>Fork the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus">ML+X-Nexus repository</a></li>
 <li>Clone the forked repository onto your local machine</li>
 <li>Create a new branch</li>
-<li>Write the post, commit and push the changes</li>
+<li>Write the post
+<ul>
+<li>(optional) Preview and iterate</li>
+</ul></li>
+<li>commit and push the changes</li>
 <li>Make a pull request</li>
+<li>Wait for review</li>
 </ol>
 <p>If you don’t know how to use Git / GitHub already, it can be a little intimidating at first. A friendlier alternative could be to <a href="https://desktop.github.com/">download GitHub desktop</a> and add your post using the instructions provided below. If you’d like to learn more about GitHub Desktop, check out the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/Github-desktop.html">Version Control with GitHub Desktop</a> guide on Nexus. If you need additional help (and work in a research lab at UW-Madison), you may also seek help at the Data Science Hub’s <a href="https://datascience.wisc.edu/hub/#dropin">office hours (“Coding Meetup”)</a>.</p>
 <section id="get-started-with-github-desktop-recommended-if-youre-new-to-git-and-github" class="level4">
@@ -483,13 +498,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fork-the-repository" class="level4">
 <h4 class="anchored" data-anchor-id="fork-the-repository">3. Fork the Repository</h4>
+<p>The purpose of a Fork is to create a copy of the original repository that can be syncronized. In an open-source collaboration, the original repository will not allow you to make edits directly. Instead, you will update your Fork and then ask the original repository owners to integrate your changes through a Pull Request (PR), which you will do in step 8.</p>
 <ol type="1">
 <li>Go to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus">ML+X-Nexus repository</a> on GitHub.</li>
-<li>Click the <code>Fork</code> button at the top-right corner of the page. This will create a copy of the repository under your GitHub account.</li>
+<li>Click the <code>Fork</code> button at the top-right corner of the page.
+<ul>
+<li>This will create a copy of the repository under your GitHub account.</li>
+<li>You will now be able to make changes to your Forked copy of the repository.</li>
+</ul></li>
 </ol>
 </section>
 <section id="clone-the-repository-to-your-system-to-your-local-system" class="level4">
 <h4 class="anchored" data-anchor-id="clone-the-repository-to-your-system-to-your-local-system">4. Clone the Repository to Your System to Your Local System</h4>
+<p>Cloning your Fork to your local filesystem will allow you to use your development environment of choice to make changes.</p>
 <ol type="1">
 <li>From your new forked version of the repo on GitHub, click the green <code>Code</code> button to copy the HTTPS URL of the fork</li>
 <li>In GitHub Desktop, click on <code>File</code> &gt; <code>Clone Repository</code>.</li>
@@ -498,6 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="create-a-new-branch" class="level4">
 <h4 class="anchored" data-anchor-id="create-a-new-branch">5. Create a New Branch</h4>
+<p>It is common practice to create a new branch anytime you perform work as a new feature, update, or fix. This is often called a “feature branch”. The name comes from the idea that each feature should have its own branch, in an effort to keep things tidy.</p>
 <ol type="1">
 <li>In GitHub Desktop, click on Branch &gt; New Branch.</li>
 <li>Name your new branch descriptively based on the resource type and name (e.g., workshop-introDL, video-NeurIPS2024, etc.).</li>
@@ -505,6 +527,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="write-your-post" class="level4">
 <h4 class="anchored" data-anchor-id="write-your-post">6. Write Your Post</h4>
+<p>This is where you make changes to add your new content. Often times this starts by copying a template of your desired content (links below) into the desired folder and editing it to reflect the content you want to share.</p>
 <ol type="1">
 <li>Open your favorite text editor or IDE (e.g., Visual Studio Code, Sublime Text).</li>
 <li>Write your post in the appropriate format. Follow the guidelines below, making use the template files provided.</li>
@@ -526,7 +549,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 <section id="where-to-place-your-resource-qmd-file" class="level4">
-<h4 class="anchored" data-anchor-id="where-to-place-your-resource-qmd-file">Where to place your resource qmd file?</h4>
+<h4 class="anchored" data-anchor-id="where-to-place-your-resource-qmd-file">Where to place your resource qmd file</h4>
 <p>We want the site to be constantly evolving with the community, and our intention is to keep the contributions to the site as free as possible. However, we added some sections to structure the site a little bit:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>├── Applications</span>
@@ -548,9 +571,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>│   ├── Libraries </span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>│   ├── Models </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Note</strong>: Some subfolders may not exist yet (e.g., Code, Data) since no one has contributed a resource from one of those categories yet, and git doesn’t allow empty folders. If your resource doesn’t belong to one of the categories listed above, you may add a new one. We’ll discuss this new category when we review your initial “Issue” announcing the resource addition.</p>
+<section id="how-to-preview-new-content" class="level5">
+<h5 class="anchored" data-anchor-id="how-to-preview-new-content">How to preview new content</h5>
+<p>It is possible to preview the page you are creating on your local machine before you make the pull request, or even commit any changes. This requires Quarto to be installed on your local machine. Note that this can be very helpful, but try not to spend too much time iterating without committing, pushing, and completing the Pull Request process. You can always come back to this step and improve the content after it is published.</p>
+<ol type="1">
+<li><a href="https://quarto.org/docs/get-started/">Install Quarto</a> on your local machine</li>
+<li>Open terminal/shell/command line and run the <code>quarto preview &lt;my_new_content.qmd&gt;</code> command (replace &lt;my_new_content.qmd&gt; with your new file)</li>
+<li>Wait for the files to render (this can take a while the first time as it renders all pages the first time)</li>
+<li>A browser window should open with your version of the ML+X Nexus page</li>
+<li>Review your changes</li>
+</ol>
+<p>While the <code>quarto preview</code> command is running, the content will update when it notices a change. This allows you to iterate quickly between review and editing. When you want to stop previewing, cancel the <code>quarto preview</code> command. Usually this is done by pressing <code>Ctrl</code>+<code>C</code> in the terminal window.</p>
+</section>
 </section>
 <section id="commit-and-push-changes" class="level4">
 <h4 class="anchored" data-anchor-id="commit-and-push-changes">7. Commit and Push Changes</h4>
+<p>Commit and push changes to your feature branch as you work. You can commit and push as many times as you want to track the updates anc changes you’ve made.</p>
 <ol type="1">
 <li>In GitHub Desktop, you should see your changes listed under Changes.</li>
 <li>Write a descriptive commit message (e.g., Add new resource: workshop-introDL).</li>
@@ -560,6 +596,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="make-a-pull-request" class="level4">
 <h4 class="anchored" data-anchor-id="make-a-pull-request">8. Make a Pull Request</h4>
+<p>Pull Request (PR) is the term used when you <em>request</em> that one branch be <em>pulled</em> into another. The process of combining branches is often called a merge. In this case, you will ask the original repository to merge your Fork’s feature branch into their main branch. This PR will notify the original repository owner of your request and will then be reviewed.</p>
 <ol type="1">
 <li>Go to your forked repository on GitHub.</li>
 <li>Click on the Compare &amp; pull request button.</li>
@@ -570,6 +607,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="wait-for-review" class="level4">
 <h4 class="anchored" data-anchor-id="wait-for-review">9. Wait for Review</h4>
+<p>Your Pull Request (PR) will need to be reviewed by the owner of the original repository.</p>
 <ol type="1">
 <li>One of the Nexus developers will review your pull request. They may provide feedback or request changes.</li>
 <li>Address any feedback and push additional commits as needed.</li>
