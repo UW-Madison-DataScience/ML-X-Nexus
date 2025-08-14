@@ -1,0 +1,99 @@
+---
+title: "MLflow 101: Local Experiment Tracking for Beginners"
+author: 
+  - name: Parith Reddy  
+    email: psreddy@wisc.edu
+
+date: 2025-08-14  
+date-format: long  
+
+image: "../../../images/mlflow-logo.png"
+
+categories: 
+  - Blogs
+  - Reproducibility
+  - Sklearn
+  - MLflow
+  - Code-along
+
+---
+This [blog](https://mlflow.org/docs/latest/tracking.html) is a beginner-friendly walkthrough of **local** experiment tracking with MLflow. If you’ve ever lost a “good” result because you forgot which settings you used, MLflow solves the day-one problem in many student projects: *what did I run and how well did it do?* You can start on a laptop with no cloud setup and still keep a reproducible record of parameters, metrics, and artifacts.
+
+**Why this helps in practice.** From what I’ve seen in classes and hackathons, people usually try one of three things: (1) screenshots and notebook cells (fast, but impossible to compare later), (2) spreadsheets (organized, but manual and easy to break), or (3) full platforms like Weights & Biases (great for teams, but heavy when you’re just learning). MLflow hits a clean middle ground for early projects: a tiny API to log runs and a UI to compare them. If your work scales up, the same code can point to a remote tracking server or be paired with data versioning tools.
+
+#### Prerequisites
+- [Intro to Machine Learning with Sklearn](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html)  
+- [Version Control with GitHub Desktop](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/Github-desktop.html)
+
+Below is a minimal example that trains a baseline `LogisticRegression` and logs a few metrics and artifacts. The goal isn’t to chase state-of-the-art performance; it’s to show a small, reusable pattern you can drop into your own repos.
+
+```python
+# train.py — minimal MLflow example
+import argparse
+import mlflow, mlflow.sklearn
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, roc_auc_score
+import pandas as pd
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--C", type=float, default=1.0, help="Inverse regularization strength")
+args = parser.parse_args()
+
+# Data
+X, y = load_breast_cancer(return_X_y=True, as_frame=True)
+Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Experiment + run
+mlflow.set_experiment("mlflow-101")
+with mlflow.start_run():
+    model = LogisticRegression(max_iter=200, C=args.C, solver="lbfgs")
+    model.fit(Xtr, ytr)
+
+    yhat = model.predict(Xte)
+    proba = model.predict_proba(Xte)[:, 1]
+    acc = accuracy_score(yte, yhat)
+    auc = roc_auc_score(yte, proba)
+
+    mlflow.log_param("C", args.C)
+    mlflow.log_metric("accuracy", acc)
+    mlflow.log_metric("roc_auc", auc)
+
+    # Save model + prediction artifacts
+    mlflow.sklearn.log_model(model, "model")
+    pd.DataFrame({"y_true": yte, "y_score": proba}).to_csv("preds.csv", index=False)
+    mlflow.log_artifact("preds.csv")
+
+print("done")
+```
+
+Run a few experiments with different regularization strengths and compare them in the local UI:
+
+```bash
+# 1) Create env and install
+python -m venv .venv
+# macOS/Linux:
+source .venv/bin/activate
+# Windows (PowerShell):
+# .venv\Scripts\Activate.ps1
+
+pip install mlflow scikit-learn pandas
+
+# 2) Run experiments
+python train.py --C 0.1
+python train.py --C 1.0
+python train.py --C 10
+
+# 3) Open the Tracking UI from the folder that contains the `mlruns/` directory
+mlflow ui  # visit http://127.0.0.1:5000
+```
+
+## Questions?
+If you have lingering questions about this resource, please post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub.
+
+## See also
+- [MLflow Tracking (official docs)](https://mlflow.org/docs/latest/tracking.html)  
+- [Tracking quickstart (official)](https://mlflow.org/docs/latest/ml/tracking/quickstart/)  
+- [Track model development using MLflow (Databricks guide)](https://docs.databricks.com/aws/en/mlflow/tracking)  
+- [DVC “Get Started” for data versioning](https://dvc.org/doc/start)
