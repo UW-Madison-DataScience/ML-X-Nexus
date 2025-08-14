@@ -4,8 +4,10 @@ author:
   - name: Parith Reddy  
     email: psreddy@wisc.edu
 
-date: 2025-08-13  
+date: 2025-08-14  
 date-format: long  
+
+image: "../../../images/mlflow-logo.png"
 
 categories: 
   - Blogs
@@ -15,21 +17,15 @@ categories:
   - Code-along
 
 ---
-This blog is a beginner-friendly walkthrough of local experiment tracking with [MLflow Tracking](https://mlflow.org/docs/latest/tracking.html). You’ll learn how to log parameters, metrics, and artifacts from a small scikit-learn script and then compare runs in the MLflow UI—all on your laptop, with no cloud setup. It’s designed for class projects, labs, and hackathons where you need a simple, repeatable way to answer: *what did I run and how well did it do?*
+This [blog](https://mlflow.org/docs/latest/tracking.html) is a beginner-friendly walkthrough of **local** experiment tracking with MLflow. If you’ve ever lost a “good” result because you forgot which settings you used, MLflow solves the day-one problem in many student projects: *what did I run and how well did it do?* You can start on a laptop with no cloud setup and still keep a reproducible record of parameters, metrics, and artifacts.
+
+**Why this helps in practice.** From what I’ve seen in classes and hackathons, people usually try one of three things: (1) screenshots and notebook cells (fast, but impossible to compare later), (2) spreadsheets (organized, but manual and easy to break), or (3) full platforms like Weights & Biases (great for teams, but heavy when you’re just learning). MLflow hits a clean middle ground for early projects: a tiny API to log runs and a UI to compare them. If your work scales up, the same code can point to a remote tracking server or be paired with data versioning tools.
 
 #### Prerequisites
-- Intro to Machine Learning with Sklearn (Nexus): https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html
-- Version Control with GitHub Desktop (Nexus): https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/Github-desktop.html
+- Intro to Machine Learning with Sklearn (Nexus): https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html  
+- Version Control with GitHub Desktop (Nexus): https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/Github-desktop.html  
 
-Write your blog content here. Discuss the following (if applicable):
-
-- **Motivation**: Many students keep “best results” in scattered notebook cells or screenshots; MLflow makes experiments comparable and reproducible.
-- **Problem/Challenge**: Track hyperparameters, metrics, and artifacts so you can iterate with evidence instead of memory.
-- **Methods/Techniques**: Use MLflow’s Python API to log params/metrics and artifacts from a scikit-learn `LogisticRegression` baseline; view and compare runs in the local MLflow UI.
-- **Results**: Side-by-side comparisons of AUC/accuracy across different `C` values; a tiny, reusable template you can drop into any future project.
-
-## Code Snippets (Optional)
-If you're sharing code directly, include short snippets or explanations of the key components below. You can also link to a repo later.
+Below is a minimal example that trains a baseline `LogisticRegression` and logs a few metrics and artifacts. The goal isn’t to chase state-of-the-art performance; it’s to show a small, reusable pattern you can drop into your own repos.
 
 ```python
 # train.py — minimal MLflow example
@@ -72,6 +68,8 @@ with mlflow.start_run():
 print("done")
 ```
 
+Run a few experiments with different regularization strengths and compare them in the local UI:
+
 ```bash
 # 1) Create env and install
 python -m venv .venv
@@ -82,7 +80,7 @@ source .venv/bin/activate
 
 pip install mlflow scikit-learn pandas
 
-# 2) Run a few experiments
+# 2) Run experiments
 python train.py --C 0.1
 python train.py --C 1.0
 python train.py --C 10
@@ -92,10 +90,10 @@ mlflow ui  # visit http://127.0.0.1:5000
 ```
 
 ## Questions?
-If you any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+If you have lingering questions about this resource, please post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub.
 
 ## See also
-- MLflow Tracking (official docs): https://mlflow.org/docs/latest/tracking.html
-- Tracking quickstart (official): https://mlflow.org/docs/latest/ml/tracking/quickstart/
-- Track model development using MLflow (Databricks guide): https://docs.databricks.com/aws/en/mlflow/tracking
+- MLflow Tracking (official docs): https://mlflow.org/docs/latest/tracking.html  
+- Tracking quickstart (official): https://mlflow.org/docs/latest/ml/tracking/quickstart/  
+- Track model development using MLflow (Databricks guide): https://docs.databricks.com/aws/en/mlflow/tracking  
 - DVC “Get Started” for data versioning: https://dvc.org/doc/start
