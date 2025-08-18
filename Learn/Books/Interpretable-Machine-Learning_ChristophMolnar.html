@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Peter Cruz Parrilla">
+<meta name="dcterms.date" content="2025-08-18">
 
-<title>Blogs – Nexus: Crowdsourced ML Resources</title>
+<title>Interpretable Machine Learning – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,10 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Learn/Books/index.html" rel="next">
-<link href="../../Learn/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -70,65 +68,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-author','listing-title','listing-description','listing-date','listing-reading-time','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -141,7 +81,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Blogs/index.html">Blogs</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Interpretable Machine Learning</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -151,7 +91,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -192,7 +132,7 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
@@ -345,20 +285,52 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QmxvZ3M=">Blogs <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Q29kZS1hbG9uZw==">Code-along <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RXRoaWNhbCUyMEFJ">Ethical AI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R2VuQUk=">GenAI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW5kdXN0cnklMjBhcHBsaWNhdGlvbnM=">Industry applications <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUxmbG93">MLflow <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUxPcHM=">MLOps <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmVwcm9kdWNpYmlsaXR5">Reproducibility <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2tsZWFybg==">Sklearn <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a>
+  <ul class="collapse">
+  <li><a href="#from-the-author-christoph-molnar" id="toc-from-the-author-christoph-molnar" class="nav-link" data-scroll-target="#from-the-author-christoph-molnar">From the author, Christoph Molnar</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Books/Interpretable-Machine-Learning_ChristophMolnar.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Blogs/index.html">Blogs</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blogs</h1>
-</div>
+<h1 class="title">Interpretable Machine Learning</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Books</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Regression</div>
+    <div class="quarto-category">Decision trees</div>
+    <div class="quarto-category">Visualization</div>
+    <div class="quarto-category">Interpretability</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Peter Cruz Parrilla <a href="mailto:cruzparrilla@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 18, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -368,94 +340,43 @@ window.Quarto = {
 </header>
 
 
-<p>Explore websites that features regular blogs on AI and ML related topics.</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p><a href="https://christophm.github.io/interpretable-ml-book/interpretability.html">Interpretable Machine Learning (IML)</a> provides a concise and substantially deep breakdown of many classic machine learning models that serve as the foundation for most machine learning applications today. In a field where it’s easy to be amazed by the performance of “blackbox” models, it’s important for both beginners and advanced practitioners to understand the sources of success and constraint for a given model in a given application. These details not only improve our ability to make great models but also to extract information that might inform the framing of the problem, the use of the tools, or even the science behind the problem. In this book, you will not only explore the important mathematical and algorithmic structrure of models and the importance of their features on the outputs, but you will also learn model-agnostic ways to evaluate a model’s performance.</p>
+<section id="from-the-author-christoph-molnar" class="level3">
+<h3 class="anchored" data-anchor-id="from-the-author-christoph-molnar">From the author, Christoph Molnar</h3>
+<blockquote class="blockquote">
+<p>Interpretable Machine Learning, or Explainable AI, has really exploded as a field around 2015 (<a href="https://doi.org/10.1007/978-3-030-65965-3_28">Molnar, Casalicchio, and Bischl 2020</a>). Especially the subfield of model-agnostic interpretability, which offers methods that work for any model, gained a lot of attention. New methods for the interpretation of machine learning models are still being published at breakneck speed. To keep up with everything that is published would be madness and simply impossible. That’s why you will not find the most novel and fancy methods in this book, but established methods and basic concepts of machine learning interpretability. These basics prepare you for making machine learning models interpretable. Internalizing the basic concepts also empowers you to better understand and evaluate any new paper on interpretability published on the pre-print server arxiv.org in the last 5 minutes since you began reading this book (I might be exaggerating the publication rate).</p>
+</blockquote>
+<section id="prerequisites" class="level4">
+<h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
+<ul>
+<li>Basic understanding of statistics, linear algebra, and calculus</li>
+<li>Basic understanding of machine learning concepts (loss functions, feature spaces, etc.)</li>
+</ul>
+</section>
+<section id="estimated-time-to-complete" class="level4">
+<h4 class="anchored" data-anchor-id="estimated-time-to-complete">Estimated time to complete</h4>
+<p><strong>TBD</strong>: Use the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Books/%7BName%7D.qmd">Improve this page</a> functionality to add your own estimate!</p>
+</section>
+</section>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>If you any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<!-- MARKDOWN COMMENT: Please Check the existing resources on Nexus to see if any other related resources (e.g., related books/videos, blog posts commenting on the resource, alternative approaches/frameworks, etc.) should be linked below. You may also link to resources which aren't currently on the Nexus platform, if applicable. If you're feeling ambitious, you may wish to post those to Nexus as well!  -->
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Books/Intro-StatisticalLearning_JamesGareth-DanielaWitten-HastieTrevor-TibshiraniRob.html">Introduction to Statistical Learning</a>: An introduction to the topics explored in IML.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/TrustworthyAI_Explainability-Bias-Fairness-OODdetection.html">Trustworthy AI Workshop</a>. A workshop to apply and explore what you’ve learned in this book while obtaining additional perspectives about explainability and trustworthiness in AI.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="QmxvZ3MlMkNSZXByb2R1Y2liaWxpdHklMkNTa2xlYXJuJTJDTUxPcHMlMkNNTGZsb3clMkNDb2RlLWFsb25n" data-listing-date-sort="1755129600000" data-listing-file-modified-sort="1755550165049" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="451">
-<a href="../../Learn/Blogs/mlflow-101.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/mlflow-logo.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-MLflow 101: Local Experiment Tracking for Beginners
-</h5>
-<div class="listing-reading-time card-text text-muted">3 min</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmxvZ3M='); return false;">Blogs</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVwcm9kdWNpYmlsaXR5'); return false;">Reproducibility</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2tsZWFybg=='); return false;">Sklearn</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUxPcHM='); return false;">MLOps</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUxmbG93'); return false;">MLflow</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
-
-</div>
-<div class="card-text listing-description delink">
-This blog is a beginner-friendly walkthrough of local experiment tracking with MLflow. If you’ve ever lost a “good” result because you forgot which settings you used, MLflow…<em></em>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Parith Reddy
-</div>
-<div class="listing-date">
-2025-08-14
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="QmxvZ3MlMkNJbmR1c3RyeSUyMGFwcGxpY2F0aW9ucyUyQ0xMTSUyQ0V0aGljYWwlMjBBSSUyQ0dlbkFJ" data-listing-date-sort="1733961600000" data-listing-file-modified-sort="1755550165049" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="133">
-<a href="../../Learn/Blogs/one-useful-thing.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/oneUsefulThing.webp" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-One Useful Thing
-</h5>
-<div class="listing-reading-time card-text text-muted">1 min</div>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmxvZ3M='); return false;">Blogs</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW5kdXN0cnklMjBhcHBsaWNhdGlvbnM='); return false;">Industry applications</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXRoaWNhbCUyMEFJ'); return false;">Ethical AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">GenAI</div>
-
-</div>
-<div class="card-text listing-description delink">
-One Useful Thing is a blog where Wharton professor Ethan Mollick “provides a research-based view on the implications of AI.” Since November 2022 Mollick has been sharing a…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Alan Ng
-</div>
-<div class="listing-date">
-2024-12-12
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -855,21 +776,9 @@ Alan Ng
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Learn/index.html" class="pagination-link" aria-label="Learn">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Learn</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Learn/Books/index.html" class="pagination-link" aria-label="Books">
-        <span class="nav-page-text">Books</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Blogs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Books/Interpretable-Machine-Learning_ChristophMolnar.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
