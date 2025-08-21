@@ -1,0 +1,209 @@
+---
+title: "GeoDeepDive: Unlocking Knowledge from Scientific Literature"
+author:
+  - name: Devanshi Jain
+    url: https://github.com/devanshi80
+date: 2025-09-21
+categories: 
+  - Books 
+  - Data
+  - NLP
+  - OCR
+  - Scientific Text Mining 
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 3
+    code-tools: true
+    code-overflow: scroll
+description: "A guide to using GeoDeepDive, a powerful platform and database for large-scale text and data mining of scientific documents."
+image: "../../../images/geodeepdive_pipeline.png"
+jupyter: python3
+---
+
+## Overview
+
+[GeoDeepDive (GDD)](https://geodeepdive.org/) is a cyberinfrastructure project designed to accelerate scientific discovery by extracting information from the vast and growing body of published scientific literature. While its roots are in geology, its applications span any domain that relies on published texts, including biology, materials science, medicine, and social sciences.
+
+At its core, GDD is a massive database of over 15 million scientific documents (articles, theses, reports) that have been processed through a high-performance computing pipeline. This pipeline performs:
+*   **Optical Character Recognition (OCR)** to convert scanned PDFs into machine-readable text.
+*   **Natural Language Processing (NLP)** to parse sentences, identify parts of speech, and perform named entity recognition (e.g., finding mineral names, locations, species).
+*   **Relation Extraction** to find and catalog relationships between entities (e.g., "mineral X is found at location Y").
+
+The result is not just a collection of texts, but a structured, queryable knowledge graph. Researchers can use GDD's public API to ask complex questions that would be impossible to answer by manual literature review, such as "find all papers that mention a specific fossil and its geological age" or "extract all measured values of a particular chemical compound."
+
+## Prerequisites
+
+*   **Basic familiarity with Python** and making HTTP requests.
+*   A **GitHub account** (to use GDD's public API).
+*   An understanding of basic **NLP concepts** (Token, Sentence, Named Entity) is helpful but not strictly required to run the example.
+
+## Key Concepts and Definitions
+
+| Concept | Definition |
+| :--- | :--- |
+| **Document** | Any processed text unit in the GDD database, typically a scientific publication. |
+| **NLP** | Natural Language Processing, the field of AI concerned with interactions between computers and human language. |
+| **Named Entity Recognition (NER)** | An NLP task to identify and classify key information (entities) in text into predefined categories like persons, organizations, locations, etc. In GDD, these are often scientific terms. |
+| **API (Application Programming Interface)** | A set of rules and tools that allows different software applications to communicate with each other. GDD provides an API to query its database programmatically. |
+| **JSON** | JavaScript Object Notation, a lightweight data-interchange format that is easy for humans to read and write and for machines to parse and generate. It is the primary format for data returned by the GDD API. |
+
+## Tutorial: Querying the GeoDeepDive API for Mineral Mentions
+
+This tutorial will guide you through a simple example of using Python to query the GeoDeepDive API to find sentences that mention the mineral "stishovite."
+
+### Step 1: Get Your GitHub Token
+The GDD API uses GitHub OAuth for authentication. You need to generate a personal access token.
+1.  Go to your GitHub [Settings](https://github.com/settings/profile).
+2.  Navigate to **Developer settings** > **Personal access tokens** > **Tokens (classic)**.
+3.  Click **Generate new token (classic)**. Give it a descriptive note (e.g., "GeoDeepDive API").
+4.  Select the `public_repo` scope. This is sufficient.
+5.  Click **Generate token** and **copy the token immediately** (you won't see it again!).
+
+### Step 2: Set Up Your Python Environment
+We'll use the `requests` library to make HTTP calls. Let's install it:
+
+```python
+#| code-line-numbers: "1"
+!pip install requests
+```
+
+### Step 3: Configure Your Authentication
+Now, let's set up your authentication. Replace the placeholders with your actual GitHub credentials:
+
+```python
+#| code-line-numbers: "1-6"
+import requests
+import json
+
+# Replace these with your actual GitHub credentials
+GITHUB_USERNAME = "YourGitHubUsername" 
+GITHUB_TOKEN = "YOUR_GITHUB_TOKEN"  # Replace with the token you generated
+
+print("Authentication configured successfully!")
+```
+
+### Step 4: Query the GeoDeepDive API
+Let's search for documents mentioning the mineral "stishovite":
+
+```python
+#| code-line-numbers: "1-30"
+# The public endpoint for the GDD API
+url = "https://geodeepdive.org/api/articles"
+
+# The parameters for our query. We want sentences about 'stishovite'
+params = {
+    "term": "stishovite",   # The word or phrase to search for
+    "full_results": True,   # Get full details, including sentences
+    "sentences": True       # Include the sentences in the response
+}
+
+# Make the GET request to the API with authentication
+response = requests.get(url, params=params, auth=(GITHUB_USERNAME, GITHUB_TOKEN))
+
+# Check if the request was successful
+if response.status_code == 200:
+    data = response.json()
+    print(f" Found {data['success']['total']} documents mentioning 'stishovite'.\n")
+    
+    # Loop through the first few documents and print relevant sentences
+    for i, doc in enumerate(data['success']['data'][:3]):  # Look at first 3 docs
+        print(f" Document {i+1}: {doc['_gddid']}")
+        print(f"   Title: {doc.get('title', 'No title available')}")
+        print("   Sentences found:")
+        
+        stishovite_sentences = [s for s in doc['sentences'] if 'stishovite' in s['text'].lower()]
+        
+        for j, sentence in enumerate(stishovite_sentences[:2]):  # Show first 2 sentences per doc
+            print(f"     {j+1}. {sentence['text']}")
+        
+        print(f"   Total sentences with 'stishovite': {len(stishovite_sentences)}")
+        print("\n" + "─" * 80 + "\n")
+else:
+    print(f" Error: {response.status_code}")
+    print(response.text)
+```
+
+### Step 5: Advanced Query - Filter by Journal
+Let's try a more specific query to find papers in specific journals:
+
+```python
+#| code-line-numbers: "1-25"
+# Search for stishovite in specific journals
+advanced_params = {
+    "term": "stishovite",
+    "journal": "science,nature,geology",  # Filter by journal names
+    "full_results": True,
+    "sentences": True,
+    "limit": 5  # Limit to 5 results
+}
+
+advanced_response = requests.get(url, params=advanced_params, auth=(GITHUB_USERNAME, GITHUB_TOKEN))
+
+if advanced_response.status_code == 200:
+    advanced_data = advanced_response.json()
+    print(f"🔍 Found {advanced_data['success']['total']} documents in specified journals.")
+    
+    if advanced_data['success']['total'] > 0:
+        print("\n📊 Journal distribution:")
+        journals = {}
+        for doc in advanced_data['success']['data']:
+            journal = doc.get('journal', 'Unknown')
+            journals[journal] = journals.get(journal, 0) + 1
+        
+        for journal, count in journals.items():
+            print(f"   {journal}: {count} documents")
+    else:
+        print("No documents found in the specified journals.")
+else:
+    print(f" Advanced query error: {advanced_response.status_code}")
+```
+
+### Step 6: Export Results (Optional)
+Let's export the results to a JSON file for further analysis:
+
+```python
+#| code-line-numbers: "1-15"
+import json
+from datetime import datetime
+
+# Export the results
+if response.status_code == 200:
+    export_data = {
+        "query": "stishovite",
+        "execution_date": datetime.now().isoformat(),
+        "total_documents": data['success']['total'],
+        "sample_documents": data['success']['data'][:5]  # First 5 documents
+    }
+    
+    with open('geodeepdive_results.json', 'w') as f:
+        json.dump(export_data, f, indent=2)
+    
+    print("💾 Results exported to 'geodeepdive_results.json'")
+    
+    # Show a preview
+    print("\n📋 Preview of exported data:")
+    print(f"Total documents: {export_data['total_documents']}")
+    print(f"Sample size: {len(export_data['sample_documents'])}")
+```
+
+## Summary
+
+GeoDeepDive is a powerful tool for moving beyond simple keyword searches to true knowledge extraction. By providing programmatic access to a deeply processed corpus of scientific literature, it enables researchers to ask complex, data-driven questions at a scale that was previously impossible.
+
+*   **Key Takeaway:** GDD turns unstructured text into structured, queryable data.
+*   **What we accomplished:** We successfully queried the GeoDeepDive API, retrieved scientific documents mentioning "stishovite," filtered results by journal, and exported the data for further analysis.
+*   **Next Steps:** Explore the [official GeoDeepDive API documentation](https://geodeepdive.org/api_help) to learn about more advanced queries, such as filtering by author, journal, or year, and using its relation extraction capabilities.
+
+## Additional Resources
+
+*   [GeoDeepDive Official Website](https://geodeepdive.org/)
+*   [GeoDeepDive API Documentation](https://geodeepdive.org/api_help)
+*   [GitHub Guide for Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+*   [Requests: HTTP for Humans (Python Library Docs)](https://requests.readthedocs.io/)
+
+---
+
+**Note:** Remember to keep your GitHub token secure and never share it publicly. For production use, consider using environment variables or secure secret management.
+```
