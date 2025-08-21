@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Devanshi Jain">
+<meta name="dcterms.date" content="2025-09-21">
+<meta name="description" content="A guide to using GeoDeepDive, a powerful platform and database for large-scale text and data mining of scientific documents.">
+
+<title>GeoDeepDive: Unlocking Knowledge from Scientific Literature – Nexus: Crowdsourced ML Resources</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-d2c0ce28e8b6fa0eb0bddacaf6502482.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">GeoDeepDive: Unlocking Knowledge from Scientific Literature</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+    <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to contribute?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learn</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notebooks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workshops</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Toolbox</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compute</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GenAI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Libraries</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">MLOps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI @ UW</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML+X</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML4MI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SILO</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Other</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Category glossary</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  <li><a href="#key-concepts-and-definitions" id="toc-key-concepts-and-definitions" class="nav-link" data-scroll-target="#key-concepts-and-definitions">Key Concepts and Definitions</a></li>
+  <li><a href="#tutorial-querying-the-geodeepdive-api-for-mineral-mentions" id="toc-tutorial-querying-the-geodeepdive-api-for-mineral-mentions" class="nav-link" data-scroll-target="#tutorial-querying-the-geodeepdive-api-for-mineral-mentions">Tutorial: Querying the GeoDeepDive API for Mineral Mentions</a>
+  <ul class="collapse">
+  <li><a href="#step-1-get-your-github-token" id="toc-step-1-get-your-github-token" class="nav-link" data-scroll-target="#step-1-get-your-github-token">Step 1: Get Your GitHub Token</a></li>
+  <li><a href="#step-2-set-up-your-python-environment" id="toc-step-2-set-up-your-python-environment" class="nav-link" data-scroll-target="#step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</a></li>
+  <li><a href="#step-3-configure-your-authentication" id="toc-step-3-configure-your-authentication" class="nav-link" data-scroll-target="#step-3-configure-your-authentication">Step 3: Configure Your Authentication</a></li>
+  <li><a href="#step-4-query-the-geodeepdive-api" id="toc-step-4-query-the-geodeepdive-api" class="nav-link" data-scroll-target="#step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</a></li>
+  <li><a href="#step-5-advanced-query---filter-by-journal" id="toc-step-5-advanced-query---filter-by-journal" class="nav-link" data-scroll-target="#step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</a></li>
+  <li><a href="#step-6-export-results-optional" id="toc-step-6-export-results-optional" class="nav-link" data-scroll-target="#step-6-export-results-optional">Step 6: Export Results (Optional)</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a>
+  <ul class="collapse">
+  <li><a href="#step-3-configure-your-authentication-1" id="toc-step-3-configure-your-authentication-1" class="nav-link" data-scroll-target="#step-3-configure-your-authentication-1">Step 3: Configure Your Authentication</a></li>
+  <li><a href="#step-4-query-the-geodeepdive-api-1" id="toc-step-4-query-the-geodeepdive-api-1" class="nav-link" data-scroll-target="#step-4-query-the-geodeepdive-api-1">Step 4: Query the GeoDeepDive API</a></li>
+  <li><a href="#step-5-advanced-query---filter-by-journal-1" id="toc-step-5-advanced-query---filter-by-journal-1" class="nav-link" data-scroll-target="#step-5-advanced-query---filter-by-journal-1">Step 5: Advanced Query - Filter by Journal</a></li>
+  <li><a href="#step-6-export-results-optional-1" id="toc-step-6-export-results-optional-1" class="nav-link" data-scroll-target="#step-6-export-results-optional-1">Step 6: Export Results (Optional)</a></li>
+  </ul></li>
+  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1">Summary</a></li>
+  <li><a href="#additional-resources-1" id="toc-additional-resources-1" class="nav-link" data-scroll-target="#additional-resources-1">Additional Resources</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/geodeepdive.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">GeoDeepDive: Unlocking Knowledge from Scientific Literature</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">Books</div>
+    <div class="quarto-category">Data</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">OCR</div>
+    <div class="quarto-category">Scientific Text Mining</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    A guide to using GeoDeepDive, a powerful platform and database for large-scale text and data mining of scientific documents.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p><a href="https://github.com/devanshi80">Devanshi Jain</a> </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 21, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p><a href="https://geodeepdive.org/">GeoDeepDive (GDD)</a> is a cyberinfrastructure project designed to accelerate scientific discovery by extracting information from the vast and growing body of published scientific literature. While its roots are in geology, its applications span any domain that relies on published texts, including biology, materials science, medicine, and social sciences.</p>
+<p>At its core, GDD is a massive database of over 15 million scientific documents (articles, theses, reports) that have been processed through a high-performance computing pipeline. This pipeline performs: * <strong>Optical Character Recognition (OCR)</strong> to convert scanned PDFs into machine-readable text. * <strong>Natural Language Processing (NLP)</strong> to parse sentences, identify parts of speech, and perform named entity recognition (e.g., finding mineral names, locations, species). * <strong>Relation Extraction</strong> to find and catalog relationships between entities (e.g., “mineral X is found at location Y”).</p>
+<p>The result is not just a collection of texts, but a structured, queryable knowledge graph. Researchers can use GDD’s public API to ask complex questions that would be impossible to answer by manual literature review, such as “find all papers that mention a specific fossil and its geological age” or “extract all measured values of a particular chemical compound.”</p>
+</section>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<ul>
+<li><strong>Basic familiarity with Python</strong> and making HTTP requests.</li>
+<li>A <strong>GitHub account</strong> (to use GDD’s public API).</li>
+<li>An understanding of basic <strong>NLP concepts</strong> (Token, Sentence, Named Entity) is helpful but not strictly required to run the example.</li>
+</ul>
+</section>
+<section id="key-concepts-and-definitions" class="level2">
+<h2 class="anchored" data-anchor-id="key-concepts-and-definitions">Key Concepts and Definitions</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Concept</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Document</strong></td>
+<td style="text-align: left;">Any processed text unit in the GDD database, typically a scientific publication.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>NLP</strong></td>
+<td style="text-align: left;">Natural Language Processing, the field of AI concerned with interactions between computers and human language.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Named Entity Recognition (NER)</strong></td>
+<td style="text-align: left;">An NLP task to identify and classify key information (entities) in text into predefined categories like persons, organizations, locations, etc. In GDD, these are often scientific terms.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>API (Application Programming Interface)</strong></td>
+<td style="text-align: left;">A set of rules and tools that allows different software applications to communicate with each other. GDD provides an API to query its database programmatically.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>JSON</strong></td>
+<td style="text-align: left;">JavaScript Object Notation, a lightweight data-interchange format that is easy for humans to read and write and for machines to parse and generate. It is the primary format for data returned by the GDD API.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tutorial-querying-the-geodeepdive-api-for-mineral-mentions" class="level2">
+<h2 class="anchored" data-anchor-id="tutorial-querying-the-geodeepdive-api-for-mineral-mentions">Tutorial: Querying the GeoDeepDive API for Mineral Mentions</h2>
+<p>This tutorial will guide you through a simple example of using Python to query the GeoDeepDive API to find sentences that mention the mineral “stishovite.”</p>
+<section id="step-1-get-your-github-token" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-get-your-github-token">Step 1: Get Your GitHub Token</h3>
+<p>The GDD API uses GitHub OAuth for authentication. You need to generate a personal access token. 1. Go to your GitHub <a href="https://github.com/settings/profile">Settings</a>. 2. Navigate to <strong>Developer settings</strong> &gt; <strong>Personal access tokens</strong> &gt; <strong>Tokens (classic)</strong>. 3. Click <strong>Generate new token (classic)</strong>. Give it a descriptive note (e.g., “GeoDeepDive API”). 4. Select the <code>public_repo</code> scope. This is sufficient. 5. Click <strong>Generate token</strong> and <strong>copy the token immediately</strong> (you won’t see it again!).</p>
+</section>
+<section id="step-2-set-up-your-python-environment" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
+<p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install requests</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-3-configure-your-authentication" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
+<p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-6"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace these with your actual GitHub credentials</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>GITHUB_USERNAME <span class="op">=</span> <span class="st">"YourGitHubUsername"</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>GITHUB_TOKEN <span class="op">=</span> <span class="st">"YOUR_GITHUB_TOKEN"</span>  <span class="co"># Replace with the token you generated</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Authentication configured successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-4-query-the-geodeepdive-api" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
+<p>Let’s search for documents mentioning the mineral “stishovite”:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-30"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The public endpoint for the GDD API</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://geodeepdive.org/api/articles"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The parameters for our query. We want sentences about 'stishovite'</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,   <span class="co"># The word or phrase to search for</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,   <span class="co"># Get full details, including sentences</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>       <span class="co"># Include the sentences in the response</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the GET request to the API with authentication</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the request was successful</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Found </span><span class="sc">{</span>data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents mentioning 'stishovite'.</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loop through the first few documents and print relevant sentences</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, doc <span class="kw">in</span> <span class="bu">enumerate</span>(data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">3</span>]):  <span class="co"># Look at first 3 docs</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f" Document </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>doc[<span class="st">'_gddid'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"   Title: </span><span class="sc">{</span>doc<span class="sc">.</span>get(<span class="st">'title'</span>, <span class="st">'No title available'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"   Sentences found:"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        stishovite_sentences <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> doc[<span class="st">'sentences'</span>] <span class="cf">if</span> <span class="st">'stishovite'</span> <span class="kw">in</span> s[<span class="st">'text'</span>].lower()]</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j, sentence <span class="kw">in</span> <span class="bu">enumerate</span>(stishovite_sentences[:<span class="dv">2</span>]):  <span class="co"># Show first 2 sentences per doc</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"     </span><span class="sc">{</span>j<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>sentence[<span class="st">'text'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"   Total sentences with 'stishovite': </span><span class="sc">{</span><span class="bu">len</span>(stishovite_sentences)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> <span class="st">"─"</span> <span class="op">*</span> <span class="dv">80</span> <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Error: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(response.text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-5-advanced-query---filter-by-journal" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
+<p>Let’s try a more specific query to find papers in specific journals:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-25"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Search for stishovite in specific journals</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>advanced_params <span class="op">=</span> {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"journal"</span>: <span class="st">"science,nature,geology"</span>,  <span class="co"># Filter by journal names</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"limit"</span>: <span class="dv">5</span>  <span class="co"># Limit to 5 results</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>advanced_response <span class="op">=</span> requests.get(url, params<span class="op">=</span>advanced_params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> advanced_response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    advanced_data <span class="op">=</span> advanced_response.json()</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"🔍 Found </span><span class="sc">{</span>advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents in specified journals."</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📊 Journal distribution:"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        journals <span class="op">=</span> {}</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> doc <span class="kw">in</span> advanced_data[<span class="st">'success'</span>][<span class="st">'data'</span>]:</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>            journal <span class="op">=</span> doc.get(<span class="st">'journal'</span>, <span class="st">'Unknown'</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            journals[journal] <span class="op">=</span> journals.get(journal, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> journal, count <span class="kw">in</span> journals.items():</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>journal<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>count<span class="sc">}</span><span class="ss"> documents"</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"No documents found in the specified journals."</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Advanced query error: </span><span class="sc">{</span>advanced_response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-6-export-results-optional" class="level3">
+<h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
+<p>Let’s export the results to a JSON file for further analysis:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-15"</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Export the results</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    export_data <span class="op">=</span> {</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"query"</span>: <span class="st">"stishovite"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"execution_date"</span>: datetime.now().isoformat(),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'total'</span>],</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"sample_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">5</span>]  <span class="co"># First 5 documents</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">'geodeepdive_results.json'</span>, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        json.dump(export_data, f, indent<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"💾 Results exported to 'geodeepdive_results.json'"</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show a preview</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📋 Preview of exported data:"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Total documents: </span><span class="sc">{</span>export_data[<span class="st">'total_documents'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Sample size: </span><span class="sc">{</span><span class="bu">len</span>(export_data[<span class="st">'sample_documents'</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>GeoDeepDive is a powerful tool for moving beyond simple keyword searches to true knowledge extraction. By providing programmatic access to a deeply processed corpus of scientific literature, it enables researchers to ask complex, data-driven questions at a scale that was previously impossible.</p>
+<ul>
+<li><strong>Key Takeaway:</strong> GDD turns unstructured text into structured, queryable data.</li>
+<li><strong>What we accomplished:</strong> We successfully queried the GeoDeepDive API, retrieved scientific documents mentioning “stishovite,” filtered results by journal, and exported the data for further analysis.</li>
+<li><strong>Next Steps:</strong> Explore the <a href="https://geodeepdive.org/api_help">official GeoDeepDive API documentation</a> to learn about more advanced queries, such as filtering by author, journal, or year, and using its relation extraction capabilities.</li>
+</ul>
+</section>
+<section id="additional-resources" class="level2">
+<h2 class="anchored" data-anchor-id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://geodeepdive.org/">GeoDeepDive Official Website</a></li>
+<li><a href="https://geodeepdive.org/api_help">GeoDeepDive API Documentation</a></li>
+<li><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub Guide for Personal Access Tokens</a></li>
+<li><a href="https://requests.readthedocs.io/">Requests: HTTP for Humans (Python Library Docs)</a></li>
+</ul>
+<hr>
+<p><strong>Note:</strong> Remember to keep your GitHub token secure and never share it publicly. For production use, consider using environment variables or secure secret management.</p>
+<pre><code>
+
+
+
+
+:::{#quarto-navigation-envelope .hidden}
+[Nexus: Crowdsourced ML Resources]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl"}
+[Nexus: Crowdsourced ML Resources]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1uYXZiYXItdGl0bGU="}
+[Home]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9pbmRleC5odG1sSG9tZQ=="}
+[How to contribute?]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9HdWlkZXMvSG93LXRvLWNvbnRyaWJ1dGUuaHRtbEhvdy10by1jb250cmlidXRlPw=="}
+[Learn]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9pbmRleC5odG1sTGVhcm4="}
+[Blogs]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9CbG9ncy9pbmRleC5odG1sQmxvZ3M="}
+[Books]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9Cb29rcy9pbmRleC5odG1sQm9va3M="}
+[Guides]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9HdWlkZXMvaW5kZXguaHRtbEd1aWRlcw=="}
+[Notebooks]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9Ob3RlYm9va3MvaW5kZXguaHRtbE5vdGVib29rcw=="}
+[Videos]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9WaWRlb3MvaW5kZXguaHRtbFZpZGVvcw=="}
+[Workshops]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9MZWFybi9Xb3Jrc2hvcHMvaW5kZXguaHRtbFdvcmtzaG9wcw=="}
+[Toolbox]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9Ub29sYm94L2luZGV4Lmh0bWxUb29sYm94"}
+[Compute]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9Ub29sYm94L0NvbXB1dGUvaW5kZXguaHRtbENvbXB1dGU="}
+[Data]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9Ub29sYm94L0RhdGEvaW5kZXguaHRtbERhdGE="}
+[GenAI]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9Ub29sYm94L0dlbkFJL2luZGV4Lmh0bWxHZW5BSQ=="}
+[Libraries]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9Ub29sYm94L0xpYnJhcmllcy9pbmRleC5odG1sTGlicmFyaWVz"}
+[MLOps]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9Ub29sYm94L01MT3BzL2luZGV4Lmh0bWxNTE9wcw=="}
+[Models]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9Ub29sYm94L01vZGVscy9pbmRleC5odG1sTW9kZWxz"}
+[Applications]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvaW5kZXguaHRtbEFwcGxpY2F0aW9ucw=="}
+[Blogs]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvQmxvZ3MvaW5kZXguaHRtbEJsb2dz"}
+[Videos]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvVmlkZW9zL2luZGV4Lmh0bWxWaWRlb3M="}
+[AI @ UW]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvVmlkZW9zL0V4cGxvcmluZy1BSS1hdC1VVy9pbmRleC5odG1sQUktQC1VVw=="}
+[ML+X]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvVmlkZW9zL0ZvcnVtcy9pbmRleC5odG1sTUwrWA=="}
+[ML4MI]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvVmlkZW9zL01MNE1JL2luZGV4Lmh0bWxNTDRNSQ=="}
+[SILO]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvVmlkZW9zL1NJTE8vaW5kZXguaHRtbFNJTE8="}
+[Other]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9BcHBsaWNhdGlvbnMvVmlkZW9zL090aGVyL2luZGV4Lmh0bWxPdGhlcg=="}
+[Category glossary]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9nbG9zc2FyeS5odG1sQ2F0ZWdvcnktZ2xvc3Nhcnk="}
+:::
+
+
+
+:::{#quarto-meta-markdown .hidden}
+[GeoDeepDive: Unlocking Knowledge from Scientific Literature – Nexus: Crowdsourced ML Resources]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW1ldGF0aXRsZQ=="}
+[GeoDeepDive: Unlocking Knowledge from Scientific Literature – Nexus: Crowdsourced ML Resources]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLXR3aXR0ZXJjYXJkdGl0bGU="}
+[GeoDeepDive: Unlocking Knowledge from Scientific Literature – Nexus: Crowdsourced ML Resources]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW9nY2FyZHRpdGxl"}
+[Nexus: Crowdsourced ML Resources]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW1ldGFzaXRlbmFtZQ=="}
+[A guide to using GeoDeepDive, a powerful platform and database for large-scale text and data mining of scientific documents.]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLXR3aXR0ZXJjYXJkZGVzYw=="}
+[A guide to using GeoDeepDive, a powerful platform and database for large-scale text and data mining of scientific documents.]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW9nY2FyZGRkZXNj"}
+:::
+
+
+
+
+&lt;!-- --&gt;
+
+::: {.quarto-embedded-source-code}
+```````````````````{.markdown shortcodes="false"}
+---
+title: "GeoDeepDive: Unlocking Knowledge from Scientific Literature"
+author:
+  - name: Devanshi Jain
+    url: https://github.com/devanshi80
+date: 2025-09-21
+categories: 
+  - Books 
+  - Data
+  - NLP
+  - OCR
+  - Scientific Text Mining 
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 3
+    code-tools: true
+    code-overflow: scroll
+description: "A guide to using GeoDeepDive, a powerful platform and database for large-scale text and data mining of scientific documents."
+image: "../../../images/geodeepdive_pipeline.png"
+jupyter: python3
+---
+
+## Overview
+
+[GeoDeepDive (GDD)](https://geodeepdive.org/) is a cyberinfrastructure project designed to accelerate scientific discovery by extracting information from the vast and growing body of published scientific literature. While its roots are in geology, its applications span any domain that relies on published texts, including biology, materials science, medicine, and social sciences.
+
+At its core, GDD is a massive database of over 15 million scientific documents (articles, theses, reports) that have been processed through a high-performance computing pipeline. This pipeline performs:
+*   **Optical Character Recognition (OCR)** to convert scanned PDFs into machine-readable text.
+*   **Natural Language Processing (NLP)** to parse sentences, identify parts of speech, and perform named entity recognition (e.g., finding mineral names, locations, species).
+*   **Relation Extraction** to find and catalog relationships between entities (e.g., "mineral X is found at location Y").
+
+The result is not just a collection of texts, but a structured, queryable knowledge graph. Researchers can use GDD's public API to ask complex questions that would be impossible to answer by manual literature review, such as "find all papers that mention a specific fossil and its geological age" or "extract all measured values of a particular chemical compound."
+
+## Prerequisites
+
+*   **Basic familiarity with Python** and making HTTP requests.
+*   A **GitHub account** (to use GDD's public API).
+*   An understanding of basic **NLP concepts** (Token, Sentence, Named Entity) is helpful but not strictly required to run the example.
+
+## Key Concepts and Definitions
+
+| Concept | Definition |
+| :--- | :--- |
+| **Document** | Any processed text unit in the GDD database, typically a scientific publication. |
+| **NLP** | Natural Language Processing, the field of AI concerned with interactions between computers and human language. |
+| **Named Entity Recognition (NER)** | An NLP task to identify and classify key information (entities) in text into predefined categories like persons, organizations, locations, etc. In GDD, these are often scientific terms. |
+| **API (Application Programming Interface)** | A set of rules and tools that allows different software applications to communicate with each other. GDD provides an API to query its database programmatically. |
+| **JSON** | JavaScript Object Notation, a lightweight data-interchange format that is easy for humans to read and write and for machines to parse and generate. It is the primary format for data returned by the GDD API. |
+
+## Tutorial: Querying the GeoDeepDive API for Mineral Mentions
+
+This tutorial will guide you through a simple example of using Python to query the GeoDeepDive API to find sentences that mention the mineral "stishovite."
+
+### Step 1: Get Your GitHub Token
+The GDD API uses GitHub OAuth for authentication. You need to generate a personal access token.
+1.  Go to your GitHub [Settings](https://github.com/settings/profile).
+2.  Navigate to **Developer settings** &gt; **Personal access tokens** &gt; **Tokens (classic)**.
+3.  Click **Generate new token (classic)**. Give it a descriptive note (e.g., "GeoDeepDive API").
+4.  Select the `public_repo` scope. This is sufficient.
+5.  Click **Generate token** and **copy the token immediately** (you won't see it again!).
+
+### Step 2: Set Up Your Python Environment
+We'll use the `requests` library to make HTTP calls. Let's install it:
+
+```python
+#| code-line-numbers: "1"
+!pip install requests</code></pre>
+<section id="step-3-configure-your-authentication-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-configure-your-authentication-1">Step 3: Configure Your Authentication</h3>
+<p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-6"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace these with your actual GitHub credentials</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>GITHUB_USERNAME <span class="op">=</span> <span class="st">"YourGitHubUsername"</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>GITHUB_TOKEN <span class="op">=</span> <span class="st">"YOUR_GITHUB_TOKEN"</span>  <span class="co"># Replace with the token you generated</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Authentication configured successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-4-query-the-geodeepdive-api-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api-1">Step 4: Query the GeoDeepDive API</h3>
+<p>Let’s search for documents mentioning the mineral “stishovite”:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-30"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The public endpoint for the GDD API</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://geodeepdive.org/api/articles"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The parameters for our query. We want sentences about 'stishovite'</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,   <span class="co"># The word or phrase to search for</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,   <span class="co"># Get full details, including sentences</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>       <span class="co"># Include the sentences in the response</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the GET request to the API with authentication</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the request was successful</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Found </span><span class="sc">{</span>data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents mentioning 'stishovite'.</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loop through the first few documents and print relevant sentences</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, doc <span class="kw">in</span> <span class="bu">enumerate</span>(data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">3</span>]):  <span class="co"># Look at first 3 docs</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f" Document </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>doc[<span class="st">'_gddid'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"   Title: </span><span class="sc">{</span>doc<span class="sc">.</span>get(<span class="st">'title'</span>, <span class="st">'No title available'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"   Sentences found:"</span>)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        stishovite_sentences <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> doc[<span class="st">'sentences'</span>] <span class="cf">if</span> <span class="st">'stishovite'</span> <span class="kw">in</span> s[<span class="st">'text'</span>].lower()]</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j, sentence <span class="kw">in</span> <span class="bu">enumerate</span>(stishovite_sentences[:<span class="dv">2</span>]):  <span class="co"># Show first 2 sentences per doc</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"     </span><span class="sc">{</span>j<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>sentence[<span class="st">'text'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"   Total sentences with 'stishovite': </span><span class="sc">{</span><span class="bu">len</span>(stishovite_sentences)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> <span class="st">"─"</span> <span class="op">*</span> <span class="dv">80</span> <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Error: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(response.text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-5-advanced-query---filter-by-journal-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal-1">Step 5: Advanced Query - Filter by Journal</h3>
+<p>Let’s try a more specific query to find papers in specific journals:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-25"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Search for stishovite in specific journals</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>advanced_params <span class="op">=</span> {</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"journal"</span>: <span class="st">"science,nature,geology"</span>,  <span class="co"># Filter by journal names</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"limit"</span>: <span class="dv">5</span>  <span class="co"># Limit to 5 results</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>advanced_response <span class="op">=</span> requests.get(url, params<span class="op">=</span>advanced_params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> advanced_response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    advanced_data <span class="op">=</span> advanced_response.json()</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"🔍 Found </span><span class="sc">{</span>advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents in specified journals."</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📊 Journal distribution:"</span>)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        journals <span class="op">=</span> {}</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> doc <span class="kw">in</span> advanced_data[<span class="st">'success'</span>][<span class="st">'data'</span>]:</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>            journal <span class="op">=</span> doc.get(<span class="st">'journal'</span>, <span class="st">'Unknown'</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            journals[journal] <span class="op">=</span> journals.get(journal, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> journal, count <span class="kw">in</span> journals.items():</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>journal<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>count<span class="sc">}</span><span class="ss"> documents"</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"No documents found in the specified journals."</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Advanced query error: </span><span class="sc">{</span>advanced_response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-6-export-results-optional-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-6-export-results-optional-1">Step 6: Export Results (Optional)</h3>
+<p>Let’s export the results to a JSON file for further analysis:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-line-numbers: "1-15"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Export the results</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    export_data <span class="op">=</span> {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"query"</span>: <span class="st">"stishovite"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"execution_date"</span>: datetime.now().isoformat(),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'total'</span>],</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"sample_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">5</span>]  <span class="co"># First 5 documents</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">'geodeepdive_results.json'</span>, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        json.dump(export_data, f, indent<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"💾 Results exported to 'geodeepdive_results.json'"</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show a preview</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📋 Preview of exported data:"</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Total documents: </span><span class="sc">{</span>export_data[<span class="st">'total_documents'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Sample size: </span><span class="sc">{</span><span class="bu">len</span>(export_data[<span class="st">'sample_documents'</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="summary-1" class="level2">
+<h2 class="anchored" data-anchor-id="summary-1">Summary</h2>
+<p>GeoDeepDive is a powerful tool for moving beyond simple keyword searches to true knowledge extraction. By providing programmatic access to a deeply processed corpus of scientific literature, it enables researchers to ask complex, data-driven questions at a scale that was previously impossible.</p>
+<ul>
+<li><strong>Key Takeaway:</strong> GDD turns unstructured text into structured, queryable data.</li>
+<li><strong>What we accomplished:</strong> We successfully queried the GeoDeepDive API, retrieved scientific documents mentioning “stishovite,” filtered results by journal, and exported the data for further analysis.</li>
+<li><strong>Next Steps:</strong> Explore the <a href="https://geodeepdive.org/api_help">official GeoDeepDive API documentation</a> to learn about more advanced queries, such as filtering by author, journal, or year, and using its relation extraction capabilities.</li>
+</ul>
+</section>
+<section id="additional-resources-1" class="level2">
+<h2 class="anchored" data-anchor-id="additional-resources-1">Additional Resources</h2>
+<ul>
+<li><a href="https://geodeepdive.org/">GeoDeepDive Official Website</a></li>
+<li><a href="https://geodeepdive.org/api_help">GeoDeepDive API Documentation</a></li>
+<li><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub Guide for Personal Access Tokens</a></li>
+<li><a href="https://requests.readthedocs.io/">Requests: HTTP for Humans (Python Library Docs)</a></li>
+</ul>
+<hr>
+<p><strong>Note:</strong> Remember to keep your GitHub token secure and never share it publicly. For production use, consider using environment variables or secure secret management.</p>
+<pre><code></code></pre>
+<p>:::</p>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/UW-Madison-DataScience\.github\.io\/ML-X-Nexus\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/geodeepdive.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
