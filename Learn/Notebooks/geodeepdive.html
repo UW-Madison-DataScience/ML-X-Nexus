@@ -462,123 +462,123 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="1aa46b4e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">!</span>pip install requests</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6ddaa33e" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install requests</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="082fe36c" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> requests</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="im">import</span> json</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Replace these with your actual GitHub credentials</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>GITHUB_USERNAME <span class="op">=</span> <span class="st">"YourGitHubUsername"</span> </span>
-<span id="cb2-6"><a href="#cb2-6"></a>GITHUB_TOKEN <span class="op">=</span> <span class="st">"YOUR_GITHUB_TOKEN"</span>  <span class="co"># Replace with the token you generated</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="bu">print</span>(<span class="st">"Authentication configured successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8cc4dea0" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace these with your actual GitHub credentials</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>GITHUB_USERNAME <span class="op">=</span> <span class="st">"YourGitHubUsername"</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>GITHUB_TOKEN <span class="op">=</span> <span class="st">"YOUR_GITHUB_TOKEN"</span>  <span class="co"># Replace with the token you generated</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Authentication configured successfully!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="243788d9" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># The public endpoint for the GDD API</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>url <span class="op">=</span> <span class="st">"https://geodeepdive.org/api/articles"</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># The parameters for our query. We want sentences about 'stishovite'</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>params <span class="op">=</span> {</span>
-<span id="cb3-6"><a href="#cb3-6"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,   <span class="co"># The word or phrase to search for</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,   <span class="co"># Get full details, including sentences</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>       <span class="co"># Include the sentences in the response</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a>}</span>
-<span id="cb3-10"><a href="#cb3-10"></a></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="co"># Make the GET request to the API with authentication</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a>response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
-<span id="cb3-13"><a href="#cb3-13"></a></span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="co"># Check if the request was successful</span></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
-<span id="cb3-16"><a href="#cb3-16"></a>    data <span class="op">=</span> response.json()</span>
-<span id="cb3-17"><a href="#cb3-17"></a>    <span class="bu">print</span>(<span class="ss">f" Found </span><span class="sc">{</span>data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents mentioning 'stishovite'.</span><span class="ch">\n</span><span class="ss">"</span>)</span>
-<span id="cb3-18"><a href="#cb3-18"></a>    </span>
-<span id="cb3-19"><a href="#cb3-19"></a>    <span class="co"># Loop through the first few documents and print relevant sentences</span></span>
-<span id="cb3-20"><a href="#cb3-20"></a>    <span class="cf">for</span> i, doc <span class="kw">in</span> <span class="bu">enumerate</span>(data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">3</span>]):  <span class="co"># Look at first 3 docs</span></span>
-<span id="cb3-21"><a href="#cb3-21"></a>        <span class="bu">print</span>(<span class="ss">f" Document </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>doc[<span class="st">'_gddid'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-22"><a href="#cb3-22"></a>        <span class="bu">print</span>(<span class="ss">f"   Title: </span><span class="sc">{</span>doc<span class="sc">.</span>get(<span class="st">'title'</span>, <span class="st">'No title available'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-23"><a href="#cb3-23"></a>        <span class="bu">print</span>(<span class="st">"   Sentences found:"</span>)</span>
-<span id="cb3-24"><a href="#cb3-24"></a>        </span>
-<span id="cb3-25"><a href="#cb3-25"></a>        stishovite_sentences <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> doc[<span class="st">'sentences'</span>] <span class="cf">if</span> <span class="st">'stishovite'</span> <span class="kw">in</span> s[<span class="st">'text'</span>].lower()]</span>
-<span id="cb3-26"><a href="#cb3-26"></a>        </span>
-<span id="cb3-27"><a href="#cb3-27"></a>        <span class="cf">for</span> j, sentence <span class="kw">in</span> <span class="bu">enumerate</span>(stishovite_sentences[:<span class="dv">2</span>]):  <span class="co"># Show first 2 sentences per doc</span></span>
-<span id="cb3-28"><a href="#cb3-28"></a>            <span class="bu">print</span>(<span class="ss">f"     </span><span class="sc">{</span>j<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>sentence[<span class="st">'text'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-29"><a href="#cb3-29"></a>        </span>
-<span id="cb3-30"><a href="#cb3-30"></a>        <span class="bu">print</span>(<span class="ss">f"   Total sentences with 'stishovite': </span><span class="sc">{</span><span class="bu">len</span>(stishovite_sentences)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-31"><a href="#cb3-31"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> <span class="st">"─"</span> <span class="op">*</span> <span class="dv">80</span> <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
-<span id="cb3-32"><a href="#cb3-32"></a><span class="cf">else</span>:</span>
-<span id="cb3-33"><a href="#cb3-33"></a>    <span class="bu">print</span>(<span class="ss">f" Error: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-34"><a href="#cb3-34"></a>    <span class="bu">print</span>(response.text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="68589391" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The public endpoint for the GDD API</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://geodeepdive.org/api/articles"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The parameters for our query. We want sentences about 'stishovite'</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,   <span class="co"># The word or phrase to search for</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,   <span class="co"># Get full details, including sentences</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>       <span class="co"># Include the sentences in the response</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the GET request to the API with authentication</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the request was successful</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Found </span><span class="sc">{</span>data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents mentioning 'stishovite'.</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loop through the first few documents and print relevant sentences</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, doc <span class="kw">in</span> <span class="bu">enumerate</span>(data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">3</span>]):  <span class="co"># Look at first 3 docs</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f" Document </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>doc[<span class="st">'_gddid'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"   Title: </span><span class="sc">{</span>doc<span class="sc">.</span>get(<span class="st">'title'</span>, <span class="st">'No title available'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"   Sentences found:"</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        stishovite_sentences <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> doc[<span class="st">'sentences'</span>] <span class="cf">if</span> <span class="st">'stishovite'</span> <span class="kw">in</span> s[<span class="st">'text'</span>].lower()]</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j, sentence <span class="kw">in</span> <span class="bu">enumerate</span>(stishovite_sentences[:<span class="dv">2</span>]):  <span class="co"># Show first 2 sentences per doc</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"     </span><span class="sc">{</span>j<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>sentence[<span class="st">'text'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"   Total sentences with 'stishovite': </span><span class="sc">{</span><span class="bu">len</span>(stishovite_sentences)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> <span class="st">"─"</span> <span class="op">*</span> <span class="dv">80</span> <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Error: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(response.text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="3b9c0d3d" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Search for stishovite in specific journals</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>advanced_params <span class="op">=</span> {</span>
-<span id="cb4-3"><a href="#cb4-3"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="st">"journal"</span>: <span class="st">"science,nature,geology"</span>,  <span class="co"># Filter by journal names</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,</span>
-<span id="cb4-6"><a href="#cb4-6"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>,</span>
-<span id="cb4-7"><a href="#cb4-7"></a>    <span class="st">"limit"</span>: <span class="dv">5</span>  <span class="co"># Limit to 5 results</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a>}</span>
-<span id="cb4-9"><a href="#cb4-9"></a></span>
-<span id="cb4-10"><a href="#cb4-10"></a>advanced_response <span class="op">=</span> requests.get(url, params<span class="op">=</span>advanced_params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
-<span id="cb4-11"><a href="#cb4-11"></a></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="cf">if</span> advanced_response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
-<span id="cb4-13"><a href="#cb4-13"></a>    advanced_data <span class="op">=</span> advanced_response.json()</span>
-<span id="cb4-14"><a href="#cb4-14"></a>    <span class="bu">print</span>(<span class="ss">f"🔍 Found </span><span class="sc">{</span>advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents in specified journals."</span>)</span>
-<span id="cb4-15"><a href="#cb4-15"></a>    </span>
-<span id="cb4-16"><a href="#cb4-16"></a>    <span class="cf">if</span> advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb4-17"><a href="#cb4-17"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📊 Journal distribution:"</span>)</span>
-<span id="cb4-18"><a href="#cb4-18"></a>        journals <span class="op">=</span> {}</span>
-<span id="cb4-19"><a href="#cb4-19"></a>        <span class="cf">for</span> doc <span class="kw">in</span> advanced_data[<span class="st">'success'</span>][<span class="st">'data'</span>]:</span>
-<span id="cb4-20"><a href="#cb4-20"></a>            journal <span class="op">=</span> doc.get(<span class="st">'journal'</span>, <span class="st">'Unknown'</span>)</span>
-<span id="cb4-21"><a href="#cb4-21"></a>            journals[journal] <span class="op">=</span> journals.get(journal, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a>        </span>
-<span id="cb4-23"><a href="#cb4-23"></a>        <span class="cf">for</span> journal, count <span class="kw">in</span> journals.items():</span>
-<span id="cb4-24"><a href="#cb4-24"></a>            <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>journal<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>count<span class="sc">}</span><span class="ss"> documents"</span>)</span>
-<span id="cb4-25"><a href="#cb4-25"></a>    <span class="cf">else</span>:</span>
-<span id="cb4-26"><a href="#cb4-26"></a>        <span class="bu">print</span>(<span class="st">"No documents found in the specified journals."</span>)</span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="cf">else</span>:</span>
-<span id="cb4-28"><a href="#cb4-28"></a>    <span class="bu">print</span>(<span class="ss">f" Advanced query error: </span><span class="sc">{</span>advanced_response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f645a027" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Search for stishovite in specific journals</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>advanced_params <span class="op">=</span> {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"term"</span>: <span class="st">"stishovite"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"journal"</span>: <span class="st">"science,nature,geology"</span>,  <span class="co"># Filter by journal names</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"full_results"</span>: <span class="va">True</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sentences"</span>: <span class="va">True</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"limit"</span>: <span class="dv">5</span>  <span class="co"># Limit to 5 results</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>advanced_response <span class="op">=</span> requests.get(url, params<span class="op">=</span>advanced_params, auth<span class="op">=</span>(GITHUB_USERNAME, GITHUB_TOKEN))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> advanced_response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    advanced_data <span class="op">=</span> advanced_response.json()</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"🔍 Found </span><span class="sc">{</span>advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>]<span class="sc">}</span><span class="ss"> documents in specified journals."</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> advanced_data[<span class="st">'success'</span>][<span class="st">'total'</span>] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📊 Journal distribution:"</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        journals <span class="op">=</span> {}</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> doc <span class="kw">in</span> advanced_data[<span class="st">'success'</span>][<span class="st">'data'</span>]:</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>            journal <span class="op">=</span> doc.get(<span class="st">'journal'</span>, <span class="st">'Unknown'</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>            journals[journal] <span class="op">=</span> journals.get(journal, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> journal, count <span class="kw">in</span> journals.items():</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>journal<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>count<span class="sc">}</span><span class="ss"> documents"</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"No documents found in the specified journals."</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Advanced query error: </span><span class="sc">{</span>advanced_response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="d6d2248f" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> json</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
-<span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co"># Export the results</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
-<span id="cb5-6"><a href="#cb5-6"></a>    export_data <span class="op">=</span> {</span>
-<span id="cb5-7"><a href="#cb5-7"></a>        <span class="st">"query"</span>: <span class="st">"stishovite"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8"></a>        <span class="st">"execution_date"</span>: datetime.now().isoformat(),</span>
-<span id="cb5-9"><a href="#cb5-9"></a>        <span class="st">"total_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'total'</span>],</span>
-<span id="cb5-10"><a href="#cb5-10"></a>        <span class="st">"sample_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">5</span>]  <span class="co"># First 5 documents</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a>    }</span>
-<span id="cb5-12"><a href="#cb5-12"></a>    </span>
-<span id="cb5-13"><a href="#cb5-13"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">'geodeepdive_results.json'</span>, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
-<span id="cb5-14"><a href="#cb5-14"></a>        json.dump(export_data, f, indent<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb5-15"><a href="#cb5-15"></a>    </span>
-<span id="cb5-16"><a href="#cb5-16"></a>    <span class="bu">print</span>(<span class="st">"💾 Results exported to 'geodeepdive_results.json'"</span>)</span>
-<span id="cb5-17"><a href="#cb5-17"></a>    </span>
-<span id="cb5-18"><a href="#cb5-18"></a>    <span class="co"># Show a preview</span></span>
-<span id="cb5-19"><a href="#cb5-19"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📋 Preview of exported data:"</span>)</span>
-<span id="cb5-20"><a href="#cb5-20"></a>    <span class="bu">print</span>(<span class="ss">f"Total documents: </span><span class="sc">{</span>export_data[<span class="st">'total_documents'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-21"><a href="#cb5-21"></a>    <span class="bu">print</span>(<span class="ss">f"Sample size: </span><span class="sc">{</span><span class="bu">len</span>(export_data[<span class="st">'sample_documents'</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="259cdf55" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Export the results</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    export_data <span class="op">=</span> {</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"query"</span>: <span class="st">"stishovite"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"execution_date"</span>: datetime.now().isoformat(),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'total'</span>],</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"sample_documents"</span>: data[<span class="st">'success'</span>][<span class="st">'data'</span>][:<span class="dv">5</span>]  <span class="co"># First 5 documents</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">'geodeepdive_results.json'</span>, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        json.dump(export_data, f, indent<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"💾 Results exported to 'geodeepdive_results.json'"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show a preview</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">📋 Preview of exported data:"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Total documents: </span><span class="sc">{</span>export_data[<span class="st">'total_documents'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Sample size: </span><span class="sc">{</span><span class="bu">len</span>(export_data[<span class="st">'sample_documents'</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
