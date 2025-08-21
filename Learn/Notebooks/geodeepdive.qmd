@@ -65,7 +65,6 @@ The GDD API uses GitHub OAuth for authentication. You need to generate a persona
 We'll use the `requests` library to make HTTP calls. Let's install it:
 
 ```{python}
-#| code-line-numbers: "1"
 !pip install requests
 ```
 
@@ -73,7 +72,6 @@ We'll use the `requests` library to make HTTP calls. Let's install it:
 Now, let's set up your authentication. Replace the placeholders with your actual GitHub credentials:
 
 ```{python}
-#| code-line-numbers: "1-6"
 import requests
 import json
 
@@ -88,7 +86,6 @@ print("Authentication configured successfully!")
 Let's search for documents mentioning the mineral "stishovite":
 
 ```{python}
-#| code-line-numbers: "1-30"
 # The public endpoint for the GDD API
 url = "https://geodeepdive.org/api/articles"
 
@@ -129,7 +126,6 @@ else:
 Let's try a more specific query to find papers in specific journals:
 
 ```{python}
-#| code-line-numbers: "1-25"
 # Search for stishovite in specific journals
 advanced_params = {
     "term": "stishovite",
@@ -164,7 +160,6 @@ else:
 Let's export the results to a JSON file for further analysis:
 
 ```{python}
-#| code-line-numbers: "1-15"
 import json
 from datetime import datetime
 
