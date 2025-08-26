@@ -1,0 +1,77 @@
+---
+title: "torchaudio"
+author: 
+  - name: Andrew Piela
+    email: andrewpiela9090@gmail.com, apiela@wisc.edu
+    
+date: 2025-08-26 
+date-format: long
+categories: 
+  - Libraries # always include
+  - Audio
+  - PyTorch
+  - Music Transcription
+  - Deep Learning
+
+---
+## About this resource
+
+torchaudio is an audio library mainly for I/O, feature extraction, and augmentation. It was developed by the actual PyTorch team, 
+and it offers tools for wav to tensor preprocessing, spectrogram features (Mel, CQT, MFCC), and SoX-based effects. It has a 
+tensor-first design, which thus makes it pretty easy to feed models directly, which can be ideal for automatic music 
+transcription, speech tasks, and overall general audio ML. Torchaudio works well with other audio libraries, such as librosa 
+and pretty_midi, and I used them to create a CNN for converting wav files to midi piano rolls, which can be opened and edited in DAWs.
+
+#### Key features
+- **Feature 1**: Tensor-first transforms
+  -  MelSpectrogram, CQT, MFCC, Resample, AmplitudeToDB.
+- **Feature 2**: Audio I/O
+  -  Load/save WAV/MP3/FLAC straight to torch.Tensor (which is CPU/GPU-ready).
+- **Feature 3**: augmentation
+  -  Pitch/tempo changes, masking, noise via SoX effects.
+- **Performance**: Offers batches and GPU acceleration through PyTorch and it also works well with DataLoader.
+
+## Integration and compatibility
+torchaudio integrates with various machine learning frameworks and libraries, making it versatile for a range of tasks.
+
+- **Frameworks Supported**: PyTorch
+- **Compatible Libraries**: NumPy, SciPy, librosa (complementary analysis), pretty_midi (export MIDI)
+- **Installation Instructions**: pip install torch torchaudio 
+  -  optional: pip install librosa pretty_midi
+
+## Use cases
+Here are some examples of how torchaudio can be applied to different machine learning tasks.
+
+- **Use Case 1**: Wav file to midi transcription 
+  -  Preprocess audio to log-mel/CQT tensors, train CNN/CRNN models for frame-wise notes/onsets.
+- **Use Case 2**: Data augmentation
+  -  Pitch/tempo shifts to increase robustness.
+
+## Tutorials and resources
+#### Getting started
+- **Official Tutorial]**: https://www.youtube.com/watch?v=3mju52xBFK8
+- code snippet (this code loads audio as a tensor and resamples it so every file has the same sample rate):
+
+    '''python
+    # wav -> log-mel spectrogram tensor (which would be model input)
+    import torchaudio
+
+    w, sr = torchaudio.load("path/to/audio.wav")
+    w = w.mean(0, keepdim=True) if w.size(0) > 1 else w
+    if sr != 22050: w = torchaudio.transforms.Resample(sr, 22050)(w); sr = 22050
+
+    mel = torchaudio.transforms.MelSpectrogram(sample_rate=sr, n_fft=2048, hop_length=512, n_mels=128)
+    X_db = torchaudio.transforms.AmplitudeToDB(stype="power")(mel(w))
+    print(X_db.shape)  # shape would be (1, 128, T)                    
+
+#### High-level tips for effective use
+- **Optimization**: precompute log-mels for quicker training
+- **Memory Management**: use small-ish n_mels and hop_length and also batch by time frames
+- **Common Pitfalls**: a common mistake is having inconsistent sample rates and hop lengths, so you should make sure to keep them the same in training and inference
+
+#### Related libraries & tools
+- librosa: offers extra MIR utilities, like chroma and beat tracking
+- pretty_midi: turns frame-wise predictions into MIDI files for eventual listening/evaluation
+
+## Questions?
+If you have any lingering questions about this resource, feel free to post them on the [ML+X Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub.
