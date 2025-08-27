@@ -1,10 +1,11 @@
 ---
-title: "torchaudio"
+title: "TorchAudio"
 author: 
   - name: Andrew Piela
     email: andrewpiela9090@gmail.com, apiela@wisc.edu
     
 date: 2025-08-26 
+image: ../../../images/pexels-pixabay-257904.jpg
 date-format: long
 categories: 
   - Libraries # always include
@@ -16,31 +17,26 @@ categories:
 ---
 ## About this resource
 
-torchaudio is an audio library mainly for I/O, feature extraction, and augmentation. It was developed by the actual PyTorch team, 
-and it offers tools for wav to tensor preprocessing, spectrogram features (Mel, CQT, MFCC), and SoX-based effects. It has a 
-tensor-first design, which thus makes it pretty easy to feed models directly, which can be ideal for automatic music 
-transcription, speech tasks, and overall general audio ML. Torchaudio works well with other audio libraries, such as librosa 
-and pretty_midi, and I used them to create a CNN for converting wav files to midi piano rolls, which can be opened and edited in DAWs.
+The TorchAudio library is an audio library that allows you to incorporate modern audio signal processing into deep learning workflows. Developed by the PyTorch team, it offers GPU-friendly tools for audio I/O, feature extraction, and augmentation. TorchAudio's I/O means it can decode files like WAV/MP3/FLAC into PyTorch tensors of shape (channels, time) with torchaudio.load and then write tensors back to audio with torchaudio.save. Furthermore, TorchAudio provides differentiable transforms (STFT, Mel/CQT spectrograms, MFCC) and SoX-based effects for augmentation (pitch/tempo changes, masking). Built on PyTorch, it slots cleanly into DataLoader and nn.Module pipelines, making it perfect for researchers and practitioners building speech recognition, music transcription, and other audio ML systems.
 
 #### Key features
 - **Feature 1**: Tensor-first transforms
   -  MelSpectrogram, CQT, MFCC, Resample, AmplitudeToDB.
 - **Feature 2**: Audio I/O
   -  Load/save WAV/MP3/FLAC straight to torch.Tensor (which is CPU/GPU-ready).
-- **Feature 3**: augmentation
+- **Feature 3**: Augmentation
   -  Pitch/tempo changes, masking, noise via SoX effects.
 - **Performance**: Offers batches and GPU acceleration through PyTorch and it also works well with DataLoader.
 
 ## Integration and compatibility
-torchaudio integrates with various machine learning frameworks and libraries, making it versatile for a range of tasks.
+TorchAudio integrates with various machine learning frameworks and libraries, making it versatile for a range of tasks.
 
 - **Frameworks Supported**: PyTorch
 - **Compatible Libraries**: NumPy, SciPy, librosa (complementary analysis), pretty_midi (export MIDI)
-- **Installation Instructions**: pip install torch torchaudio 
-  -  optional: pip install librosa pretty_midi
+- **Installation Instructions**: 'pip install torchaudio' 
 
 ## Use cases
-Here are some examples of how torchaudio can be applied to different machine learning tasks.
+Here are some examples of how TorchAudio can be applied to different machine learning tasks.
 
 - **Use Case 1**: Wav file to midi transcription 
   -  Preprocess audio to log-mel/CQT tensors, train CNN/CRNN models for frame-wise notes/onsets.
@@ -75,3 +71,8 @@ Here are some examples of how torchaudio can be applied to different machine lea
 
 ## Questions?
 If you have any lingering questions about this resource, feel free to post them on the [ML+X Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub.
+
+## See also
+- [**Documentation**: TorchAudio Documentation](https://docs.pytorch.org/audio/stable/index.html): Includes official API as well as tutorials.
+- [**Youtube Tutorial**: Getting Started With Torchaudio | PyTorch Tutorial](https://www.youtube.com/watch?v=3mju52xBFK8): In this youtube video from the AssemblyAI youtube channel, you can learn how to code the basic features of TorchAudio, including resampling and incorporating an audio dataset.
+- [**Dataset**: The MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro): Popular dataset containing hundreds of paired audio and MIDI recordings that can be processed with TorchAudio and used for training.
