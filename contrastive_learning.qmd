@@ -1,0 +1,112 @@
+---
+title: "Contrastive Learning for Large Language Models: A SimCLR Tutorial"
+author: 
+  - name: Moshi Fu  
+
+date: 2025-09-01  
+date-format: long  
+
+image: "images/ML+X_Logo_Secondary_Tagline_Transparent.png"
+
+categories: 
+  - Blogs
+  - Deep learning
+  - Transfer learning
+  - LMM
+  - Multimodal learning
+
+---
+
+Contrastive learning has emerged as one of the most effective self-supervised learning paradigms. While it is well established in computer vision through methods like [SimCLR](https://arxiv.org/abs/2002.05709) and [CLIP](https://arxiv.org/abs/2103.00020), its application to **large language models (LLMs)** is a growing research direction. This tutorial provides an overview of how contrastive learning works, why it matters for language and multimodal tasks, and how one could adapt SimCLR-style training to LLMs.
+
+---
+
+Estimated time to complete: 30-45 minutes (to read the post, understand theory, and run the minimal code snippet).
+
+#### Prerequisites
+- Familiarity with neural networks and deep learning basics.  
+- Knowledge of encoders (e.g., BERT) and embeddings.  
+- Comfort with PyTorch or Hugging Face Transformers.  
+
+---
+
+## Motivation
+LLMs are usually trained with next-token prediction, but this does not always guarantee high-quality *representations* for downstream tasks like semantic search or retrieval. Contrastive learning provides a way to directly optimize for better embeddings:  
+
+- **Pulling positives together**: semantically similar sentences or modalities map close in embedding space.  
+- **Pushing negatives apart**: unrelated examples are separated.  
+
+This results in more meaningful and robust representations, especially helpful in **low-resource** or **domain-specific** applications (e.g., healthcare notes, legal documents).
+
+---
+
+## Theory: The InfoNCE Loss
+At the core of SimCLR is the **Normalized Temperature-Scaled Cross-Entropy (NT-Xent) loss**.  
+
+For a pair of positive samples \((z_i, z_j)\) and a batch of negatives, the loss is:  
+
+\[
+\mathcal{L}_{i,j} = -\log \frac{\exp(\mathrm{sim}(z_i, z_j) / \tau)}{\sum_{k=1}^{2N} \mathbb{1}_{[k \neq i]} \exp(\mathrm{sim}(z_i, z_k)/\tau)}
+\]
+
+- \( \mathrm{sim}(z_i, z_j) \) = cosine similarity.  
+- \( \tau \) = temperature hyperparameter (controls how “sharp” the softmax distribution is).  
+- Each example has two augmented “views”; other examples in the batch act as negatives.  
+
+The optimization encourages **alignment** (positives are close) and **uniformity** (representations spread evenly on the hypersphere).
+
+---
+
+## Workflow: Adapting SimCLR to Text and LLMs
+
+1. **Data collection**  
+   - Gather domain-specific unlabeled text (e.g., clinical notes, Q&A, product reviews).  
+
+2. **Text augmentation**  
+   - Similar to image augmentations in SimCLR, we need two different “views” of the same input.  
+   - Options: back-translation, synonym replacement, random masking, or dropout.  
+   - **Why this matters:** Contrastive learning requires *two semantically equivalent but not identical inputs*. Good augmentations teach the model to be invariant to surface changes (like wording or noise) while keeping the meaning intact. Overly aggressive edits can break this assumption and degrade performance.  
+
+3. **Encoding and projection**  
+   - Use an encoder (e.g., BERT, RoBERTa, or pooled LLM hidden states).  
+   - Add a **projection head** (small MLP) to map embeddings into a contrastive space.  
+   - **Why projection head:** The projection layer provides a space specialized for contrastive training while preserving the encoder’s general-purpose embeddings. In practice, you discard the projection head after training and use the encoder outputs for downstream tasks. Empirically, a 2-layer MLP with normalization gives the best balance.  
+
+4. **Contrastive objective**  
+   - Train with NT-Xent loss.  
+   - Large batch sizes are ideal (more negatives), but memory-efficient techniques like queues (MoCo) can help.  
+   - **What NT-Xent does:** For each anchor, it increases similarity to its positive pair while decreasing similarity to all others in the batch (treated as negatives). The temperature parameter \(\tau\) controls how sharply similarities are distinguished. This loss balances **alignment** (positives close) and **uniformity** (embeddings spread evenly on the sphere).  
+   - **Practical tip:** Start with τ ≈ 0.07; use batch size ≥64 if possible, or simulate larger batches with gradient accumulation or a memory queue.  
+
+5. **Evaluation**  
+   - Sentence similarity benchmarks (STS, retrieval tasks).  
+   - Downstream fine-tuning with frozen or lightly fine-tuned embeddings.  
+   - **Why STS:** Semantic Textual Similarity datasets provide human-rated similarity scores. You compute cosine similarity between embeddings and measure correlation (Spearman/Pearson) with human judgments. This directly tests whether your embedding space reflects real semantic similarity. Complement STS with retrieval (top-k accuracy) or transfer classification to validate usefulness.  
+
+
+---
+
+## Example: Minimal PyTorch Snippet
+Below is a simplified view of how contrastive loss might be implemented for text embeddings:
+
+```python
+import torch
+import torch.nn.functional as F
+
+def contrastive_loss(z1, z2, temperature=0.05):
+    # Normalize
+    z1, z2 = F.normalize(z1, dim=-1), F.normalize(z2, dim=-1)
+    # Similarity matrix
+    sim_matrix = torch.mm(z1, z2.t()) / temperature
+    labels = torch.arange(sim_matrix.size(0)).to(sim_matrix.device)
+    # Symmetric loss
+    loss_i = F.cross_entropy(sim_matrix, labels)
+    loss_j = F.cross_entropy(sim_matrix.t(), labels)
+    return (loss_i + loss_j) / 2
+
+## Applications
+
+- Semantic retrieval: Building better search and Q&A systems.
+- Healthcare NLP: Pretraining on clinical notes for diagnosis classification.
+- Multimodal learning: Aligning medical images with reports, following the CLIP/LLaVA paradigm.
+- Instruction tuning: Treating human-preferred completions as positives to align LLMs.
