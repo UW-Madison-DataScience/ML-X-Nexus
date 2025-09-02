@@ -48,7 +48,7 @@ Here are some examples of how TorchAudio can be applied to different machine lea
 - **[Official Tutorial](https://www.youtube.com/watch?v=3mju52xBFK8)**
 - code snippet (this code loads audio as a tensor and resamples it so every file has the same sample rate):
 
-    '''python
+    ```python
     # wav -> log-mel spectrogram tensor (which would be model input)
     import torchaudio
 
@@ -58,7 +58,8 @@ Here are some examples of how TorchAudio can be applied to different machine lea
 
     mel = torchaudio.transforms.MelSpectrogram(sample_rate=sr, n_fft=2048, hop_length=512, n_mels=128)
     X_db = torchaudio.transforms.AmplitudeToDB(stype="power")(mel(w))
-    print(X_db.shape)  # shape would be (1, 128, T)                    
+    print(X_db.shape)  # shape would be (1, 128, T)  
+    ```
 
 #### High-level tips for effective use
 - **Optimization**: precompute log-mels for quicker training
