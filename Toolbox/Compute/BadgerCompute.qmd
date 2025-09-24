@@ -1,0 +1,96 @@
+---
+title: "BadgerCompute"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2025-09-24
+date-format: long
+image: "../../../images/BadgerCompute.png"
+categories:
+  - Compute
+  - Jupyter
+  - BadgerCompute
+---
+
+## About this resource
+
+[BadgerCompute](https://badgerhub.wisc.edu/) is UW–Madison’s browser-based interactive computing service built on JupyterHub. It provides on-demand access to CPUs, memory, and GPUs without requiring any local software installation or server setup. Researchers, instructors, and students can write and run code, visualize data, and develop workflows directly from their web browser using only a NetID.
+
+BadgerCompute is similar in spirit to Google Colab: both offer hosted Jupyter notebook environments for writing and executing code interactively. However, BadgerCompute is campus-supported, requires NetID authentication, and is subject to UW data policies. It is free to use and avoids many of the resource limits tied to commercial Colab accounts, but it also comes with shorter runtime limits, more limited storage, and fewer GPU guarantees.
+
+## GPU access and runtime limits
+
+BadgerCompute provides both CPU and GPU computing resources. GPU availability is limited and not guaranteed, but when available it is often sufficient for small to medium deep learning tasks, accelerated data analysis, or exploratory workflows.
+
+Each session runs in a containerized environment with common data science tools already installed. Sessions have the following limitations:
+
+- Maximum runtime is four hours.
+- Sessions without an active browser connection shut down automatically after ten minutes.
+- The service can support roughly 80–100 concurrent users.
+- GPU capacity is shared and may not be available during peak usage times.
+
+## Data storage limitations
+
+BadgerCompute is designed for interactive computing, not data storage. Its storage model is deliberately minimal and ephemeral:
+
+- Only the `~/work` directory persists across sessions. Any files saved elsewhere are deleted when a session ends.
+- Even within `~/work`, persistence is not guaranteed indefinitely. Files may be deleted under data retention policies or during system maintenance.
+- Storage capacity is limited and intended for notebooks, scripts, and small datasets.
+- Large datasets should be stored in external locations (e.g., departmental storage, cloud object storage, or shared research storage) and accessed from within a BadgerCompute session as needed.
+
+Because of these constraints, BadgerCompute should not be treated as a long-term storage location. A common best practice is to store notebooks in GitHub and data in external services, then pull what you need into the environment each time you launch a session.
+
+## Getting started
+
+To use BadgerCompute, you must:
+
+1. Have an active UW–Madison NetID.
+2. Complete the [BadgerCompute Certification Course](https://canvas.wisc.edu/enroll/JR887K) on Canvas and wait 24 hours for access.
+
+Once approved, go to [badgerhub.wisc.edu](https://badgerhub.wisc.edu/) and log in. On the "Server Options" page, select the "Basic Data Science" environment and click "Start" to launch a JupyterLab session. Startup can take several minutes, especially during peak usage.
+
+## Working in JupyterLab
+
+When your session launches, you will see the standard JupyterLab interface:
+
+- A file browser for navigating directories and uploading or downloading files
+- A launcher for creating new notebooks, terminals, or text files
+- A notebook interface for writing and running code interactively
+- A terminal for executing shell commands directly
+
+Only the `~/work` directory is persistent. Any files saved elsewhere are deleted when the session ends.
+
+## Best practices and limitations
+
+Because BadgerCompute is a shared resource with limited capacity, plan your workflows with the following in mind:
+
+- Sessions end automatically after four hours and cannot be extended.
+- Sessions without an active browser connection end after ten minutes.
+- GPU access depends on demand and may not be available.
+- Storage is temporary and extremely limited.
+- Availability is not guaranteed for classes or large workshops. For larger courses, coordinate in advance or consider alternatives.
+
+## When to use BadgerCompute vs. other platforms
+
+BadgerCompute is most useful for:
+
+- Rapid prototyping of data analysis or machine learning workflows
+- Teaching and demonstrations without requiring software installation
+- Exploratory data analysis and small-scale model development
+- Short tasks that benefit from GPU acceleration
+
+For more intensive work — such as training large models, running distributed jobs, executing long-running tasks, or hosting large datasets — platforms like [CHTC](https://chtc.cs.wisc.edu/), AWS, GCP, or local HPC clusters are more appropriate. Many users start exploratory work in BadgerCompute and transition to these larger systems once workflows are established.
+
+## Learn more and get help
+
+Documentation: [docs.badgercompute.wisc.edu](https://docs.badgercompute.wisc.edu)  
+Community forum: [community.badgerhub.wisc.edu](https://community.badgerhub.wisc.edu)  
+Support: [badger.compute@wisc.edu](mailto:badger.compute@wisc.edu)
+
+BadgerCompute is supported by DoIT, CHTC, and the Data Science Institute (DSI) as part of UW–Madison’s research computing ecosystem.
+
+## Questions?
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## See also
+- [Intro to AWS SageMaker for Predictive ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html). Learn how to launch and scale machine learning workflows in the cloud using AWS SageMaker.
