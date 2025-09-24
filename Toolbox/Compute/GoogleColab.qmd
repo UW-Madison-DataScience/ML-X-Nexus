@@ -1,0 +1,106 @@
+---
+title: "Google Colab"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2025-09-24
+date-format: long
+image: "../../../images/GoogleColab.png"
+categories:
+  - Compute
+  - Jupyter
+  - Colab
+---
+
+## About this resource
+
+[Google Colab](https://colab.research.google.com/) is a cloud-based Jupyter notebook environment that runs entirely in the browser. It allows you to write and execute Python code without installing anything locally, making it a popular choice for machine learning, data analysis, and teaching. Colab integrates directly with Google Drive, supports GPU and TPU acceleration, and makes it easy to share notebooks and collaborate with others.
+
+Colab's core experience is free, but its performance and capabilities now depend on how many **compute units** you have available. Free users share limited resources, while paid plans provide monthly compute units that improve GPU access, runtime length, memory availability, and additional features like background execution.
+
+## Plans and compute units
+
+Google Colab uses **compute units** as the core billing and usage mechanism for paid plans. Units are consumed as you run notebooks and expire after 90 days. You can purchase them individually on a pay-as-you-go basis or receive a monthly allotment through a subscription plan.
+
+| Plan | Cost | Compute units | Key features |
+|------|------|----------------|---------------|
+| Free | $0 | – | ~12-hour runtime, ~12 GB RAM, limited shared GPUs (T4/K80), ~90-minute idle timeout |
+| Pay As You Go | variable | Purchase as needed | No subscription required. Units expire after 90 days. Access faster GPUs and more memory when available. |
+| Colab Pro | $9.99/month | 100 units/month | Faster GPUs (T4/P100), high-memory options (~25 GB), ~24-hour runtime, ~180-minute idle timeout |
+| Colab Pro+ | ~$49.99/month | ~500–600 units/month | All Pro features plus more compute units, premium GPU priority (T4/P100/V100), background execution up to 24 hours |
+| Colab Enterprise | custom | Custom | Integrated with Google Cloud (BigQuery, Vertex AI), enterprise notebook storage, and AI-assisted code generation. Contact Google for pricing. |
+
+Important details:
+
+- Compute units expire after 90 days, even if unused.
+- When you run out of compute units, you must wait for renewal or purchase more.
+- Free-tier users do not have compute units and share access to limited GPUs with unpredictable availability.
+- Pro and Pro+ users get priority access to faster GPUs and more stable session runtimes.
+- **Background execution** (Pro+) allows notebooks to continue running for up to 24 hours even if your browser is closed.
+
+## GPU access and runtime behavior
+
+When GPU acceleration is enabled, Colab notebooks can leverage NVIDIA T4 or P100 GPUs for faster model training and inference. Pro+ users occasionally access V100 GPUs.
+
+- GPU usage must be manually enabled in each notebook: Runtime → Change runtime type → Hardware accelerator → GPU  
+- Sessions disconnect automatically after ~12 hours on the free tier and up to ~24 hours on paid tiers.  
+- Idle notebooks are shut down after ~90 minutes (free) or ~180 minutes (Pro/Pro+).  
+
+For most small to medium-scale workflows, the free tier is sufficient. If you need more consistent GPU access, background execution, or longer uninterrupted runs, paid tiers offer a substantial improvement.
+
+## Data storage and mounting Google Drive
+
+Colab notebooks themselves are stored in Google Drive, but any files you upload during a session are temporary and deleted once the session ends. To persist data between sessions, mount your Google Drive into the notebook runtime.
+
+Here is the standard code snippet for mounting your Google Drive:
+
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+Once mounted, your Drive files are available under `/content/drive/MyDrive/`. For example:
+
+```python
+import pandas as pd
+df = pd.read_csv('/content/drive/MyDrive/data.csv')
+```
+
+This approach is essential for storing training data, saving model checkpoints, or writing outputs that need to persist after the notebook shuts down. For larger datasets, connecting to cloud storage services like Google Cloud Storage (GCS) or AWS S3 is also possible using their Python SDKs.
+
+## Best practices and limitations
+
+While Google Colab is one of the easiest ways to experiment with machine learning, it has several limitations to consider:
+
+- Session timeouts cannot be disabled and will interrupt long-running jobs.
+- GPU availability is shared and unpredictable in the free tier.
+- Persistent storage requires integrating with Google Drive or another external service.
+- Environment customization is limited compared to running Jupyter on your own server or cloud instance.
+- Network access is restricted, so some package installations or external connections may not work as expected.
+
+Because of these constraints, Colab is best suited for:
+
+- Rapid prototyping of notebooks and model experiments  
+- Teaching and workshops  
+- Exploratory data analysis and visualization  
+- Small to medium-scale deep learning tasks  
+
+For more control, longer runtimes, or production workflows, platforms like AWS SageMaker or on-premises solutions such as BadgerCompute are better suited.
+
+## When to use Google Colab vs. other platforms
+
+Colab is ideal when:
+
+- You need a quick, cloud-hosted notebook without infrastructure setup.
+- You are teaching or learning machine learning interactively.
+- Your workloads are short to medium in length and fit within session limits.
+- You want simple access to GPUs without managing your own hardware.
+
+If you require more predictable performance, larger data handling capabilities, or longer-running training jobs, consider using BadgerCompute for campus-supported work or SageMaker for scalable, managed cloud workflows.
+
+## Questions?
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## See also
+- [BadgerCompute](https://uw-madison-datascience.github.io/ML-X-Nexus/Compute/BadgerCompute.html). UW–Madison's Jupyter-based interactive computing service with NetID authentication and GPU access.
+- [Intro to AWS SageMaker for Predictive ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html). Learn how to launch and scale machine learning workflows in the cloud using AWS SageMaker.
