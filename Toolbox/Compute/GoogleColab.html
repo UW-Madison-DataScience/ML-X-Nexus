@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2025-09-24">
 
-<title>Data – Nexus: Crowdsourced ML Resources</title>
+<title>Google Colab – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -29,10 +66,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Toolbox/GenAI/index.html" rel="next">
-<link href="../../Toolbox/Compute/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -71,65 +104,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +117,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/Data/index.html">Data</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Google Colab</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +127,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -247,7 +222,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
@@ -347,20 +322,49 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="QXVkaW8lMjBkYXRh">Audio data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QmVuY2htYXJraW5n">Benchmarking <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QmlvbG9neQ==">Biology <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Q0lGQVI=">CIFAR <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q2l0aXplbiUyMHNjaWVuY2U=">Citizen science <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q0xJUA==">CLIP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q05O">CNN <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29tcHV0ZXIlMjB2aXNpb24=">Computer vision <span class="quarto-category-count">(4)</span></div><div class="category" data-category="RGF0YQ==">Data <span class="quarto-category-count">(5)</span></div><div class="category" data-category="RWNvbG9neQ==">Ecology <span class="quarto-category-count">(2)</span></div><div class="category" data-category="SHVnZ2luZyUyMEZhY2U=">Hugging Face <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW1hZ2UlMjBjbGFzc2lmaWNhdGlvbg==">Image classification <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW1hZ2UlMjBkYXRh">Image data <span class="quarto-category-count">(4)</span></div><div class="category" data-category="SW1hZ2UlMjBzZWdtZW50YXRpb24=">Image segmentation <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TXVsdGltb2RhbCUyMGRhdGE=">Multimodal data <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TXVsdGltb2RhbCUyMGxlYXJuaW5n">Multimodal learning <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGxhbnQlMjBwaGVub3R5cGluZw==">Plant phenotyping <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmV0cmlldmFs">Retrieval <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGV4dCUyMGFuYWx5c2lz">Text analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGV4dCUyMGRhdGE=">Text data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VmlU">ViT <span class="quarto-category-count">(1)</span></div><div class="category" data-category="WmVyby1zaG90JTIwbGVhcm5pbmc=">Zero-shot learning <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#plans-and-compute-units" id="toc-plans-and-compute-units" class="nav-link" data-scroll-target="#plans-and-compute-units">Plans and compute units</a></li>
+  <li><a href="#data-storage-and-mounting-google-drive" id="toc-data-storage-and-mounting-google-drive" class="nav-link" data-scroll-target="#data-storage-and-mounting-google-drive">Data storage and mounting Google Drive</a></li>
+  <li><a href="#best-practices-and-limitations" id="toc-best-practices-and-limitations" class="nav-link" data-scroll-target="#best-practices-and-limitations">Best practices and limitations</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Compute/GoogleColab.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/Data/index.html">Data</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data</h1>
-</div>
+<h1 class="title">Google Colab</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Compute</div>
+    <div class="quarto-category">Jupyter</div>
+    <div class="quarto-category">Colab</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 24, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -370,231 +374,127 @@ window.Quarto = {
 </header>
 
 
-<p>Explore popular datasets that you can leverage for your next machine learning project.</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p><a href="https://colab.research.google.com/">Google Colab</a> is a cloud-based Jupyter notebook environment that runs entirely in the browser. It allows you to write and execute Python code without installing anything locally, making it a popular choice for machine learning, data analysis, and teaching. Colab integrates directly with Google Drive, supports GPU and TPU acceleration, and makes it easy to share notebooks and collaborate with others.</p>
+<p>Colab’s core experience is free, but its performance and capabilities now depend on how many <strong>compute units</strong> you have available. Free users share limited resources, while paid plans provide monthly compute units that improve GPU access, runtime length, memory availability, and additional features like background execution.</p>
+</section>
+<section id="plans-and-compute-units" class="level2">
+<h2 class="anchored" data-anchor-id="plans-and-compute-units">Plans and compute units</h2>
+<p>Google Colab uses <strong>compute units</strong> as the core billing and usage mechanism for paid plans. Units are consumed as you run notebooks and expire after 90 days. You can purchase them individually on a pay-as-you-go basis or receive a monthly allotment through a subscription plan.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 24%">
+<col style="width: 27%">
+<col style="width: 12%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Plan</th>
+<th>Cost</th>
+<th>Compute units</th>
+<th>Typical runtime</th>
+<th>Memory</th>
+<th>GPU access</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Free</td>
+<td>$0</td>
+<td>–</td>
+<td>Up to ~12 hours <em>under ideal conditions</em> (often less), ~90 min idle timeout</td>
+<td>~12 GB</td>
+<td>Shared GPUs (commonly T4/K80), no guarantees</td>
+</tr>
+<tr class="even">
+<td>Pay As You Go</td>
+<td>variable</td>
+<td>Purchase as needed</td>
+<td>Depends on units purchased</td>
+<td>Varies</td>
+<td>Access to faster GPUs and more memory when available</td>
+</tr>
+<tr class="odd">
+<td>Colab Pro</td>
+<td>$9.99/month</td>
+<td>100 units/month</td>
+<td>Often 12–24 hours, ~180 min idle timeout</td>
+<td>~25 GB</td>
+<td>More predictable access to T4/P100 GPUs and high-memory VMs</td>
+</tr>
+<tr class="even">
+<td>Colab Pro+</td>
+<td>~$49.99/month</td>
+<td>~500–600 units/month</td>
+<td>Up to ~24 hours, ~180 min idle timeout</td>
+<td>~25 GB</td>
+<td>Priority access to premium GPUs (T4/P100/V100) and background execution</td>
+</tr>
+<tr class="odd">
+<td>Colab Enterprise</td>
+<td>custom</td>
+<td>Custom</td>
+<td>Custom</td>
+<td>Custom</td>
+<td>Integrated with GCP services (BigQuery, Vertex AI)</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>While free-tier performance is often sufficient for teaching, tutorials, and lightweight experiments, paid plans offer more predictable runtime windows, stronger GPU availability, and improved overall stability for sustained machine learning workloads. Colab Pro is often the most practical choice for researchers and students who use Colab regularly, balancing cost, runtime, and GPU access without committing to the higher price of Pro+ or worrying about “pay as you go” charges.</p>
+</blockquote>
+<p>For the most up-to-date prices, check <a href="https://colab.research.google.com/signup">colab.research.google.com/signup</a></p>
+</section>
+<section id="data-storage-and-mounting-google-drive" class="level2">
+<h2 class="anchored" data-anchor-id="data-storage-and-mounting-google-drive">Data storage and mounting Google Drive</h2>
+<p>Colab notebooks themselves are stored in Google Drive, but any files you upload during a session are temporary and deleted once the session ends. To persist data between sessions, mount your Google Drive into the notebook runtime:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>drive.mount(<span class="st">'/content/drive'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Once mounted, your Drive files are available under <code>/content/drive/MyDrive/</code>. For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'/content/drive/MyDrive/data.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This approach is essential for storing training data, saving model checkpoints, or writing outputs that need to persist after the notebook shuts down. For larger datasets, connecting to cloud storage services like Google Cloud Storage (GCS) or AWS S3 is also possible using their Python SDKs.</p>
+</section>
+<section id="best-practices-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="best-practices-and-limitations">Best practices and limitations</h2>
+<p>While Google Colab is one of the easiest ways to experiment with machine learning, it has several limitations to consider:</p>
+<ul>
+<li>Session timeouts cannot be disabled and will interrupt long-running jobs.</li>
+<li>GPU availability is shared and unpredictable in the free tier.</li>
+<li>Persistent storage requires integrating with Google Drive or another external service.</li>
+<li>Environment customization is limited compared to running Jupyter on your own server or cloud instance.</li>
+</ul>
+<p>Because of these constraints, Colab is best suited for:</p>
+<ul>
+<li>Rapid prototyping of notebooks and model experiments<br>
+</li>
+<li>Teaching and workshops<br>
+</li>
+<li>Exploratory data analysis and visualization<br>
+</li>
+<li>Small to medium-scale deep learning tasks</li>
+</ul>
+<p>For more control, longer runtimes, or production workflows, platforms like <strong>AWS SageMaker</strong>, <strong>Google Vertex AI</strong>, or campus HPC systems (e.g., <strong>CHTC</strong>) are better suited.</p>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>If you have any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html">Intro to AWS SageMaker for Predictive ML/AI</a>. Learn how to launch and scale machine learning workflows in the cloud using AWS SageMaker.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Compute/BadgerCompute.html">BadgerCompute</a> – UW–Madison’s lightweight, NetID-authenticated Jupyter service for short interactive sessions and classroom use.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="RGF0YSUyQ0ltYWdlJTIwZGF0YSUyQ0Jpb2xvZ3klMkNFY29sb2d5JTJDQ29tcHV0ZXIlMjB2aXNpb24lMkNNdWx0aW1vZGFsJTIwbGVhcm5pbmclMkNCZW5jaG1hcmtpbmclMkNDaXRpemVuJTIwc2NpZW5jZSUyQ0NMSVAlMkNaZXJvLXNob3QlMjBsZWFybmluZw==" data-listing-date-sort="1743638400000" data-listing-file-modified-sort="1758916908041" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="287">
-<a href="../../Toolbox/Data/iNaturalist.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/iNaturalist-Wordmark.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-iNaturalist (iNat)
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YQ=='); return false;">Data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW1hZ2UlMjBkYXRh'); return false;">Image data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmlvbG9neQ=='); return false;">Biology</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWNvbG9neQ=='); return false;">Ecology</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29tcHV0ZXIlMjB2aXNpb24='); return false;">Computer vision</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TXVsdGltb2RhbCUyMGxlYXJuaW5n'); return false;">Multimodal learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmVuY2htYXJraW5n'); return false;">Benchmarking</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2l0aXplbiUyMHNjaWVuY2U='); return false;">Citizen science</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q0xJUA=='); return false;">CLIP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('WmVyby1zaG90JTIwbGVhcm5pbmc='); return false;">Zero-shot learning</div>
-
-</div>
-<div class="card-text listing-description delink">
-iNaturalist (iNat) is one of the largest community-contributed biodiversity datasets, with millions of photos of plants, animals, and fungi submitted by citizen scientists…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2025-04-03
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="RGF0YSUyQ011bHRpbW9kYWwlMjBkYXRhJTJDQ29tcHV0ZXIlMjB2aXNpb24lMkNSZXRyaWV2YWwlMkNaZXJvLXNob3QlMjBsZWFybmluZyUyQ0JlbmNobWFya2luZyUyQ011bHRpbW9kYWwlMjBsZWFybmluZyUyQ1ZpVCUyQ0xMTSUyQ0Jpb2xvZ3klMkNFY29sb2d5JTJDSW1hZ2UlMjBkYXRhJTJDSHVnZ2luZyUyMEZhY2U=" data-listing-date-sort="1742947200000" data-listing-file-modified-sort="1758916908041" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="729">
-<a href="../../Toolbox/Data/INQUIRE.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/inquire.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-INQUIRE
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YQ=='); return false;">Data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TXVsdGltb2RhbCUyMGRhdGE='); return false;">Multimodal data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29tcHV0ZXIlMjB2aXNpb24='); return false;">Computer vision</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV0cmlldmFs'); return false;">Retrieval</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('WmVyby1zaG90JTIwbGVhcm5pbmc='); return false;">Zero-shot learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmVuY2htYXJraW5n'); return false;">Benchmarking</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TXVsdGltb2RhbCUyMGxlYXJuaW5n'); return false;">Multimodal learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VmlU'); return false;">ViT</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmlvbG9neQ=='); return false;">Biology</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWNvbG9neQ=='); return false;">Ecology</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW1hZ2UlMjBkYXRh'); return false;">Image data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SHVnZ2luZyUyMEZhY2U='); return false;">Hugging Face</div>
-
-</div>
-<div class="card-text listing-description delink">
-INQUIRE is a benchmark for evaluating text-to-image retrieval models on expert-level ecological queries. Built on a 5-million-image subset of iNaturalist 2024 (iNat24), it…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2025-03-26
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="RGF0YSUyQ0ltYWdlJTIwZGF0YSUyQ0NvbXB1dGVyJTIwdmlzaW9uJTJDSW1hZ2UlMjBjbGFzc2lmaWNhdGlvbiUyQ0NOTiUyQ0NJRkFS" data-listing-date-sort="1740960000000" data-listing-file-modified-sort="1758916908041" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="756">
-<a href="../../Toolbox/Data/CIFAR.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/cifar.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-CIFAR Dataset
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YQ=='); return false;">Data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW1hZ2UlMjBkYXRh'); return false;">Image data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29tcHV0ZXIlMjB2aXNpb24='); return false;">Computer vision</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW1hZ2UlMjBjbGFzc2lmaWNhdGlvbg=='); return false;">Image classification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q05O'); return false;">CNN</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q0lGQVI='); return false;">CIFAR</div>
-
-</div>
-<div class="card-text listing-description delink">
-CIFAR-10 (Canadian Institute for Advanced Research) is a widely used dataset consisting of 60,000 color images at a resolution of 32×32 pixels, spanning 10 distinct classes…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Aidan O’Brien
-</div>
-<div class="listing-date">
-2025-03-03
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="RGF0YSUyQ0ltYWdlJTIwZGF0YSUyQ1BsYW50JTIwcGhlbm90eXBpbmclMkNJbWFnZSUyMHNlZ21lbnRhdGlvbiUyQ0NvbXB1dGVyJTIwdmlzaW9u" data-listing-date-sort="1729209600000" data-listing-file-modified-sort="1758916908041" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="355">
-<a href="../../Toolbox/Data/LVD2021_Leaf-Vein-Dataset.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/leaf_vein.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Leaf Vein Dataset (LVD2021)
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YQ=='); return false;">Data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW1hZ2UlMjBkYXRh'); return false;">Image data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UGxhbnQlMjBwaGVub3R5cGluZw=='); return false;">Plant phenotyping</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW1hZ2UlMjBzZWdtZW50YXRpb24='); return false;">Image segmentation</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29tcHV0ZXIlMjB2aXNpb24='); return false;">Computer vision</div>
-
-</div>
-<div class="card-text listing-description delink">
-The Leaf Vein Dataset 2021 (LVD2021), introduced in the paper Leaf vein segmentation with self-supervision, contains high-resolution images of leaves with pixel-wise…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-10-18
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="4" data-categories="RGF0YSUyQ1RleHQlMjBkYXRhJTJDQXVkaW8lMjBkYXRhJTJDTXVsdGltb2RhbCUyMGRhdGElMkNOTFAlMkNUZXh0JTIwYW5hbHlzaXM=" data-listing-date-sort="1728864000000" data-listing-file-modified-sort="1758916908041" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="598">
-<a href="../../Toolbox/Data/Gutenberg.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/gutenberg.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Project Gutenberg: Text &amp; Audio Books
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YQ=='); return false;">Data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGV4dCUyMGRhdGE='); return false;">Text data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QXVkaW8lMjBkYXRh'); return false;">Audio data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TXVsdGltb2RhbCUyMGRhdGE='); return false;">Multimodal data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGV4dCUyMGFuYWx5c2lz'); return false;">Text analysis</div>
-
-</div>
-<div class="card-text listing-description delink">
-The Project Gutenberg dataset contains text from thousands of books, spanning a variety of genres and styles, and in some cases, corresponding audiobooks. Researchers and…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-10-14
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -995,21 +895,9 @@ Chris Endemann
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Toolbox/Compute/index.html" class="pagination-link" aria-label="Compute">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Compute</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Toolbox/GenAI/index.html" class="pagination-link" aria-label="GenAI">
-        <span class="nav-page-text">GenAI</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Data/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Compute/GoogleColab.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
