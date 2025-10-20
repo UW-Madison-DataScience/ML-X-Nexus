@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="author" content="Nidhal Jegham">
+<meta name="dcterms.date" content="2025-09-09">
 
-<title>MLOps – Nexus: Crowdsourced ML Resources</title>
+<title>AI’s Environmental Footprint: Insights and Actions – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +26,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../Toolbox/Models/index.html" rel="next">
-<link href="../../Toolbox/Libraries/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-8d3a3c2ac8d3f940c196e2a7a1173c30.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-8d3a3c2ac8d3f940c196e2a7a1173c30.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,65 +70,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +83,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/MLOps/index.html">MLOps</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">AI’s Environmental Footprint: Insights and Actions</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,13 +93,13 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../../index.html" class="sidebar-logo-link">
-      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <a href="../../../index.html" class="sidebar-logo-link">
+      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -173,19 +114,19 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Learn/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learn</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -194,37 +135,37 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Notebooks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Workshops</span></a>
   </div>
 </li>
@@ -232,7 +173,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -241,37 +182,37 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compute</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GenAI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Libraries</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">MLOps</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -279,7 +220,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Applications</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -288,13 +229,13 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -303,31 +244,31 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">AI @ UW</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML+X</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML4MI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SILO</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other</span></a>
   </div>
 </li>
@@ -337,7 +278,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Category glossary</span></a>
   </div>
 </li>
@@ -347,20 +288,56 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QmxvZ3M=">Blogs <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29kZS1hbG9uZw==">Code-along <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUxmbG93">MLflow <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUxPcHM=">MLOps <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmVwcm9kdWNpYmlsaXR5">Reproducibility <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2tsZWFybg==">Sklearn <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a>
+  <ul class="collapse">
+  <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key points</a></li>
+  </ul></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/Forums/mlx_2025-09-09.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/MLOps/index.html">MLOps</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">MLOps</h1>
-</div>
+<h1 class="title">AI’s Environmental Footprint: Insights and Actions</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Videos</div>
+    <div class="quarto-category">ML+X</div>
+    <div class="quarto-category">Ethical AI</div>
+    <div class="quarto-category">Trustworthy AI</div>
+    <div class="quarto-category">Benchmarking</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">RAG</div>
+    <div class="quarto-category">Retrieval</div>
+    <div class="quarto-category">Cloud</div>
+    <div class="quarto-category">GPU</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Presenters</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann </p>
+             <p>Nidhal Jegham </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Date</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 9, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -370,65 +347,59 @@ window.Quarto = {
 </header>
 
 
-<p>Explore lifecycle tools that help you run ML projects reliably and repeatably—covering:</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p>This forum explores how machine learning practitioners can measure and reduce the environmental costs of AI. It pairs two complementary efforts: one that retrieves emissions and cost data from sustainability reports using RAG, and another that benchmarks energy, water, and carbon footprints across large language models.</p>
+<ol type="1">
+<li><strong>WattBot: Estimating AI Emissions and Costs with RAG — Chris Endemann</strong> <a href="https://www.youtube.com/watch?v=2dCQS1jAbUo&amp;t=144s" target="_blank">02:24</a><br>
+Chris introduces WattBot, a Kaggle challenge and retrieval-augmented generation (RAG) framework for estimating AI emissions and compute costs. Using 35+ papers and 300+ curated Q&amp;A pairs, teams build systems that return citation-backed answers or explicitly state when evidence is missing—promoting transparency and reproducibility in sustainability reporting.
 <ul>
-<li><strong>Experiment tracking</strong> (runs, metrics, params, artifacts)</li>
-<li><strong>Model registry</strong> (versioning, stage transitions, lineage)</li>
-<li><strong>Pipelines &amp; orchestration</strong> (reproducible builds, CI/CD)</li>
-<li><strong>Serving &amp; deployment</strong> (APIs, batch jobs)</li>
-<li><strong>Monitoring</strong> (drift, performance, data/infra health)</li>
+<li><strong>Kaggle challenge</strong>: <a href="https://www.kaggle.com/competitions/WattBot2025/overview">kaggle.com/competitions/WattBot2025/overview</a></li>
+</ul></li>
+<li><strong>How Hungry is AI? Benchmarking Energy, Water, and Carbon Footprint of LLM Inference — Nidhal Jegham</strong> <a href="https://www.youtube.com/watch?v=2dCQS1jAbUo&amp;t=547s" target="_blank">09:07</a><br>
+Nidhal presents a reproducible framework to estimate per-request energy, water, and carbon use for open and proprietary LLMs. The method combines hardware assumptions (A100–H200 GPUs), data center multipliers (PUE, WUE, CIF), and a DEA-style efficiency score that balances model accuracy against environmental cost.
+<ul>
+<li><strong>Preprint</strong>: <a href="https://arxiv.org/abs/2505.09598">https://arxiv.org/abs/2505.09598</a><br>
+</li>
+<li><strong>Dashboard</strong>: <a href="https://app.powerbi.com/view?r=eyJrIjoiZjVmOTI0MmMtY2U2Mi00ZTE2LTk2MGYtY2ZjNDMzODZkMjlmIiwidCI6IjQyNmQyYThkLTljY2QtNDI1NS04OTNkLTA2ODZhMzJjMTY4ZCIsImMiOjF9">https://app.powerbi.com/view?r=eyJr9</a></li>
+</ul></li>
+</ol>
+<section id="key-points" class="level3">
+<h3 class="anchored" data-anchor-id="key-points">Key points</h3>
+<ul>
+<li>Data center efficiency and GPU generation (A100–H200) drive impact as much as model size.<br>
+</li>
+<li>Environmental multipliers like PUE (Power Usage Effectiveness) and WUE (Water Usage Effectiveness) are critical to cross-site comparisons.</li>
+<li>Model retraining cycles and deployment refreshes (fine-tuning and re-optimization) add hidden costs.<br>
+</li>
+<li>Efficiency is not absolute: the Jevons paradox applies—lower per-query cost can increase overall usage.<br>
+</li>
+<li>Current reporting lacks unified standards; the EU AI Act is the first major policy requiring disclosure.<br>
+</li>
+<li>U.S. regulation remains minimal, making voluntary transparency efforts (like Mistral’s) especially important.<br>
+</li>
+<li>Renewable energy sourcing and liquid cooling are among the most actionable interventions.<br>
+</li>
+<li>Academic and industry collaborations can close data gaps through open benchmarking.</li>
 </ul>
-<blockquote class="blockquote">
-<p>Tip: If it primarily <em>manages</em> your workflow (not just a Python import), it belongs here. Examples: MLflow, Weights &amp; Biases, DVC, ClearML, Kubeflow Pipelines, Feast, BentoML, Seldon Core.</p>
-</blockquote>
+<p><strong>Discussion takeaways</strong> - Aggregate usage, not single-query cost, drives total environmental footprint.<br>
+- Publishing carbon and water data in model cards could normalize sustainability reporting.<br>
+- Reporting environmental impact alongside accuracy metrics is an emerging best practice.<br>
+- Community-led reproducibility efforts (like WattBot) help standardize sustainability benchmarks.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/2dCQS1jAbUo" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: Exploring RAG with Romeo and Juliet</a>: Learn how to build an end-to-end retrieval augmented generation (RAG) pipeline using Shakespeare’s Romeo and Juliet as example text.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/"><strong>Video Archive</strong>: ML+X forum archive</a>: Check out other recorded forums from ML+X.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="QmxvZ3MlMkNSZXByb2R1Y2liaWxpdHklMkNTa2xlYXJuJTJDTUxPcHMlMkNNTGZsb3clMkNDb2RlLWFsb25n" data-listing-date-sort="1755129600000" data-listing-file-modified-sort="1760969976695" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="450">
-<a href="../../Learn/Blogs/mlflow-101.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/mlflow-logo.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-MLflow 101: Local Experiment Tracking for Beginners
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmxvZ3M='); return false;">Blogs</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVwcm9kdWNpYmlsaXR5'); return false;">Reproducibility</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2tsZWFybg=='); return false;">Sklearn</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUxPcHM='); return false;">MLOps</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUxmbG93'); return false;">MLflow</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
-
-</div>
-<div class="card-text listing-description delink">
-This is a beginner-friendly overview of local experiment tracking with MLflow. If you’ve ever lost a “good” result because you forgot which settings you used, MLflow solves…<em></em>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Parith Reddy
-</div>
-<div class="listing-date">
-2025-08-14
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -829,21 +800,9 @@ Parith Reddy
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Toolbox/Libraries/index.html" class="pagination-link" aria-label="Libraries">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Libraries</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Toolbox/Models/index.html" class="pagination-link" aria-label="Models">
-        <span class="nav-page-text">Models</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/MLOps/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/Forums/mlx_2025-09-09.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
