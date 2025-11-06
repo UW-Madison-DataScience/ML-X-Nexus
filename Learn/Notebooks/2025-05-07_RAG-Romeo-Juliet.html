@@ -450,7 +450,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="step-1-load-the-corpus">Step 1: Load the corpus</h2>
 <p>In this example, we’ll use “Romeo and Juliet” as our text corpus. This text is freely available via <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/Gutenberg.html">Project Gutenberg</a>.</p>
 <p>Preview the file</p>
-<div id="de724b2a" class="cell" data-execution_count="1">
+<div id="90958b00" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download Romeo and Juliet from Project Gutenberg</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -466,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-2-split-text-into-chunks" class="level2">
 <h2 class="anchored" data-anchor-id="step-2-split-text-into-chunks">Step 2: Split text into “chunks”</h2>
 <p>Next, we define a function to split the corpus into smaller chunks based on word count. The simplest “chunking” approach is to chunk by word count or character count.</p>
-<div id="063247b7" class="cell" data-execution_count="2">
+<div id="1a8431be" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chunk_text(text, max_words<span class="op">=</span><span class="dv">200</span>):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> re  <span class="co"># Regular expressions will help us split the text more precisely</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -495,7 +495,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> chunks  <span class="co"># Return list of chunks</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then apply our chunking function to the corpus.</p>
-<div id="370bef33" class="cell" data-execution_count="3">
+<div id="b261089f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the chunking function to your full text file</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>chunks <span class="op">=</span> chunk_text(file_contents, max_words<span class="op">=</span><span class="dv">200</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -536,7 +536,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Retrieve the top-matching chunks to pass along as context to the language model.</li>
 </ol>
 <p>This allows the system to surface text that is meaningfully related to the question—even if it doesn’t use the same words. For example, a question like “<em>What does Juliet think of Romeo?</em>” might retrieve a passage describing her inner turmoil or emotional reaction, even if the words “think” or “Romeo” aren’t explicitly present. Embedding-based retrieval improves relevance, flexibility, and ultimately the quality of the answers your language model can generate.</p>
-<div id="9f7d6a59" class="cell" data-execution_count="4">
+<div id="247ff23c" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -564,7 +564,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="are-question-embeddings-and-chunk-embeddings-really-comparable" class="level3">
 <h3 class="anchored" data-anchor-id="are-question-embeddings-and-chunk-embeddings-really-comparable">Are question embeddings and chunk embeddings really comparable?</h3>
 <p>We’re assuming that the embedding model (e.g., <code>all-MiniLM-L6-v2</code>) was trained in such a way that <em>questions and answers occupy the same semantic space</em>. That is, if a question and a passage are semantically aligned (e.g., about the same topic or fact), their embeddings should be close. This assumption holds reasonably well for general-purpose models trained on sentence pairs, but it’s not perfect — especially for very abstract or indirect questions. If a model was only trained to embed statements, it may not align questions correctly. You might retrieve chunks that are <strong>related but not directly useful</strong> for answering the question.</p>
-<div id="ac578716" class="cell" data-execution_count="5">
+<div id="1f1fd67a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> retrieve_relevant_chunks(model, query, chunks, embeddings, top_n<span class="op">=</span><span class="dv">3</span>):</span>
@@ -574,7 +574,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> [(chunks[i], scores[i]) <span class="cf">for</span> i <span class="kw">in</span> top_indices]</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="85485c4a" class="cell" data-execution_count="6">
+<div id="8c7946ee" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"Who kills Mercutio?"</span> <span class="co"># Answer: Tybalt, Juliet's cousin</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>top_chunks <span class="op">=</span> retrieve_relevant_chunks(model, question, chunks, embeddings)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -613,7 +613,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="run-a-few-additional-queries-report-top-ranked-chunk" class="level3">
 <h3 class="anchored" data-anchor-id="run-a-few-additional-queries-report-top-ranked-chunk">Run a few additional queries &amp; report top-ranked chunk</h3>
-<div id="da044af2" class="cell" data-execution_count="7">
+<div id="fb9b3e90" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a few factual queries and inspect the top-ranked chunks</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>factual_questions <span class="op">=</span> [</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Who kills Mercutio?"</span>, <span class="co"># Tybalt</span></span>
@@ -656,7 +656,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="refining-chunking-strategy">Refining chunking strategy</h3>
 <p>Our current chunks are only based on word length. Instead, we can create chunks that are more tuned to the dataset and potential questions we might ask by defining a chunk as a “dialogue block”, i.e., as a group of N full speaker turns (e.g., JULIET. + her lines, ROMEO. + his lines, etc.).</p>
 <p>Let’s give this a shot to see how it impacts retrieval.</p>
-<div id="b15743e4" class="cell" data-execution_count="8">
+<div id="98d1a8e5" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chunk_by_speaker_blocks(text, block_size<span class="op">=</span><span class="dv">4</span>):</span>
@@ -698,18 +698,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> grouped_chunks</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="087c9ebe" class="cell" data-execution_count="9">
+<div id="5a0e2817" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>speaker_chunks <span class="op">=</span> chunk_by_speaker_blocks(file_contents, block_size<span class="op">=</span><span class="dv">4</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total speaker_chunks: </span><span class="sc">{</span><span class="bu">len</span>(speaker_chunks)<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Preview of first chunk:</span><span class="ch">\n\n</span><span class="sc">{</span>speaker_chunks[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Our chunks have now been improved so that we aren’t cutting off any diagloue mid-sentence, and each chunk contains a few turns between speakers – allowing us to better capture the overall semantics of short passages from <em>Romeo and Juliet</em>.</p>
-<div id="4c531b0c" class="cell" data-execution_count="10">
+<div id="d6905adc" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dialogue_embeddings <span class="op">=</span> model.encode(speaker_chunks, device<span class="op">=</span>device)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shape of dialogue_embeddings matrix: </span><span class="sc">{</span>np<span class="sc">.</span>array(dialogue_embeddings)<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4d911869" class="cell" data-execution_count="11">
+<div id="9fb9eabd" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a few factual queries and inspect the top-ranked chunks</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>factual_questions <span class="op">=</span> [</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Who kills Mercutio?"</span>, <span class="co"># Tybalt</span></span>
@@ -761,7 +761,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The model we’ve used so far, <a href="https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1"><code>multi-qa-MiniLM-L6-cos-v1</code></a>, is a solid starting point for retrieval-augmented generation (RAG) pipelines, it is relatively lightweight (22M parameters, ~500–800 MB GPU memory), which makes it efficient but less expressive than larger models.</p>
 <p>However, larger embedding models have more capacity to capture subtle semantic relationships, including indirect phrasing or domain-specific language. This can make a dramatic difference in tasks like matching Shakespearean dialogue to modern questions—something smaller models often struggle with.</p>
 <p>Let’s try a slightly larger model with 109 M parameters, <a href="https://huggingface.co/sentence-transformers/all-mpnet-base-v2"><code>all-mpnet-base-v2</code></a></p>
-<div id="7fe4929c" class="cell" data-execution_count="12">
+<div id="c0824940" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dot-product version of the same model</span></span>
@@ -770,7 +770,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate embeddings for all chunks</span></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>dialogue_embeddings <span class="op">=</span> model_larger.encode(speaker_chunks, device<span class="op">=</span>device)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="46664561" class="cell" data-execution_count="13">
+<div id="6e20504d" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a few factual queries and inspect the top-ranked chunks</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>factual_questions <span class="op">=</span> [</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Who kills Mercutio?"</span>, <span class="co"># Tybalt</span></span>
@@ -816,17 +816,17 @@ QUESTION: [your question]
 ANSWER:</code></pre>
 <p>By framing the input this way, we signal to the model that it should focus only on the retrieved content. We’re not asking it to draw from general knowledge of the play—just from the selected passages.</p>
 <p>Let’s begin assembling the full prompt:</p>
-<div id="d16f377c" class="cell" data-execution_count="14">
+<div id="5e926b6f" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"Who killed Mercutio?"</span> <span class="co"># Tybalt/Tibalt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="7d7b9334" class="cell" data-execution_count="15">
+<div id="d770dbe6" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>top_dialgoue_chunks <span class="op">=</span> retrieve_relevant_chunks(model_larger, question, speaker_chunks, dialogue_embeddings, top_n<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract only the chunk text from (chunk, score) tuples</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>context <span class="op">=</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(chunk <span class="cf">for</span> chunk, score <span class="kw">in</span> top_dialgoue_chunks)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(context)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="28da52f2" class="cell" data-execution_count="16">
+<div id="86379f0f" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="ss">f"Use the following passage to answer this question.</span><span class="ch">\n</span><span class="ss">BEGIN_PASSAGE:</span><span class="ch">\n</span><span class="sc">{</span>context<span class="sc">}</span><span class="ch">\n</span><span class="ss">END_PASSAGE</span><span class="ch">\n</span><span class="ss">QUESTION: </span><span class="sc">{</span>question<span class="sc">}</span><span class="ch">\n</span><span class="ss">ANSWER:"</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(prompt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -836,7 +836,7 @@ ANSWER:</code></pre>
 <h3 class="anchored" data-anchor-id="language-model-for-generation">Language model for generation</h3>
 <p>For this section, we’re using <a href="https://huggingface.co/tiiuae/falcon-rw-1b"><code>tiiuae/falcon-rw-1b</code></a>, a small 1.3B parameter decoder-only model trained on the RefinedWeb dataset. It’s designed for general-purpose text continuation, not for answering questions or following instructions.</p>
 <p>This makes it a good baseline for testing how much a generative model can do with only retrieved context and minimal guidance. As we’ll see, its output often reflects surface-level patterns or recent tokens, rather than accurate reasoning grounded in the text.</p>
-<div id="dbb7caef" class="cell" data-execution_count="17">
+<div id="03760f9a" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>llm <span class="op">=</span> pipeline(<span class="st">"text-generation"</span>, model<span class="op">=</span><span class="st">"tiiuae/falcon-rw-1b"</span>, device_map<span class="op">=</span><span class="st">"auto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -849,10 +849,10 @@ ANSWER:</code></pre>
 <li><code>do_sample=True</code>: Enables creative variation rather than deterministic output. For the purposes of getting a reproducible result, we’ll set this to <code>False</code></li>
 </ul>
 <p>These parameters influence not just length, but also how literal or speculative the answer might be. Sampling increases variety but can also introduce tangents or continuation artifacts.</p>
-<div id="92dd9515" class="cell" data-execution_count="18">
+<div id="54897598" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> llm(prompt, max_new_tokens<span class="op">=</span><span class="dv">10</span>, do_sample<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>][<span class="st">"generated_text"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="d16f8d00" class="cell" data-execution_count="19">
+<div id="0141d7ae" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
@@ -865,7 +865,7 @@ ANSWER:</code></pre>
 <pre><code>[prompt] + [generated text]</code></pre>
 <p>If you’re only interested in the generated part (e.g., the model’s answer), you’ll need to remove the prompt manually after generation.</p>
 <p>We can strip off the final answer / generated result with the next code cell.</p>
-<div id="07e63270" class="cell" data-execution_count="20">
+<div id="f1bcec88" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>generated_answer <span class="op">=</span> result[<span class="bu">len</span>(prompt):].strip()</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(generated_answer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -894,7 +894,7 @@ Answer: She curses fortune.</code></pre>
 <li>Add a <code>stop</code> sequence after the first answer (if supported)</li>
 <li>Use a tighter or more explicit prompt style</li>
 </ul>
-<div id="58a5235e" class="cell" data-execution_count="21">
+<div id="14590b4f" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> llm(prompt, max_new_tokens<span class="op">=</span><span class="dv">1</span>, do_sample<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>][<span class="st">"generated_text"</span>] <span class="co"># adjust to inlcude max of 1 new tokens</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>generated_answer <span class="op">=</span> result[<span class="bu">len</span>(prompt):].strip()</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(generated_answer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -932,7 +932,7 @@ The life of Tybalt</p>
 <h4 class="anchored" data-anchor-id="instruction-tuning-improves-perfomance">Instruction tuning improves perfomance</h4>
 <p>To improve factual accuracy in your RAG pipeline, it’s helpful to use an <strong>instruction-tuned</strong> model rather than a base language model. You’ve been using <code>falcon-rw-1b</code> (where “rw” stands for “Refined Web”), which is trained only to continue text — not to follow specific question-and-answer instructions. That’s why it often hallucinates factual events.</p>
 <p>A lightweight upgrade is to instead use <code>tiiuae/Falcon3-1B-Instruct</code>, an instruction-tuned version of Falcon. It still runs on modest hardware but is trained to follow prompts and answer questions in a focused way.</p>
-<div id="d1420847" class="cell" data-execution_count="22">
+<div id="d0ffa9a4" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>llm <span class="op">=</span> pipeline(</span>
@@ -942,7 +942,7 @@ The life of Tybalt</p>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    torch_dtype<span class="op">=</span><span class="st">"auto"</span>,  <span class="co"># optional, helps with GPU memory</span></span>
 <span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="46f63b6a" class="cell" data-execution_count="23">
+<div id="a0c38be7" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: We use max_new_tokens=3 here because words like "Tybalt" may be split into multiple tokens (e.g., "Ty", "b", "alt").</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># It's often tricky to get exactly one word due to subword tokenization.</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> llm(prompt, max_new_tokens<span class="op">=</span><span class="dv">3</span>, do_sample<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>][<span class="st">"generated_text"</span>]</span>
