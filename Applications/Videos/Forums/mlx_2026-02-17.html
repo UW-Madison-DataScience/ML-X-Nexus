@@ -6,10 +6,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Nils Matteson">
+<meta name="author" content="Blaise Enuh">
 <meta name="author" content="Chris Endemann">
-<meta name="dcterms.date" content="2025-09-26">
+<meta name="dcterms.date" content="2026-02-17">
 
-<title>Google Colab – Nexus: Crowdsourced ML Resources</title>
+<title>Deploying RAG in Bedrock vs.&nbsp;Local: WattBot 2025 Case Study – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,61 +24,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-b76802e14fd74a9f0c153399fdc7ab5e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-b76802e14fd74a9f0c153399fdc7ab5e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -117,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Google Colab</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Deploying RAG in Bedrock vs.&nbsp;Local: WattBot 2025 Case Study</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -131,9 +98,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../../index.html" class="sidebar-logo-link">
-      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <a href="../../../index.html" class="sidebar-logo-link">
+      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
@@ -148,19 +115,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Learn/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learn</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -169,37 +136,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Notebooks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Workshops</span></a>
   </div>
 </li>
@@ -207,7 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -216,37 +183,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compute</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GenAI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Libraries</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">MLOps</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -254,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Applications</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -263,13 +230,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -278,31 +245,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">AI @ UW</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML+X</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML4MI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SILO</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other</span></a>
   </div>
 </li>
@@ -312,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Category glossary</span></a>
   </div>
 </li>
@@ -326,26 +293,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
-  <li><a href="#plans-and-compute-units" id="toc-plans-and-compute-units" class="nav-link" data-scroll-target="#plans-and-compute-units">Plans and compute units</a></li>
-  <li><a href="#data-storage-and-mounting-google-drive" id="toc-data-storage-and-mounting-google-drive" class="nav-link" data-scroll-target="#data-storage-and-mounting-google-drive">Data storage and mounting Google Drive</a></li>
-  <li><a href="#best-practices-and-limitations" id="toc-best-practices-and-limitations" class="nav-link" data-scroll-target="#best-practices-and-limitations">Best practices and limitations</a></li>
-  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a>
+  <ul class="collapse">
+  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
+  </ul></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Compute/GoogleColab.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/Forums/mlx_2026-02-17.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Google Colab</h1>
+<h1 class="title">Deploying RAG in Bedrock vs.&nbsp;Local: WattBot 2025 Case Study</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Compute</div>
-    <div class="quarto-category">Jupyter</div>
-    <div class="quarto-category">Colab</div>
+    <div class="quarto-category">Videos</div>
+    <div class="quarto-category">ML+X</div>
+    <div class="quarto-category">UW-Madison</div>
+    <div class="quarto-category">RAG</div>
+    <div class="quarto-category">Retrieval</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">Cloud</div>
+    <div class="quarto-category">AWS</div>
+    <div class="quarto-category">Bedrock</div>
+    <div class="quarto-category">Hugging Face</div>
+    <div class="quarto-category">Foundation models</div>
+    <div class="quarto-category">GenAI</div>
+    <div class="quarto-category">Sustainability</div>
+    <div class="quarto-category">Energy</div>
+    <div class="quarto-category">Benchmarking</div>
     <div class="quarto-category">GPU</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">NLP</div>
   </div>
   </div>
 
@@ -354,16 +334,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-heading">Presenters</div>
     <div class="quarto-title-meta-contents">
-             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+             <p>Nils Matteson </p>
+             <p>Blaise Enuh </p>
+             <p>Chris Endemann </p>
           </div>
   </div>
     
     <div>
-    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-heading">Date</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 26, 2025</p>
+      <p class="date">February 17, 2026</p>
     </div>
   </div>
   
@@ -377,116 +359,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="about-this-resource" class="level2">
 <h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
-<p><a href="https://colab.research.google.com/">Google Colab</a> is a cloud-based Jupyter notebook environment that runs entirely in the browser. It allows you to write and execute Python code without installing anything locally, making it a popular choice for machine learning, data analysis, and teaching. Colab integrates directly with Google Drive, supports GPU and TPU acceleration, and makes it easy to share notebooks and collaborate with others.</p>
-</section>
-<section id="plans-and-compute-units" class="level2">
-<h2 class="anchored" data-anchor-id="plans-and-compute-units">Plans and compute units</h2>
-<p>While free-tier performance is often sufficient for teaching, tutorials, and lightweight experiments, paid plans offer more predictable runtime windows, stronger GPU availability, and improved overall stability for sustained machine learning workloads. Colab Pro is often the most practical choice for researchers and students who use Colab regularly, balancing cost, runtime, and GPU access without committing to the higher price of Pro+ or worrying about “pay as you go” charges.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 24%">
-<col style="width: 27%">
-<col style="width: 12%">
-<col style="width: 18%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Plan</th>
-<th>Cost</th>
-<th>Compute units</th>
-<th>Typical runtime</th>
-<th>Memory</th>
-<th>GPU access</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Free</td>
-<td>$0</td>
-<td>–</td>
-<td>Up to ~12 hours <em>under ideal conditions</em> (often much less; &lt;4 isn’t uncommon), ~90 min idle timeout</td>
-<td>~12 GB</td>
-<td>Shared GPUs (commonly T4/K80), no guarantees</td>
-</tr>
-<tr class="even">
-<td>Pay As You Go</td>
-<td>variable</td>
-<td>Purchase as needed</td>
-<td>Depends on units purchased</td>
-<td>Varies</td>
-<td>Access to faster GPUs and more memory when available</td>
-</tr>
-<tr class="odd">
-<td>Colab Pro</td>
-<td>$9.99/month</td>
-<td>100 units/month</td>
-<td>Often 12–24 hours, ~180 min idle timeout</td>
-<td>~25 GB</td>
-<td>More predictable access to T4/P100 GPUs and high-memory VMs</td>
-</tr>
-<tr class="even">
-<td>Colab Pro+</td>
-<td>~$49.99/month</td>
-<td>~500–600 units/month</td>
-<td>Up to ~24 hours, ~180 min idle timeout</td>
-<td>~25 GB</td>
-<td>Priority access to premium GPUs (T4/P100/V100) and background execution</td>
-</tr>
-<tr class="odd">
-<td>Colab Enterprise</td>
-<td>custom</td>
-<td>Custom</td>
-<td>Custom</td>
-<td>Custom</td>
-<td>Integrated with GCP services (BigQuery, Vertex AI)</td>
-</tr>
-</tbody>
-</table>
-<p>For the most up-to-date prices, check <a href="https://colab.research.google.com/signup">colab.research.google.com/signup</a></p>
-</section>
-<section id="data-storage-and-mounting-google-drive" class="level2">
-<h2 class="anchored" data-anchor-id="data-storage-and-mounting-google-drive">Data storage and mounting Google Drive</h2>
-<p>Colab notebooks themselves are stored in Google Drive, but any files you upload during a session are temporary and deleted once the session ends. To persist data between sessions, mount your Google Drive into the notebook runtime:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>drive.mount(<span class="st">'/content/drive'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Once mounted, your Drive files are available under <code>/content/drive/MyDrive/</code>. For example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'/content/drive/MyDrive/data.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This approach is essential for storing training data, saving model checkpoints, or writing outputs that need to persist after the notebook shuts down. For larger datasets, connecting to cloud storage services like Google Cloud Storage (GCS) or AWS S3 is also possible using their Python SDKs.</p>
-</section>
-<section id="best-practices-and-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="best-practices-and-limitations">Best practices and limitations</h2>
-<p>While Google Colab is one of the easiest ways to experiment with machine learning, it has several limitations to consider:</p>
+<p>Many researchers are exploring retrieval-augmented generation (RAG) to build document-grounded, trustworthy AI tools, but it is often unclear how design choices around models, infrastructure, and deployment play out in practice. In this session, we present lessons learned from replicating the winning RAG system from the WattBot 2025 challenge. This challenge focused on producing citation-backed energy and sustainability estimates for AI workloads from a fixed corpus of 30+ academic papers, or explicitly abstaining when evidence was missing. After a short overview of the winning approach, presenters discuss how this system was implemented in practice, including a cloud deployment using AWS Bedrock and local, open-source efforts (e.g., Hugging Face models on GB10 or PowerEdge 7725). We share lessons learned around performance, cost, latency, and operational tradeoffs, along with a demo of a Streamlit-based interface designed for longer-term hosting—aimed at making RAG tools accessible to stakeholders.</p>
+<section id="deploying-rag-in-bedrock-vs.-local-nils-matteson-blaise-enuh" class="level4">
+<h4 class="anchored" data-anchor-id="deploying-rag-in-bedrock-vs.-local-nils-matteson-blaise-enuh">Deploying RAG in Bedrock vs.&nbsp;Local — Nils Matteson &amp; Blaise Enuh</h4>
+<p>Nils Matteson (CS/DS Undergraduate, UW-Madison) and Blaise Enuh (Research Associate, Great Lakes Bioenergy Research Center, UW-Madison) walk through both a cloud-based deployment using AWS Bedrock and a local, open-source alternative using Hugging Face models on NVIDIA GB10 and Dell PowerEdge 7725 hardware. They compare performance, cost, latency, and operational tradeoffs between the two approaches.</p>
 <ul>
-<li>Session timeouts cannot be disabled and will interrupt long-running jobs.</li>
-<li>GPU availability is shared and unpredictable in the free tier.</li>
-<li>Persistent storage requires integrating with Google Drive or another external service.</li>
-<li>Environment customization is limited compared to running Jupyter on your own server or cloud instance.</li>
+<li><strong>Nils’s website</strong>: <a href="https://nilsmatteson.com/">nilsmatteson.com</a></li>
 </ul>
-<p>Because of these constraints, Colab is best suited for:</p>
-<ul>
-<li>Rapid prototyping of notebooks and model experiments<br>
-</li>
-<li>Teaching and workshops<br>
-</li>
-<li>Exploratory data analysis and visualization<br>
-</li>
-<li>Small to medium-scale deep learning tasks</li>
-</ul>
-<p>For more control, longer runtimes, or production workflows, platforms like AWS SageMaker, Google Vertex AI or campus HPC systems (e.g., CHTC) are better suited.</p>
 </section>
-<section id="questions" class="level2">
-<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
-<p>If you have any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
+<section id="wattbot-challenge-overview-streamlit-demo-chris-endemann" class="level4">
+<h4 class="anchored" data-anchor-id="wattbot-challenge-overview-streamlit-demo-chris-endemann">WattBot Challenge Overview &amp; Streamlit Demo — Chris Endemann</h4>
+<p>Chris Endemann (Research Cloud Consultant, DoIT, UW-Madison) provides a brief overview of the winning WattBot 2025 approach and demos a Streamlit-based interface designed for longer-term hosting.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/WYSzI3WZmKo" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="links" class="level3">
+<h3 class="anchored" data-anchor-id="links">Links</h3>
+<ul>
+<li><strong>GitHub</strong>: <a href="https://github.com/matteso1/KohakuRAG">KohakuRAG</a></li>
+<li><strong>Kaggle challenge</strong>: <a href="https://www.kaggle.com/competitions/WattBot2025/overview">WattBot 2025</a></li>
+<li><strong>Winning solution</strong>: <a href="https://github.com/KohakuBlueleaf/KohakuRAG">KohakuBlueleaf/KohakuRAG</a></li>
+<li><a href="https://ml-marathon.wisc.edu/">Machine Learning Marathon</a>: Learn about the annual Machine Learning Marathon (3-month AI/ML hackathon) hosted by ML+X each fall.</li>
+</ul>
+</section>
 </section>
 <section id="see-also" class="level2">
 <h2 class="anchored" data-anchor-id="see-also">See also</h2>
 <ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html"><strong>Compute</strong>: BadgerCompute</a> – UW–Madison’s lightweight, NetID-authenticated Jupyter service for short interactive sessions and classroom use. Includes a 4-hour runtime limit (which may sometimes beat the free version of Colab).</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Compute</strong>: Intro to AWS SageMaker for Predictive ML/AI</a>. Learn how to launch and scale machine learning workflows in the cloud using AWS SageMaker.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-09-09.html"><strong>Talk</strong>: AI’s Environmental Footprint: Insights and Actions</a>: The previous ML+X forum where WattBot was first introduced, covering AI sustainability measurement and the RAG-based challenge design.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: Exploring Fact-Based QA with RAG: Romeo and Juliet</a>: Learn how to build an end-to-end RAG pipeline from scratch using sentence-transformers and Hugging Face models.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Workshop</strong>: Intro to AWS SageMaker for Predictive ML/AI</a>: Hands-on workshop covering AWS SageMaker and Bedrock for cloud-based ML/AI workflows, including RAG deployment.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>Resource</strong>: UW Generative AI Services &amp; Policies</a>: Overview of vetted GenAI tools at UW-Madison, including AWS Bedrock access.</li>
 </ul>
 
 
@@ -898,4 +800,4 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Compute/GoogleColab.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/Forums/mlx_2026-02-17.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
