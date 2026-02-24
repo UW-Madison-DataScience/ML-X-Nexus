@@ -342,6 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#templates" id="toc-templates" class="nav-link" data-scroll-target="#templates">Resource templates</a></li>
   <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure">Where to place your file</a></li>
   <li><a href="#previewing-locally-optional" id="toc-previewing-locally-optional" class="nav-link" data-scroll-target="#previewing-locally-optional">Previewing locally (optional)</a></li>
+  <li><a href="#notebooks" id="toc-notebooks" class="nav-link" data-scroll-target="#notebooks">Contributing a Jupyter notebook</a></li>
   </ul></li>
   <li><a href="#how-to-improve-an-existing-post" id="toc-how-to-improve-an-existing-post" class="nav-link" data-scroll-target="#how-to-improve-an-existing-post">How to improve an existing post</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
@@ -495,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="templates" class="level3">
 <h3 class="anchored" data-anchor-id="templates">Resource templates</h3>
 <p>Start with one of these and follow the inline comments:</p>
-<p><strong>Learn:</strong> <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-blog.qmd">Blog</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-book.qmd">Book</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-video.qmd">Video</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-workshop.qmd">Workshop</a></p>
+<p><strong>Learn:</strong> <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-blog.qmd">Blog</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-book.qmd">Book</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-notebook.qmd">Notebook</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-video.qmd">Video</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-workshop.qmd">Workshop</a></p>
 <p><strong>Applications:</strong> <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_application-blog.qmd">Blog</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_application-video.qmd">Video</a></p>
 <p><strong>Toolbox:</strong> <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_toolbox-data.qmd">Data</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_toolbox-model.qmd">Model</a> · <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_toolbox-library.qmd">Library</a></p>
 </section>
@@ -515,6 +516,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If you have <a href="https://quarto.org/docs/get-started/">Quarto</a> installed, you can preview your post before submitting:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> preview <span class="op">&lt;</span>your_file.qmd<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Don’t spend too much time perfecting things locally — you can always iterate after the PR is open.</p>
+</section>
+<section id="notebooks" class="level3">
+<h3 class="anchored" data-anchor-id="notebooks">Contributing a Jupyter notebook</h3>
+<p>If you’re sharing a code-along notebook (e.g., a tutorial, demo, or walkthrough), the workflow is slightly different from other resource types. Nexus stores notebooks as <code>.qmd</code> (Quarto markdown) files, and a GitHub Action automatically generates the <code>.ipynb</code> after your PR is merged.</p>
+<p><strong>The workflow:</strong></p>
+<ol type="1">
+<li><strong>Develop in a notebook</strong> — write your content in Jupyter (<code>.ipynb</code>) as you normally would.</li>
+<li><strong>Convert to <code>.qmd</code></strong> — when you’re ready to submit, run: <code>bash     quarto convert your_notebook.ipynb</code> This produces a <code>.qmd</code> file with your code cells and markdown preserved.</li>
+<li><strong>Add YAML front matter</strong> — open the <code>.qmd</code> and add the required metadata header at the top. Use the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-notebook.qmd">notebook template</a> as a reference. Key fields include <code>jupyter: python3</code> and <code>execute: eval: false</code> (prevents code from running during the site build).</li>
+<li><strong>Submit a PR with the <code>.qmd</code> file</strong> — place it in <code>Learn/Notebooks/</code>. Do <strong>not</strong> include the <code>.ipynb</code> in your PR; the GitHub Action will generate it automatically after merge.</li>
+</ol>
+<p>For a working example, see the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html">RAG: Romeo and Juliet notebook</a> and its <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.qmd">source <code>.qmd</code></a>.</p>
 </section>
 </section>
 <section id="how-to-improve-an-existing-post" class="level2">
