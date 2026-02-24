@@ -106,7 +106,7 @@ A Nexus developer will review your PR. They may request changes — just push ad
 Start with one of these and follow the inline comments:
 
 **Learn:**
-[Blog](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-blog.qmd) · [Book](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-book.qmd) · [Video](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-video.qmd) · [Workshop](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-workshop.qmd)
+[Blog](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-blog.qmd) · [Book](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-book.qmd) · [Notebook](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-notebook.qmd) · [Video](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-video.qmd) · [Workshop](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-workshop.qmd)
 
 **Applications:**
 [Blog](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_application-blog.qmd) · [Video](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_application-video.qmd)
@@ -138,6 +138,23 @@ quarto preview <your_file.qmd>
 ```
 
 Don't spend too much time perfecting things locally — you can always iterate after the PR is open.
+
+### Contributing a Jupyter notebook {#notebooks}
+
+If you're sharing a code-along notebook (e.g., a tutorial, demo, or walkthrough), the workflow is slightly different from other resource types. Nexus stores notebooks as `.qmd` (Quarto markdown) files, and a GitHub Action automatically generates the `.ipynb` after your PR is merged.
+
+**The workflow:**
+
+1. **Develop in a notebook** — write your content in Jupyter (`.ipynb`) as you normally would.
+2. **Convert to `.qmd`** — when you're ready to submit, run:
+    ```bash
+    quarto convert your_notebook.ipynb
+    ```
+    This produces a `.qmd` file with your code cells and markdown preserved.
+3. **Add YAML front matter** — open the `.qmd` and add the required metadata header at the top. Use the [notebook template](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Contributor-templates/template_learn-notebook.qmd) as a reference. Key fields include `jupyter: python3` and `execute: eval: false` (prevents code from running during the site build).
+4. **Submit a PR with the `.qmd` file** — place it in `Learn/Notebooks/`. Do **not** include the `.ipynb` in your PR; the GitHub Action will generate it automatically after merge.
+
+For a working example, see the [RAG: Romeo and Juliet notebook](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html) and its [source `.qmd`](https://github.com/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.qmd).
 
 ## How to improve an existing post
 
