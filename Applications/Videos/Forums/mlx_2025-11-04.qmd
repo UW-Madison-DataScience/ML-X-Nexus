@@ -1,0 +1,40 @@
+---
+title: "Efficient KV-Cache Compression for Long-Context and Reasoning Models"
+date: 2025-11-04
+author:
+  - "Zefan Cai"
+image: "https://img.youtube.com/vi/hyEJi5N4p3Q/maxresdefault.jpg"
+
+language:
+  title-block-author-single: "Presenter"
+  title-block-author-plural: "Presenters"
+  title-block-published: "Date"
+
+categories:
+  - Videos
+  - ML+X
+  - UW-Madison
+  - LLM
+  - Deep learning
+  - NLP
+  - GenAI
+  - Foundation models
+  - GPU
+  - Benchmarking
+---
+
+## About this resource
+Large language models (LLMs) increasingly handle very long input contexts, and their inference relies on storing key-value (KV) caches for past tokens to avoid redundant computation. However, as context length grows, the memory footprint of full KV caches becomes a major bottleneck. In this talk, Zefan Cai (CS PhD Student, UW-Madison, advised by Prof. Junjie Hu) presents two complementary approaches to compressing the KV cache, highlighting the underlying principles, trade-offs, and practical benefits for inference efficiency.
+
+#### Pyramid KV
+Pyramid KV is motivated by the observation that in transformer-based LLMs, attention flows from broad scopes in lower layers to narrow, focused contexts in higher layers ("pyramidal information funneling"). By allocating more cache budget in lower layers and gradually reducing it in higher layers, Pyramid KV achieves near-full performance while retaining only ~12% of the full KV cache on long-context benchmarks.
+
+#### R-KV: Redundancy-aware KV Cache Compression
+Building upon Pyramid KV, R-KV targets reasoning-heavy tasks (e.g., chain-of-thought) where long outputs produce very large KV caches. R-KV identifies and prunes redundant tokens in the cache, enabling roughly a 90% memory saving and ~6.6x throughput improvement, while preserving or even slightly improving accuracy compared to the full cache.
+
+{{< video https://www.youtube.com/watch?v=hyEJi5N4p3Q >}}
+
+## See also
+- [**Talk**: Exploring Generative AI: An Introduction to Large Language Models and Diffusion Models](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.html): An introductory overview of LLMs covering next-word prediction, GPT models, and parameter-efficient fine-tuning with LoRA.
+- [**Talk**: AI's Environmental Footprint: Insights and Actions](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-09-09.html): Benchmarking the energy, water, and carbon costs of LLM inference—motivation for why KV-cache compression and inference efficiency matter.
+- [**Book**: Understanding Deep Learning](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Books/Intro-Deeplearning_SimonJDPrince.html): A modern overview of deep learning fundamentals including transformer architecture, with interactive Colab notebooks.
