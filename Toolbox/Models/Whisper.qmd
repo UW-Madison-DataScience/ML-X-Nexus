@@ -1,0 +1,63 @@
+---
+title: "Whisper: Open-Source Speech Recognition"
+author:
+  - name: ML+X Community
+
+date: 2026-02-24
+date-format: long
+image: "../../../images/vincent-van-zalinge-mDohQISBnCk-unsplash.jpg"
+
+categories:
+  - Models
+  - Deep learning
+  - NLP
+  - Transformers
+  - Audio data
+---
+## About this resource
+
+[Whisper](https://github.com/openai/whisper) is an open-source automatic speech recognition (ASR) model developed by OpenAI. Introduced in September 2022, Whisper was trained on 680,000 hours of multilingual and multitask supervised data from the web, making it remarkably robust across languages, accents, and audio conditions. The model can perform speech recognition, speech translation, and language identification.
+
+#### Key features
+- **Architecture**: Encoder-decoder transformer that takes log-Mel spectrograms as input and generates text tokens autoregressively.
+- **Multilingual**: Supports transcription in 99 languages and translation to English from any of those languages.
+- **Robustness**: Trained on diverse, noisy real-world audio, giving it strong performance without fine-tuning across a wide range of recording conditions.
+- **Multiple sizes**: Available in tiny, base, small, medium, and large variants (39M to 1.55B parameters), allowing users to trade off speed and accuracy.
+
+## Timeline context
+Whisper represents a significant step in open-source speech recognition:
+
+- **[DeepSpeech (2014)](https://arxiv.org/abs/1412.5567)**: Baidu's end-to-end speech recognition model using recurrent neural networks.
+- **[Wav2Vec 2.0 (2020)](https://arxiv.org/abs/2006.11477)**: Meta's self-supervised speech representation model, reducing the need for labeled data.
+- **[Whisper (2022)](https://arxiv.org/abs/2212.04356)**: OpenAI's large-scale supervised model achieving near-human-level accuracy through web-scale training data.
+- **[Whisper v3 (2023)](https://github.com/openai/whisper)**: Improved large model with better multilingual performance.
+
+## Whisper variants
+- **Whisper tiny/base/small** (39M–244M params): Fast inference, suitable for real-time applications or resource-constrained environments.
+- **Whisper medium** (769M params): Good balance of accuracy and speed for most research uses.
+- **Whisper large-v3** (1.55B params): Highest accuracy, best for offline transcription of challenging audio.
+- **[Distil-Whisper](https://huggingface.co/distil-whisper)**: Distilled versions that are 6x faster while retaining most of the accuracy.
+
+## Model playground
+#### Tutorials and getting started
+- **[GitHub repository](https://github.com/openai/whisper)**: Installation instructions and command-line usage.
+- **[Hugging Face model page](https://huggingface.co/openai/whisper-large-v3)**: Use Whisper through the Hugging Face Transformers library with just a few lines of code.
+- **[Google Colab demo](https://colab.research.google.com/github/openai/whisper/blob/master/notebooks/LibreChat.ipynb)**: Try Whisper in the browser without any local setup.
+
+#### High-level tips for effective use
+- **Model selection**: Start with `whisper-small` or `whisper-medium` for most tasks; use `large-v3` only when accuracy on difficult audio is critical.
+- **Faster inference**: Use [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (CTranslate2-based) for up to 4x speed improvements with comparable accuracy.
+- **Long audio**: For audio files longer than 30 seconds, use the chunked pipeline in Hugging Face Transformers or Whisper's built-in chunking.
+- **Fine-tuning**: Fine-tune on domain-specific audio (e.g., medical dictation, specific accents) using Hugging Face's training utilities for improved accuracy on specialized content.
+
+#### Related datasets & challenges
+- [**Common Voice (Mozilla)**](https://commonvoice.mozilla.org/): Large multilingual speech dataset, useful for evaluating and fine-tuning ASR models.
+- [**LibriSpeech**](https://www.openslr.org/12): Standard benchmark dataset for English speech recognition.
+
+## Questions?
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## See also
+- [**Library**: Hugging Face Transformers](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace-Transformers.html): The recommended way to use Whisper in Python projects.
+- [**Model**: Llama (Meta)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Llama.html): Another prominent open-weight model, focused on text generation.
+- [**Library**: torchaudio](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/torchaudio.html): PyTorch library for audio processing, useful for preparing audio data for Whisper.
