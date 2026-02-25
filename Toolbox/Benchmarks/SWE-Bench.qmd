@@ -1,0 +1,88 @@
+---
+title: "SWE-bench: Evaluating AI on Real-World Software Engineering"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2025-04-24
+date-format: long
+image: "../../../images/SWE-Bench.png"
+
+categories:
+  - Benchmarks
+  - Software engineering
+  - Code generation
+  - LLMs
+  - GenAI
+  - Agents
+---
+## About this resource
+
+[SWE-bench](https://www.swebench.com/) is a benchmark designed to evaluate whether AI models can solve real-world software engineering tasks. Rather than testing code generation in isolation, SWE-bench presents models with actual GitHub issues from popular open-source Python repositories and asks them to produce a patch that resolves the issue and passes the associated test suite.
+
+The benchmark was introduced in the 2024 paper [*SWE-bench: Can Language Models Resolve Real-World GitHub Issues?*](https://arxiv.org/abs/2310.06770) by Carlos E. Jimenez et al. at Princeton University.
+
+## How it works
+
+Each SWE-bench task consists of:
+
+- **A GitHub issue description** — the natural-language problem statement as written by the original issue author.
+- **A codebase snapshot** — the state of the repository at the time the issue was filed.
+- **A gold patch and test suite** — the model's output is evaluated by checking whether it passes the same tests used to validate the human-authored fix.
+
+Models are scored on **% resolved** — the fraction of issues where the generated patch passes the full test suite. This makes SWE-bench more rigorous than benchmarks that only check if code compiles or passes a single test case.
+
+## SWE-bench Verified
+
+The original SWE-bench dataset contains 2,294 tasks, but not all of them are well-specified or reliably solvable. To address this, [OpenAI collaborated with the SWE-bench team](https://openai.com/index/introducing-swe-bench-verified/) to create **SWE-bench Verified** — a human-filtered subset of 500 tasks where annotators confirmed that:
+
+- The issue description contains enough information to identify the problem.
+- The test suite reliably validates correct solutions.
+- The task is not ambiguous or under-specified.
+
+SWE-bench Verified is now the standard subset used for most leaderboard comparisons.
+
+## Current state of the leaderboard (early 2025)
+
+On the [Bash Only leaderboard](https://www.swebench.com/#test) — which evaluates all models on SWE-bench Verified using the same shell-based interface — the top models are resolving around 74% of issues:
+
+| Model | % Resolved (Verified) |
+|---|---|
+| Claude 4.5 Opus (medium) | 74.40% |
+| Gemini 3 Pro Preview | 74.20% |
+| Claude 4.5 Sonnet | 70.60% |
+| Claude 4 Opus (May 2025) | 67.60% |
+| GPT-5 (medium reasoning) | 65.00% |
+
+These numbers have been climbing quickly — for context, the best scores were around 50% in early 2024.
+
+## Interpreting the results
+
+It's tempting to read "74% resolved" as meaning AI can fix 74% of real-world software bugs, but several important caveats apply:
+
+- **Curated subset**: SWE-bench Verified deliberately filters out ambiguous, under-documented, or hard-to-test issues. Real-world GitHub issues are messier.
+- **Issue specification quality**: In practice, much of the difficulty in software engineering lies in understanding vague requirements, reproducing bugs, and navigating large unfamiliar codebases. SWE-bench tasks are relatively well-scoped.
+- **Single-repo Python focus**: The benchmark currently draws from a set of well-maintained Python libraries (e.g., Django, scikit-learn, sympy). Generalization to other languages, less-documented codebases, or proprietary software is an open question.
+- **No deployment or integration testing**: SWE-bench tests whether a patch passes unit/integration tests, not whether it would be accepted in a real code review or function correctly at scale.
+
+### The self-driving car analogy
+
+The trajectory of SWE-bench scores is reminiscent of autonomous driving predictions circa 2015–2017, when rapid progress on structured benchmarks led many companies to predict full autonomy was just a year or two away. A decade later, the long tail of edge cases turned out to be the hardest part.
+
+Similarly, while the pace of improvement on SWE-bench is genuinely impressive, the remaining 25–30% of unresolved issues — and the much larger space of tasks not captured by the benchmark — may prove disproportionately difficult. Benchmarks measure a specific, well-defined slice of capability, and the gap between benchmark performance and reliable, general-purpose software engineering likely remains significant.
+
+## Why it matters
+
+Despite these caveats, SWE-bench provides a useful signal for tracking progress in AI-assisted software engineering. It tests end-to-end problem-solving (reading an issue, understanding a codebase, writing a correct fix) rather than narrow code completion, making it one of the more meaningful benchmarks for evaluating practical coding ability.
+
+For researchers and practitioners in ML, SWE-bench offers:
+
+- **A rough barometer** for how quickly AI coding capabilities are improving.
+- **A reality check** on what "AI can code" actually means today — useful for calibrating expectations when adopting AI tools.
+- **An evaluation framework** that can be adapted for domain-specific benchmarks (e.g., testing AI on bioinformatics pipelines or data analysis workflows).
+
+## Questions?
+If you have any lingering questions about this resource, feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## See also
+- [**GenAI**: GenAI at UW-Madison](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Overview of generative AI tools and resources available at UW-Madison.
