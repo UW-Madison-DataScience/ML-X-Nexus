@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2026-02-27">
 
-<title>GenAI – Nexus: Crowdsourced ML Resources</title>
+<title>OpenScholar: Scientific Literature Synthesis with Retrieval-Augmented LMs – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,10 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Toolbox/Libraries/index.html" rel="next">
-<link href="../../Toolbox/Data/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -71,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +82,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/GenAI/index.html">GenAI</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">OpenScholar: Scientific Literature Synthesis with Retrieval-Augmented LMs</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +92,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -259,7 +199,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GenAI</span></a>
   </div>
 </li>
@@ -353,20 +293,51 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Rm91bmRhdGlvbiUyMG1vZGVscw==">Foundation models <span class="quarto-category-count">(3)</span></div><div class="category" data-category="R2VtaW5p">Gemini <span class="quarto-category-count">(2)</span></div><div class="category" data-category="R2VuQUk=">GenAI <span class="quarto-category-count">(3)</span></div><div class="category" data-category="SHVnZ2luZyUyMEZhY2U=">Hugging Face <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(3)</span></div><div class="category" data-category="TWljcm9zb2Z0JTIwQ29waWxvdA==">Microsoft Copilot <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UkFH">RAG <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmV0cmlldmFs">Retrieval <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3VtbWFyaXphdGlvbg==">Summarization <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGV4dCUyMGRhdGE=">Text data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VVctTWFkaXNvbg==">UW-Madison <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See also</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/GenAI/OpenScholar.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/GenAI/index.html">GenAI</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">GenAI</h1>
-</div>
+<h1 class="title">OpenScholar: Scientific Literature Synthesis with Retrieval-Augmented LMs</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">GenAI</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">RAG</div>
+    <div class="quarto-category">Retrieval</div>
+    <div class="quarto-category">Foundation models</div>
+    <div class="quarto-category">Text data</div>
+    <div class="quarto-category">Hugging Face</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 27, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -376,143 +347,131 @@ window.Quarto = {
 </header>
 
 
-<p>Explore genAI tools that you can leverage for your next AI/ML project.</p>
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p><a href="https://openscholar.allen.ai/">OpenScholar</a> is an open-source, retrieval-augmented language model (LM) designed to help researchers navigate and synthesize scientific literature. Developed by the Allen Institute for AI (AI2) and the University of Washington, OpenScholar answers scientific queries by searching a datastore of 45 million open-access papers, retrieving relevant passages, and generating citation-backed responses. The work was <a href="https://www.nature.com/articles/s41586-025-10072-4">published in <em>Nature</em></a> in February 2026.</p>
+<p>Unlike general-purpose LLMs that frequently hallucinate citations (GPT-4o hallucinates citations 78-90% of the time), OpenScholar achieves citation accuracy on par with human experts. In human evaluations conducted by 16 PhD-level experts, OpenScholar’s responses were preferred over expert-written ones 51% of the time for the 8B variant and 70% of the time for the GPT-4o-augmented variant.</p>
+<section id="key-features" class="level4">
+<h4 class="anchored" data-anchor-id="key-features">Key features</h4>
+<ul>
+<li><strong>Retrieval-augmented generation over 45M papers</strong>: OpenScholar searches a datastore of 45 million open-access papers (~236 million passage embeddings) drawn from <a href="https://www.semanticscholar.org/">Semantic Scholar</a>, ensuring responses are grounded in real, retrievable literature rather than model memory.</li>
+<li><strong>Iterative self-feedback inference</strong>: At inference time, OpenScholar uses a self-feedback loop to iteratively refine its outputs — each iteration retrieves additional papers, improving factuality, coverage, and citation accuracy through natural language feedback.</li>
+<li><strong>Highly accurate citations</strong>: While GPT-4o hallucinates the vast majority of its cited papers, OpenScholar’s retrieval-first design ensures all citations correspond to real, retrievable sources.</li>
+<li><strong>Fully open-source</strong>: All code, model checkpoints, retriever/reranker weights, retrieval index, training data, and evaluation benchmarks are publicly available — the first complete open release of a scientific assistant LM pipeline.</li>
+</ul>
+</section>
+<section id="model-variants-and-sizes" class="level4">
+<h4 class="anchored" data-anchor-id="model-variants-and-sizes">Model variants and sizes</h4>
+<p>OpenScholar can be used with different underlying language models:</p>
+<ul>
+<li><strong>OpenScholar-8B (OS-8B)</strong>: A fine-tuned version of <a href="https://huggingface.co/meta-llama/Llama-3.1-8B">Llama 3.1 8B</a>, optimized for scientific literature synthesis. This is the flagship open-weight model. Available on <a href="https://huggingface.co/OpenSciLM/Llama-3.1_OpenScholar-8B">Hugging Face</a>. Despite its compact size, it outperforms GPT-4o by 6.1% in correctness on multi-paper synthesis tasks, and is <strong>100x more cost-efficient</strong> than comparable systems like PaperQA2.</li>
+<li><strong>OpenScholar-GPT4o (OS-GPT4o)</strong>: The OpenScholar pipeline (datastore, retriever, reranker, and self-feedback loop) applied on top of GPT-4o. This variant improves GPT-4o’s correctness by 12% and raises citation F1 from 0.1 to 39.5, demonstrating how the pipeline enhances any off-the-shelf LLM.</li>
+<li><strong>OpenScholar-70B (OS-70B)</strong>: The pipeline applied using Llama 3.1 70B as the underlying generator, offering a middle ground between the compact 8B model and proprietary API-based options.</li>
+</ul>
+</section>
+<section id="how-the-8b-model-was-trained" class="level4">
+<h4 class="anchored" data-anchor-id="how-the-8b-model-was-trained">How the 8B model was trained</h4>
+<p>The OpenScholar-8B model was trained using the same self-feedback pipeline used at inference time, but repurposed for synthetic data generation:</p>
+<ol type="1">
+<li><strong>Curated abstracts</strong>: Starting from 1 million curated scientific paper abstracts from the datastore.</li>
+<li><strong>Synthetic data generation</strong>: The self-feedback loop was used to generate 130,000 high-quality training instances, where the model iteratively refined its own outputs with retrieval feedback.</li>
+<li><strong>Instruction tuning</strong>: The final 13K instruction-tuning dataset (OS_Train_Data) was used to fine-tune Llama 3.1 8B using a modified version of <a href="https://github.com/pytorch/torchtune">torchtune</a> on 8x A100 GPUs.</li>
+</ol>
+<p>This approach allows a compact 8B model to achieve performance competitive with much larger proprietary models by distilling the quality of the iterative self-feedback pipeline into the model weights.</p>
+</section>
+<section id="evaluation-scholarqabench" class="level4">
+<h4 class="anchored" data-anchor-id="evaluation-scholarqabench">Evaluation: ScholarQABench</h4>
+<p>To rigorously evaluate scientific literature synthesis, the authors created <a href="https://github.com/AkariAsai/ScholarQABench">ScholarQABench</a>, the first large-scale multi-domain benchmark for this task:</p>
+<ul>
+<li><strong>2,967 expert-written queries</strong> and <strong>208 long-form answers</strong> across four domains: computer science, physics, neuroscience, and biomedicine.</li>
+<li>Evaluation metrics include <strong>correctness</strong>, <strong>citation accuracy</strong> (are cited papers real and relevant?), <strong>coverage</strong> (does the response address all aspects of the query?), and <strong>writing quality</strong>.</li>
+<li>Human evaluations were conducted by <strong>16 experts with PhDs</strong> across 108 questions, providing gold-standard comparisons between model and expert-written responses.</li>
+</ul>
+<p><strong>Key results on ScholarQABench:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 30%">
+<col style="width: 23%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Correctness vs.&nbsp;GPT-4o</th>
+<th>Citation quality</th>
+<th>Human preference vs.&nbsp;expert</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GPT-4o (no retrieval)</td>
+<td>baseline</td>
+<td>Hallucinates 78-90% of citations</td>
+<td>Preferred 32% of the time</td>
+</tr>
+<tr class="even">
+<td>OpenScholar-8B</td>
+<td>+6.1%</td>
+<td>On par with human experts</td>
+<td>Preferred 51% of the time</td>
+</tr>
+<tr class="odd">
+<td>OpenScholar-GPT4o</td>
+<td>+12%</td>
+<td>Citation F1: 0.1 → 39.5</td>
+<td>Preferred 70% of the time</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="genai-use-at-uw-madison" class="level4">
+<h4 class="anchored" data-anchor-id="genai-use-at-uw-madison">GenAI use at UW-Madison</h4>
 <p>UW–Madison faculty, staff, students, and affiliates are required to follow <a href="https://it.wisc.edu/generative-ai-uw-madison-use-policies/">campus policies relevant to AI use</a>. Uses of <a href="https://it.wisc.edu/statement-on-use-of-generative-ai/">generative AI</a> that are explicitly prohibited by policy include, but are not limited to, the following:</p>
 <ul>
 <li>Entering any sensitive, restricted or otherwise protected institutional data – including hard-coded passwords – into any generative AI tool or service;</li>
 <li>Using AI-generated code for institutional IT systems or services without review by a human to verify the absence of malicious elements;</li>
 <li>Using generative AI to violate laws; institutional policies, rules or guidelines; or agreements or contracts.</li>
 </ul>
+</section>
+<section id="potential-use-cases" class="level4">
+<h4 class="anchored" data-anchor-id="potential-use-cases">Potential use cases</h4>
+<ul>
+<li><strong>Literature reviews</strong>: Rapidly synthesize the state of research on a topic with properly cited sources, saving hours of manual search and reading. Particularly useful for getting up to speed in unfamiliar fields.</li>
+<li><strong>Research question exploration</strong>: Ask nuanced scientific questions and receive grounded answers that point you to the most relevant papers, helping identify gaps and opportunities in the literature.</li>
+<li><strong>Grant writing and proposals</strong>: Quickly gather and cite supporting evidence for research proposals, ensuring claims are backed by real, verifiable literature.</li>
+<li><strong>Cross-disciplinary research</strong>: Explore connections between fields (e.g., neuroscience and computer science) by querying across OpenScholar’s multi-domain datastore of 45 million papers.</li>
+<li><strong>Teaching and mentoring</strong>: Help students and early-career researchers learn to navigate scientific literature effectively, with a tool that models good citation practices.</li>
+</ul>
+</section>
+<section id="links" class="level4">
+<h4 class="anchored" data-anchor-id="links">Links</h4>
+<ul>
+<li><strong>Paper</strong>: <a href="https://arxiv.org/abs/2411.14199">arXiv:2411.14199</a> | <a href="https://www.nature.com/articles/s41586-025-10072-4">Nature</a></li>
+<li><strong>Demo</strong>: <a href="https://openscholar.allen.ai/">openscholar.allen.ai</a></li>
+<li><strong>Hugging Face model (8B)</strong>: <a href="https://huggingface.co/OpenSciLM/Llama-3.1_OpenScholar-8B">OpenSciLM/Llama-3.1_OpenScholar-8B</a></li>
+<li><strong>Hugging Face retriever</strong>: <a href="https://huggingface.co/OpenSciLM/OpenScholar_Retriever">OpenSciLM/OpenScholar_Retriever</a></li>
+<li><strong>GitHub</strong>: <a href="https://github.com/AkariAsai/OpenScholar">AkariAsai/OpenScholar</a></li>
+<li><strong>Project page</strong>: <a href="https://openscilm.allen.ai/">openscilm.allen.ai</a></li>
+</ul>
+</section>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>If you any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
+</section>
+<section id="see-also" class="level2">
+<h2 class="anchored" data-anchor-id="see-also">See also</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/NotebookLM.html"><strong>GenAI</strong>: NotebookLM</a>: Another GenAI summarization tool, useful for quickly digesting individual papers and generating audio summaries.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: RAG with Romeo and Juliet</a>: A hands-on tutorial on retrieval-augmented generation, the technique that underpins OpenScholar.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html"><strong>Forum</strong>: Deploying RAG in Bedrock vs.&nbsp;Local</a>: A case study comparing cloud-based and local RAG deployment strategies.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="R2VuQUklMkNOTFAlMkNMTE0lMkNSQUclMkNSZXRyaWV2YWwlMkNGb3VuZGF0aW9uJTIwbW9kZWxzJTJDVGV4dCUyMGRhdGElMkNIdWdnaW5nJTIwRmFjZQ==" data-listing-date-sort="1772150400000" data-listing-file-modified-sort="1772230718515" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="860">
-<a href="../../Toolbox/GenAI/OpenScholar.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/OpenScholar.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-OpenScholar: Scientific Literature Synthesis with Retrieval-Augmented LMs
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">GenAI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UkFH'); return false;">RAG</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV0cmlldmFs'); return false;">Retrieval</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm91bmRhdGlvbiUyMG1vZGVscw=='); return false;">Foundation models</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGV4dCUyMGRhdGE='); return false;">Text data</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SHVnZ2luZyUyMEZhY2U='); return false;">Hugging Face</div>
-
-</div>
-<div class="card-text listing-description delink">
-OpenScholar is an open-source, retrieval-augmented language model (LM) designed to help researchers navigate and synthesize scientific literature. Developed by the Allen…<em></em>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2026-02-27
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="R2VuQUklMkNNaWNyb3NvZnQlMjBDb3BpbG90JTJDR2VtaW5pJTJDVVctTWFkaXNvbiUyQ0xMTSUyQ0ZvdW5kYXRpb24lMjBtb2RlbHM=" data-listing-date-sort="1736208000000" data-listing-file-modified-sort="1772230718515" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="370">
-<a href="../../Toolbox/GenAI/GenAI-at-UW-Madison.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/UW-genAI-services.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-UW Generative AI Services &amp; Policies
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">GenAI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWljcm9zb2Z0JTIwQ29waWxvdA=='); return false;">Microsoft Copilot</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VtaW5p'); return false;">Gemini</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VVctTWFkaXNvbg=='); return false;">UW-Madison</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm91bmRhdGlvbiUyMG1vZGVscw=='); return false;">Foundation models</div>
-
-</div>
-<div class="card-text listing-description delink">
-The University of Wisconsin–‍Madison is committed to responsibly harnessing the power of generative artificial intelligence to enhance teaching, learning, research and…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2025-01-07
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="R2VuQUklMkNOTFAlMkNTdW1tYXJpemF0aW9uJTJDR2VtaW5pJTJDTExNJTJDRm91bmRhdGlvbiUyMG1vZGVscw==" data-listing-date-sort="1733702400000" data-listing-file-modified-sort="1772230718515" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="266">
-<a href="../../Toolbox/GenAI/NotebookLM.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/NotebookLM.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-NotebookLM: A GenAI Summarization Tool
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">GenAI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U3VtbWFyaXphdGlvbg=='); return false;">Summarization</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VtaW5p'); return false;">Gemini</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm91bmRhdGlvbiUyMG1vZGVscw=='); return false;">Foundation models</div>
-
-</div>
-<div class="card-text listing-description delink">
-NotebookLM is a generative AI tool designed to assist with understanding dense, complex texts, including research papers in machine learning and AI. Developed by Google Labs…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-12-09
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -913,21 +872,9 @@ Chris Endemann
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Toolbox/Data/index.html" class="pagination-link" aria-label="Data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Toolbox/Libraries/index.html" class="pagination-link" aria-label="Libraries">
-        <span class="nav-page-text">Libraries</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/GenAI/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/GenAI/OpenScholar.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
