@@ -156,7 +156,7 @@ torch.cuda.empty_cache()
 
 ### BF16 (bfloat16)
 
-BF16 uses 16 bits like FP16, but allocates more bits to the exponent and fewer to the mantissa. This gives it the same range as FP32 but with less decimal precision — a trade-off that works well for training large models.
+BF16 uses 16 bits like FP16, but splits those bits differently. A floating-point number has two main parts: the **exponent** (which controls the *range* — how large or small a number can be) and the **fraction bits** (which control the *precision* — how many decimal places you get). FP16 gives more bits to precision but sacrifices range, which is why it caps out around 65,504 and can't represent very small values. BF16 does the opposite: it keeps the same exponent size as FP32 (8 bits), giving it the same massive range (~1e-38 to ~3e38), at the cost of coarser decimal precision. In practice, this tradeoff works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.
 
 ```{python}
 model_bf16, mem_bf16, params_bf16 = load_and_measure(
