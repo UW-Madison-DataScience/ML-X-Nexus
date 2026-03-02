@@ -376,9 +376,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#whats-happening-under-the-hood" id="toc-whats-happening-under-the-hood" class="nav-link" data-scroll-target="#whats-happening-under-the-hood">What’s happening under the hood</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul></li>
+  <li><a href="#part-5-when-to-quantize-and-how-aggressively" id="toc-part-5-when-to-quantize-and-how-aggressively" class="nav-link" data-scroll-target="#part-5-when-to-quantize-and-how-aggressively">Part 5: When to quantize (and how aggressively)</a>
+  <ul class="collapse">
+  <li><a href="#quantization-is-primarily-an-inference-technique" id="toc-quantization-is-primarily-an-inference-technique" class="nav-link" data-scroll-target="#quantization-is-primarily-an-inference-technique">Quantization is primarily an inference technique</a></li>
+  <li><a href="#good-enough-vs.-the-best-the-quality-speed-tradeoff" id="toc-good-enough-vs.-the-best-the-quality-speed-tradeoff" class="nav-link" data-scroll-target="#good-enough-vs.-the-best-the-quality-speed-tradeoff">“Good enough” vs.&nbsp;“the best”: the quality-speed tradeoff</a></li>
+  <li><a href="#how-low-can-you-go" id="toc-how-low-can-you-go" class="nav-link" data-scroll-target="#how-low-can-you-go">How low can you go?</a></li>
+  <li><a href="#rules-of-thumb" id="toc-rules-of-thumb" class="nav-link" data-scroll-target="#rules-of-thumb">Rules of thumb</a></li>
+  </ul></li>
   <li><a href="#cleanup" id="toc-cleanup" class="nav-link" data-scroll-target="#cleanup">Cleanup</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions</a></li>
-  <li><a href="#related-resources" id="toc-related-resources" class="nav-link" data-scroll-target="#related-resources">Related resources</a></li>
+  <li><a href="#related-resources" id="toc-related-resources" class="nav-link" data-scroll-target="#related-resources">Related resources</a>
+  <ul class="collapse">
+  <li><a href="#key-papers" id="toc-key-papers" class="nav-link" data-scroll-target="#key-papers">Key papers</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/Quantization-and-Precision.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
@@ -430,10 +440,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>When working with large language models, you’ll often encounter terms like “FP32”, “FP16”, “INT8”, and “4-bit quantization.” These describe how a model’s weights are stored in memory — and they have a direct impact on how much GPU memory a model requires, how fast it runs, and whether it fits on your hardware at all.</p>
 <p>This notebook unpacks these concepts step by step:</p>
 <ol type="1">
-<li><strong>Precision</strong>: What floating-point formats (FP32, FP16, BF16) mean and how they affect memory.</li>
-<li><strong>Quantization</strong>: How tools like <code>bitsandbytes</code> reduce precision further (to 8-bit or 4-bit) to shrink memory footprints.</li>
-<li><strong>Parameter counts vs.&nbsp;memory</strong>: Why the number of model parameters stays the same, but memory usage changes.</li>
-<li><strong>A PyTorch gotcha</strong>: Why <code>model.parameters()</code> can report misleading numbers after quantization — and how to correctly count parameters.</li>
+<li>Precision: What floating-point formats (FP32, FP16, BF16) mean and how they affect memory.</li>
+<li>Quantization: How tools like <code>bitsandbytes</code> reduce precision further (to 8-bit or 4-bit) to shrink memory footprints.</li>
+<li>Parameter counts vs.&nbsp;memory: Why the number of model parameters stays the same, but memory usage changes.</li>
+<li>A PyTorch gotcha: Why <code>model.parameters()</code> can report misleading numbers after quantization — and how to correctly count parameters.</li>
+<li>When to quantize: Practical guidance on where quantization helps most, and where it doesn’t.</li>
 </ol>
 <section id="prerequisites" class="level3">
 <h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
@@ -444,10 +455,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="f5f4cde3" class="cell" data-execution_count="1">
+<div id="e11ca581" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="752fea46" class="cell" data-execution_count="2">
+<div id="94d1f6d6" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gc</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -455,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="part-1-what-is-precision" class="level2">
 <h2 class="anchored" data-anchor-id="part-1-what-is-precision">Part 1: What is precision?</h2>
-<p>Every number in a neural network — every weight, bias, and activation — is stored as a sequence of bits. The <strong>precision</strong> (or <strong>data type</strong>) determines how many bits are used per number, which controls both the range and granularity of values that can be represented.</p>
+<p>Every number in a neural network — every weight, bias, and activation — is stored as a sequence of bits. The precision (or data type) determines how many bits are used per number, which controls both the range and granularity of values that can be represented.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 18%">
@@ -522,7 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="4db160bd" class="cell" data-execution_count="3">
+<div id="ca1b92b1" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_gpu_memory_mb():</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return current GPU memory allocated in MB."""</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> torch.cuda.is_available():</span>
@@ -569,7 +580,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="feeaea6f" class="cell" data-execution_count="4">
+<div id="8f3893a4" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model_name <span class="op">=</span> <span class="st">"gpt2"</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>model_fp32, mem_fp32, params_fp32 <span class="op">=</span> load_and_measure(</span>
@@ -582,7 +593,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="60a88ff4" class="cell" data-execution_count="5">
+<div id="b2aee85e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model_fp16, mem_fp16, params_fp16 <span class="op">=</span> load_and_measure(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    model_name, dtype<span class="op">=</span>torch.float16, label<span class="op">=</span><span class="st">"FP16 (16-bit floating point)"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -594,7 +605,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates more bits to the exponent and fewer to the mantissa. This gives it the same range as FP32 but with less decimal precision — a trade-off that works well for training large models.</p>
-<div id="b86b5bb6" class="cell" data-execution_count="6">
+<div id="390ba331" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model_bf16, mem_bf16, params_bf16 <span class="op">=</span> load_and_measure(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    model_name, dtype<span class="op">=</span>torch.bfloat16, label<span class="op">=</span><span class="st">"BF16 (bfloat16)"</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -605,7 +616,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="eb5ec499" class="cell" data-execution_count="7">
+<div id="27ad6e3e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Memory comparison (GPT-2, 124M params):"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  FP32:  </span><span class="sc">{</span>mem_fp32<span class="sc">:,.1f}</span><span class="ss"> MB"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  FP16:  </span><span class="sc">{</span>mem_fp16<span class="sc">:,.1f}</span><span class="ss"> MB"</span>)</span>
@@ -615,16 +626,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  FP16:  </span><span class="sc">{</span>params_fp16<span class="sc">:,}</span><span class="ss">"</span>)</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  BF16:  </span><span class="sc">{</span>params_bf16<span class="sc">:,}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>At this point, the key takeaway should be clear: <strong>reducing precision halves memory, but the parameter count is unchanged.</strong> Every weight is still there — it just takes up less space.</p>
+<p>At this point, the key takeaway should be clear: reducing precision halves memory, but the parameter count is unchanged. Every weight is still there — it just takes up less space.</p>
 </section>
 </section>
 <section id="part-3-quantization-with-bitsandbytes" class="level2">
 <h2 class="anchored" data-anchor-id="part-3-quantization-with-bitsandbytes">Part 3: Quantization with bitsandbytes</h2>
-<p>Quantization goes a step further than simply choosing a lower-precision dtype at load time. Tools like <a href="https://github.com/TimDettmers/bitsandbytes"><code>bitsandbytes</code></a> apply <strong>post-training quantization</strong> that converts weights to 8-bit or 4-bit representations using specialized algorithms (e.g., LLM.int8(), NF4 with double quantization).</p>
+<p>Quantization goes a step further than simply choosing a lower-precision dtype at load time. Tools like <a href="https://github.com/bitsandbytes-foundation/bitsandbytes"><code>bitsandbytes</code></a> apply post-training quantization that converts weights to 8-bit or 4-bit representations using specialized algorithms (e.g., LLM.int8(), NF4 with double quantization).</p>
 <p>This can dramatically reduce memory — often enough to run a model that otherwise wouldn’t fit on your GPU.</p>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="a80725bd" class="cell" data-execution_count="8">
+<div id="2dc42462" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bnb_config_8bit <span class="op">=</span> BitsAndBytesConfig(load_in_8bit<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>model_8bit, mem_8bit, params_8bit <span class="op">=</span> load_and_measure(</span>
@@ -637,7 +648,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="05e70925" class="cell" data-execution_count="9">
+<div id="37e369d1" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bnb_config_4bit <span class="op">=</span> BitsAndBytesConfig(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    load_in_4bit<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    bnb_4bit_quant_type<span class="op">=</span><span class="st">"nf4"</span>,           <span class="co"># normalized float 4-bit</span></span>
@@ -652,7 +663,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="8bf7a94d" class="cell" data-execution_count="10">
+<div id="2b649fa7" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span><span class="st">'='</span><span class="op">*</span><span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Summary: GPT-2 (124M params) at different precisions"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'='</span><span class="op">*</span><span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
@@ -668,21 +679,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="part-4-the-pytorch-parameter-count-gotcha" class="level2">
 <h2 class="anchored" data-anchor-id="part-4-the-pytorch-parameter-count-gotcha">Part 4: The PyTorch parameter count gotcha</h2>
-<p>If you ran the summary above, you may have noticed something odd: <strong>the parameter count reported by <code>numel()</code> drops after quantization.</strong> The 4-bit model might report roughly half or a quarter of the expected parameters.</p>
-<p>This is <strong>not</strong> because quantization removed weights. The model still has the same architecture and the same logical number of parameters. So what’s going on?</p>
+<p>If you ran the summary above, you may have noticed something odd: the parameter count reported by <code>numel()</code> drops after quantization. The 4-bit model might report roughly half or a quarter of the expected parameters.</p>
+<p>This is not because quantization removed weights. The model still has the same architecture and the same logical number of parameters. So what’s going on?</p>
 <section id="why-numel-is-misleading-for-quantized-models" class="level3">
 <h3 class="anchored" data-anchor-id="why-numel-is-misleading-for-quantized-models">Why <code>numel()</code> is misleading for quantized models</h3>
-<p>When <code>bitsandbytes</code> quantizes a weight matrix, it doesn’t store the weights as a normal PyTorch tensor. Instead, it <strong>packs</strong> multiple low-bit values into each byte:</p>
+<p>When <code>bitsandbytes</code> quantizes a weight matrix, it doesn’t store the weights as a normal PyTorch tensor. Instead, it packs multiple low-bit values into each byte:</p>
 <ul>
-<li><strong>8-bit</strong>: Each weight occupies 1 byte (same as <code>numel()</code> would expect for uint8)</li>
-<li><strong>4-bit</strong>: Two weights are packed into a single byte, stored as a <code>uint8</code> tensor of half the length</li>
+<li>8-bit: Each weight occupies 1 byte (same as <code>numel()</code> would expect for uint8)</li>
+<li>4-bit: Two weights are packed into a single byte, stored as a <code>uint8</code> tensor of half the length</li>
 </ul>
-<p>When you call <code>p.numel()</code> on a quantized parameter, PyTorch reports the number of elements in the <strong>storage tensor</strong>, not the number of logical weights. Since two 4-bit values are packed into one uint8 element, <code>numel()</code> returns roughly half the true count.</p>
+<p>When you call <code>p.numel()</code> on a quantized parameter, PyTorch reports the number of elements in the storage tensor, not the number of logical weights. Since two 4-bit values are packed into one uint8 element, <code>numel()</code> returns roughly half the true count.</p>
 </section>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="16c47d6b" class="cell" data-execution_count="11">
+<div id="5c8aa51d" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bitsandbytes <span class="im">as</span> bnb</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count_parameters_correct(model):</span>
@@ -704,7 +715,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total, quantized, non_quantized</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="a4fc912f" class="cell" data-execution_count="12">
+<div id="fbc2c06f" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>naive_count <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model_4bit.parameters())</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>correct_total, quantized_params, non_quantized_params <span class="op">=</span> count_parameters_correct(model_4bit)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -719,7 +730,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="d8c7f91f" class="cell" data-execution_count="13">
+<div id="24737522" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, param <span class="kw">in</span> model_4bit.named_parameters():</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">hasattr</span>(param, <span class="st">"quant_state"</span>):</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Layer: </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -731,7 +742,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>()</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span>  <span class="co"># just show one example</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>This confirms that quantization doesn’t remove parameters — it <strong>repacks</strong> them into a more compact representation. The model’s architecture and logical weight count are unchanged, but the storage is compressed.</p>
+<p>This confirms that quantization doesn’t remove parameters — it repacks them into a more compact representation. The model’s architecture and logical weight count are unchanged, but the storage is compressed.</p>
 </section>
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">Summary</h3>
@@ -749,24 +760,95 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><code>p.numel()</code></td>
-<td>Number of elements in the <strong>storage tensor</strong> (misleading for quantized params)</td>
+<td>Number of elements in the storage tensor (misleading for quantized params)</td>
 </tr>
 <tr class="even">
 <td><code>p.quant_state.shape</code></td>
-<td>The <strong>original logical shape</strong> of the weight matrix</td>
+<td>The original logical shape of the weight matrix</td>
 </tr>
 <tr class="odd">
 <td>GPU memory usage</td>
-<td>The <strong>actual memory footprint</strong> — the metric that matters for fitting on your hardware</td>
+<td>The actual memory footprint — the metric that matters for fitting on your hardware</td>
 </tr>
 </tbody>
 </table>
-<p>The bottom line: <strong>quantization does not remove parameters.</strong> It changes how they’re stored. Always use <code>quant_state</code> or measure GPU memory directly if you want an accurate picture of a quantized model.</p>
+<p>The bottom line: quantization does not remove parameters. It changes how they’re stored. Always use <code>quant_state</code> or measure GPU memory directly if you want an accurate picture of a quantized model.</p>
+</section>
+</section>
+<section id="part-5-when-to-quantize-and-how-aggressively" class="level2">
+<h2 class="anchored" data-anchor-id="part-5-when-to-quantize-and-how-aggressively">Part 5: When to quantize (and how aggressively)</h2>
+<p>Now that we’ve seen how quantization works mechanically, the natural next question is: when should you actually use it, and how far should you go?</p>
+<section id="quantization-is-primarily-an-inference-technique" class="level3">
+<h3 class="anchored" data-anchor-id="quantization-is-primarily-an-inference-technique">Quantization is primarily an inference technique</h3>
+<p>Quantization shines at inference time. Training requires high-precision gradients to make stable updates to model weights, and aggressive quantization (8-bit or below) introduces too much noise for standard backpropagation to work well. For this reason, most models are trained at FP32, BF16, or with mixed-precision strategies (FP16 compute with FP32 accumulation), and then quantized after training for deployment.</p>
+<p>The notable exception is <a href="https://arxiv.org/abs/2305.14314">QLoRA</a> (Dettmers et al., 2023), which freezes a 4-bit quantized base model and trains only small low-rank adapter (LoRA) layers in higher precision. This makes it possible to fine-tune a 65B-parameter model on a single 48GB GPU — but the base weights themselves are never updated in low precision.</p>
+</section>
+<section id="good-enough-vs.-the-best-the-quality-speed-tradeoff" class="level3">
+<h3 class="anchored" data-anchor-id="good-enough-vs.-the-best-the-quality-speed-tradeoff">“Good enough” vs.&nbsp;“the best”: the quality-speed tradeoff</h3>
+<p>Quantization isn’t just about fitting a model onto your GPU — it also makes inference faster. Lower-precision operations use less memory bandwidth, and for small batch sizes (which are common in interactive applications), memory bandwidth is often the bottleneck. So a 4-bit model doesn’t just use ~8x less memory than FP32 — it can also generate tokens noticeably faster.</p>
+<p>This creates a practical tradeoff worth thinking about:</p>
+<ul>
+<li>A larger model at higher precision might give you the best possible quality, but it’s slower and requires expensive hardware.</li>
+<li>A larger model at lower precision (e.g., 70B at 4-bit) can often outperform a smaller model at full precision (e.g., 7B at FP16), while running on the same hardware.</li>
+<li>For many applications, a well-quantized model is “good enough” — and the speed and cost savings make it the better engineering choice.</li>
+</ul>
+<p>The question worth asking is not just “which model is most accurate?” but “which model gives me acceptable quality at the speed and cost I need?” In many real-world settings, faster and cheaper wins over marginally better.</p>
+</section>
+<section id="how-low-can-you-go" class="level3">
+<h3 class="anchored" data-anchor-id="how-low-can-you-go">How low can you go?</h3>
+<p>Research suggests 4-bit is a practical sweet spot for inference:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2212.09720">Dettmers &amp; Zettlemoyer (2023)</a> ran over 35,000 quantization experiments and found that 4-bit precision is nearly universally optimal when trading off total model bits against zero-shot accuracy. At 3-bit, quality degrades sharply.</li>
+<li>8-bit quantization (via <a href="https://arxiv.org/abs/2208.07339">LLM.int8()</a>) is effectively lossless for most models — it’s a safe default when memory is tight but you don’t want to risk any quality loss.</li>
+<li><a href="https://arxiv.org/abs/2210.17323">GPTQ</a> (Frantar et al., 2023) demonstrated that one-shot weight quantization to 3-4 bits is feasible even for 175B-parameter models with negligible accuracy loss, enabling single-GPU inference for models that otherwise require multiple GPUs.</li>
+</ul>
+<p>A recent study on <a href="https://arxiv.org/abs/2411.04330">Scaling Laws for Precision</a> (Kumar, Ankner et al., 2024) adds nuance: the quality degradation from post-training quantization grows as models are trained on more data. In other words, a model trained to its full data budget may be more sensitive to aggressive quantization than one that was undertrained. This is worth keeping in mind as foundation models continue to scale up their training data.</p>
+</section>
+<section id="rules-of-thumb" class="level3">
+<h3 class="anchored" data-anchor-id="rules-of-thumb">Rules of thumb</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th>Recommended precision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Training from scratch</td>
+<td>FP32 or BF16 (mixed precision)</td>
+</tr>
+<tr class="even">
+<td>Fine-tuning (full)</td>
+<td>BF16 or FP16</td>
+</tr>
+<tr class="odd">
+<td>Fine-tuning (parameter-efficient on limited hardware)</td>
+<td>QLoRA (4-bit base + FP16 adapters)</td>
+</tr>
+<tr class="even">
+<td>Inference (quality-sensitive)</td>
+<td>8-bit (INT8)</td>
+</tr>
+<tr class="odd">
+<td>Inference (memory/speed-constrained)</td>
+<td>4-bit (NF4 or GPTQ)</td>
+</tr>
+<tr class="even">
+<td>Inference (extreme compression)</td>
+<td>3-bit or below — expect quality loss, benchmark carefully</td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="f6013969" class="cell" data-execution_count="14">
+<div id="d8edcc4e" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> model_4bit</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gc.collect()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>torch.cuda.empty_cache()</span>
@@ -780,12 +862,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="related-resources" class="level2">
 <h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
 <ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: Exploring Fact-Based QA with RAG: Romeo and Juliet</a>: A RAG tutorial that mentions bitsandbytes for running quantized models in resource-constrained environments.</li>
-<li><a href="https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes"><strong>Hugging Face docs</strong>: bitsandbytes integration</a>: Official documentation on using bitsandbytes with the <code>transformers</code> library.</li>
-<li><a href="https://github.com/bitsandbytes-foundation/bitsandbytes"><strong>GitHub</strong>: bitsandbytes</a>: The bitsandbytes library for 8-bit and 4-bit quantization.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html">Exploring Fact-Based QA with RAG: Romeo and Juliet</a> (Nexus notebook): A RAG tutorial that uses bitsandbytes for running quantized models in resource-constrained environments.</li>
+<li><a href="https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes">Hugging Face: bitsandbytes integration</a>: Official documentation on using bitsandbytes with the <code>transformers</code> library.</li>
+<li><a href="https://github.com/bitsandbytes-foundation/bitsandbytes">bitsandbytes on GitHub</a>: The bitsandbytes library for 8-bit and 4-bit quantization.</li>
+</ul>
+<section id="key-papers" class="level3">
+<h3 class="anchored" data-anchor-id="key-papers">Key papers</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2208.07339">LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale</a> (Dettmers et al., NeurIPS 2022): The foundational paper behind bitsandbytes INT8 quantization, showing lossless inference at half the memory.</li>
+<li><a href="https://arxiv.org/abs/2212.09720">The Case for 4-bit Precision: k-bit Inference Scaling Laws</a> (Dettmers &amp; Zettlemoyer, ICML 2023): Empirical scaling laws across 35,000+ experiments showing that 4-bit is nearly universally optimal for inference.</li>
+<li><a href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized LLMs</a> (Dettmers et al., NeurIPS 2023): Enables fine-tuning 65B models on a single 48GB GPU by combining 4-bit quantization with LoRA adapters.</li>
+<li><a href="https://arxiv.org/abs/2210.17323">GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers</a> (Frantar et al., ICLR 2023): One-shot weight quantization to 3-4 bits for models up to 175B parameters.</li>
+<li><a href="https://arxiv.org/abs/2411.04330">Scaling Laws for Precision</a> (Kumar, Ankner et al., 2024): Precision-aware scaling laws showing how quantization interacts with model size and training data budget.</li>
 </ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
