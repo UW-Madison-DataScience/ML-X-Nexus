@@ -1,0 +1,333 @@
+---
+title: "Understanding Quantization and Precision"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-03-02
+date-format: long
+image: "../../../images/vincent-van-zalinge-mDohQISBnCk-unsplash.jpg"
+
+categories:
+  - Notebooks
+  - Code-along
+  - Deep learning
+  - LLM
+  - Quantization
+  - GPU
+  - Hugging Face
+  - PyTorch
+
+jupyter: python3
+execute:
+  echo: true
+  eval: false
+
+---
+
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/Quantization-and-Precision.ipynb)
+
+When working with large language models, you'll often encounter terms like "FP32", "FP16", "INT8", and "4-bit quantization." These describe how a model's weights are stored in memory — and they have a direct impact on how much GPU memory a model requires, how fast it runs, and whether it fits on your hardware at all.
+
+This notebook unpacks these concepts step by step:
+
+1. **Precision**: What floating-point formats (FP32, FP16, BF16) mean and how they affect memory.
+2. **Quantization**: How tools like `bitsandbytes` reduce precision further (to 8-bit or 4-bit) to shrink memory footprints.
+3. **Parameter counts vs. memory**: Why the number of model parameters stays the same, but memory usage changes.
+4. **A PyTorch gotcha**: Why `model.parameters()` can report misleading numbers after quantization — and how to correctly count parameters.
+
+### Prerequisites
+
+- Basic familiarity with PyTorch and Hugging Face `transformers`
+- Access to a GPU runtime (e.g., Google Colab with T4)
+
+## Setup
+
+```{python}
+!pip install -q transformers accelerate bitsandbytes torch
+```
+
+```{python}
+import torch
+import gc
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+```
+
+## Part 1: What is precision?
+
+Every number in a neural network — every weight, bias, and activation — is stored as a sequence of bits. The **precision** (or **data type**) determines how many bits are used per number, which controls both the range and granularity of values that can be represented.
+
+| Data type | Bits per value | Approximate range | Typical use |
+|-----------|---------------|-------------------|-------------|
+| FP32 (float32) | 32 | ~1e-38 to ~3e38 | Default training precision |
+| FP16 (float16) | 16 | ~6e-5 to 65504 | Mixed-precision training |
+| BF16 (bfloat16) | 16 | ~1e-38 to ~3e38 | Training on modern GPUs (A100, H100) |
+| INT8 | 8 | -128 to 127 | Post-training quantization |
+| NF4 (4-bit) | 4 | Normalized float | Aggressive quantization via bitsandbytes |
+
+### Key insight: precision controls memory per parameter
+
+A model with 1 billion parameters requires:
+
+- **4 GB** at FP32 (4 bytes per param)
+- **2 GB** at FP16/BF16 (2 bytes per param)
+- **1 GB** at INT8 (1 byte per param)
+- **~0.5 GB** at 4-bit (0.5 bytes per param)
+
+The number of parameters hasn't changed — only how much memory each one occupies.
+
+Let's verify this with a real model.
+
+## Part 2: Loading a model at different precisions
+
+We'll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.
+
+### Helper: Measure GPU memory
+
+```{python}
+def get_gpu_memory_mb():
+    """Return current GPU memory allocated in MB."""
+    if torch.cuda.is_available():
+        return torch.cuda.memory_allocated() / 1024**2
+    return 0.0
+
+def load_and_measure(model_name, dtype=None, quantization_config=None, label=""):
+    """Load a model and report memory usage and parameter info."""
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    before = get_gpu_memory_mb()
+
+    kwargs = {"device_map": "auto"}
+    if dtype:
+        kwargs["torch_dtype"] = dtype
+    if quantization_config:
+        kwargs["quantization_config"] = quantization_config
+
+    model = AutoModelForCausalLM.from_pretrained(model_name, **kwargs)
+
+    after = get_gpu_memory_mb()
+    mem_used = after - before
+
+    # Count parameters
+    total_params = sum(p.numel() for p in model.parameters())
+    total_elements = sum(p.nelement() for p in model.parameters())
+
+    print(f"\n{'='*60}")
+    print(f"  {label}")
+    print(f"{'='*60}")
+    print(f"  GPU memory used:     {mem_used:,.1f} MB")
+    print(f"  model.parameters():  {total_params:,} (via numel())")
+    print(f"  Expected params:     ~124,000,000 (GPT-2)")
+
+    # Show dtypes present in model
+    dtypes = set()
+    for p in model.parameters():
+        dtypes.add(str(p.dtype))
+    print(f"  Parameter dtypes:    {dtypes}")
+
+    return model, mem_used, total_params
+```
+
+### FP32 (default)
+
+```{python}
+model_name = "gpt2"
+
+model_fp32, mem_fp32, params_fp32 = load_and_measure(
+    model_name, dtype=torch.float32, label="FP32 (32-bit floating point)"
+)
+del model_fp32
+gc.collect()
+torch.cuda.empty_cache()
+```
+
+### FP16 (half precision)
+
+```{python}
+model_fp16, mem_fp16, params_fp16 = load_and_measure(
+    model_name, dtype=torch.float16, label="FP16 (16-bit floating point)"
+)
+del model_fp16
+gc.collect()
+torch.cuda.empty_cache()
+```
+
+### BF16 (bfloat16)
+
+BF16 uses 16 bits like FP16, but allocates more bits to the exponent and fewer to the mantissa. This gives it the same range as FP32 but with less decimal precision — a trade-off that works well for training large models.
+
+```{python}
+model_bf16, mem_bf16, params_bf16 = load_and_measure(
+    model_name, dtype=torch.bfloat16, label="BF16 (bfloat16)"
+)
+del model_bf16
+gc.collect()
+torch.cuda.empty_cache()
+```
+
+### Compare: precision vs. memory
+
+```{python}
+print(f"\nMemory comparison (GPT-2, 124M params):")
+print(f"  FP32:  {mem_fp32:,.1f} MB")
+print(f"  FP16:  {mem_fp16:,.1f} MB")
+print(f"  BF16:  {mem_bf16:,.1f} MB")
+print(f"\nParameter count (should be identical):")
+print(f"  FP32:  {params_fp32:,}")
+print(f"  FP16:  {params_fp16:,}")
+print(f"  BF16:  {params_bf16:,}")
+```
+
+At this point, the key takeaway should be clear: **reducing precision halves memory, but the parameter count is unchanged.** Every weight is still there — it just takes up less space.
+
+## Part 3: Quantization with bitsandbytes
+
+Quantization goes a step further than simply choosing a lower-precision dtype at load time. Tools like [`bitsandbytes`](https://github.com/TimDettmers/bitsandbytes) apply **post-training quantization** that converts weights to 8-bit or 4-bit representations using specialized algorithms (e.g., LLM.int8(), NF4 with double quantization).
+
+This can dramatically reduce memory — often enough to run a model that otherwise wouldn't fit on your GPU.
+
+### 8-bit quantization
+
+```{python}
+bnb_config_8bit = BitsAndBytesConfig(load_in_8bit=True)
+
+model_8bit, mem_8bit, params_8bit = load_and_measure(
+    model_name, quantization_config=bnb_config_8bit, label="INT8 (8-bit via bitsandbytes)"
+)
+del model_8bit
+gc.collect()
+torch.cuda.empty_cache()
+```
+
+### 4-bit quantization (NF4)
+
+```{python}
+bnb_config_4bit = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",           # normalized float 4-bit
+    bnb_4bit_use_double_quant=True,       # further compress quantization constants
+    bnb_4bit_compute_dtype=torch.float16  # compute in FP16 for speed
+)
+
+model_4bit, mem_4bit, params_4bit = load_and_measure(
+    model_name, quantization_config=bnb_config_4bit, label="NF4 (4-bit via bitsandbytes)"
+)
+```
+
+### Compare all configurations
+
+```{python}
+print(f"\n{'='*60}")
+print(f"  Summary: GPT-2 (124M params) at different precisions")
+print(f"{'='*60}")
+print(f"  {'Config':<12} {'Memory (MB)':>14} {'numel()':>16}")
+print(f"  {'-'*44}")
+print(f"  {'FP32':<12} {mem_fp32:>14,.1f} {params_fp32:>16,}")
+print(f"  {'FP16':<12} {mem_fp16:>14,.1f} {params_fp16:>16,}")
+print(f"  {'BF16':<12} {mem_bf16:>14,.1f} {params_bf16:>16,}")
+print(f"  {'INT8':<12} {mem_8bit:>14,.1f} {params_8bit:>16,}")
+print(f"  {'NF4 (4-bit)':<12} {mem_4bit:>14,.1f} {params_4bit:>16,}")
+```
+
+## Part 4: The PyTorch parameter count gotcha
+
+If you ran the summary above, you may have noticed something odd: **the parameter count reported by `numel()` drops after quantization.** The 4-bit model might report roughly half or a quarter of the expected parameters.
+
+This is **not** because quantization removed weights. The model still has the same architecture and the same logical number of parameters. So what's going on?
+
+### Why `numel()` is misleading for quantized models
+
+When `bitsandbytes` quantizes a weight matrix, it doesn't store the weights as a normal PyTorch tensor. Instead, it **packs** multiple low-bit values into each byte:
+
+- **8-bit**: Each weight occupies 1 byte (same as `numel()` would expect for uint8)
+- **4-bit**: Two weights are packed into a single byte, stored as a `uint8` tensor of half the length
+
+When you call `p.numel()` on a quantized parameter, PyTorch reports the number of elements in the **storage tensor**, not the number of logical weights. Since two 4-bit values are packed into one uint8 element, `numel()` returns roughly half the true count.
+
+### Correctly counting parameters
+
+To get the real parameter count, we need to check whether each parameter is a quantized `bitsandbytes` type and recover the original shape:
+
+```{python}
+import bitsandbytes as bnb
+
+def count_parameters_correct(model):
+    """Count parameters correctly, handling bitsandbytes quantized layers."""
+    total = 0
+    quantized = 0
+    non_quantized = 0
+
+    for name, param in model.named_parameters():
+        if hasattr(param, "quant_state"):
+            # This is a bitsandbytes quantized parameter.
+            # The original shape is stored in quant_state.
+            original_numel = param.quant_state.shape.numel()
+            total += original_numel
+            quantized += original_numel
+        else:
+            total += param.numel()
+            non_quantized += param.numel()
+
+    return total, quantized, non_quantized
+```
+
+```{python}
+naive_count = sum(p.numel() for p in model_4bit.parameters())
+correct_total, quantized_params, non_quantized_params = count_parameters_correct(model_4bit)
+
+print(f"4-bit quantized GPT-2:")
+print(f"  Naive numel() count:     {naive_count:,}")
+print(f"  Correct parameter count: {correct_total:,}")
+print(f"    - Quantized params:    {quantized_params:,}")
+print(f"    - Non-quantized params:{non_quantized_params:,}")
+print(f"  Expected (GPT-2):        ~124,000,000")
+```
+
+### What's happening under the hood
+
+Let's peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:
+
+```{python}
+for name, param in model_4bit.named_parameters():
+    if hasattr(param, "quant_state"):
+        print(f"Layer: {name}")
+        print(f"  Storage tensor shape: {param.shape}")
+        print(f"  Storage dtype:        {param.dtype}")
+        print(f"  numel() reports:      {param.numel():,}")
+        print(f"  Original shape:       {param.quant_state.shape}")
+        print(f"  Original numel:       {param.quant_state.shape.numel():,}")
+        print()
+        break  # just show one example
+```
+
+This confirms that quantization doesn't remove parameters — it **repacks** them into a more compact representation. The model's architecture and logical weight count are unchanged, but the storage is compressed.
+
+### Summary
+
+| What you check | What it tells you |
+|----------------|-------------------|
+| `p.numel()` | Number of elements in the **storage tensor** (misleading for quantized params) |
+| `p.quant_state.shape` | The **original logical shape** of the weight matrix |
+| GPU memory usage | The **actual memory footprint** — the metric that matters for fitting on your hardware |
+
+The bottom line: **quantization does not remove parameters.** It changes how they're stored. Always use `quant_state` or measure GPU memory directly if you want an accurate picture of a quantized model.
+
+## Cleanup
+
+```{python}
+del model_4bit
+gc.collect()
+torch.cuda.empty_cache()
+print("GPU memory cleared.")
+```
+
+## Questions
+
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## Related resources
+
+- [**Notebook**: Exploring Fact-Based QA with RAG: Romeo and Juliet](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html): A RAG tutorial that mentions bitsandbytes for running quantized models in resource-constrained environments.
+- [**Hugging Face docs**: bitsandbytes integration](https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes): Official documentation on using bitsandbytes with the `transformers` library.
+- [**GitHub**: bitsandbytes](https://github.com/bitsandbytes-foundation/bitsandbytes): The bitsandbytes library for 8-bit and 4-bit quantization.
