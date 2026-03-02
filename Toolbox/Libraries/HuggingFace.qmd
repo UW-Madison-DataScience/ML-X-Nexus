@@ -1,0 +1,132 @@
+---
+title: "Hugging Face"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2024-08-01
+date-format: long
+image: "../../../images/hugging-face.png"
+
+categories:
+  - Libraries
+  - Hugging Face
+  - NLP
+  - Deep learning
+  - Foundation models
+  - LLM
+  - Computer vision
+  - Model exploration
+  - Model sharing
+  - PyTorch
+  - Tensorflow
+  - Text data
+  - Multimodal learning
+---
+
+## About this resource
+
+[Hugging Face](https://huggingface.co/) is an open-source platform and ecosystem for machine learning. It's best known for the [Transformers](https://huggingface.co/docs/transformers) library, but it has grown into a one-stop shop for finding, sharing, and running models, datasets, and demos across NLP, computer vision, audio, and multimodal tasks. If you're doing ML research or building an ML application, chances are you'll interact with Hugging Face at some point.
+
+The platform hosts over 900,000 models and 200,000 datasets contributed by the community, along with tools for training, fine-tuning, evaluation, and deployment. It integrates natively with PyTorch, TensorFlow, and JAX.
+
+#### Key features
+
+- **Model Hub**: Browse, search, and download pretrained models for virtually any task — text generation, classification, object detection, speech recognition, and more. Every model has a [model card](https://huggingface.co/docs/hub/model-cards) with documentation, usage examples, and performance details.
+- **Datasets library**: Load thousands of community-contributed datasets with a single line of code using the [`datasets`](https://huggingface.co/docs/datasets) library. Supports streaming for large datasets that don't fit in memory.
+- **Pipelines**: The [`pipeline()`](https://huggingface.co/docs/transformers/main_classes/pipelines) API provides a high-level interface for common tasks (sentiment analysis, summarization, image classification, etc.) — often just 2-3 lines of code to go from zero to inference.
+- **Spaces**: Host interactive ML demos using [Gradio](https://gradio.app/) or [Streamlit](https://streamlit.io/) directly on Hugging Face. Great for sharing prototypes, class projects, or research demos without managing infrastructure.
+- **Fine-tuning and training**: The [`Trainer`](https://huggingface.co/docs/transformers/main_classes/trainer) API and integration with [PEFT](https://huggingface.co/docs/peft) (parameter-efficient fine-tuning) and [TRL](https://huggingface.co/docs/trl) (reinforcement learning from human feedback) make it straightforward to adapt models to your data.
+
+## Finding and downloading models
+
+The [Model Hub](https://huggingface.co/models) is the main entry point. You can filter by task, library, language, license, and more. Each model page includes:
+
+- A **model card** describing the architecture, training data, intended use, and limitations
+- **Usage snippets** you can copy directly into your code
+- **Community discussion** and version history
+
+To download and use a model in Python:
+
+```python
+from transformers import pipeline
+
+# High-level: use a pipeline for common tasks
+classifier = pipeline("sentiment-analysis")
+result = classifier("Hugging Face makes ML accessible!")
+
+# Or load a specific model and tokenizer
+from transformers import AutoTokenizer, AutoModel
+
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModel.from_pretrained("bert-base-uncased")
+```
+
+For non-Transformers models (e.g., scikit-learn, spaCy, or custom frameworks), the [`huggingface_hub`](https://huggingface.co/docs/huggingface_hub) library provides download/upload utilities:
+
+```python
+from huggingface_hub import hf_hub_download
+
+# Download a specific file from any repo
+path = hf_hub_download(repo_id="username/model-name", filename="model.pkl")
+```
+
+## Useful functions and integrations
+
+| Function / Tool | What it does |
+|---|---|
+| `pipeline()` | One-liner inference for 30+ task types |
+| `AutoModel` / `AutoTokenizer` | Auto-detect and load the right model class |
+| `datasets.load_dataset()` | Load any Hub dataset with streaming support |
+| `Trainer` | Full training loop with logging, evaluation, checkpointing |
+| `PEFT` (LoRA, QLoRA) | Fine-tune large models on limited hardware |
+| `accelerate` | Distribute training across GPUs with minimal code changes |
+| `huggingface_hub` | Upload/download models, datasets, and files programmatically |
+| `evaluate` | Standardized metrics (accuracy, BLEU, ROUGE, etc.) |
+
+Hugging Face also integrates with:
+
+- **PyTorch, TensorFlow, JAX** — Transformers models work across all three
+- **LangChain** — use HF models as components in LLM chains and RAG pipelines
+- **Sentence Transformers** — specialized library for text embeddings, built on HF
+- **GGUF / llama.cpp** — quantized model formats hosted on the Hub for local inference
+- **Weights & Biases, MLflow** — experiment tracking integrations
+
+## Model hosting and inference
+
+Hugging Face offers several options for running models beyond your local machine:
+
+- **Inference API**: Send HTTP requests to hosted models for quick prototyping — no GPU required on your end. Free tier available for many models.
+- **Inference Endpoints**: Deploy dedicated, scalable endpoints for production workloads. You choose the hardware (CPU, GPU, etc.) and pay for what you use.
+- **Spaces**: Host interactive demos powered by Gradio or Streamlit. Useful for sharing results with collaborators or embedding demos in papers and presentations.
+
+## UW-Madison on Hugging Face
+
+UW-Madison has a verified organization on Hugging Face: [huggingface.co/uw-madison](https://huggingface.co/uw-madison). It hosts models developed by UW researchers, including efficient transformer architectures like [YOSO](https://huggingface.co/uw-madison/yoso-4096) and [Nystromformer](https://huggingface.co/uw-madison/nystromformer-4096). If your lab is publishing models, consider hosting them under this org for visibility and discoverability.
+
+There are also department-level orgs like [UW-Madison-Radiology](https://huggingface.co/UW-Madison-Radiology). Contact your department or the [Data Science Hub](https://datascience.wisc.edu/hub/) if you're interested in setting one up.
+
+## Installation
+
+```bash
+# Core library
+pip install transformers
+
+# Common companion libraries
+pip install datasets evaluate accelerate huggingface_hub
+
+# For parameter-efficient fine-tuning
+pip install peft trl
+```
+
+## Questions?
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## See also
+- [**Notebook**: Exploring Fact-Based QA with RAG: Romeo and Juliet](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html): Hands-on tutorial building a RAG pipeline with Hugging Face models and sentence-transformers.
+- [**Workshop**: Intro to Text Analysis / NLP](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html): Covers NLP fundamentals including deploying models with Hugging Face.
+- [**Talk**: Exploring Model Sharing in the Age of Foundation Models](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2024-03-12.html): ML+X forum on model sharing best practices, featuring Hugging Face and LLaVA-NeXT.
+- [**GenAI**: OpenScholar](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html): An open-source scientific literature assistant with models hosted on Hugging Face.
+- [**Model**: DeepForest](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/DeepForest.html): Ecological object detection models hosted on Hugging Face.
+- [Hugging Face Documentation](https://huggingface.co/docs)
+- [Hugging Face Course](https://huggingface.co/learn/nlp-course): Free, comprehensive NLP course covering Transformers end to end.
