@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2024-08-01">
 
-<title>Guides – Nexus: Crowdsourced ML Resources</title>
+<title>Hugging Face – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -29,10 +66,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Learn/Notebooks/index.html" rel="next">
-<link href="../../Learn/Books/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -71,65 +104,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -142,7 +117,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Guides/index.html">Guides</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Hugging Face</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +127,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -206,7 +181,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
@@ -370,20 +345,61 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Q29kZS1hbG9uZw==">Code-along <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R2l0JTJGR2l0SHVi">Git/GitHub <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R3VpZGVz">Guides <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UmVwcm9kdWNpYmlsaXR5">Reproducibility <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-resource" id="toc-about-this-resource" class="nav-link active" data-scroll-target="#about-this-resource">About this resource</a></li>
+  <li><a href="#finding-and-downloading-models" id="toc-finding-and-downloading-models" class="nav-link" data-scroll-target="#finding-and-downloading-models">Finding and downloading models</a></li>
+  <li><a href="#useful-functions-and-integrations" id="toc-useful-functions-and-integrations" class="nav-link" data-scroll-target="#useful-functions-and-integrations">Useful functions and integrations</a></li>
+  <li><a href="#model-hosting-and-inference" id="toc-model-hosting-and-inference" class="nav-link" data-scroll-target="#model-hosting-and-inference">Model hosting and inference</a></li>
+  <li><a href="#uw-madison-on-hugging-face" id="toc-uw-madison-on-hugging-face" class="nav-link" data-scroll-target="#uw-madison-on-hugging-face">UW-Madison on Hugging Face</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions?</a></li>
+  <li><a href="#related-resources" id="toc-related-resources" class="nav-link" data-scroll-target="#related-resources">Related resources</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Libraries/HuggingFace.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Guides/index.html">Guides</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Guides</h1>
-</div>
+<h1 class="title">Hugging Face</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Libraries</div>
+    <div class="quarto-category">Hugging Face</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Foundation models</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">Computer vision</div>
+    <div class="quarto-category">Model exploration</div>
+    <div class="quarto-category">Model sharing</div>
+    <div class="quarto-category">PyTorch</div>
+    <div class="quarto-category">Tensorflow</div>
+    <div class="quarto-category">Text data</div>
+    <div class="quarto-category">Multimodal learning</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 1, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -393,79 +409,149 @@ window.Quarto = {
 </header>
 
 
+<section id="about-this-resource" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-resource">About this resource</h2>
+<p><a href="https://huggingface.co/">Hugging Face</a> is an open-source platform and ecosystem for machine learning. It’s best known for the <a href="https://huggingface.co/docs/transformers">Transformers</a> library, but it has grown into a one-stop shop for finding, sharing, and running models, datasets, and demos across NLP, computer vision, audio, and multimodal tasks. If you’re doing ML research or building an ML application, chances are you’ll interact with Hugging Face at some point.</p>
+<p>The platform hosts over 900,000 models and 200,000 datasets contributed by the community, along with tools for training, fine-tuning, evaluation, and deployment. It integrates natively with PyTorch, TensorFlow, and JAX.</p>
+<section id="key-features" class="level4">
+<h4 class="anchored" data-anchor-id="key-features">Key features</h4>
+<ul>
+<li><strong>Model Hub</strong>: Browse, search, and download pretrained models for virtually any task — text generation, classification, object detection, speech recognition, and more. Every model has a <a href="https://huggingface.co/docs/hub/model-cards">model card</a> with documentation, usage examples, and performance details.</li>
+<li><strong>Datasets library</strong>: Load thousands of community-contributed datasets with a single line of code using the <a href="https://huggingface.co/docs/datasets"><code>datasets</code></a> library. Supports streaming for large datasets that don’t fit in memory.</li>
+<li><strong>Pipelines</strong>: The <a href="https://huggingface.co/docs/transformers/main_classes/pipelines"><code>pipeline()</code></a> API provides a high-level interface for common tasks (sentiment analysis, summarization, image classification, etc.) — often just 2-3 lines of code to go from zero to inference.</li>
+<li><strong>Spaces</strong>: Host interactive ML demos using <a href="https://gradio.app/">Gradio</a> or <a href="https://streamlit.io/">Streamlit</a> directly on Hugging Face. Great for sharing prototypes, class projects, or research demos without managing infrastructure.</li>
+<li><strong>Fine-tuning and training</strong>: The <a href="https://huggingface.co/docs/transformers/main_classes/trainer"><code>Trainer</code></a> API and integration with <a href="https://huggingface.co/docs/peft">PEFT</a> (parameter-efficient fine-tuning) and <a href="https://huggingface.co/docs/trl">TRL</a> (reinforcement learning from human feedback) make it straightforward to adapt models to your data.</li>
+</ul>
+</section>
+</section>
+<section id="finding-and-downloading-models" class="level2">
+<h2 class="anchored" data-anchor-id="finding-and-downloading-models">Finding and downloading models</h2>
+<p>The <a href="https://huggingface.co/models">Model Hub</a> is the main entry point. You can filter by task, library, language, license, and more. Each model page includes:</p>
+<ul>
+<li>A <strong>model card</strong> describing the architecture, training data, intended use, and limitations</li>
+<li><strong>Usage snippets</strong> you can copy directly into your code</li>
+<li><strong>Community discussion</strong> and version history</li>
+</ul>
+<p>To download and use a model in Python:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># High-level: use a pipeline for common tasks</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>classifier <span class="op">=</span> pipeline(<span class="st">"sentiment-analysis"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> classifier(<span class="st">"Hugging Face makes ML accessible!"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Or load a specific model and tokenizer</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer, AutoModel</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">"bert-base-uncased"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoModel.from_pretrained(<span class="st">"bert-base-uncased"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For non-Transformers models (e.g., scikit-learn, spaCy, or custom frameworks), the <a href="https://huggingface.co/docs/huggingface_hub"><code>huggingface_hub</code></a> library provides download/upload utilities:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> huggingface_hub <span class="im">import</span> hf_hub_download</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Download a specific file from any repo</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> hf_hub_download(repo_id<span class="op">=</span><span class="st">"username/model-name"</span>, filename<span class="op">=</span><span class="st">"model.pkl"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="useful-functions-and-integrations" class="level2">
+<h2 class="anchored" data-anchor-id="useful-functions-and-integrations">Useful functions and integrations</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pipeline()</code></td>
+<td>One-liner inference for 30+ task types</td>
+</tr>
+<tr class="even">
+<td><code>AutoModel</code> / <code>AutoTokenizer</code></td>
+<td>Auto-detect and load the right model class</td>
+</tr>
+<tr class="odd">
+<td><code>datasets.load_dataset()</code></td>
+<td>Load any Hub dataset with streaming support</td>
+</tr>
+<tr class="even">
+<td><code>Trainer</code></td>
+<td>Full training loop with logging, evaluation, checkpointing</td>
+</tr>
+<tr class="odd">
+<td><code>PEFT</code> (LoRA, QLoRA)</td>
+<td>Fine-tune large models on limited hardware</td>
+</tr>
+<tr class="even">
+<td><code>accelerate</code></td>
+<td>Distribute training across GPUs with minimal code changes</td>
+</tr>
+<tr class="odd">
+<td><code>huggingface_hub</code></td>
+<td>Upload/download models, datasets, and files programmatically</td>
+</tr>
+<tr class="even">
+<td><code>evaluate</code></td>
+<td>Standardized metrics (accuracy, BLEU, ROUGE, etc.)</td>
+</tr>
+</tbody>
+</table>
+<p>Hugging Face also integrates with:</p>
+<ul>
+<li><strong>PyTorch, TensorFlow, JAX</strong> — Transformers models work across all three</li>
+<li><strong>LangChain</strong> — use HF models as components in LLM chains and RAG pipelines</li>
+<li><strong>Sentence Transformers</strong> — specialized library for text embeddings, built on HF</li>
+<li><strong>GGUF / llama.cpp</strong> — quantized model formats hosted on the Hub for local inference</li>
+<li><strong>Weights &amp; Biases, MLflow</strong> — experiment tracking integrations</li>
+</ul>
+</section>
+<section id="model-hosting-and-inference" class="level2">
+<h2 class="anchored" data-anchor-id="model-hosting-and-inference">Model hosting and inference</h2>
+<p>Hugging Face offers several options for running models beyond your local machine:</p>
+<ul>
+<li><strong>Inference API</strong>: Send HTTP requests to hosted models for quick prototyping — no GPU required on your end. Free tier available for many models.</li>
+<li><strong>Inference Endpoints</strong>: Deploy dedicated, scalable endpoints for production workloads. You choose the hardware (CPU, GPU, etc.) and pay for what you use.</li>
+<li><strong>Spaces</strong>: Host interactive demos powered by Gradio or Streamlit. Useful for sharing results with collaborators or embedding demos in papers and presentations.</li>
+</ul>
+</section>
+<section id="uw-madison-on-hugging-face" class="level2">
+<h2 class="anchored" data-anchor-id="uw-madison-on-hugging-face">UW-Madison on Hugging Face</h2>
+<p>UW-Madison has a verified organization on Hugging Face: <a href="https://huggingface.co/uw-madison">huggingface.co/uw-madison</a>. It hosts models developed by UW researchers, including efficient transformer architectures like <a href="https://huggingface.co/uw-madison/yoso-4096">YOSO</a> and <a href="https://huggingface.co/uw-madison/nystromformer-4096">Nystromformer</a>. If your lab is publishing models, consider hosting them under this org for visibility and discoverability.</p>
+<p>There are also department-level orgs like <a href="https://huggingface.co/UW-Madison-Radiology">UW-Madison-Radiology</a>. Contact your department or the <a href="https://datascience.wisc.edu/hub/">Data Science Hub</a> if you’re interested in setting one up.</p>
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Core library</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install transformers</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Common companion libraries</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install datasets evaluate accelerate huggingface_hub</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># For parameter-efficient fine-tuning</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install peft trl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions?</h2>
+<p>If you have any lingering questions about this resource, please feel free to post to the <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a">Nexus Q&amp;A</a> on GitHub. We will improve materials on this website as additional questions come in.</p>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: Exploring Fact-Based QA with RAG: Romeo and Juliet</a>: Hands-on tutorial building a RAG pipeline with Hugging Face models and sentence-transformers.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html"><strong>Workshop</strong>: Intro to Text Analysis / NLP</a>: Covers NLP fundamentals including deploying models with Hugging Face.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2024-03-12.html"><strong>Talk</strong>: Exploring Model Sharing in the Age of Foundation Models</a>: ML+X forum on model sharing best practices, featuring Hugging Face and LLaVA-NeXT.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html"><strong>GenAI</strong>: OpenScholar</a>: An open-source scientific literature assistant with models hosted on Hugging Face.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/DeepForest.html"><strong>Model</strong>: DeepForest</a>: Ecological object detection models hosted on Hugging Face.</li>
+<li><a href="https://huggingface.co/docs">Hugging Face Documentation</a></li>
+<li><a href="https://huggingface.co/learn/nlp-course">Hugging Face Course</a>: Free, comprehensive NLP course covering Transformers end to end.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="R3VpZGVzJTJDUmVwcm9kdWNpYmlsaXR5JTJDR2l0JTJGR2l0SHViJTJDQ29kZS1hbG9uZw==" data-listing-date-sort="1720656000000" data-listing-file-modified-sort="1772486573342" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3679">
-<a href="../../Learn/Guides/Github-desktop.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/github-desktop.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Version Control with GitHub Desktop
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3VpZGVz'); return false;">Guides</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVwcm9kdWNpYmlsaXR5'); return false;">Reproducibility</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2l0JTJGR2l0SHVi'); return false;">Git/GitHub</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
-
-</div>
-<div class="card-text listing-description delink">
-Navigating the world of version control systems like Git can initially feel daunting, especially for those new to programming or collaborative software development projects.…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-11
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="R3VpZGVz" data-listing-date-sort="1719187200000" data-listing-file-modified-sort="1772486573343" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1278">
-<a href="../../Learn/Guides/How-to-contribute.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/DALL·E_knowledge-sharing-AI.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-How to Contribute?
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3VpZGVz'); return false;">Guides</div>
-
-</div>
-<div class="card-text listing-description delink">
-Nexus is built by people sharing what they’ve learned with each other. This guide covers what we’re looking for, what makes a good contribution, and how to submit one.
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-ML+X
-</div>
-<div class="listing-date">
-2024-06-24
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -866,21 +952,9 @@ ML+X
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Learn/Books/index.html" class="pagination-link" aria-label="Books">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Books</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Learn/Notebooks/index.html" class="pagination-link" aria-label="Notebooks">
-        <span class="nav-page-text">Notebooks</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/Libraries/HuggingFace.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
