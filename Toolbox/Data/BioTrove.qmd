@@ -1,0 +1,84 @@
+---
+title: "BioTrove"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2025-09-11
+date-format: long
+image: "../../../images/Clustering-Biotrove.png"
+
+categories:
+  - Data
+  - Image data
+  - Computer vision
+  - Biology
+  - Ecology
+  - Biodiversity
+  - Deep learning
+  - CLIP
+  - Hugging Face
+  - Citizen science
+---
+
+[BioTrove](https://baskargroup.github.io/BioTrove/) is the largest publicly accessible biodiversity image dataset, containing **161.9 million images** spanning approximately **366,000 species** across three kingdoms: Animalia, Fungi, and Plantae. Curated from [iNaturalist](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/iNaturalist.html) research-grade observations, BioTrove provides an unprecedented resource for training and evaluating AI models in biodiversity and ecology. It was published as a **Spotlight** paper at the NeurIPS 2024 Datasets and Benchmarks track.
+
+### What makes BioTrove valuable for AI?
+
+BioTrove addresses a critical gap in AI for biodiversity: the lack of large-scale, curated, and openly available training data. While previous datasets like TREEOFLIFE-10M offered strong species diversity, BioTrove exceeds their scale by a factor of ~16x while maintaining comparable taxonomic breadth.
+
+Each image is annotated with:
+
+- Scientific names and common names
+- Full taxonomic hierarchy (kingdom, phylum, class, order, family, genus, species)
+- Image URLs and metadata for reproducible access
+
+### Taxonomic coverage
+
+BioTrove covers eleven major taxonomic groups, including Aves (birds), Insecta (insects), Plantae (plants), Fungi, Mammalia (mammals), Reptilia, Amphibia, Arachnida, Mollusca, Actinopterygii (ray-finned fish), and Animalia (other animals).
+
+### Key subsets and benchmarks
+
+- **BioTrove-Train (~40M images, ~33K species)**: A curated training subset focused on seven taxonomic categories (Aves, Arachnida, Insecta, Plantae, Fungi, Mollusca, Reptilia) chosen for their biodiversity impact and underrepresentation in standard image models.
+- **BioTrove-Balanced (~112K images)**: Up to 500 species per category with 50 images each, for balanced evaluation.
+- **BioTrove-Unseen**: Species with fewer than 30 instances, for testing generalization to rare or unseen species.
+- **BioTrove-LifeStages**: Evaluates recognition across developmental stages (egg, larva, pupa, adult) for five insect species.
+
+### Pretrained models (BioTrove-CLIP)
+
+Three CLIP-based models were trained on BioTrove-Train and released on Hugging Face:
+
+- **BT-CLIP-O**: ViT-B/16 initialized from OpenCLIP
+- **BT-CLIP-B**: ViT-B/16 initialized from BioCLIP
+- **BT-CLIP-M**: ViT-L/14 initialized from MetaCLIP
+
+These models are useful for biodiversity-focused image classification, retrieval, and zero-shot species identification.
+
+### Key applications
+
+- **Pest control and crop monitoring**: Training models to identify pest species and agricultural threats
+- **Biodiversity assessment**: Large-scale species identification and population monitoring
+- **Environmental conservation**: Detecting ecological changes and supporting wildlife monitoring
+- **Fine-grained classification**: Building models that distinguish visually similar species
+- **Zero-shot species recognition**: Leveraging CLIP-based models for identifying species not seen during training
+
+### Access
+
+BioTrove metadata and tools are available on [GitHub](https://github.com/baskargroup/BioTrove/), with dataset cards and pretrained models on [Hugging Face](https://huggingface.co/datasets/BGLab/BioTrove). The BioTrove library includes scripts for downloading, filtering, and preprocessing the data into ML-ready image-text pairs.
+
+## Related datasets & projects
+
+- [**Data**: iNaturalist](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/iNaturalist.html): The source platform for BioTrove's research-grade observations.
+- [**Data**: INQUIRE](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/INQUIRE.html): A retrieval benchmark built on iNaturalist data.
+- [**Project**: Clustering the BioTrove Dataset](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/BioTrove-Clustering.html): An ML Marathon challenge using BioTrove for unsupervised species clustering.
+
+## Questions
+
+If you have questions about BioTrove or want to discuss use cases, feel free to post in the [ML+X Nexus Q&A forum](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a).
+
+## Related resources
+
+- [**Paper**: BioTrove: A Large Curated Image Dataset Enabling AI for Biodiversity (NeurIPS 2024)](https://arxiv.org/abs/2406.17720)
+- [**Hugging Face**: BioTrove dataset card](https://huggingface.co/datasets/BGLab/BioTrove)
+- [**Hugging Face**: BioTrove-CLIP models](https://huggingface.co/BGLab/BioTrove-CLIP)
+- [**GitHub**: BioTrove tools and scripts](https://github.com/baskargroup/BioTrove/)
