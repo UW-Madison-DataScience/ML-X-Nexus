@@ -314,7 +314,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-consider-the-cloud-for-mlai-research" id="toc-why-consider-the-cloud-for-mlai-research" class="nav-link active" data-scroll-target="#why-consider-the-cloud-for-mlai-research">Why consider the cloud for ML/AI research?</a></li>
+  <li><a href="#why-run-mlai-in-the-cloud" id="toc-why-run-mlai-in-the-cloud" class="nav-link active" data-scroll-target="#why-run-mlai-in-the-cloud">Why run ML/AI in the cloud?</a>
+  <ul class="collapse">
+  <li><a href="#cloud-vs.-university-hpc-clusters" id="toc-cloud-vs.-university-hpc-clusters" class="nav-link" data-scroll-target="#cloud-vs.-university-hpc-clusters">Cloud vs.&nbsp;university HPC clusters</a></li>
+  <li><a href="#when-does-model-size-justify-cloud-compute" id="toc-when-does-model-size-justify-cloud-compute" class="nav-link" data-scroll-target="#when-does-model-size-justify-cloud-compute">When does model size justify cloud compute?</a></li>
+  <li><a href="#llm-apis-skip-the-infrastructure-entirely" id="toc-llm-apis-skip-the-infrastructure-entirely" class="nav-link" data-scroll-target="#llm-apis-skip-the-infrastructure-entirely">LLM APIs: skip the infrastructure entirely</a></li>
+  <li><a href="#a-note-on-cloud-costs" id="toc-a-note-on-cloud-costs" class="nav-link" data-scroll-target="#a-note-on-cloud-costs">A note on cloud costs</a></li>
+  </ul></li>
   <li><a href="#why-use-a-uw-provisioned-account" id="toc-why-use-a-uw-provisioned-account" class="nav-link" data-scroll-target="#why-use-a-uw-provisioned-account">Why use a UW-provisioned account?</a></li>
   <li><a href="#paying-for-cloud-compute-with-grant-money" id="toc-paying-for-cloud-compute-with-grant-money" class="nav-link" data-scroll-target="#paying-for-cloud-compute-with-grant-money">Paying for cloud compute with grant money</a>
   <ul class="collapse">
@@ -380,16 +386,127 @@ ul.task-list li input[type="checkbox"] {
 
 <p>UW-Madison offers enterprise cloud computing through contracts with <strong>Amazon Web Services (AWS)</strong>, <strong>Google Cloud Platform (GCP)</strong>, and <strong>Microsoft Azure</strong>. These services are managed by the <a href="https://kb.wisc.edu/page.php?id=109785">UW Public Cloud Team</a>, a cross-disciplinary group of operations, cybersecurity, and research cyberinfrastructure (RCI) professionals.</p>
 <p>Using a UW-provisioned cloud account — rather than a personal one — gives you access to institutional pricing discounts, lower overhead on grants, data protection agreements, security monitoring, and dedicated support. If you’re doing any research or university work in the cloud, start here.</p>
-<section id="why-consider-the-cloud-for-mlai-research" class="level2">
-<h2 class="anchored" data-anchor-id="why-consider-the-cloud-for-mlai-research">Why consider the cloud for ML/AI research?</h2>
-<p>If you’re used to running workloads on a lab workstation or campus cluster, commercial cloud can feel like an unnecessary expense. But for many ML/AI use cases, it offers real advantages:</p>
+<section id="why-run-mlai-in-the-cloud" class="level2">
+<h2 class="anchored" data-anchor-id="why-run-mlai-in-the-cloud">Why run ML/AI in the cloud?</h2>
+<p>You have ML/AI code that works on your laptop. But at some point you need more — a bigger GPU (or several), a dataset that won’t fit on disk, or the ability to run dozens of training experiments overnight. You could invest in local hardware or compete for time on a shared HPC cluster, but cloud platforms let you rent exactly the hardware you need, for exactly as long as you need it, and then shut it down.</p>
+<section id="cloud-vs.-university-hpc-clusters" class="level3">
+<h3 class="anchored" data-anchor-id="cloud-vs.-university-hpc-clusters">Cloud vs.&nbsp;university HPC clusters</h3>
+<p>Most universities offer shared HPC clusters with GPUs. These are excellent resources — but they have tradeoffs worth understanding:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 41%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>University HPC</th>
+<th>Cloud (AWS, GCP, Azure)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Cost</strong></td>
+<td>Free or subsidized</td>
+<td>Pay per hour</td>
+</tr>
+<tr class="even">
+<td><strong>GPU availability</strong></td>
+<td>Shared queue; wait times during peak periods and per-job runtime limits (often 24–72 hrs) that may require checkpointing long training runs</td>
+<td>On-demand (subject to quota); jobs run as long as needed</td>
+</tr>
+<tr class="odd">
+<td><strong>Hardware variety</strong></td>
+<td>Fixed hardware refresh cycle (3–5 years)</td>
+<td>Latest GPUs available immediately (A100, H100, B200)</td>
+</tr>
+<tr class="even">
+<td><strong>Scaling</strong></td>
+<td>Limited by cluster size</td>
+<td>Spin up hundreds of jobs in parallel</td>
+</tr>
+<tr class="odd">
+<td><strong>Multi-GPU / NVLink</strong></td>
+<td>Sometimes available, depends on cluster</td>
+<td>Available on demand — essential for training, fine-tuning, or serving large LLMs that don’t fit in a single GPU’s memory</td>
+</tr>
+<tr class="even">
+<td><strong>Job orchestration</strong></td>
+<td>Writing scheduler scripts, packaging environments, and wiring up parallel job arrays can take significant refactoring</td>
+<td>Managed ML platforms (Vertex AI, SageMaker, Azure ML) handle provisioning, parallelism, and teardown</td>
+</tr>
+<tr class="odd">
+<td><strong>Software environment</strong></td>
+<td>Module system; some clusters support containers — research computing staff can often help with setup</td>
+<td>Prebuilt containers for common ML frameworks (PyTorch, TensorFlow, XGBoost); bring your own Docker image for full control</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The short version:</strong> use your university cluster when it has the hardware you need and the queue isn’t blocking you. Use the cloud when you need hardware your cluster doesn’t have, need to scale beyond what the queue allows, or need a specific software environment you can’t easily get on-campus. Many researchers use both — develop and test on HPC, then scale to cloud for large experiments or specialized hardware.</p>
+</section>
+<section id="when-does-model-size-justify-cloud-compute" class="level3">
+<h3 class="anchored" data-anchor-id="when-does-model-size-justify-cloud-compute">When does model size justify cloud compute?</h3>
+<p>Not every model needs cloud hardware. Here’s a rough guide:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 20%">
+<col style="width: 29%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model scale</th>
+<th>Parameters</th>
+<th>Example models</th>
+<th>Where to run</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Small</td>
+<td>&lt; 10M</td>
+<td>Logistic regression, small CNNs, XGBoost</td>
+<td>Laptop or HPC — cloud adds overhead without much benefit</td>
+</tr>
+<tr class="even">
+<td>Medium</td>
+<td>10M–500M</td>
+<td>ResNets, BERT-base, mid-sized transformers</td>
+<td>HPC or cloud with a single GPU (T4 or L4)</td>
+</tr>
+<tr class="odd">
+<td>Large</td>
+<td>500M–10B</td>
+<td>GPT-2, LLaMA-7B, fine-tuning large transformers</td>
+<td>Cloud — requires A100-class GPUs with 40–80 GB VRAM</td>
+</tr>
+<tr class="even">
+<td>Very large</td>
+<td>10B+</td>
+<td>LLaMA-70B, Gemini, GPT-4-scale models</td>
+<td>Cloud — requires multi-GPU nodes with NVLink</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Large language models (LLMs) are a strong use case for cloud.</strong> Fine-tuning a 7B-parameter model requires ~28 GB of GPU memory just for the model weights (in mixed precision), plus memory for gradients and optimizer states — easily exceeding what a single consumer GPU provides. Cloud platforms give you on-demand access to A100 (40/80 GB), H100 (80 GB), and B200 GPUs without purchasing hardware that costs tens of thousands of dollars.</p>
+<p>For smaller models (under ~500M parameters), a university HPC cluster with T4 or V100 GPUs is often sufficient. Cloud becomes the clear choice when your model or dataset outgrows local hardware, or when you need rapid iteration across many experiments.</p>
+</section>
+<section id="llm-apis-skip-the-infrastructure-entirely" class="level3">
+<h3 class="anchored" data-anchor-id="llm-apis-skip-the-infrastructure-entirely">LLM APIs: skip the infrastructure entirely</h3>
+<p>For many GenAI tasks, you don’t need to provision GPUs at all. Services like the OpenAI API, Google’s Vertex AI, and Amazon Bedrock let you call frontier models (GPT-4o, Gemini, Claude, etc.) with a simple API request — no GPU provisioning, no model hosting. LLM API calls cost fractions of a cent each and are often the fastest, most cost-effective path. See <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html">GenAI at UW-Madison</a> for available services.</p>
+</section>
+<section id="a-note-on-cloud-costs" class="level3">
+<h3 class="anchored" data-anchor-id="a-note-on-cloud-costs">A note on cloud costs</h3>
+<p>Cloud computing is not free, but it’s worth putting costs in context:</p>
 <ul>
-<li><strong>No hardware to buy or maintain.</strong> GPUs are expensive ($10k–$40k+ per card), depreciate quickly, and require someone to manage drivers, cooling, and failures. Cloud lets you rent exactly the hardware you need and stop paying when you’re done.</li>
-<li><strong>Scale on demand.</strong> Need 8 interconnected GPUs (NVLink) for a large training job? Spin them up for a few hours, then shut them down. Cloud platforms make it straightforward to scale up for intensive work and scale back down to zero when idle.</li>
-<li><strong>LLM APIs skip the infrastructure entirely.</strong> Services like the OpenAI API, Google’s Vertex AI, and Amazon Bedrock let you call frontier models (GPT-4o, Gemini, Claude, etc.) with a simple API request — no GPU provisioning, no model hosting. For many GenAI tasks, this is the fastest and most cost-effective path. See <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html">GenAI at UW-Madison</a> for available services.</li>
-<li><strong>Costs can be quite affordable.</strong> A single GPU instance (e.g., NVIDIA T4) runs ~$1–3/hr. Fine-tuning a small model on a moderate dataset might cost $10–50. LLM API calls are fractions of a cent each. For small-to-medium workloads, cloud costs are often far less than the capital and staff costs of owning equivalent hardware. That said, sustained 24/7 GPU usage will add up — cloud is most cost-effective when you can start and stop resources as needed.</li>
-<li><strong>There is a learning curve</strong>, as with any new tool. But UW-developed workshop materials are available to help you get started — see the <a href="#related-resources">Related resources</a> at the bottom of this page.</li>
+<li><strong>Hardware is expensive and ages fast.</strong> A single A100 GPU costs ~$15,000 and is outdated within a few years. Cloud lets you rent the latest hardware by the hour.</li>
+<li><strong>You pay only for what you use.</strong> Stop a VM and the meter stops — valuable for bursty research workloads. A single T4 GPU instance runs ~$1–3/hr. Fine-tuning a small model on a moderate dataset might cost $10–50.</li>
+<li><strong>Managed services save development time.</strong> You don’t have to write scheduling logic, package custom containers, or maintain orchestration infrastructure — managed ML platforms handle that plumbing so you can focus on the ML.</li>
+<li><strong>Budgets and alerts keep you safe.</strong> All three platforms offer billing dashboards and budget alerts to prevent surprise bills.</li>
 </ul>
+<p>The key habit: choose the right machine size, stop resources when idle, and monitor spending.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -403,6 +520,20 @@ Note
 <p>Cloud isn’t the right fit for every workload. If you want to avoid cloud costs, UW’s <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">CHTC</a> offers free GPU access for batch jobs (though jobs are queued and have runtime limits). Many researchers use a mix of both.</p>
 </div>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a learning curve, as with any new tool. But UW-developed workshop materials are available to help you get started — see the <a href="#related-resources">Related resources</a> at the bottom of this page.</p>
+</div>
+</div>
+</section>
 </section>
 <section id="why-use-a-uw-provisioned-account" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-a-uw-provisioned-account">Why use a UW-provisioned account?</h2>
