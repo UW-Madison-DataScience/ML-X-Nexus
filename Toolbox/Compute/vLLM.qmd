@@ -1,0 +1,150 @@
+---
+title: "vLLM"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-03-06
+date-format: long
+image: "../../../images/vLLM.png"
+categories:
+  - Compute
+  - GPU
+  - LLM
+  - Inference
+  - Serving
+---
+
+[vLLM](https://docs.vllm.ai/) is a high-throughput, memory-efficient inference and serving engine for large language models (LLMs). Originally developed at UC Berkeley, vLLM has become one of the most widely adopted open-source tools for deploying LLMs in production, thanks to its innovative memory management and support for a broad range of model architectures.
+
+vLLM is designed to solve a core challenge in LLM deployment: serving models efficiently at scale. Running inference on large models like LLaMA, Mistral, or Qwen typically requires significant GPU memory and careful batching to achieve acceptable throughput. vLLM addresses this with **PagedAttention**, a technique that manages the key-value (KV) cache in non-contiguous blocks — similar to virtual memory paging in operating systems — dramatically reducing memory waste and enabling higher concurrency.
+
+## Key features
+
+- **PagedAttention**: Efficient KV cache management that reduces GPU memory waste by up to 4x compared to naive implementations, enabling more concurrent requests per GPU.
+- **Continuous batching**: Dynamically batches incoming requests rather than waiting for a full batch, reducing latency and improving GPU utilization.
+- **Tensor parallelism and pipeline parallelism**: Distributes models across multiple GPUs for serving models that exceed the memory of a single device.
+- **OpenAI-compatible API server**: Drop-in replacement for OpenAI's API format, making it easy to integrate with existing applications and tooling.
+- **Broad model support**: Supports a wide range of architectures including LLaMA, Mistral, Mixtral, Qwen, Falcon, GPT-NeoX, Phi, Gemma, and many more.
+- **Quantization support**: Run quantized models (AWQ, GPTQ, SqueezeLLM, FP8) for reduced memory footprint with minimal quality loss.
+- **Speculative decoding**: Accelerates inference by using a smaller draft model to propose tokens that the larger model verifies in parallel.
+- **Multi-modal support**: Serve models that handle both text and image inputs (e.g., LLaVA, Phi-3-Vision).
+
+## Getting started
+
+Install vLLM with pip:
+
+```bash
+pip install vllm
+```
+
+Start serving a model with a single command:
+
+```bash
+vllm serve meta-llama/Llama-3.1-8B-Instruct
+```
+
+This launches an OpenAI-compatible API server on port 8000. You can then send requests using any OpenAI-compatible client:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(base_url="http://localhost:8000/v1", api_key="unused")
+
+response = client.chat.completions.create(
+    model="meta-llama/Llama-3.1-8B-Instruct",
+    messages=[{"role": "user", "content": "Explain PagedAttention in one paragraph."}],
+)
+print(response.choices[0].message.content)
+```
+
+## Running vLLM on Run:ai
+
+[Run:ai](https://www.run.ai/) is a GPU orchestration platform that manages and schedules GPU workloads across shared clusters. Several research computing environments — including some at UW-Madison — use Run:ai to allocate GPU resources fairly across users and teams. vLLM integrates naturally with Run:ai-managed infrastructure, since vLLM workloads are deployed as containerized services that Run:ai can schedule and monitor.
+
+### Why use vLLM with Run:ai?
+
+- **GPU scheduling**: Run:ai handles GPU allocation, queuing, and fair-sharing across users, so you don't need to manually claim or wait for GPUs.
+- **Containerized deployment**: vLLM runs in Docker containers, which align well with Run:ai's Kubernetes-based orchestration. You can use the official [vLLM Docker images](https://docs.vllm.ai/en/latest/deployment/docker.html) or build custom images.
+- **Fractional GPU support**: Run:ai supports fractional GPU allocation, which can be useful for serving smaller quantized models that don't need an entire GPU.
+- **Multi-node serving**: For very large models, Run:ai can allocate multiple GPUs across nodes, and vLLM's tensor parallelism can span them.
+
+### Example: submitting a vLLM job on Run:ai
+
+A typical workflow for deploying vLLM on a Run:ai-managed cluster involves:
+
+1. **Build or pull a container image** with vLLM installed. The official vLLM images are a good starting point:
+
+```bash
+docker pull vllm/vllm-openai:latest
+```
+
+2. **Submit a workload** through the Run:ai CLI or web interface, requesting the appropriate GPU resources:
+
+```bash
+runai submit vllm-serve \
+    --image vllm/vllm-openai:latest \
+    --gpu 1 \
+    --port 8000:8000 \
+    --command -- vllm serve meta-llama/Llama-3.1-8B-Instruct \
+    --large-shm
+```
+
+3. **Access the API endpoint** once the job is running. You may need to set up port forwarding or use the Run:ai-provided service URL:
+
+```bash
+runai port-forward vllm-serve --port 8000:8000
+```
+
+4. **Send requests** to the locally forwarded endpoint, just as you would with any local vLLM server.
+
+::: {.callout-note}
+The exact CLI syntax and available options depend on your cluster's Run:ai configuration. Consult your local system administrators or Run:ai documentation for cluster-specific instructions.
+:::
+
+### Model storage considerations
+
+Large model weights (often tens of gigabytes) should be stored on shared filesystems accessible to your Run:ai jobs rather than downloaded fresh each time. Common approaches include:
+
+- Mounting a shared NFS or PVC (Persistent Volume Claim) that contains pre-downloaded model weights.
+- Using Hugging Face's cache directory (`HF_HOME`) pointed at a shared storage location.
+- Pre-baking model weights into a custom Docker image (suitable for frequently used models).
+
+## Performance tuning
+
+vLLM offers several knobs for optimizing serving performance:
+
+- **`--tensor-parallel-size`**: Number of GPUs to split the model across. Use this when a model doesn't fit on a single GPU.
+- **`--max-model-len`**: Maximum sequence length. Reducing this frees GPU memory for more concurrent requests.
+- **`--gpu-memory-utilization`**: Fraction of GPU memory vLLM should use (default 0.9). Lower values leave room for other processes.
+- **`--quantization`**: Specify quantization method (awq, gptq, fp8) for reduced memory usage.
+- **`--enforce-eager`**: Disable CUDA graph compilation for debugging or when memory is tight.
+
+Example with multiple GPUs and quantization:
+
+```bash
+vllm serve meta-llama/Llama-3.1-70B-Instruct \
+    --tensor-parallel-size 4 \
+    --quantization awq \
+    --max-model-len 4096
+```
+
+## When to use vLLM
+
+vLLM is a strong choice when you need to:
+
+- Serve open-weight LLMs with high throughput and low latency
+- Host a private, self-managed LLM endpoint (e.g., for data privacy or compliance)
+- Run inference on models too large for a single GPU
+- Provide an OpenAI-compatible API without relying on external services
+
+For simpler use cases like one-off inference or experimentation, tools like Hugging Face `transformers` with `pipeline()` or [Ollama](https://ollama.com/) may be easier to set up. For managed cloud deployments, consider services like AWS SageMaker or Google Cloud's Vertex AI.
+
+## Questions
+
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
+
+## Related resources
+
+- [**Compute**: Center for High Throughput Computing (CHTC)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) - UW-Madison's core computational service provider, offering GPU access for machine learning jobs.
+- [**Compute**: BadgerCompute](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html) - UW-Madison's browser-based interactive computing service for lightweight GPU workloads.
+- [**Compute**: Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html) - Cloud-hosted Jupyter notebooks with optional GPU access for prototyping.
