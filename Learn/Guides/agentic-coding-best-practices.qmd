@@ -134,7 +134,30 @@ cd yourrepo && claude
 
 **Best for:** Developers comfortable with the terminal, CI/CD integration, scripting and automation, working in remote/SSH environments, and organizations that need to route traffic through their own cloud provider.
 
-#### GitHub Copilot (Agent mode in VS Code)
+#### GitHub Copilot
+
+[GitHub Copilot](https://github.com/features/copilot) is GitHub's AI coding assistant. It's a **multi-model platform** — you can choose from Claude, GPT, Gemini, and others as the underlying model. This is fundamentally different from Claude Code, and the distinction matters.
+
+##### "Claude" in Copilot vs. Claude Code: what's actually different?
+
+When you select Claude as the model in Copilot (whether in VS Code agent mode or the async coding agent), you're using Claude's *language model* — but **GitHub's orchestration layer** is driving it. GitHub controls the system prompts, the tool-calling framework, the context management, and how your instructions are delivered to the model. Think of it as Claude's brain in GitHub's body.
+
+Claude Code, by contrast, is Anthropic's *own* agentic system built specifically around Claude. Anthropic controls the entire stack: the system prompts are purpose-built for agentic coding, the tool framework is designed for Claude's strengths, and features like extended thinking, `CLAUDE.md` project configuration, and the permission model are all tightly integrated.
+
+**Why this matters in practice:**
+
+- **Context handling** — Copilot primarily derives context from open tabs and (when indexing is enabled) broader repo structure. Claude Code maps your entire repository, accumulating context through conversation threading. For multi-file tasks, Claude Code generally [understands project architecture more holistically](https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/).
+- **Instruction following** — Claude Code reads your `CLAUDE.md` files natively. Copilot has its own instruction mechanism (`copilot-instructions.md`), but users have [reported](https://github.com/orgs/community/discussions/176156) that Claude models don't always follow Copilot's instruction files as reliably — because the model is being orchestrated by a system designed for multiple models, not optimized for any one.
+- **Extended thinking** — Claude Code uses extended thinking by default. Copilot support for thinking tokens has been [inconsistent](https://github.com/orgs/community/discussions/176156), with some configurations producing errors when extended thinking parameters are passed.
+- **Quality on complex tasks** — Independent testing shows Claude Code produces a [higher accept rate (44% vs 38%)](https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/) and outperforms Copilot in tasks requiring explanation, logic, and edge-case handling. Copilot excels at speed and inline completions.
+
+::: {.callout-note collapse="true"}
+## Claude as a standalone agent on GitHub (Feb 2026)
+
+As of [February 2026](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/), Claude is also available as a **standalone agent** on GitHub — not just a model choice within Copilot. You can assign issues directly to `@claude` (or `@copilot`, or `@codex`) and each agent runs independently in its own environment. In this mode, Claude uses Anthropic's own agent harness rather than GitHub's Copilot orchestration, which should close the quality gap. This is available with Copilot Pro+, Business, and Enterprise plans.
+:::
+
+##### Agent mode (in VS Code)
 
 1. Open your repo in VS Code with the Copilot extension installed
 2. Open the Copilot chat panel (Ctrl/Cmd+Shift+I)
@@ -147,40 +170,44 @@ Copilot will:
 2. Create/edit files directly — **no permission prompt by default** in many configurations
 3. May run tests if it decides to (or you can ask it to)
 4. You review the changes in VS Code's diff view
-5. **You** handle the git workflow (branch, commit, push, PR) — or use the Copilot coding agent for that
+5. **You** handle the git workflow (branch, commit, push, PR) — or use the async coding agent for that
 
-**Friction:** The IDE experience is smooth but you have less visibility into *why* the agent made certain choices. Agent mode is also still evolving — for complex multi-step tasks it may not iterate as effectively as Claude Code's loop. The upside is zero context-switching: you're already in your editor.
+**Friction:** The IDE experience is smooth but you have less visibility into *why* the agent made certain choices. Agent mode is still evolving — for complex multi-step tasks it may not iterate as effectively as Claude Code's agentic loop. The upside is zero context-switching: you're already in your editor.
 
-#### GitHub Copilot (Coding agent — async)
+##### Coding agent (async)
 
 1. Go to your repo on GitHub.com
 2. Create an issue: *"Add a slugify utility function to src/utils/ with tests"*
-3. Assign the issue to Copilot (or comment `@copilot` on the issue)
-4. Walk away — Copilot works in a cloud environment
+3. Assign the issue to Copilot (or `@claude` / `@codex` for those agents)
+4. Walk away — the agent works in a cloud environment
 
-Copilot will:
+The agent will:
 
 1. Create a branch
 2. Implement the function and tests
-3. Open a PR referencing the issue
+3. Open a draft PR referencing the issue
 4. You get a notification when the PR is ready to review
+
+By default, the async coding agent uses Claude Sonnet 4.6 when no model is explicitly selected. You can choose from Claude Opus 4.6, Claude Sonnet 4.5, GPT-5.1-Codex-Max, GPT-5.2-Codex, and others via the model picker.
 
 **Friction:** This is the most hands-off option, but you have the least control during execution. Works best for well-scoped, clearly described issues. If the task is ambiguous or requires judgment calls, you may end up doing multiple rounds of PR review and comments to guide it.
 
+**Best for:** Inline autocomplete, single-file edits, and quick agent tasks within the IDE. Also excellent for async PR generation on well-defined issues. Many developers use Copilot *alongside* Claude Code — Copilot for inline completions in the editor, Claude Code in the terminal for deep multi-file work.
+
 #### Key takeaway
 
-The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more autonomous" doesn't always mean "smoother experience."
+The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more autonomous" doesn't always mean "better results."
 
 Counterintuitively, **Claude.ai can feel lower-friction than Claude Code** for many tasks — the chat interface just *answers*, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (in any form) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.
 
-The trade-off is between **autonomy** and **control**:
+The trade-off is between **autonomy**, **control**, and **optimization**:
 
 - **Claude.ai (chat)** — not agentic, but fluid and zero-risk. You do the manual work.
-- **Claude Code (CLI, desktop, IDE extension, or web)** — fully agentic, with an explicit permission model you can tune from conservative to autonomous.
-- **Copilot agent mode (IDE)** — agentic within the IDE, fewer interruptions than Claude Code, but less granular control.
-- **Copilot coding agent (async)** — most hands-off, but least control during execution.
+- **Claude Code (desktop, web, CLI, or IDE extension)** — fully agentic, with Anthropic's purpose-built orchestration optimized for Claude. The deepest integration between model and tooling.
+- **Copilot with Claude model (IDE)** — agentic within the IDE, fewer interruptions, but Claude is running through GitHub's orchestration layer rather than Anthropic's. Good for inline work; less optimized for complex multi-step reasoning.
+- **Claude agent on GitHub (async)** — Anthropic's own agent harness running on GitHub's infrastructure. Assign issues to `@claude` for async PR generation.
 
-Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's guardrails are a feature. Quick question or brainstorming? Claude.ai chat is hard to beat. Cranking through well-understood changes? Copilot's flow might be preferable.
+Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's guardrails are a feature. Quick question or brainstorming? Claude.ai chat is hard to beat. Already in VS Code and want inline help? Copilot is hard to beat. Need Claude's full reasoning depth on a complex refactor? Claude Code is the most direct path to the model's capabilities.
 
 ## Working effectively with Claude Code
 
