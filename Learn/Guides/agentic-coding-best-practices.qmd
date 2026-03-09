@@ -57,20 +57,22 @@ The [claude.ai](https://claude.ai) chat interface is where many people start —
 
 ### Claude Code (CLI agent)
 
-[Claude Code](https://code.claude.com/) is Anthropic's **terminal-based agentic tool**. This is the fully autonomous version — it runs in your shell, reads your codebase, executes commands, edits files, and iterates on its own output.
+[Claude Code](https://code.claude.com/) is Anthropic's **terminal-based agentic tool**. It runs in your shell and can read your codebase, execute commands, edit files, and iterate on its own output — but it asks permission before doing most things.
 
 **Strengths:**
 
 - Full agentic capability: reads files, writes code, runs tests, fixes errors, commits — all in a loop
 - Works across your entire project (not just open files)
-- `CLAUDE.md` project file for persistent instructions and guardrails
-- Permission system lets you approve/deny each action (or configure auto-approve for low-risk operations)
+- **Strong default guardrails** — prompts you to approve/deny each tool action (file edits, shell commands, etc.) before it executes. You stay in the loop by default.
+- `CLAUDE.md` project file for persistent instructions and project-specific guardrails
+- Configurable autonomy: you can loosen permissions (auto-approve reads, or even all actions) as you build trust, or tighten them for sensitive work
 - Supports extended thinking for complex reasoning tasks
 
 **Limitations:**
 
 - CLI-first — steeper learning curve if you're not comfortable in the terminal
-- Direct shell access means higher security surface (see [Security section](#security-protecting-your-environment) below)
+- Direct shell access means the security surface *potential* is high, even though defaults are conservative (see [Security section](#security-protecting-your-environment) below)
+- The permission prompts can feel slow if you're used to more autonomous tools — there's a trade-off between safety and flow
 - Pay-per-token via Anthropic API, which can add up during long sessions
 
 **Best for:** Multi-step feature development, large refactors, debugging complex issues, any task that benefits from the agent being able to run and test its own code.
@@ -109,8 +111,8 @@ GitHub Copilot is an **IDE-integrated** assistant. When you select Claude as the
 
 **Limitations:**
 
-- Actions are mediated by the IDE — less autonomous than CLI-based Claude Code
-- Agent mode is still maturing and more constrained than a full CLI agent
+- Agent mode is still maturing — may struggle with very large or complex multi-step tasks compared to Claude Code
+- Less granular permission controls — Copilot agent mode tends to just go, which is convenient but gives you less oversight than Claude Code's approve/deny model
 - When using Claude as the model, you're getting Claude's intelligence but GitHub's tooling — the permission model, context handling, and capabilities are GitHub's, not Anthropic's
 - Premium model requests (including Claude) may have usage limits depending on your subscription tier
 
@@ -120,7 +122,7 @@ GitHub Copilot is an **IDE-integrated** assistant. When you select Claude as the
 
 | | Claude.ai (Web) | Claude Code (CLI) | Claude Code (Browser) | Copilot + Claude (IDE) |
 |---|---|---|---|---|
-| **Agentic capability** | None | Full | Full | Moderate (growing) |
+| **Agentic capability** | None | Full (conservative defaults) | Full (sandboxed) | Moderate (fewer guardrails) |
 | **System access** | Read-only (connected repos) | Direct shell | Sandboxed remote | IDE-mediated |
 | **Multi-file edits** | Manual (you apply changes) | Native | Native | Agent mode only |
 | **Security risk** | Minimal | Highest (local) | Low (sandboxed) | Moderate |
