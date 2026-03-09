@@ -18,7 +18,7 @@ categories:
 
 AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://www.cursor.com/), [Windsurf](https://windsurf.com/), [Augment Code](https://www.augmentcode.com/), [Amazon Q Developer](https://aws.amazon.com/q/developer/), [Gemini Code Assist](https://cloud.google.com/products/gemini-code-assist), and [GitLab Duo](https://about.gitlab.com/gitlab-duo/) are among the most prominent, with new entrants appearing regularly.
 
-Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **Claude Code** (both the [CLI agent](https://code.claude.com/) and the [web UI](https://claude.ai)) as the primary lens. Claude Code exposes the trade-offs of agentic coding especially clearly: you get a powerful agent with real shell access, but you have to think carefully about permissions, context, and cost. We'll reference GitHub Copilot and other tools for comparison where it's useful.
+Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **[Claude Code](https://code.claude.com/)** as the primary lens. Claude Code is Anthropic's agentic coding tool — distinct from the [Claude.ai](https://claude.ai) chat interface — and it comes in two forms: a **CLI** you install locally and a **browser-based IDE**. Both give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We'll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.
 
 This is a first pass based on early experience — we expect it to evolve as the ML+X community builds more hands-on knowledge. If you have tips, corrections, or experiences to share, please leave a comment below or start a discussion on the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a).
 
@@ -53,21 +53,23 @@ This space is moving fast — capabilities and pricing change frequently. See [C
 
 In practice, many developers use **multiple tools**: a chat UI for brainstorming and review, an agentic tool for multi-step feature work, and an IDE copilot for inline completions throughout the day.
 
-### What the same task looks like across Claude Code surfaces
+### What the same task looks like across different tools
 
-Since this guide focuses on Claude Code, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across each way you can use it, plus GitHub Copilot for comparison.
+To make these distinctions concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across Claude.ai, both forms of Claude Code, and GitHub Copilot.
 
-#### Claude.ai (Web UI)
+#### Claude.ai (chat — not Claude Code)
 
-1. Go to [claude.ai](https://claude.ai), start a new conversation
+[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. It's **not** an agentic coding tool — it can't execute code, edit files, or run commands on your system. But with its [connected repos feature](https://support.anthropic.com/en/articles/11## Claude.ai GitHub integration), it can read your GitHub repositories and generate code in conversation.
+
+1. Start a new conversation at [claude.ai](https://claude.ai)
 2. Connect your GitHub repo (Settings → Connected accounts → GitHub → select repo)
 3. Ask: *"Look at `src/utils/` and add a `slugify` function that matches the style of existing utilities. Also write tests."*
-4. Claude browses your repo, generates the code and tests in the chat
+4. Claude reads your repo, generates the code and tests in the chat
 5. **You** copy the code into your editor, create a branch, commit, and open the PR yourself
 
-**Friction:** You're the middleware for applying changes — every edit goes through your clipboard. But notice what's *not* here: permission prompts. Claude.ai just answers. There's no approve/deny flow because there's nothing risky happening — Claude can't touch your system. This makes the web UI feel faster and more fluid for the conversational part, even though you do more manual work on the integration side.
+**Friction:** You're the middleware — every edit goes through your clipboard. But notice what's *not* here: permission prompts, approve/deny flows, or any risk of it running a bad command. Claude.ai can't touch your system, so the conversation feels fast and fluid even though you do more manual work on the integration side.
 
-**Best for:** Code review, architecture discussions, understanding unfamiliar codebases, generating code you'll integrate manually. The connected repo feature makes this dramatically more useful than plain copy-paste — Claude can see your whole project, not just the snippet you remembered to include.
+**Best for:** Code review, architecture discussions, understanding unfamiliar codebases, generating code you'll integrate manually. The connected repo feature means Claude can see your whole project, not just the snippet you remembered to paste.
 
 #### Claude Code (CLI)
 
@@ -148,16 +150,16 @@ Copilot will:
 
 #### Key takeaway
 
-The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more powerful" doesn't always mean "smoother experience."
+The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more autonomous" doesn't always mean "smoother experience."
 
-Counterintuitively, **Claude.ai can feel less friction than Claude Code CLI** for many tasks — the web UI just *answers*, with no permission prompts, no approve/deny flow, and no risk of it running a bad command. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code CLI is more capable, but its default guardrails (which exist for good reason — it has real shell access) mean more interruptions.
+Counterintuitively, **Claude.ai can feel lower-friction than Claude Code** for many tasks — the chat interface just *answers*, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (CLI or browser) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.
 
-Across all the options, the trade-off is between **control** and **flow**:
+The trade-off is between **autonomy** and **control**:
 
-- **Claude.ai** — most fluid conversation, but you do all the manual work
-- **Claude Code CLI** — most capable, but defaults to the most permission prompts. You can loosen these as you build trust.
-- **Copilot agent mode** — fewer interruptions than Claude Code, but less granular control and less effective on complex multi-step tasks
-- **Copilot coding agent (async)** — most hands-off, but least control during execution
+- **Claude.ai (chat)** — not agentic, but fluid and zero-risk. You do the manual work.
+- **Claude Code (CLI or browser)** — fully agentic, with an explicit permission model you can tune from conservative to autonomous.
+- **Copilot agent mode (IDE)** — agentic within the IDE, fewer interruptions than Claude Code, but less granular control.
+- **Copilot coding agent (async)** — most hands-off, but least control during execution.
 
 Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's guardrails are a feature. Quick question about your repo? Claude.ai with a connected repo is hard to beat. Cranking through well-understood changes? Copilot's flow might be preferable.
 
