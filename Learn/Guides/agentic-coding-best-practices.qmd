@@ -279,44 +279,142 @@ Just because an agent wrote the code doesn't mean it's correct, secure, or maint
 - Verify it matches your architectural patterns
 - Make sure it doesn't introduce unnecessary complexity
 
+### Give the agent a way to verify its own work
+
+This is the single highest-leverage thing you can do. Claude performs dramatically better when it can check its own output — running tests, comparing screenshots, validating behavior — rather than relying on you as the only feedback loop.
+
+- **Include test cases in your prompt**: *"Write a `validateEmail` function. Test cases: `user@example.com` → true, `invalid` → false, `user@.com` → false. Run the tests after implementing."*
+- **Ask it to verify UI changes visually**: *"[paste screenshot] Implement this design. Take a screenshot of the result and compare it to the original."*
+- **Point to the symptom, not just the fix**: *"The build fails with this error: [paste error]. Fix it and verify the build succeeds. Address the root cause, don't suppress the error."*
+
+The more you invest in making your verification rock-solid (a good test suite, a linter, a build check), the more autonomously the agent can work.
+
+### Explore first, then plan, then code
+
+For complex tasks, resist the urge to let Claude jump straight to implementation. Use **[Plan Mode](https://code.claude.com/docs/en/common-workflows#use-plan-mode-for-safe-code-analysis)** (toggle with `Shift+Tab`) to separate exploration from execution:
+
+1. **Explore**: In Plan Mode, Claude reads files and answers questions without making changes. *"Read `src/auth/` and understand how we handle sessions and login."*
+2. **Plan**: Ask Claude to create an implementation plan. *"I want to add Google OAuth. What files need to change? Create a plan."*
+3. **Implement**: Switch back to Normal Mode and let Claude execute the plan, verifying against tests.
+4. **Commit**: Ask Claude to commit with a descriptive message.
+
+Skip this for small, clear tasks — if you could describe the diff in one sentence, just ask Claude to do it directly. Planning is most useful when you're uncertain about the approach or the change touches multiple files.
+
+### Manage context aggressively
+
+Claude's context window is your most important resource. As it fills up with conversation history, file contents, and command outputs, performance degrades — Claude may "forget" earlier instructions or make more mistakes.
+
+- **Use `/clear` between unrelated tasks** — a clean context dramatically improves quality
+- **Use `/compact` to summarize long conversations** — run `/compact focus on the API changes` to keep what matters and discard the rest
+- **Delegate exploration to subagents** — when Claude needs to read dozens of files to investigate something, have it use a [subagent](https://code.claude.com/docs/en/sub-agents). The subagent works in its own context and returns a summary, keeping your main conversation lean.
+- **Run `/context`** to see what's consuming your context window (MCP servers can be surprisingly expensive)
+- **Course-correct early** — if Claude is going in the wrong direction, interrupt with `Esc` rather than letting it generate more output that clutters context. After two failed corrections, `/clear` and start fresh with a better prompt.
+
+### Extend Claude Code with skills, hooks, and MCP
+
+Beyond `CLAUDE.md`, Claude Code has a rich [extension system](https://code.claude.com/docs/en/features-overview) for customizing behavior:
+
+- **[Skills](https://code.claude.com/docs/en/skills)** — reusable knowledge and workflows. Create a `/deploy` skill that runs your deployment checklist, or an API conventions skill that Claude loads when working on your endpoints. Skills load on demand, so they don't bloat every session like `CLAUDE.md` does.
+- **[Hooks](https://code.claude.com/docs/en/hooks)** — deterministic scripts that run at specific points in Claude's workflow. Unlike `CLAUDE.md` instructions (which are advisory), hooks are guaranteed to fire. Use them for things like running ESLint after every file edit or blocking writes to a `migrations/` directory.
+- **[MCP](https://code.claude.com/docs/en/mcp)** — connect Claude to external services. Query your database, post to Slack, control a browser, or pull issues from your project tracker — all from within a Claude Code session.
+- **[Subagents](https://code.claude.com/docs/en/sub-agents)** — isolated workers with their own context. Useful for research tasks, code review, or any work where you don't want the intermediate steps cluttering your main conversation.
+
+Start with `CLAUDE.md` for your core conventions. Add skills when you find yourself repeating the same workflows. Add hooks when you need guaranteed automation. Add MCP when you need external integrations.
+
 ## Managing costs
 
 Agentic coding tools that use API tokens (like Claude Code) charge per token, and agentic workflows are token-hungry — the agent reads files, reasons through problems, writes code, runs commands, reads output, and iterates. A single focused task might use 50K–200K tokens. A sprawling, underspecified session can easily burn through 1M+ tokens.
 
 ### What does this actually cost?
 
-Rough estimates for Claude Code usage (as of early 2026, using Claude Sonnet as the default model):
+There are two ways to pay for Claude Code: **subscription plans** (fixed monthly cost) or **API tokens** (pay-per-use). Most individuals should start with a subscription; API pricing is better for automation and CI/CD pipelines.
 
-| Usage pattern | Tokens/day (est.) | Daily cost (est.) |
+**Subscription plans** (as of early 2026):
+
+| Plan | Price | What you get |
 |---|---|---|
-| Light — a few focused tasks | 100K–300K | $0.50–$2 |
-| Moderate — active feature development | 500K–1.5M | $3–$10 |
-| Heavy — large refactors, multi-step debugging | 2M–5M+ | $15–$40+ |
+| **Pro** | $20/month | Claude Code access with moderate usage limits |
+| **Max 5x** | $100/month | 5× the Pro usage limit — sweet spot for most active developers |
+| **Max 20x** | $200/month | 20× the Pro usage limit — for heavy agentic work or parallel sessions |
+| **Team (premium seats)** | $150/user/month (min 5 seats) | Team management, shared billing, org-level policies |
 
-These are rough ranges and will vary based on model choice (Opus costs more than Sonnet, Haiku costs less), codebase size (larger context = more input tokens), and how many agentic loops occur. Anthropic also offers a **Max plan** with higher rate limits for teams doing heavy agentic work.
+With subscription plans, you never get a surprise bill — you hit rate limits instead. The `/cost` command shows your token usage in a session, but on a subscription plan this is informational only; it doesn't affect your bill.
 
-For comparison, GitHub Copilot subscriptions run $10–$39/month depending on tier, with usage-based pricing for premium models beyond included allowances.
+**API token pricing** (pay-per-use):
+
+| Model | Input tokens | Output tokens | Best for |
+|---|---|---|---|
+| **Haiku 4.5** | $1/MTok | $5/MTok | Fast, cheap tasks (linting, simple edits) |
+| **Sonnet 4.6** | $3/MTok | $15/MTok | Default for most coding work |
+| **Opus 4.6** | $5/MTok | $25/MTok | Complex reasoning, architecture decisions |
+
+Anthropic reports that the average Claude Code user on API pricing spends [roughly $6/day](https://code.claude.com/docs/en/costs), with 90% of users under $12/day. That translates to **$100–200/month** for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit [$5,000+](https://jeffry.in/expensive-ai/).
+
+**Rule of thumb:** If your monthly API costs would exceed $60–80, Max 5x is cheaper. If they'd exceed $150, Max 20x is the clear winner.
+
+For comparison, GitHub Copilot runs $10–$39/month depending on tier, with usage-based pricing for premium models beyond included allowances.
+
+### Watch out for runaway costs
+
+Agentic workflows can burn through tokens fast, especially when things go wrong:
+
+- **Agentic loops**: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens. One developer documented an [orchestrator agent flow that hit $150/hour](https://jeffry.in/expensive-ai/).
+- **Context accumulation**: As your conversation grows, every new message includes the full context window — so the 50th message in a session costs far more than the 1st. Use `/clear` between unrelated tasks and `/compact` to summarize long conversations.
+- **Parallel sessions**: Running multiple Claude Code sessions simultaneously (especially on the web or with agent teams) multiplies your token consumption proportionally. Five parallel sessions = 5× the cost.
+- **Extended thinking**: Thinking tokens are billed as output tokens. A complex Opus session with deep reasoning can generate thousands of thinking tokens per turn.
+
+**How to protect yourself:**
+
+- **On a subscription**: You can't overspend, but you can hit rate limits mid-task. Monitor with `/cost` and plan your usage around your limit.
+- **On API pricing**: Set [spending alerts and hard limits](https://console.anthropic.com/) on your Anthropic account. Use separate API keys for different projects so you can track spending.
+- **In both cases**: Use `/cost` to monitor token usage mid-session. If a session is getting expensive, `/clear` and start fresh with a more specific prompt. Break large tasks into focused sessions.
+
+### For UW-Madison researchers: institutional cloud benefits
+
+If you're at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.
+
+Contact your department's IT staff or [Research Computing](https://it.wisc.edu/services/research-computing/) to ask about available cloud credits and whether AI API costs are eligible.
 
 ### Strategies to keep costs down
 
 - **Be specific in your prompts** — vague requests lead to more agentic loops, which means more tokens. "Add a login form" costs more than "Add a React component at `src/components/LoginForm.tsx` that posts email/password to `/api/auth/login`"
-- **Use the right tier of model for the task** — use Haiku or Sonnet for straightforward tasks, reserve Opus for complex reasoning
-- **Break large tasks into smaller ones** — each focused session is cheaper than one sprawling conversation that loses context and re-reads files
+- **Use `/clear` aggressively** — reset context between unrelated tasks. A clean context means fewer input tokens per message.
+- **Use `/compact`** — summarize long conversations to free up context space without losing key information
+- **Use the right model for the task** — Haiku or Sonnet for straightforward tasks, reserve Opus for complex reasoning
+- **Break large tasks into smaller sessions** — each focused session is cheaper than one sprawling conversation that loses context and re-reads files
 - **Use `CLAUDE.md`** to provide project context upfront — this reduces the amount of exploration the agent needs to do
-- **Set spending alerts and hard limits** on your Anthropic API account
-- **Monitor session token usage** — Claude Code shows token counts in the session, so you can see when things are getting expensive and redirect
+- **Delegate exploration to subagents** — they run in isolated context and return summaries, keeping your main session lean
+- **Monitor session costs** — run `/cost` periodically to see where you stand
+
+For more detail, see Anthropic's [cost management guide](https://code.claude.com/docs/en/costs).
 
 ### Energy and environmental considerations
 
-It's worth acknowledging that agentic coding is more compute-intensive than traditional code completion. Each agentic loop involves multiple LLM inference calls, each of which consumes GPU compute (and the energy that powers it). A heavy day of agentic coding might involve hundreds of inference calls.
+Agentic coding is more compute-intensive than traditional code completion or web search. Each agentic loop involves multiple LLM inference calls, each consuming GPU compute. A heavy day of agentic coding might involve hundreds or thousands of inference calls.
 
-The environmental cost of AI inference is an active area of research and debate. Some perspective:
+**How does AI inference compare to other activities?**
 
-- A single LLM inference call uses roughly 0.001–0.01 kWh of energy (varies widely by model size and provider infrastructure)
-- A heavy day of agentic coding (thousands of calls) might use 1–10 kWh — comparable to running a desktop computer for a day
-- Cloud providers are increasingly powering data centers with renewable energy, but this varies by region and provider
+The energy cost of a single AI query is an active area of research, with estimates varying widely depending on model size, query complexity, and methodology:
 
-This doesn't mean you shouldn't use agentic tools — the productivity gains can be substantial. But it's a reason to be intentional: don't let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. **Efficient prompting is both cheaper and greener.**
+| Activity | Energy per query (est.) | Source |
+|---|---|---|
+| Google Search (traditional) | ~0.0003 kWh (0.3 Wh) | [Google, 2009](https://googleblog.blogspot.com/2009/01/powering-google-search.html) (likely lower today) |
+| AI-powered chat query (e.g., ChatGPT) | ~0.001–0.01 kWh (1–10 Wh) | [Epoch AI](https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use), [MIT Sloan](https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/) |
+| Google AI Overview (search + AI) | ~0.01 kWh (10 Wh) | [Various estimates](https://kanoppi.co/search-engines-vs-ai-energy-consumption-compared/) |
+
+An AI query uses roughly **3–30× more energy** than a traditional web search, though the exact ratio depends heavily on the model and task. These are single-query estimates — an agentic coding session chains dozens or hundreds of such calls together.
+
+**The bigger picture:**
+
+- The [IEA projects](https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks) that global data center electricity consumption will roughly double from 460 TWh in 2022 to over 1,000 TWh by 2026, driven largely by AI workloads.
+- An estimated [80–90% of AI computing](https://aimultiple.com/ai-energy-consumption) is used for inference (running models), not training them. Every agentic coding session contributes to this.
+- Cloud providers are investing heavily in renewable energy, but coverage varies by region and provider. Your actual carbon footprint depends on where the data center serving your requests is located.
+
+**What this means for agentic coding:**
+
+A rough estimate: a heavy day of agentic coding (hundreds of inference calls across multiple sessions) might consume 1–10 kWh — comparable to running a desktop computer for a workday. This is modest at the individual level, but multiplied across thousands of developers using these tools daily, the aggregate energy footprint is significant and growing.
+
+This doesn't mean you shouldn't use agentic tools — the productivity gains can be substantial, and the energy per unit of useful output may actually be better than the alternative (a human developer running builds, searching docs, and context-switching for hours). But it's a reason to be intentional: don't let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. **Efficient prompting is both cheaper and greener.**
 
 ## Security fundamentals
 
