@@ -348,7 +348,9 @@ With subscription plans, you never get a surprise bill — you hit rate limits i
 | **Sonnet 4.6** | $3/MTok | $15/MTok | Default for most coding work |
 | **Opus 4.6** | $5/MTok | $25/MTok | Complex reasoning, architecture decisions |
 
-Anthropic reports that the average Claude Code user on API pricing spends [roughly $6/day](https://code.claude.com/docs/en/costs), with 90% of users under $12/day. That translates to **$100–200/month** for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit [$5,000+](https://jeffry.in/expensive-ai/).
+Note that output tokens cost **5× more** than input tokens across all models — and code generation is output-heavy. Also, requests exceeding 200K input tokens are charged at 2× input / 1.5× output rates, which matters for large codebases. [Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) can reduce input costs by up to 90% on repeated system prompts, and the [Batch API](https://platform.claude.com/docs/en/build-with-claude/batch-processing) offers a 50% discount for async processing.
+
+Anthropic reports that the average Claude Code user on API pricing spends [roughly $6/day](https://code.claude.com/docs/en/costs), with 90% of users under $12/day. That translates to **$100–200/month** for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit [$5,000+](https://jeffry.in/expensive-ai/). One detailed [usage report](https://ccusage.com/guide/monthly-reports) showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.
 
 **Rule of thumb:** If your monthly API costs would exceed $60–80, Max 5x is cheaper. If they'd exceed $150, Max 20x is the clear winner.
 
@@ -390,31 +392,34 @@ For more detail, see Anthropic's [cost management guide](https://code.claude.com
 
 ### Energy and environmental considerations
 
-Agentic coding is more compute-intensive than traditional code completion or web search. Each agentic loop involves multiple LLM inference calls, each consuming GPU compute. A heavy day of agentic coding might involve hundreds or thousands of inference calls.
+Agentic coding is more compute-intensive than a simple chat query or web search. A single LLM text query now uses [roughly 0.3 Wh](https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use) — about the same as a Google search — thanks to hardware improvements and model optimization. But an agentic coding session chains **hundreds or thousands** of such calls together as the agent reads files, reasons, writes code, runs commands, and iterates.
 
-**How does AI inference compare to other activities?**
+**How much energy does agentic coding actually use?**
 
-The energy cost of a single AI query is an active area of research, with estimates varying widely depending on model size, query complexity, and methodology:
+A [detailed analysis by Simon P. Couch](https://www.simonpcouch.com/blog/2026-01-20-cc-impact/) estimated Claude Code's energy footprint at roughly **41 Wh per session** — over 130× a single chat query. A heavy day of usage (multiple sessions, parallel agents) can reach **~1,300 Wh/day**. To put that in perspective:
 
-| Activity | Energy per query (est.) | Source |
-|---|---|---|
-| Google Search (traditional) | ~0.0003 kWh (0.3 Wh) | [Google, 2009](https://googleblog.blogspot.com/2009/01/powering-google-search.html) (likely lower today) |
-| AI-powered chat query (e.g., ChatGPT) | ~0.001–0.01 kWh (1–10 Wh) | [Epoch AI](https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use), [MIT Sloan](https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/) |
-| Google AI Overview (search + AI) | ~0.01 kWh (10 Wh) | [Various estimates](https://kanoppi.co/search-engines-vs-ai-energy-consumption-compared/) |
+| Activity | Energy |
+|---|---|
+| Google search or single AI chat query | ~0.3 Wh |
+| LED lightbulb (1 hour) | ~10 Wh |
+| One Claude Code session | ~41 Wh |
+| Streaming 1 hour of video (incl. device) | ~36–80 Wh |
+| Heavy Claude Code daily use | ~1,300 Wh |
+| Running a dishwasher once | ~1,300 Wh |
+| Daily refrigerator use | ~1,200–1,500 Wh |
 
-An AI query uses roughly **3–30× more energy** than a traditional web search, though the exact ratio depends heavily on the model and task. These are single-query estimates — an agentic coding session chains dozens or hundreds of such calls together.
+So a heavy day of agentic coding is roughly equivalent to running your dishwasher — modest at the individual level, but significant in aggregate.
 
 **The bigger picture:**
 
-- The [IEA projects](https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks) that global data center electricity consumption will roughly double from 460 TWh in 2022 to over 1,000 TWh by 2026, driven largely by AI workloads.
-- An estimated [80–90% of AI computing](https://aimultiple.com/ai-energy-consumption) is used for inference (running models), not training them. Every agentic coding session contributes to this.
-- Cloud providers are investing heavily in renewable energy, but coverage varies by region and provider. Your actual carbon footprint depends on where the data center serving your requests is located.
+- The [IEA projects](https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai) that global data center electricity consumption will roughly double from ~415 TWh in 2024 to over 945 TWh by 2030, driven largely by AI workloads. In the US, data centers are projected to consume [more electricity than all energy-intensive manufacturing combined](https://www.carbonbrief.org/ai-five-charts-that-put-data-centre-energy-use-and-emissions-into-context/) (aluminum, steel, cement, chemicals) by 2030.
+- An estimated [60–90% of AI computing energy](https://aimultiple.com/ai-energy-consumption) goes to inference (running models), not training. Training grabs headlines, but inference — every agentic session, every chat query — is where the ongoing energy cost lives.
+- Cloud providers are investing in renewable energy, but coverage varies. Anthropic has [pledged to offset energy costs](https://www.anthropic.com/news/investing-in-energy-to-secure-america-s-ai-future) and invested in grid optimization research, though the company [lacks formal carbon reduction targets](https://ditchcarbon.com/organizations/anthropic) and a significant portion of new capacity is [natural gas powered](https://www.fastcompany.com/91336991/openai-anthropic-deepseek-ai-models-environmental-impact).
+- On the efficiency side, a [University of Rhode Island study](https://www.fastcompany.com/91336991/openai-anthropic-deepseek-ai-models-environmental-impact) found Claude Sonnet to be among the most energy-efficient frontier models, and energy per token has [improved ~120× from GPT-3 to current models](https://muxup.com/2026q1/per-query-energy-consumption-of-llms) due to hardware and architecture advances.
 
-**What this means for agentic coding:**
+**What this means for you:**
 
-A rough estimate: a heavy day of agentic coding (hundreds of inference calls across multiple sessions) might consume 1–10 kWh — comparable to running a desktop computer for a workday. This is modest at the individual level, but multiplied across thousands of developers using these tools daily, the aggregate energy footprint is significant and growing.
-
-This doesn't mean you shouldn't use agentic tools — the productivity gains can be substantial, and the energy per unit of useful output may actually be better than the alternative (a human developer running builds, searching docs, and context-switching for hours). But it's a reason to be intentional: don't let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. **Efficient prompting is both cheaper and greener.**
+This doesn't mean you shouldn't use agentic tools — the productivity gains can be substantial, and the energy per unit of *useful output* may be better than the alternative (a human developer running builds, searching docs, and context-switching for hours). But it's a reason to be intentional: don't let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. **Efficient prompting is both cheaper and greener.**
 
 ## Security fundamentals
 
