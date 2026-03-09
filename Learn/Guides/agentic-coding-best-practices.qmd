@@ -1,0 +1,249 @@
+---
+title: "Best Practices for Agentic Coding: Working Effectively with AI Coding Agents"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-03-09
+date-format: long
+image: "../../../images/agentic-coding.png"
+categories:
+  - Guides
+  - GenAI
+  - LLM
+  - Agentic coding
+  - Software development
+  - Best practices
+  - Security
+---
+
+AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. But with great autonomy comes great responsibility. This guide covers best practices for working with agentic coding tools, with a focus on Claude Code, comparisons to GitHub Copilot (with Claude as the model), security considerations, and practical strategies for getting the most out of these tools without burning through your budget or accidentally nuking your repo.
+
+## What is agentic coding?
+
+Traditional AI code assistants (like early GitHub Copilot or ChatGPT) work in a simple loop: you ask, they suggest, you accept or reject. **Agentic** coding tools go further. They can:
+
+- Read and navigate your entire codebase
+- Execute shell commands and run tests
+- Edit multiple files in a single pass
+- Iterate on their own output (fix errors, re-run tests, refine)
+- Operate semi-autonomously over multi-step tasks
+
+This is powerful, but it also means these tools have real access to your system — and the potential to do real damage if not managed carefully.
+
+## Claude Code vs. GitHub Copilot (with Claude)
+
+There is meaningful confusion about the difference between **Claude Code** (Anthropic's CLI agent) and **GitHub Copilot using Claude as a model**. They are fundamentally different tools.
+
+### Claude Code (CLI agent)
+
+- A **terminal-based** agentic tool that runs directly in your shell
+- Has direct access to your filesystem, shell, and git
+- Can read files, write files, run commands, execute tests — all autonomously
+- Works via the Anthropic API (you pay per token)
+- Operates with a permission system: you approve or deny each tool action (or configure auto-approve rules)
+- Supports a `CLAUDE.md` project file for persistent instructions
+- Ideal for **deep, multi-step feature development** in a local or remote environment
+
+### GitHub Copilot (with Claude as the selected model)
+
+- An **IDE-integrated** assistant (VS Code, JetBrains, etc.)
+- Provides inline code completions, chat-based Q&A, and (in newer versions) agentic features within the IDE
+- When you select Claude as the backing model in Copilot, you get Claude's reasoning quality but through **GitHub's interface and permission model**
+- The scope of actions is mediated by the IDE — it can edit files open in your editor, but its system access is more constrained than a CLI tool
+- Paid via GitHub Copilot subscription (individual, business, or enterprise tiers)
+
+### Which to use?
+
+| Consideration | Claude Code (CLI) | Copilot + Claude (IDE) |
+|---|---|---|
+| **Autonomy** | High — can run commands, tests, git operations | Moderate — operates within IDE sandbox |
+| **Multi-file edits** | Native — reads/writes across entire project | Improving, but more limited |
+| **Security surface** | Larger — direct shell access | Smaller — IDE-mediated |
+| **Best for** | Feature development, refactoring, debugging complex issues | Inline completions, quick edits, code review |
+| **Cost model** | Pay-per-token (API usage) | Subscription-based |
+| **Learning curve** | Steeper — CLI-first, requires config | Gentler — familiar IDE experience |
+
+In practice, many developers use **both**: Copilot in the IDE for quick completions and inline help, and Claude Code for larger, multi-step tasks that benefit from full system access.
+
+## UI, CLI, and cloud deployment options
+
+Agentic coding tools come in several form factors:
+
+### Web UI (claude.ai)
+- Chat-based interface, no local system access
+- Good for brainstorming, code review, generating snippets
+- Cannot directly edit your files or run your tests
+- Lowest risk, but also lowest integration with your workflow
+
+### IDE extensions (Copilot, Cursor, Windsurf, etc.)
+- Integrated into your editor
+- Can read/write files within the project
+- Varying degrees of agentic capability
+- System access mediated by the IDE
+
+### CLI agents (Claude Code, Aider, Codex CLI, etc.)
+- Run in your terminal with direct system access
+- Most powerful and most dangerous
+- Best suited for experienced developers who understand the risks
+
+### Cloud/remote deployments
+- Tools like Claude Code can run on remote servers, cloud VMs, or in CI/CD pipelines
+- Anthropic offers a **sandboxed container environment** for running Claude Code in isolated contexts (useful for enterprise deployments)
+- GitHub Actions and similar CI systems can invoke agentic tools in disposable environments, limiting blast radius
+
+The key insight: **the more system access a tool has, the more carefully you need to manage it**.
+
+## Security: Protecting your environment
+
+This is the "box of worms" section. When you give an AI agent access to your terminal, you're trusting it with everything your shell user can do. Here's how to limit the damage.
+
+### 1. Scope your tokens and credentials
+
+- **Never store secrets in plain text** in your project directory. Use environment variables, credential managers, or secret stores.
+- **Use fine-grained GitHub tokens** (classic tokens with minimal scopes, or fine-grained personal access tokens limited to specific repos). If an agent accidentally leaks or misuses a token, the blast radius is smaller.
+- **Rotate tokens regularly**, especially any used in agentic contexts.
+- **Use `.gitignore` and `.env` conventions** religiously. Add `.env`, `credentials.json`, `*.pem`, etc. to `.gitignore` before the agent ever runs.
+- Consider using a **dedicated GitHub bot account** with limited permissions for agent-driven operations rather than your personal token.
+
+### 2. Use the permission system
+
+Claude Code has a built-in permission model. **Use it.**
+
+- Start in the default mode where each action requires approval
+- Only escalate to auto-approve for specific, low-risk actions (e.g., file reads, grep)
+- Be cautious with blanket auto-approve for shell commands — a single `rm -rf` or `git push --force` can ruin your day
+- Review what the agent wants to do before approving, especially for destructive operations
+
+### 3. Sandbox when possible
+
+- Run agentic tools in **containers** (Docker, Podman) so they can't touch your host system
+- Use **virtual machines** or cloud instances for high-risk experiments
+- Anthropic's sandboxing tools provide isolated environments specifically designed for agentic coding
+- For CI/CD usage, agents should run in **ephemeral environments** that are destroyed after each job
+
+### 4. Watch out for prompt injection and accidental destruction
+
+- Be careful with files that contain instructions or prompts — an agent reading a malicious `README.md` or issue body could be tricked into harmful actions
+- **Never** give an agent unsupervised access to production systems, databases, or deployment pipelines
+- Set up **git hooks** or CI checks as safety nets (e.g., prevent force-pushes to `main`)
+- Keep your work committed frequently so you can recover from mistakes
+
+### 5. Protect against "runaway" agents
+
+Sometimes an agent gets stuck in a loop — repeatedly trying and failing the same approach, burning tokens and making a mess. Strategies:
+
+- Set **spending limits** on your API account
+- Use `CLAUDE.md` instructions to constrain behavior (more on this below)
+- Monitor token usage during sessions
+- Don't hesitate to interrupt (`Ctrl+C`) and redirect
+
+## Practical tips: Getting the most from agentic coding
+
+### Think in features, not projects
+
+One of the biggest lessons from working with agentic coding tools: **use them for feature-level development, not for building entire projects in one shot.**
+
+Why? Because agents work best with clear, well-scoped requests. The less clarity you provide, the more the agent has to guess — and guessing leads to:
+
+- Agentic loops (trying approaches, failing, trying again)
+- Drift from your intended architecture
+- Wasted tokens and time
+- Code that technically works but doesn't match your vision
+
+**Precise requests get precise results.** Instead of "build me a web app with auth," try:
+
+- "Add a login form component that submits to `/api/auth/login` and stores the JWT in a httpOnly cookie"
+- "Write a pytest fixture that creates a test database with the schema from `models.py`"
+- "Refactor the `process_data` function in `pipeline.py` to handle the case where `input_df` has missing columns"
+
+Each of these is a single, well-defined task that an agent can execute without ambiguity.
+
+### Use `CLAUDE.md` to set guardrails
+
+Claude Code reads a `CLAUDE.md` file in your project root for persistent instructions. This is one of the most underrated features. Use it to:
+
+**Prevent runaway loops:**
+```markdown
+## Testing requirements
+- Always run the full test suite (`pytest tests/`) after making changes
+- If tests fail, fix the failing tests before moving on
+- Do not push code with failing tests
+```
+
+This single instruction saves enormous headaches. Without it, the agent might push broken code, you discover test failures in CI, and then you're spending time fixing things that should have been caught locally.
+
+**Enforce project conventions:**
+```markdown
+## Code style
+- Use type hints for all function signatures
+- Follow the existing import ordering convention
+- Do not add new dependencies without asking first
+```
+
+**Limit destructive actions:**
+```markdown
+## Safety
+- Never run `rm -rf` on any directory
+- Never force-push to any branch
+- Never modify files in the `config/production/` directory
+- Always create a new branch for changes; never commit directly to main
+```
+
+**Provide architectural context:**
+```markdown
+## Project structure
+- API routes go in `src/routes/`
+- Business logic goes in `src/services/`
+- Database models are in `src/models/`
+- Tests mirror the source structure under `tests/`
+```
+
+The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project.
+
+### Manage costs
+
+Agentic coding tools that use API tokens (like Claude Code) can get expensive if you're not careful. Some strategies:
+
+- **Start with cheaper models for exploration**, then switch to more capable models for complex tasks
+- **Be specific in your prompts** — vague requests lead to more back-and-forth, which means more tokens
+- **Use the right tool for the job**: simple completions in the IDE (subscription-based) vs. multi-step tasks in the CLI (token-based)
+- **Set spending alerts and limits** on your API account
+- **Monitor session token usage** — Claude Code shows token counts, so you can see when a session is getting expensive
+- **Break large tasks into smaller ones** — each focused session is cheaper than one sprawling conversation that loses context
+
+### Commit early, commit often
+
+When working with an agentic tool:
+
+1. **Commit before starting** — create a clean baseline you can revert to
+2. **Commit after each successful change** — don't let the agent build up a massive diff
+3. **Use branches** — never let an agent work directly on `main`
+4. **Review diffs before pushing** — the agent writes the code, but you own it
+
+### Review everything
+
+Just because an agent wrote the code doesn't mean it's correct, secure, or maintainable. Treat agent-generated code with the same scrutiny you'd apply to any pull request:
+
+- Read the diffs
+- Run the tests
+- Check for security issues (hardcoded secrets, SQL injection, etc.)
+- Verify it matches your architectural patterns
+- Make sure it doesn't introduce unnecessary complexity
+
+## Summary
+
+Agentic coding tools are genuinely powerful — they can dramatically accelerate feature development, help you explore unfamiliar codebases, and automate tedious multi-step tasks. But they require a different mindset than traditional code assistants:
+
+1. **Scope your requests tightly** — features, not projects
+2. **Use `CLAUDE.md`** to encode guardrails and project context
+3. **Protect your credentials** — fine-grained tokens, `.gitignore`, secret management
+4. **Use the permission system** — don't auto-approve everything
+5. **Sandbox when possible** — containers, VMs, ephemeral CI environments
+6. **Monitor costs** — set limits, be specific, use the right tool for the task
+7. **Commit frequently** — keep escape hatches available
+8. **Review everything** — you're the engineer; the agent is a very fast intern
+
+The technology is moving fast, and best practices will continue to evolve. The core principle stays the same: **give agents the minimum access they need, provide maximum clarity in your instructions, and always keep a human in the loop for decisions that matter**.
+
+## Questions
+If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
