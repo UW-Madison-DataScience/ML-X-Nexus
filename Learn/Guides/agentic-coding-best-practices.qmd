@@ -59,9 +59,9 @@ To make these distinctions concrete, let's walk through the same scenario — *"
 
 #### Claude.ai and the Claude Desktop app (chat — not Claude Code)
 
-[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. The [Claude Desktop app](https://claude.ai/download) is the same chat experience as a native application (with added [MCP](https://modelcontextprotocol.io/) support for connecting to external tools). Neither is an agentic coding tool — they can't execute code, edit files, or run commands on your system. You provide context by copying and pasting code snippets into the conversation.
+[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. The [Claude Desktop app](https://claude.ai/download) includes a **Chat** tab that provides the same experience as a native application (with added [MCP](https://modelcontextprotocol.io/) support for connecting to external tools). The Chat tab is *not* an agentic coding tool — it can't execute code, edit files, or run commands on your system. You provide context by copying and pasting code snippets into the conversation.
 
-Don't confuse the **Claude Desktop app** (a chat interface) with **Claude Code Desktop** (the agentic coding tool with a GUI). They're separate products. The Claude Desktop app is a chat window; Claude Code Desktop gives you shell access, file editing, and the full agentic workflow. Teresa Torres has a [great comparison](https://www.producttalk.org/claude-code-what-it-is-and-how-its-different/) of all the ways you can interact with Claude, including Claude.ai, Claude Projects, Claude Desktop, and Claude Code.
+Note that the Claude Desktop app actually has three tabs: **Chat** (standard conversation), **Code** (the full Claude Code agentic experience — see [below](#claude-code-desktop-app)), and **Cowork** (an AI companion that watches your screen and offers suggestions as you work). Only the **Code** tab is an agentic coding tool. Teresa Torres has a [great comparison](https://www.producttalk.org/claude-code-what-it-is-and-how-its-different/) of all the ways you can interact with Claude, including Claude.ai, Claude Projects, and Claude Code.
 
 1. Start a new conversation at [claude.ai](https://claude.ai) or in the Claude Desktop app
 2. Paste in the relevant code (e.g., the contents of `src/utils/` and a few example utilities)
@@ -107,18 +107,22 @@ Claude Code will:
 
 **Best for:** Multi-step feature development, large refactors, debugging complex issues — any task that benefits from the agent being able to run and test its own code.
 
-#### Claude Code (Desktop app)
+#### Claude Code (Desktop app) {#claude-code-desktop-app}
 
-Claude Code is also available as a [standalone desktop application](https://code.claude.com/docs/en/desktop) — a GUI wrapper around the same agentic engine that powers the CLI. You get a visual interface for the conversation, visual diffs, and permission approvals instead of working in a terminal. Under the hood it's the same tool: full shell access, file editing, test execution, and the same permission model.
+The **Code** tab in the [Claude Desktop app](https://code.claude.com/docs/en/desktop) gives you the full Claude Code experience through a GUI instead of a terminal. Under the hood it's the same agentic engine: full shell access, file editing, test execution, and the same permission model. (The Desktop app also has **Chat** and **Cowork** tabs — see [above](#claude.ai-and-the-claude-desktop-app-chat-not-claude-code) — but the Code tab is where the agentic coding happens.)
 
-The desktop app also adds some features that the CLI doesn't have out of the box:
+The Code tab adds several capabilities on top of the standard CLI experience:
 
-- **Parallel sessions with Git worktrees** — run multiple tasks simultaneously on separate branches without conflicts
-- **Visual diff view** — see exactly what Claude changed before approving
-- **Managed updates** — the app handles versioning so you're always on a stable release (the CLI can sometimes run a [different version](https://www.reddit.com/r/ClaudeCode/comments/1q7ti7i/claude_code_desktop_gui_vs_claude_code_cli/) than the desktop app)
-- **Desktop Extensions** — add new tools with one click rather than manual terminal configuration
+- **Visual diff review** — see exactly what Claude changed, leave inline comments on specific lines, and ask Claude to revise
+- **Live app preview** — Claude can start a dev server and verify its own changes in an embedded browser, taking screenshots and fixing issues it finds
+- **Parallel sessions with Git worktrees** — run multiple tasks simultaneously, each on its own isolated branch
+- **GitHub PR monitoring** — watch CI status, auto-fix failing checks, and auto-merge when everything passes
+- **Scheduled tasks** — set up recurring tasks (daily code reviews, dependency checks) that run on a schedule
+- **Connectors** — one-click integrations for GitHub, Slack, Linear, Notion, and more
+- **Remote sessions** — run long tasks on Anthropic's cloud infrastructure so you can close your laptop and come back later
+- **Managed updates** — the app handles versioning so you're always on a stable release
 
-**Best for:** Developers who prefer a GUI over the terminal, or who want parallel task management without manual worktree setup. Also a good starting point for less-technical team members (PMs, designers) who want agentic capabilities without learning terminal commands.
+**Best for:** Developers who prefer a GUI over the terminal, those who want visual diff review and parallel task management, and less-technical team members (PMs, designers) who want agentic capabilities without learning terminal commands.
 
 #### Claude Code on the web ([claude.ai/code](https://claude.ai/code))
 
