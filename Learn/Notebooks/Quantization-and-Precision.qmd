@@ -330,11 +330,12 @@ naive_count = sum(p.numel() for p in model_4bit.parameters())
 correct_total, quantized_params, non_quantized_params = count_parameters_correct(model_4bit)
 
 print(f"4-bit quantized GPT-2:")
-print(f"  Naive numel() count:     {naive_count:,}")
-print(f"  Correct parameter count: {correct_total:,}")
-print(f"    - Quantized params:    {quantized_params:,}")
-print(f"    - Non-quantized params:{non_quantized_params:,}")
-print(f"  Expected (GPT-2):        ~124,000,000")
+print(f"  Naive numel() count:          {naive_count:,}")
+print(f"  Correct parameter count:      {correct_total:,}")
+print(f"    - Quantized (true count):   {quantized_params:,}  (numel reports ~{quantized_params // 2:,} due to packing)")
+print(f"    - Non-quantized:            {non_quantized_params:,}  (numel reports correctly)")
+print(f"  Expected (GPT-2):             ~124,000,000")
+print(f"\n  Sanity check: {quantized_params // 2:,} (packed) + {non_quantized_params:,} (unquantized) ≈ {naive_count:,} (naive total) ✓")
 ```
 
 ### What's happening under the hood
