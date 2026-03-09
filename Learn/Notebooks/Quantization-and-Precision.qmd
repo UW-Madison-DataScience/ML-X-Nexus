@@ -77,9 +77,9 @@ For example, FP32 uses 1 sign + 8 exponent + 23 fraction = 32 bits. FP16 cuts th
 
 | Data type | Bits | Exponent | Fraction | Approximate range | Typical use |
 |-----------|------|----------|----------|-------------------|-------------|
-| FP32 (float32) | 32 | 8 | 23 | ~1e-38 to ~3e38 | Default training precision |
+| FP32 (float32) | 32 | 8 | 23 | ~ 1e-38 to ~ 3e38 | Default training precision |
 | FP16 (float16) | 16 | 5 | 10 | ~6e-5 to 65504 | Mixed-precision training |
-| BF16 (bfloat16) | 16 | 8 | 7 | ~1e-38 to ~3e38 | Training on modern GPUs (A100, H100) |
+| BF16 (bfloat16) | 16 | 8 | 7 | ~ 1e-38 to ~ 3e38 | Training on modern GPUs (A100, H100) |
 | INT8 | 8 | — | — | -128 to 127 | Post-training quantization |
 | NF4 (4-bit) | 4 | — | — | 16 discrete values | Aggressive quantization via bitsandbytes |
 
@@ -281,7 +281,7 @@ print(f"  {'NF4 (4-bit)':<12} {mem_4bit:>14,.1f} {params_4bit:>16,}")
 
 ## Part 4: The PyTorch parameter count gotcha
 
-If you ran the summary above, you may have noticed something odd: the 4-bit model reports ~82M parameters via `numel()` instead of the expected ~124M. Did quantization remove 42 million weights?
+If you ran the summary above, you may have noticed something odd: the 4-bit model reports ~ 82M parameters via `numel()` instead of the expected ~ 124M. Did quantization remove 42 million weights?
 
 No. The model still has the same architecture and the same logical number of parameters. The discrepancy comes from how `bitsandbytes` stores quantized weights — and from the fact that **not all parameters get quantized**.
 
@@ -296,7 +296,7 @@ For the parameters that *are* quantized, `bitsandbytes` packs multiple low-bit v
 - **8-bit**: Each weight occupies 1 byte, stored as a `uint8` tensor. `numel()` still returns the correct count here, since it's one element per weight.
 - **4-bit**: Two weights are packed into a single byte, stored as a `uint8` tensor of **half the length**.
 
-When you call `p.numel()` on a 4-bit quantized parameter, PyTorch reports the number of elements in the storage tensor (the packed `uint8` values), not the number of logical weights. Since two 4-bit values are packed into one `uint8` element, `numel()` returns half the true count for those parameters. Combined with the non-quantized parameters (which report correctly), the total `numel()` across the model ends up somewhere between the true count and half — in GPT-2's case, ~82M instead of ~124M.
+When you call `p.numel()` on a 4-bit quantized parameter, PyTorch reports the number of elements in the storage tensor (the packed `uint8` values), not the number of logical weights. Since two 4-bit values are packed into one `uint8` element, `numel()` returns half the true count for those parameters. Combined with the non-quantized parameters (which report correctly), the total `numel()` across the model ends up somewhere between the true count and half — in GPT-2's case, ~ 82M instead of ~ 124M.
 
 ### Correctly counting parameters
 
@@ -381,8 +381,8 @@ The notable exception is [QLoRA](https://arxiv.org/abs/2305.14314) (Dettmers et 
 
 One of the most practical insights from quantization research: you can often get better results by running a larger model at 4-bit than a smaller model at FP16, using the same GPU memory. For example:
 
-- A **70B model at 4-bit** (~35 GB) can fit on a single 48GB GPU and typically outperforms a **13B model at FP16** (~26 GB) on reasoning and knowledge benchmarks.
-- A **13B model at 4-bit** (~6.5 GB) fits comfortably on a 12GB consumer GPU and often outperforms a **7B model at FP16** (~14 GB, which wouldn't even fit).
+- A **70B model at 4-bit** (~ 35 GB) can fit on a single 48GB GPU and typically outperforms a **13B model at FP16** (~ 26 GB) on reasoning and knowledge benchmarks.
+- A **13B model at 4-bit** (~ 6.5 GB) fits comfortably on a 12GB consumer GPU and often outperforms a **7B model at FP16** (~ 14 GB, which wouldn't even fit).
 
 The rule of thumb: **spend your memory budget on more parameters first, then reduce precision to fit.** A 4-bit model loses a small amount of quality from quantization, but it gains far more from having access to more learned knowledge and capacity.
 
