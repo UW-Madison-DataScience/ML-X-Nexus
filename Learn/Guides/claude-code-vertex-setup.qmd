@@ -251,11 +251,21 @@ Add the following content:
     "CLAUDE_CODE_USE_VERTEX": "1",
     "CLOUD_ML_REGION": "global",
     "ANTHROPIC_VERTEX_PROJECT_ID": "YOUR-PROJECT-ID"
+  },
+  // Enable OS-level sandboxing (filesystem + network isolation).
+  // See Section 7 for full details and platform prerequisites.
+  "sandbox": {
+    "enabled": true
   }
 }
 ```
 
 Replace `YOUR-PROJECT-ID` with your actual GCP project ID (e.g., `doit-rci-sandbox-gcp-baa4`).
+
+::: {.callout-important}
+## Sandbox platform prerequisites
+The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` (see [Section 7](#enable-sandboxing)). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 7](#enable-sandboxing) for full configuration details.
+:::
 
 ### Region notes
 
@@ -486,6 +496,10 @@ You can also create a `.claude/settings.json` in your project root and commit it
 | **bypassPermissions** | Skips ALL checks | Isolated containers only — **never on your local machine** |
 
 ### Enable sandboxing (strongly recommended) {#enable-sandboxing}
+
+::: {.callout-tip}
+If you followed [Section 5](#configure-claude-code-for-vertex-ai), sandboxing is already enabled in your `settings.json`. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.
+:::
 
 Sandboxing is the **strongest protection available** against Claude modifying files outside your project. It uses OS-level enforcement (not just Claude's own judgment) to restrict what bash commands can access — even if a prompt injection bypasses Claude's decision-making.
 
