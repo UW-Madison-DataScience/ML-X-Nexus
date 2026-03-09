@@ -3,7 +3,7 @@ title: "Center for High Throughput Computing (CHTC)"
 author:
   - name: Chris Endemann
     email: endemann@wisc.edu
-date: 2026-03-09
+date: 2024-06-25
 date-format: long
 image: "../../../images/CHTC.png"
 categories:
@@ -33,8 +33,20 @@ If you’re a UW-Madison researcher looking to train models, run experiments, or
 - **Dedicated support** — Research Computing Facilitators provide one-on-one consultations, help you optimize workflows, and troubleshoot issues.
 - **Handles most model sizes** — The GPU Lab’s high-VRAM GPUs (up to 80 GB on H100s) can run inference on models up to ~70B parameters with quantization, or fine-tune smaller models on a single GPU.
 
-::: {.callout-note}
-CHTC GPUs are **not NVLink-connected**, so multi-GPU parallelism is limited to methods that don’t require fast inter-GPU communication (e.g., data parallelism works, but tensor parallelism across GPUs does not). For NVLink multi-GPU or multi-node setups needed for frontier-scale training, consider [UW cloud services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html).
+## What to expect: friction points
+
+CHTC is powerful, but it works differently from your laptop, a Jupyter notebook, or a cloud VM. Being upfront about the learning curve helps you plan:
+
+- **No interactive GUI** — CHTC is a batch computing system. You write submit files, queue jobs, and collect results. There’s no point-and-click interface or persistent Jupyter session (though short interactive jobs are available for testing). If you’re used to working in notebooks, expect to refactor your code into scripts.
+- **Queue wait times** — GPUs are shared across campus. During peak periods, you may wait hours (occasionally longer) for a GPU job to start. Planning ahead — and designing jobs that can run on backfill hardware — helps a lot.
+- **Job time limits** — Jobs have runtime caps (typically 72 hours for CPU, varying for GPU). Long training runs need checkpointing so they can resume across multiple jobs. This is good practice regardless, but it’s required here.
+- **Environment setup takes effort** — You’ll need to package your software environment into a Docker/Apptainer container and manage file transfers between your submit node and execute nodes. This is more hands-on than `pip install` on your laptop, but CHTC guides and facilitators can help.
+- **No persistent services** — CHTC runs batch jobs, not long-lived services. You can’t host a model endpoint, run a Gradio app, or keep a database running. For those use cases, see [UW cloud services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html).
+- **No NVLink multi-GPU** — GPUs are not interconnected with NVLink, so tensor parallelism across GPUs isn’t feasible. Single-GPU jobs and data-parallel multi-GPU jobs work fine, but frontier-scale training requiring fast inter-GPU communication needs cloud hardware.
+
+::: {.callout-tip}
+## The tradeoff is worth it
+The friction is real, but so is the payoff: free access to A100s and H100s, the ability to run thousands of parallel experiments, and dedicated staff who will help you get set up. Most researchers find that after the initial setup, CHTC becomes a core part of their workflow. And CHTC’s [Research Computing Facilitators](https://chtc.cs.wisc.edu/uw-research-computing/get-help) are genuinely helpful — reach out early and often.
 :::
 
 ## Available hardware
@@ -68,6 +80,34 @@ If your jobs run in under 4–6 hours (or can checkpoint that frequently), you c
 ### HPC cluster
 
 The [HPC cluster](https://chtc.cs.wisc.edu/uw-research-computing/hpc-overview) is a traditional shared-memory cluster managed with SLURM. It is suited for tightly coupled parallel jobs (e.g., MPI-based simulations) that need fast communication between nodes. The HPC cluster also supports [Apptainer containers](https://chtc.cs.wisc.edu/uw-research-computing/hpc/guides) and software management via Spack.
+
+## What model sizes can CHTC handle?
+
+The GPU you need depends on your model size and what you're doing with it (inference vs. training vs. fine-tuning). Here's a rough guide based on CHTC's available hardware:
+
+| Task | Model size | Precision | Min VRAM needed | CHTC GPU options |
+|------|-----------|-----------|----------------|-----------------|
+| **Inference** | < 7B | FP16 | ~14 GB | A100 40 GB, L40 48 GB, A100 80 GB, H100 80 GB |
+| **Inference** | 7–13B | FP16 | ~14–26 GB | A100 40 GB, L40 48 GB, A100 80 GB, H100 80 GB |
+| **Inference** | 13–30B | INT4 (quantized) | ~10–20 GB | A100 40 GB, L40 48 GB, A100 80 GB, H100 80 GB |
+| **Inference** | 30–70B | INT4 (quantized) | ~20–40 GB | L40 48 GB, A100 80 GB, H100 80 GB |
+| **Inference** | 70B | INT4 (quantized) | ~40–45 GB | L40 48 GB, A100 80 GB, H100 80 GB |
+| **Fine-tuning (LoRA/QLoRA)** | 7–13B | Mixed (BF16 + INT4 base) | ~20–30 GB | A100 40 GB, L40 48 GB, A100 80 GB, H100 80 GB |
+| **Fine-tuning (LoRA/QLoRA)** | 30–70B | QLoRA (INT4 base) | ~40–80 GB | A100 80 GB, H100 80 GB |
+| **Full fine-tuning** | 7B | BF16 | ~60–70 GB | A100 80 GB, H100 80 GB |
+| **Full fine-tuning** | 13B+ | BF16 | > 80 GB (multi-GPU) | Needs NVLink — use [cloud](UW-Cloud-Services.qmd) |
+| **Training from scratch** | > 1B | BF16 | Multi-GPU w/ NVLink | Needs NVLink — use [cloud](UW-Cloud-Services.qmd) |
+
+**Key takeaways:**
+
+- **Quantization extends your reach significantly.** A 70B model at full FP16 precision needs ~140 GB of VRAM (impossible on a single GPU), but quantized to INT4 it fits in ~40 GB — within range of an A100 80 GB or H100.
+- **LoRA/QLoRA makes fine-tuning practical on single GPUs.** You don't need to update all parameters — parameter-efficient methods let you fine-tune large models with a fraction of the memory.
+- **Inference is cheaper than training.** Running a model forward (inference) requires roughly 2 bytes per parameter at FP16, while training requires 2–4x more for gradients and optimizer states.
+- **Beyond 80 GB, you need multi-GPU with NVLink** — which CHTC doesn't offer. For those workloads, see [UW cloud services](UW-Cloud-Services.qmd).
+
+::: {.callout-note}
+These are rough estimates. Actual VRAM usage depends on batch size, sequence length, framework overhead, and the specific model architecture. When in doubt, start with a small test on an interactive GPU job.
+:::
 
 ## Job time limits
 
