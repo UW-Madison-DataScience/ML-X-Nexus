@@ -30,66 +30,111 @@ Traditional AI code assistants (like early GitHub Copilot or ChatGPT) work in a 
 
 This is powerful, but it also means these tools have real access to your system — and the potential to do real damage if not managed carefully.
 
-## Claude Code vs. GitHub Copilot (with Claude)
+## The many ways to use Claude for coding
 
-There is meaningful confusion about the difference between **Claude Code** (Anthropic's CLI agent) and **GitHub Copilot using Claude as a model**. They are fundamentally different tools.
+Before diving into best practices, it's worth clarifying the landscape. "Claude" shows up in several different coding contexts, and they have very different capabilities, risk profiles, and costs. This is a common source of confusion.
+
+### Claude.ai (Web UI)
+
+The [claude.ai](https://claude.ai) chat interface is where many people start. You paste code, ask questions, and get responses — but it has **no direct access to your computer**.
+
+**Strengths:**
+
+- Zero setup, zero risk to your local system
+- Great for brainstorming architecture, reviewing code snippets, debugging logic, or generating starter code
+- Artifacts feature lets you preview and iterate on generated code, HTML, or diagrams
+- Projects feature lets you upload files for persistent context across conversations
+
+**Limitations:**
+
+- You're the copy-paste middleware — Claude can't read your files, run your tests, or make changes directly
+- Context is limited to what you paste or upload
+- No agentic capability (no tool use, no shell access, no iteration loops)
+
+**Best for:** Exploring ideas, learning, code review, generating snippets you'll integrate manually. This is the safest option — Claude can't break anything because it can't touch anything.
 
 ### Claude Code (CLI agent)
 
-- A **terminal-based** agentic tool that runs directly in your shell
-- Has direct access to your filesystem, shell, and git
-- Can read files, write files, run commands, execute tests — all autonomously
-- Works via the Anthropic API (you pay per token)
-- Operates with a permission system: you approve or deny each tool action (or configure auto-approve rules)
-- Supports a `CLAUDE.md` project file for persistent instructions
-- Ideal for **deep, multi-step feature development** in a local or remote environment
+[Claude Code](https://code.claude.com/) is Anthropic's **terminal-based agentic tool**. This is the fully autonomous version — it runs in your shell, reads your codebase, executes commands, edits files, and iterates on its own output.
+
+**Strengths:**
+
+- Full agentic capability: reads files, writes code, runs tests, fixes errors, commits — all in a loop
+- Works across your entire project (not just open files)
+- `CLAUDE.md` project file for persistent instructions and guardrails
+- Permission system lets you approve/deny each action (or configure auto-approve for low-risk operations)
+- Supports extended thinking for complex reasoning tasks
+
+**Limitations:**
+
+- CLI-first — steeper learning curve if you're not comfortable in the terminal
+- Direct shell access means higher security surface (see [Security section](#security-protecting-your-environment) below)
+- Pay-per-token via Anthropic API, which can add up during long sessions
+
+**Best for:** Multi-step feature development, large refactors, debugging complex issues, any task that benefits from the agent being able to run and test its own code.
+
+### Claude Code on the web (browser-based IDE)
+
+Claude Code also runs in **browser-based development environments** — you get the same agentic capabilities without installing anything locally. This includes Anthropic's hosted environment and integrations with cloud IDEs.
+
+**Strengths:**
+
+- Full Claude Code agent capabilities in a browser tab
+- No local setup required — useful for quick starts or when you're not on your main machine
+- The remote environment is sandboxed by default, reducing risk to your local system
+- Good for trying out Claude Code without committing to a CLI workflow
+
+**Limitations:**
+
+- Dependent on network connectivity and cloud environment availability
+- May have resource limits (compute, storage, session duration) compared to running locally
+- Less control over the environment compared to your own machine or container
+
+**Best for:** Getting started with agentic coding, working from machines where you can't install CLI tools, team demos, and sandboxed experimentation.
 
 ### GitHub Copilot (with Claude as the selected model)
 
-- An **IDE-integrated** assistant (VS Code, JetBrains, etc.)
-- Provides inline code completions, chat-based Q&A, and (in newer versions) agentic features within the IDE
-- When you select Claude as the backing model in Copilot, you get Claude's reasoning quality but through **GitHub's interface and permission model**
-- The scope of actions is mediated by the IDE — it can edit files open in your editor, but its system access is more constrained than a CLI tool
-- Paid via GitHub Copilot subscription (individual, business, or enterprise tiers)
+GitHub Copilot is an **IDE-integrated** assistant. When you select Claude as the backing model, you get Claude's reasoning quality but through **GitHub's interface and permission model**.
 
-### Which to use?
+**Strengths:**
 
-| Consideration | Claude Code (CLI) | Copilot + Claude (IDE) |
-|---|---|---|
-| **Autonomy** | High — can run commands, tests, git operations | Moderate — operates within IDE sandbox |
-| **Multi-file edits** | Native — reads/writes across entire project | Improving, but more limited |
-| **Security surface** | Larger — direct shell access | Smaller — IDE-mediated |
-| **Best for** | Feature development, refactoring, debugging complex issues | Inline completions, quick edits, code review |
-| **Cost model** | Pay-per-token (API usage) | Subscription-based |
-| **Learning curve** | Steeper — CLI-first, requires config | Gentler — familiar IDE experience |
+- Familiar IDE experience (VS Code, JetBrains, etc.) — no context switching
+- Inline code completions as you type
+- Chat panel for longer questions and explanations
+- Agent mode (newer feature) can make multi-file edits and run terminal commands within the IDE
+- Copilot coding agent can work asynchronously — you assign a GitHub issue and it opens a PR
+- Subscription-based pricing is more predictable than pay-per-token
 
-In practice, many developers use **both**: Copilot in the IDE for quick completions and inline help, and Claude Code for larger, multi-step tasks that benefit from full system access.
+**Limitations:**
 
-## UI, CLI, and cloud deployment options
+- Actions are mediated by the IDE — less autonomous than CLI-based Claude Code
+- Agent mode is still maturing and more constrained than a full CLI agent
+- When using Claude as the model, you're getting Claude's intelligence but GitHub's tooling — the permission model, context handling, and capabilities are GitHub's, not Anthropic's
+- Premium model requests (including Claude) may have usage limits depending on your subscription tier
 
-Agentic coding tools come in several form factors:
+**Best for:** Inline completions, quick edits, code review, and developers who prefer staying in their IDE. The async coding agent is great for well-defined issues (bug fixes, test coverage) that you want to hand off.
 
-### Web UI (claude.ai)
-- Chat-based interface, no local system access
-- Good for brainstorming, code review, generating snippets
-- Cannot directly edit your files or run your tests
-- Lowest risk, but also lowest integration with your workflow
+### Comparing the options
 
-### IDE extensions (Copilot, Cursor, Windsurf, etc.)
-- Integrated into your editor
-- Can read/write files within the project
-- Varying degrees of agentic capability
-- System access mediated by the IDE
+| | Claude.ai (Web) | Claude Code (CLI) | Claude Code (Browser) | Copilot + Claude (IDE) |
+|---|---|---|---|---|
+| **Agentic capability** | None | Full | Full | Moderate (growing) |
+| **System access** | None | Direct shell | Sandboxed remote | IDE-mediated |
+| **Multi-file edits** | Manual copy-paste | Native | Native | Agent mode only |
+| **Security risk** | Minimal | Highest (local) | Low (sandboxed) | Moderate |
+| **Setup** | None | CLI install + API key | Browser login | IDE extension |
+| **Cost model** | Free tier / Pro subscription | Pay-per-token (API) | Pay-per-token (API) | Subscription + usage |
+| **Best for** | Learning, brainstorming, review | Feature dev, refactors | Quick start, sandboxed work | Daily coding, completions |
 
-### CLI agents (Claude Code, Aider, Codex CLI, etc.)
-- Run in your terminal with direct system access
-- Most powerful and most dangerous
-- Best suited for experienced developers who understand the risks
+In practice, many developers use **multiple surfaces**: Claude.ai for brainstorming and review, Claude Code (CLI or browser) for multi-step feature work, and Copilot for inline completions throughout the day.
 
-### Cloud/remote deployments
-- Tools like Claude Code can run on remote servers, cloud VMs, or in CI/CD pipelines
-- Anthropic offers a **sandboxed container environment** for running Claude Code in isolated contexts (useful for enterprise deployments)
-- GitHub Actions and similar CI systems can invoke agentic tools in disposable environments, limiting blast radius
+## Cloud and remote deployment options
+
+Beyond the developer-facing tools above, agentic coding tools can also run in server and CI/CD contexts:
+
+- **Cloud VMs and remote servers** — run Claude Code on a remote machine over SSH. Your local system stays untouched, and you can use more powerful hardware.
+- **CI/CD pipelines** — GitHub Actions, GitLab CI, and similar systems can invoke Claude Code or Copilot coding agent in **ephemeral environments** that are destroyed after each run. This is the safest way to use agentic tools at scale.
+- **Sandboxed containers** — Anthropic offers purpose-built sandboxed environments for running Claude Code in isolated contexts (see [Sandbox section](#3.-sandbox-when-possible) below). Third-party providers like E2B offer similar capabilities.
 
 The key insight: **the more system access a tool has, the more carefully you need to manage it**.
 
