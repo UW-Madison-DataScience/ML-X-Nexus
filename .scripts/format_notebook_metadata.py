@@ -4,6 +4,8 @@ import yaml
 import os
 
 for ipynb_path in glob.glob('Learn/Notebooks/**/*.ipynb', recursive=True):
+    if os.path.basename(ipynb_path) == 'index.ipynb':
+        continue
     qmd_path = ipynb_path.replace('.ipynb', '.qmd')
     if not os.path.exists(qmd_path):
         continue
