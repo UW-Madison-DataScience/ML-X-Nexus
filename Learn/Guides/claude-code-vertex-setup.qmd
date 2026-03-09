@@ -1,0 +1,773 @@
+---
+title: "Claude Code + Vertex AI Setup Guide (UW-Madison GCP)"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-02-15
+date-modified: 2026-03-09
+date-format: long
+image: "../../../images/agentic-coding.png"
+categories:
+  - Guides
+  - GenAI
+  - LLM
+  - Agentic coding
+  - Cloud computing
+  - GCP
+---
+
+This guide walks UW-Madison researchers and staff through setting up [Claude Code](https://code.claude.com/) with [Google Vertex AI](https://cloud.google.com/vertex-ai) on a UW-provisioned GCP account. It covers Windows and macOS.
+
+::: {.callout-tip}
+## New to agentic coding?
+See our companion guide, [Agentic Coding Best Practices with Claude Code](agentic-coding-best-practices.qmd), for a broader introduction to agentic coding tools and how to use them effectively.
+:::
+
+## Already set up? Returning User Quick-Start
+
+If you've already completed the full setup and just need to start a new session:
+
+::: {.panel-tabset}
+
+### Windows (PowerShell)
+
+```powershell
+# If your credentials have expired (you'll get auth errors):
+gcloud auth application-default login
+
+# Navigate to your project and launch
+cd C:\Users\you\projects\my-project
+claude
+```
+
+### macOS (Terminal)
+
+```bash
+# If your credentials have expired (you'll get auth errors):
+gcloud auth application-default login
+
+# Navigate to your project and launch
+cd ~/projects/my-project
+claude
+```
+
+:::
+
+**Once inside Claude Code:**
+
+```text
+/status       # Confirm Vertex AI is active and your project ID is correct
+/sandbox      # Enable sandboxing if not already persistent in settings
+/cost         # Check token usage at any time during your session
+```
+
+::: {.callout-tip}
+If you get 401/403 errors, re-run `gcloud auth application-default login`. If you get 404 "model not found" errors, check your region settings in `~/.claude/settings.json` (see [Section 5](#configure-claude-code-for-vertex-ai)). If you get 429 "resource exhausted" errors, you need a quota increase (see [Troubleshooting](#troubleshooting)).
+:::
+
+## 1. Prerequisites
+
+**Both platforms:**
+
+- A **UW-Madison GCP project** with billing enabled (e.g., `doit-rci-sandbox-gcp-baa4`)
+- Your **UW-Madison Google account** with IAM access to the GCP project
+- Internet connection
+
+**Windows:**
+
+- Windows 10 (build 1809+) or Windows 11
+- **PowerShell** (use this — not Git Bash, not CMD)
+
+**macOS:**
+
+- macOS 13.0 (Ventura) or later
+- **Terminal** (built-in) or any terminal emulator (iTerm2, Warp, etc.)
+
+> See the official [Claude Code system requirements](https://code.claude.com/docs/en/setup) for the full list (OS versions, RAM, shell, etc.).
+
+## 2. Install Claude Code
+
+> Official install docs: [code.claude.com/docs/en/setup](https://code.claude.com/docs/en/setup)
+
+::: {.panel-tabset}
+
+### Windows
+
+Open **PowerShell** and run:
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+::: {.callout-warning}
+**Do NOT use Git Bash (MINGW64)** — the installer does not support it. Use PowerShell only.
+:::
+
+After installation, you'll likely see a message that `C:\Users\<you>\.local\bin` is not in your PATH. Fix this:
+
+1. Press **Win + R**, type `sysdm.cpl`, press Enter.
+2. Go to **Advanced** tab → **Environment Variables**.
+3. Under **User variables**, select `Path` → click **Edit**.
+4. Click **New** and add: `C:\Users\<your-username>\.local\bin`
+5. Click **OK** on all dialogs.
+6. **Close and reopen PowerShell.**
+
+Verify:
+
+```powershell
+claude --version
+```
+
+### macOS
+
+Open **Terminal** and run:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+Alternatively, if you use Homebrew:
+
+```bash
+brew install --cask claude-code
+```
+
+After installation, restart your terminal (or run `source ~/.zshrc`), then verify:
+
+```bash
+claude --version
+```
+
+> The native installer places the binary at `~/.claude/bin/claude` or `~/.local/bin/claude` and updates your shell profile automatically. If `claude` isn't found, ensure one of these paths is in your `$PATH`.
+
+:::
+
+## 3. Install & Configure Google Cloud CLI
+
+> Official gcloud install docs: [cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
+
+::: {.panel-tabset}
+
+### Windows
+
+Download and install the [Google Cloud CLI for Windows](https://cloud.google.com/sdk/docs/install). The installer adds `gcloud` to your PATH automatically.
+
+**Fix PowerShell Execution Policy (if needed):**
+
+If `gcloud` gives you a "running scripts is disabled" error:
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Type **Y** to confirm.
+
+### macOS
+
+Option A — Homebrew (easiest):
+
+```bash
+brew install --cask google-cloud-sdk
+```
+
+Option B — Official installer:
+
+```bash
+curl https://sdk.cloud.google.com | bash
+```
+
+Then restart your terminal or run:
+
+```bash
+source ~/.zshrc   # or source ~/.bashrc
+```
+
+:::
+
+### Authenticate (both platforms)
+
+These commands are identical on both Windows and macOS:
+
+```bash
+# Log in with your UW-Madison Google account
+gcloud auth login
+
+# Set your GCP project
+gcloud config set project YOUR-PROJECT-ID
+
+# CRITICAL — this is what Claude Code actually uses to authenticate
+gcloud auth application-default login
+```
+
+Both `login` commands open a browser window. Sign in with your UW-Madison email and grant the requested permissions.
+
+## 4. Enable Vertex AI & Request Model Access {#enable-vertex-ai}
+
+> Official Vertex AI setup: [code.claude.com/docs/en/google-vertex-ai](https://code.claude.com/docs/en/google-vertex-ai)
+>
+> Google's Claude on Vertex docs: [cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude)
+
+This section is identical on both platforms — all commands run in your terminal/PowerShell.
+
+### Enable the API
+
+```bash
+gcloud services enable aiplatform.googleapis.com --project=YOUR-PROJECT-ID
+```
+
+### Request access to Claude models
+
+1. Go to the [Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden) in the GCP Console.
+2. Search for the Claude model you want (e.g., **Claude Sonnet 4**).
+3. Click the model card and **complete the access request form**.
+4. Approval may take minutes to a couple of days.
+
+### Verify IAM permissions
+
+Your GCP account needs the **`roles/aiplatform.user`** role ([Vertex IAM docs](https://cloud.google.com/vertex-ai/docs/general/access-control)), which includes:
+
+- `aiplatform.endpoints.predict` (model invocation)
+- `aiplatform.endpoints.computeTokens` (token counting)
+
+If you don't have this, ask your UW-Madison GCP administrator to grant it.
+
+## 5. Configure Claude Code for Vertex AI {#configure-claude-code-for-vertex-ai}
+
+> Full configuration reference: [code.claude.com/docs/en/google-vertex-ai](https://code.claude.com/docs/en/google-vertex-ai)
+
+Edit (or create) your settings file at `~/.claude/settings.json`.
+
+| Platform | Full path |
+|----------|-----------|
+| Windows | `C:\Users\<your-username>\.claude\settings.json` |
+| macOS | `/Users/<your-username>/.claude/settings.json` |
+
+Add the following content:
+
+```jsonc
+{
+  "autoUpdatesChannel": "latest",
+  "env": {
+    "CLAUDE_CODE_USE_VERTEX": "1",
+    "CLOUD_ML_REGION": "global",
+    "ANTHROPIC_VERTEX_PROJECT_ID": "YOUR-PROJECT-ID"
+  }
+}
+```
+
+Replace `YOUR-PROJECT-ID` with your actual GCP project ID (e.g., `doit-rci-sandbox-gcp-baa4`).
+
+### Region notes
+
+- **`global`** is typically the cheapest and is a good default.
+- Not all models are available on the global endpoint. If you get 404 "model not found" errors, add region overrides for specific models by adding more entries to the `env` block:
+
+```jsonc
+"VERTEX_REGION_CLAUDE_3_5_HAIKU": "us-east5",
+"VERTEX_REGION_CLAUDE_4_0_SONNET": "us-east5"
+```
+
+## 6. Verify the Setup
+
+Run these in your terminal (PowerShell on Windows, Terminal on macOS):
+
+```bash
+claude --version
+claude doctor
+```
+
+Then launch Claude Code from a project directory:
+
+::: {.panel-tabset}
+
+### Windows
+
+```powershell
+cd C:\Users\you\projects\my-project
+claude
+```
+
+### macOS
+
+```bash
+cd ~/projects/my-project
+claude
+```
+
+:::
+
+Once inside Claude Code, run `/status` to confirm it's using Vertex AI:
+
+```
+API provider: Google Vertex AI
+GCP project: your-project-id
+Default region: global
+```
+
+::: {.callout-note}
+When using Vertex AI, the [`/login` and `/logout` commands are disabled](https://code.claude.com/docs/en/google-vertex-ai) — authentication is handled entirely through your `gcloud` credentials.
+:::
+
+## 7. Filesystem Safety & Permissions
+
+> Official permissions docs: [code.claude.com/docs/en/permissions](https://code.claude.com/docs/en/permissions)
+>
+> Sandboxing docs: [code.claude.com/docs/en/sandboxing](https://code.claude.com/docs/en/sandboxing)
+
+### Understand the risk before you start {#understand-risk}
+
+::: {.callout-warning}
+## Claude Code runs with your user's full filesystem permissions
+This is the single most important thing to understand before using it.
+:::
+
+When you launch Claude Code from the CLI, it has access to your current working directory — but it is **not strictly confined to it**. Without sandboxing enabled, Claude can read, modify, create, or delete files **anywhere your user account has access**, including parent directories, your home folder, and system files. [Independent testing has confirmed](https://zenn.dev/tomioka/articles/0496a427f8bcd0?locale=en) that without sandboxing, Claude can create files in parent directories above the working directory without any special prompt.
+
+This means a poorly worded prompt, an agentic loop, or a [prompt injection attack](https://www.petefreitag.com/blog/claude-code-permissions/) embedded in a file Claude reads could cause changes in places you didn't intend.
+
+**Practical recommendations:**
+
+- **Test only within isolated Git repositories**, with no sensitive data present in the local repo.
+- **Until you've enabled sandboxing (see [below](#enable-sandboxing)), it's safest to only run Claude Code on machines without sensitive data stored anywhere** — or at minimum, add deny rules (see [below](#add-deny-rules)) to protect your most critical files.
+- **Sandboxing is the real solution** to this problem. It uses OS-level enforcement to restrict bash commands to the working directory, regardless of what Claude tries to do. It's available on macOS (built-in) and Linux/WSL2 (requires `bubblewrap`). Native Windows does not yet support it.
+
+### Always launch from your project directory
+
+::: {.panel-tabset}
+
+### Windows
+
+```powershell
+cd C:\Users\you\projects\my-project
+claude
+```
+
+### macOS
+
+```bash
+cd ~/projects/my-project
+claude
+```
+
+:::
+
+Claude Code defaults to operating in the directory where it's launched. Starting from `C:\` or `/` or your home directory gives it an unnecessarily broad scope.
+
+### Use Git as your safety net
+
+**Always work inside a Git repository.** This is your most important protection:
+
+- You can instantly see what changed with `git diff`.
+- You can revert any unwanted changes with `git checkout .` or `git stash`.
+- Claude Code itself is Git-aware and will generally respect repository boundaries.
+
+**Before starting a Claude Code session, make sure your working tree is clean** (commit or stash pending changes). That way, anything Claude does can be cleanly reviewed or rolled back.
+
+### Use the default permission mode
+
+Out of the box, Claude Code asks for your approval before running most commands. **Do not change this unless you understand the implications.** Specifically:
+
+- **Do NOT use `--dangerously-skip-permissions`** unless you're in an isolated container/VM. This flag bypasses all safety checks.
+- **Do NOT set the mode to `bypassPermissions`** in settings.
+
+### Understand how permissions actually work
+
+In the **default mode**, Claude Code already asks for your approval before running most commands that modify your system (file writes, bash commands, network requests, etc.). Read-only operations like viewing files generally run without prompting.
+
+You can customize this behavior with three types of rules in `settings.json`:
+
+- **`deny`** — Hard block. Claude **cannot** use the tool, period. You won't even be asked. Deny rules always win over allow rules.
+- **`allow`** — Auto-approve. Claude can use the tool **without asking you first**. This is a convenience shortcut — it skips the approval prompt for things you trust.
+- **`ask`** — Force a prompt, even if something else would auto-approve it.
+
+**You do NOT need to add `allow` rules for Claude Code to work.** Without any custom rules, it will simply ask you to approve each action as it comes up. The default behavior is already safe — `deny` rules are the ones that add protection, while `allow` rules just reduce the number of prompts you see.
+
+### Add `deny` rules to protect sensitive areas {#add-deny-rules}
+
+Think of `deny` rules as guardrails. Here's what's worth blocking and why:
+
+```jsonc
+{
+  "permissions": {
+    "deny": [
+      // SSH keys — if Claude reads or modifies these, your remote server
+      // access could be compromised. There's no reason Claude needs these.
+      "Read(//.ssh/**)",
+      "Edit(//.ssh/**)",
+
+      // Environment files — these typically contain API keys, database
+      // passwords, and other secrets. Claude could accidentally include
+      // them in its context (and thus send them to the API).
+      "Read(//.env)",
+      "Edit(//.env)",
+
+      // Cloud credentials — same reasoning as .env files. Application
+      // Default Credentials for gcloud live here.
+      "Read(//.config/gcloud/**)",
+      "Edit(//.config/gcloud/**)",
+
+      // Broad destructive commands — prevent catastrophic mistakes.
+      "Bash(rm -rf *)",
+
+      // Network tools — prevents Claude from exfiltrating data or
+      // downloading untrusted code. Use WebFetch rules instead if you
+      // need Claude to access specific URLs.
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}
+```
+
+::: {.callout-note}
+**Why not just rely on the approval prompt?** Because deny rules are absolute — they work even if you accidentally click "allow" or "always allow" on a prompt. They also protect against [prompt injection attacks](https://www.petefreitag.com/blog/claude-code-permissions/) where malicious content in a file tricks Claude into running something harmful. The approval prompt is your first line of defense; deny rules are the backup that can't be bypassed.
+
+**Important caveat:** `Read` deny rules apply on a "best-effort" basis to built-in tools like Grep and Glob. However, if a Bash command (like `cat .env`) is allowed, it can still read the file. This is why denying both `Read` and the relevant `Bash` commands together gives stronger protection. See [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details.
+:::
+
+### Optionally add `allow` rules to reduce prompt fatigue
+
+If you find yourself constantly approving the same safe commands, you can add `allow` rules so Claude runs them without asking. **Only do this for commands you're comfortable with Claude running at any time without your review:**
+
+```jsonc
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(python *)",
+      "Bash(pytest *)"
+    ]
+  }
+}
+```
+
+These are sensible starting points because they're read-only or run within your project. But you don't have to add any allow rules at all — the default "ask before doing" behavior is perfectly fine, especially when you're starting out.
+
+### Check your current permissions
+
+Run `/permissions` inside a Claude Code session at any time to see what rules are active and which settings file they came from. This is especially helpful to verify your deny rules are loaded correctly.
+
+### Use project-level settings for shared repos
+
+You can also create a `.claude/settings.json` in your project root and commit it to version control. This ensures all team members inherit the same permission rules. Project-level deny rules apply to everyone, even if their personal settings are more permissive.
+
+```jsonc
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./secrets/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}
+```
+
+> **Path syntax note:** Paths starting with `//` are absolute paths on your machine. Paths without `//` are relative to the settings file location. Use `**` to match recursively. See the [permission rules reference](https://code.claude.com/docs/en/permissions) for full pattern syntax.
+
+### Interactive safeguards during a session
+
+- **Press `Esc`** at any time to interrupt Claude Code mid-operation.
+- **Press `Shift+Tab`** to cycle through permission modes during a session.
+- **Use `/permissions`** to view and manage active permissions.
+- **Review every command** before approving it — especially `rm`, `mv`, file writes outside your project, and anything involving `sudo`.
+
+### Permission mode cheat sheet
+
+| Mode | What it does | When to use it |
+|------|-------------|----------------|
+| **default** | Asks before most operations | Day-to-day work (recommended) |
+| **acceptEdits** | Auto-approves file edits, still asks for bash commands | Trusted refactoring tasks |
+| **plan** | Read-only, no modifications allowed | Exploring a codebase, code review |
+| **dontAsk** | Auto-denies anything not explicitly in `allow` list | Strict automation |
+| **bypassPermissions** | Skips ALL checks | Isolated containers only — **never on your local machine** |
+
+### Enable sandboxing (strongly recommended) {#enable-sandboxing}
+
+Sandboxing is the **strongest protection available** against Claude modifying files outside your project. It uses OS-level enforcement (not just Claude's own judgment) to restrict what bash commands can access — even if a prompt injection bypasses Claude's decision-making.
+
+**What sandboxing does ([official docs](https://code.claude.com/docs/en/sandboxing)):**
+
+- **Filesystem isolation:** Write access is restricted to the current working directory and its subdirectories. Claude can still *read* files elsewhere (unless denied), but it **cannot modify, create, or delete files outside your project directory**. This is enforced at the OS kernel level.
+- **Network isolation:** Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.
+
+**Without sandboxing**, these protections do not exist — Claude operates with your full user permissions, and [can create/modify files in parent directories](https://zenn.dev/tomioka/articles/0496a427f8bcd0?locale=en) without any special prompt.
+
+Anthropic reports that sandboxing [reduces permission prompts by 84%](https://www.anthropic.com/engineering/claude-code-sandboxing) while *increasing* security — you get fewer interruptions and better protection.
+
+**How to enable it:**
+
+::: {.panel-tabset}
+
+### macOS
+
+Works **out of the box** using Apple's Seatbelt framework. Inside a Claude Code session, run:
+
+```
+/sandbox
+```
+
+Choose "Accept-edits mode" (recommended) — sandboxed commands run automatically, while anything outside the sandbox falls back to the normal approval prompt.
+
+### Windows (WSL2)
+
+Install dependencies first, then enable:
+
+```bash
+sudo apt install bubblewrap socat
+```
+
+Then run `/sandbox` inside Claude Code.
+
+### Windows (native PowerShell)
+
+Sandboxing is **not yet supported**. Use deny rules as your primary protection, and consider running Claude Code from WSL2 if you need stronger isolation.
+
+:::
+
+::: {.callout-note}
+Sandboxing applies only to Bash commands and their child processes. The built-in Read/Edit tools are governed by permission rules. Use both together for the strongest security posture — this is what Anthropic calls ["defense in depth"](https://code.claude.com/docs/en/sandboxing).
+:::
+
+### Further reading on permissions & security
+
+- [**Official permissions docs**](https://code.claude.com/docs/en/permissions) — full reference for rule syntax, tool names, managed policies
+- [**Official sandboxing docs**](https://code.claude.com/docs/en/sandboxing) — setup, configuration, and security model for OS-level isolation
+- [**Anthropic engineering blog on sandboxing**](https://www.anthropic.com/engineering/claude-code-sandboxing) — explains the design rationale and how filesystem + network isolation work together
+- [**Security deep-dive by Pete Freitag**](https://www.petefreitag.com/blog/claude-code-permissions/) — independent analysis of how permissions actually work under the hood, including gotchas and bypasses
+- [**Permission modes guide**](https://claudefa.st/blog/guide/development/permission-management) — when to use each mode, with workflow examples
+
+## 8. Billing, Cost Management & Avoiding Runaway Costs
+
+> Official cost management docs: [code.claude.com/docs/en/costs](https://code.claude.com/docs/en/costs)
+>
+> GCP budget alerts: [cloud.google.com/billing/docs/how-to/budgets](https://cloud.google.com/billing/docs/how-to/budgets)
+
+::: {.callout-warning}
+## Claude Code on Vertex AI is pay-as-you-go
+Every token you send and receive is billed to your GCP project. Unlike a Claude Pro/Max subscription with fixed monthly pricing, there is no spending cap unless you set one up yourself. **You can rack up significant charges quickly if you're not careful.**
+:::
+
+### Typical costs to expect
+
+According to [Anthropic's own documentation](https://code.claude.com/docs/en/costs), the average Claude Code session costs about **$6 per developer per day**, with 90% of users staying under $12/day. However, this is an *average* — complex tasks, long sessions, or agentic loops can blow past this easily. Monthly costs with Sonnet typically run **$100–$200/developer**, but there's large variance.
+
+Use the **`/cost`** command inside Claude Code at any time to see your current session's token usage and estimated cost:
+
+```
+/cost
+```
+
+### Understand what drives costs
+
+Token costs scale with **context size** — the more context Claude processes, the more you pay. Key cost drivers:
+
+- **Long conversations:** Claude re-processes the entire conversation history with each message. A session that's been going for hours costs more per-message than a fresh one.
+- **Large codebases:** If Claude reads many files to understand your project, that's all input tokens.
+- **Extended thinking:** Enabled by default with a budget of [~32K tokens](https://code.claude.com/docs/en/costs). Thinking tokens are billed as output tokens (the expensive kind). For simple tasks, this is overkill.
+- **Agentic loops (see below):** The single biggest risk for runaway costs.
+
+### Agentic loops — the #1 cost risk {#agentic-loops}
+
+::: {.callout-warning}
+An **agentic loop** happens when Claude gets stuck in a cycle — repeatedly reading the same files, running the same commands, or auto-compacting and re-expanding its context. This can burn through tokens at an alarming rate.
+:::
+
+**Real-world examples from the community:**
+
+- One user [reported a bug](https://github.com/anthropics/claude-code/issues/9579) where an auto-compacting loop consumed **108 million tokens in a single day ($64–$78)**, compared to their normal 12–68M tokens/day.
+- Runaway spikes of **$235+ over a 4-day period** were documented from that same loop bug.
+- Version updates have occasionally caused [**4x faster token consumption**](https://github.com/anthropics/claude-code/issues/16856) on the same tasks.
+
+**How to protect yourself:**
+
+- **Watch for signs:** If Claude seems to be reading the same files over and over, or your `/cost` jumps unusually fast, press **`Esc`** immediately to interrupt.
+- **Use `/compact`** to compress long conversations before they bloat.
+- **Use `/clear`** when switching to unrelated tasks — don't let stale context accumulate.
+- **Be specific in prompts.** Vague requests like "improve this codebase" trigger broad scanning. "Add input validation to the login function in `auth.ts`" is much cheaper.
+- **Use plan mode (Shift+Tab)** before expensive operations. Claude outlines its approach for your approval before writing code, preventing costly rework.
+- **Start with Sonnet, not Opus.** Only escalate to Opus for genuinely complex reasoning tasks. Opus costs significantly more per token.
+
+### Set up GCP budget alerts (do this NOW) {#budget-alerts}
+
+Budget alerts won't automatically stop spending, but they'll email you when you're approaching a threshold. **Set this up before your first Claude Code session.**
+
+1. Go to [**Billing → Budgets & Alerts**](https://console.cloud.google.com/billing/budgets) in the GCP Console.
+2. Click **Create Budget**.
+3. Scope it to your project (e.g., `doit-rci-sandbox-gcp-baa4`).
+4. Set a monthly budget amount you're comfortable with (e.g., $50, $100, $200).
+5. Set alert thresholds at **50%, 80%, and 100%** of your budget.
+6. Add your email as a notification recipient.
+
+::: {.callout-important}
+Budget alerts are [**notifications only**](https://cloud.google.com/billing/docs/how-to/budgets) — they do NOT automatically stop your services or disable billing. If you hit 100% of your budget at 2 AM, charges will continue until you manually intervene. Check your billing console daily.
+:::
+
+### Check your billing console daily
+
+Make it a habit to visit the [**GCP Billing Reports**](https://console.cloud.google.com/billing/reports) page at least once a day while actively using Claude Code. Look for:
+
+- Unexpected spikes in Vertex AI charges
+- Daily costs that exceed your expectations
+- Any charges from services you didn't intentionally use
+
+### Set quota limits as a hard ceiling
+
+Unlike budget alerts, **quotas can actually stop usage.** Go to [**Quotas & System Limits**](https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas) and set reasonable TPM (tokens per minute) quotas for the Claude models you're using. If you hit your quota, Claude Code will get 429 errors instead of running up your bill.
+
+### Cost-saving tips
+
+| Strategy | Savings |
+|----------|---------|
+| Use **Sonnet** instead of Opus for routine tasks | Significantly lower per-token cost |
+| Run **`/clear`** between unrelated tasks | Avoids paying to re-process old context |
+| Run **`/compact`** during long sessions | Compresses context, reduces per-message cost |
+| Lower extended thinking budget (`MAX_THINKING_TOKENS=8000`) | Reduces output token costs on simple tasks |
+| Keep your `CLAUDE.md` files lean (<500 lines) | Less context loaded on every message |
+| Use **plan mode** before big refactors | Catches wrong approaches before expensive execution |
+| Disable non-essential model calls | `DISABLE_NON_ESSENTIAL_MODEL_CALLS=1` in env |
+
+### Vertex AI pricing reference
+
+For the latest Claude model pricing on Vertex AI, see:
+
+- [**Vertex AI Generative AI Pricing**](https://cloud.google.com/vertex-ai/generative-ai/pricing) — official Google pricing page with per-token rates for each Claude model
+- [**Anthropic Pricing**](https://platform.claude.com/docs/en/about-claude/pricing) — base token rates by model, including cache and batch discounts
+- [**Claude Code Cost Management**](https://code.claude.com/docs/en/costs) — Anthropic's official guide to tracking and reducing Claude Code costs
+- [**GCP Quotas for Vertex AI**](https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas) — view and adjust your TPM/RPM quotas
+
+::: {.callout-note}
+The token usage shown on the [GCP Quotas page may be inaccurate](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude) for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use `/cost` inside Claude Code.
+
+Regional endpoints carry a [**10% premium**](https://cloud.google.com/vertex-ai/generative-ai/pricing) over global endpoints. If you selected the global endpoint, you're on the cheaper tier.
+:::
+
+## 9. Troubleshooting {#troubleshooting}
+
+### "model not found" (404)
+
+The model may not be available on the `global` endpoint. Try changing your region:
+
+```jsonc
+"CLOUD_ML_REGION": "us-east5"
+```
+
+Or add a model-specific override (see [Section 5](#configure-claude-code-for-vertex-ai)).
+
+### 429 "Resource Exhausted"
+
+You need a quota increase. Go to [Cloud Console → Quotas](https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas), filter by the Claude model, and request an increase.
+
+### Permission denied / IAM errors
+
+Ask your UW-Madison GCP admin to ensure you have the `roles/aiplatform.user` role on the project.
+
+### `gcloud` command not found
+
+::: {.panel-tabset}
+
+### Windows
+Make sure the Google Cloud SDK is installed and restart PowerShell.
+
+### macOS
+If you installed via Homebrew, run `source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"` or restart your terminal. If you used the curl installer, make sure you ran `source ~/.zshrc` after install.
+
+:::
+
+### `claude` command not found
+
+::: {.panel-tabset}
+
+### Windows
+Ensure `C:\Users\<you>\.local\bin` is in your user PATH (see [Section 2](#install-claude-code)). Restart PowerShell after editing PATH.
+
+### macOS
+Ensure `~/.claude/bin` or `~/.local/bin` is in your `$PATH`. Restart your terminal or run `source ~/.zshrc`.
+
+:::
+
+### Authentication expired
+
+Re-run (both platforms):
+
+```bash
+gcloud auth application-default login
+```
+
+### Run diagnostics
+
+```bash
+claude doctor
+```
+
+This checks your installation, authentication, and configuration for common issues.
+
+## 10. Quick Reference
+
+::: {.panel-tabset}
+
+### Windows (PowerShell)
+
+```powershell
+# Install Claude Code
+irm https://claude.ai/install.ps1 | iex
+
+# Install gcloud (if needed)
+# Download from https://cloud.google.com/sdk/docs/install
+
+# Authenticate with GCP
+gcloud auth login
+gcloud auth application-default login
+
+# Launch Claude Code
+cd C:\your\project
+claude
+```
+
+### macOS (Terminal)
+
+```bash
+# Install Claude Code
+curl -fsSL https://claude.ai/install.sh | bash
+# or: brew install --cask claude-code
+
+# Install gcloud (if needed)
+brew install --cask google-cloud-sdk
+# or: curl https://sdk.cloud.google.com | bash
+
+# Authenticate with GCP
+gcloud auth login
+gcloud auth application-default login
+
+# Launch Claude Code
+cd ~/your/project
+claude
+```
+
+:::
+
+### In-session commands (both platforms)
+
+```text
+/status        # Confirm Vertex AI is the active provider
+/cost          # Check current session token usage and cost
+/compact       # Compress conversation context to save tokens
+/clear         # Wipe context when switching tasks
+/permissions   # View and manage active permission rules
+/sandbox       # Check or enable OS-level sandboxing
+Esc            # Interrupt Claude mid-operation
+Shift+Tab      # Cycle through permission modes
+```
+
+## Further Reading
+
+- [Claude Code Setup Docs](https://code.claude.com/docs/en/setup)
+- [Claude Code on Vertex AI](https://code.claude.com/docs/en/google-vertex-ai)
+- [Claude Code Permissions](https://code.claude.com/docs/en/permissions)
+- [Claude Code Sandboxing](https://code.claude.com/docs/en/sandboxing)
+- [Claude Code Cost Management](https://code.claude.com/docs/en/costs)
+- [Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)
+- [GCP Budget Alerts](https://cloud.google.com/billing/docs/how-to/budgets)
