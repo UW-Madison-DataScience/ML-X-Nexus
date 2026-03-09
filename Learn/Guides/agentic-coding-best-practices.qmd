@@ -57,17 +57,19 @@ In practice, many developers use **multiple tools**: a chat UI for brainstorming
 
 To make these distinctions concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across Claude.ai, the three forms of Claude Code (CLI, desktop app, and browser IDE), and GitHub Copilot.
 
-#### Claude.ai (chat — not Claude Code)
+#### Claude.ai and the Claude Desktop app (chat — not Claude Code)
 
-[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. It's **not** an agentic coding tool — it can't execute code, edit files, or run commands on your system. It has no access to your codebase; you provide context by copying and pasting code snippets into the conversation.
+[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. The [Claude Desktop app](https://claude.ai/download) is the same chat experience as a native application (with added [MCP](https://modelcontextprotocol.io/) support for connecting to external tools). Neither is an agentic coding tool — they can't execute code, edit files, or run commands on your system. You provide context by copying and pasting code snippets into the conversation.
 
-1. Start a new conversation at [claude.ai](https://claude.ai)
+Don't confuse the **Claude Desktop app** (a chat interface) with **Claude Code Desktop** (the agentic coding tool with a GUI). They're separate products. The Claude Desktop app is a chat window; Claude Code Desktop gives you shell access, file editing, and the full agentic workflow. Teresa Torres has a [great comparison](https://www.producttalk.org/claude-code-what-it-is-and-how-its-different/) of all the ways you can interact with Claude, including Claude.ai, Claude Projects, Claude Desktop, and Claude Code.
+
+1. Start a new conversation at [claude.ai](https://claude.ai) or in the Claude Desktop app
 2. Paste in the relevant code (e.g., the contents of `src/utils/` and a few example utilities)
 3. Ask: *"Add a `slugify` function that matches the style of these existing utilities. Also write tests."*
 4. Claude generates the code and tests in the chat
 5. **You** copy the output back into your editor, create a branch, commit, and open the PR yourself
 
-**Friction:** You're the middleware in both directions — pasting code in and copying code out. But notice what's *not* here: permission prompts, approve/deny flows, or any risk of it running a bad command. Claude.ai can't touch your system, so the conversation feels fast and fluid even though you do all the manual work.
+**Friction:** You're the middleware in both directions — pasting code in and copying code out. But notice what's *not* here: permission prompts, approve/deny flows, or any risk of it running a bad command. Claude can't touch your system, so the conversation feels fast and fluid even though you do all the manual work.
 
 **Best for:** Quick code generation, architecture discussions, explaining unfamiliar code, and brainstorming — any task where you're happy to provide context manually and apply changes yourself.
 
@@ -107,23 +109,30 @@ Claude Code will:
 
 #### Claude Code (Desktop app)
 
-Claude Code is also available as a **standalone desktop application** — a GUI wrapper around the same agentic engine that powers the CLI. You get a visual interface for the conversation, file diffs, and permission approvals instead of working in a terminal. Under the hood it's the same tool: full shell access, file editing, test execution, and the permission model.
+Claude Code is also available as a [standalone desktop application](https://code.claude.com/docs/en/desktop) — a GUI wrapper around the same agentic engine that powers the CLI. You get a visual interface for the conversation, visual diffs, and permission approvals instead of working in a terminal. Under the hood it's the same tool: full shell access, file editing, test execution, and the same permission model.
 
-The workflow mirrors the CLI, but with a graphical interface. In practice, some developers [report](https://www.reddit.com/r/ClaudeCode/comments/1q7ti7i/claude_code_desktop_gui_vs_claude_code_cli/) that the desktop app follows `CLAUDE.md` instructions more reliably than the CLI — though this may reflect version differences rather than fundamental architectural gaps (the desktop and CLI can run different versions at any given time). Worth trying both to see which fits your workflow.
+The desktop app also adds some features that the CLI doesn't have out of the box:
 
-**Best for:** Developers who prefer a visual interface over the terminal, or who want the agentic capabilities of Claude Code without living in a shell.
+- **Parallel sessions with Git worktrees** — run multiple tasks simultaneously on separate branches without conflicts
+- **Visual diff view** — see exactly what Claude changed before approving
+- **Managed updates** — the app handles versioning so you're always on a stable release (the CLI can sometimes run a [different version](https://www.reddit.com/r/ClaudeCode/comments/1q7ti7i/claude_code_desktop_gui_vs_claude_code_cli/) than the desktop app)
+- **Desktop Extensions** — add new tools with one click rather than manual terminal configuration
 
-#### Claude Code (Browser IDE at [claude.ai/code](https://claude.ai/code))
+**Best for:** Developers who prefer a GUI over the terminal, or who want parallel task management without manual worktree setup. Also a good starting point for less-technical team members (PMs, designers) who want agentic capabilities without learning terminal commands.
 
-Claude Code also runs as a **browser-based IDE** at [claude.ai/code](https://claude.ai/code) — you get the same agentic capabilities as the CLI without installing anything locally. Don't confuse this with the regular [claude.ai](https://claude.ai) chat: `claude.ai/code` gives you a full development environment with shell access, file editing, and the same permission model as the CLI.
+#### Claude Code on the web ([claude.ai/code](https://claude.ai/code))
 
-The workflow is essentially the same as the CLI version above, but:
+[Claude Code on the web](https://code.claude.com/docs/en/cloud) runs Claude Code tasks on Anthropic's cloud infrastructure — no local setup needed. Don't confuse this with the regular [claude.ai](https://claude.ai) chat: `claude.ai/code` gives you a full agentic development environment that clones your GitHub repo into an isolated VM, runs shell commands, edits files, and can open PRs when it's done. It's also available on mobile ([iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) / [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude)) for kicking off and monitoring tasks on the go.
 
-- No local setup — useful for quick starts or when you're not on your main machine
-- The remote environment is sandboxed by default, reducing risk to your local system
-- May have resource limits (compute, storage, session duration) compared to running locally
+Key differences from the CLI and desktop app:
 
-**Best for:** Getting started with agentic coding, working from machines where you can't install CLI tools, team demos, and sandboxed experimentation.
+- **Asynchronous** — start a task and close your laptop; it runs in the cloud and notifies you when done
+- **Parallel tasks** — kick off multiple tasks simultaneously, each in its own isolated VM
+- **GitHub-only** — currently requires GitHub (no GitLab or other hosts)
+- **Handoff between surfaces** — start a task from the terminal with `claude --remote`, or pull a web session into your terminal with `claude --teleport`
+- **Diff review** — review exactly what changed before creating a PR, and iterate with comments directly in the browser
+
+**Best for:** Async work (kick off a task and come back later), parallel bug fixes, working on repos you don't have checked out locally, and getting started without installing anything.
 
 #### GitHub Copilot (Agent mode in VS Code)
 
@@ -171,7 +180,7 @@ The trade-off is between **autonomy** and **control**:
 - **Copilot agent mode (IDE)** — agentic within the IDE, fewer interruptions than Claude Code, but less granular control.
 - **Copilot coding agent (async)** — most hands-off, but least control during execution.
 
-Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's guardrails are a feature. Quick question about your repo? Claude.ai with a connected repo is hard to beat. Cranking through well-understood changes? Copilot's flow might be preferable.
+Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's guardrails are a feature. Quick question or brainstorming? Claude.ai chat is hard to beat. Cranking through well-understood changes? Copilot's flow might be preferable.
 
 ## Working effectively with Claude Code
 
