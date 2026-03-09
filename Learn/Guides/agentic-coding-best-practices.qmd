@@ -116,10 +116,72 @@ Claude Code has a built-in permission model. **Use it.**
 
 ### 3. Sandbox when possible
 
-- Run agentic tools in **containers** (Docker, Podman) so they can't touch your host system
-- Use **virtual machines** or cloud instances for high-risk experiments
-- Anthropic's sandboxing tools provide isolated environments specifically designed for agentic coding
-- For CI/CD usage, agents should run in **ephemeral environments** that are destroyed after each job
+Running an AI agent on your bare metal dev machine means it has access to everything you do — your SSH keys, browser cookies, credentials, other projects, system configs. Sandboxing limits the blast radius. But not all sandboxes are equal.
+
+#### Standard containers (Docker, Podman)
+
+A standard container gives you filesystem and process isolation. You mount your project directory into the container, install your toolchain, and run the agent inside. This is the approach most developers are already familiar with.
+
+**Pros:**
+
+- You control exactly what's in the container (OS, packages, toolchain)
+- The agent can't access your host filesystem outside the mounted volume
+- Easy to rebuild from scratch if something goes wrong
+- Works with any agentic tool, not just Claude Code
+
+**Cons:**
+
+- You have to set it up yourself — write a Dockerfile, manage dependencies, handle GPU passthrough if needed
+- Network access is usually unrestricted by default (the agent can still `curl` your internal services, call APIs, etc.)
+- You're responsible for security hardening (dropping capabilities, read-only mounts, non-root users)
+- Secrets management is on you — if you pass in a GitHub token via environment variable, the agent can still read it
+
+A typical setup looks like:
+
+```bash
+docker run -it --rm \
+  -v $(pwd):/workspace \
+  -w /workspace \
+  -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY \
+  my-dev-image \
+  claude
+```
+
+This gives the agent access to your project but not your home directory, SSH keys, or other projects. It's a solid baseline.
+
+#### Purpose-built sandboxes (Anthropic's sandboxed containers, E2B, etc.)
+
+Anthropic and third-party providers offer sandboxing solutions specifically designed for agentic AI workloads. These go beyond standard containers:
+
+**Pros:**
+
+- **Network restrictions** — can limit or block outbound network access so the agent can't exfiltrate data or hit unexpected endpoints
+- **Filesystem snapshots** — some solutions snapshot the filesystem before the agent runs, making it trivial to roll back
+- **Pre-configured for agentic use** — tools, permissions, and resource limits are tuned for AI agent workflows out of the box
+- **Ephemeral by default** — the environment is destroyed after the session, so nothing persists accidentally
+- **Resource limits** — CPU, memory, and time caps prevent runaway processes
+
+**Cons:**
+
+- Less flexibility — you may not be able to install arbitrary system packages or use specialized hardware
+- Vendor-specific — ties you to a particular platform or service
+- May add latency or cost compared to running locally
+- Some workflows (e.g., hardware-specific builds, GPU training) may not be supported
+
+#### Which should you use?
+
+| Scenario | Recommendation |
+|---|---|
+| **Solo dev, familiar with Docker** | Standard container with your own Dockerfile — gives you full control |
+| **Team environment, need consistency** | Purpose-built sandbox — reduces setup burden and enforces consistent security |
+| **CI/CD pipelines** | Ephemeral containers (either standard or sandboxed) — destroyed after each run |
+| **Working with sensitive data or credentials** | Purpose-built sandbox with network restrictions — limits exfiltration risk |
+| **Quick local experimentation** | Even a basic container is better than bare metal; start simple |
+| **Enterprise/compliance requirements** | Purpose-built sandbox — easier to audit and demonstrate security controls |
+
+The bottom line: **any sandboxing is better than none**. If you're running an agentic tool directly on your dev machine with full shell access, you're one bad prompt away from a very bad day. A standard Docker container gets you 80% of the way there. Purpose-built sandboxes close the remaining gaps around network isolation, snapshotting, and security hardening — but they come with less flexibility and potential vendor lock-in.
+
+For most individual developers, a Docker container with a mounted project directory and minimal credentials is the pragmatic starting point. For teams and orgs, investing in a purpose-built sandbox solution pays off in reduced risk and lower setup friction across the group.
 
 ### 4. Watch out for prompt injection and accidental destruction
 
