@@ -38,6 +38,6 @@ jobs:
         run: |
           git config user.name "quarto-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          find Learn/Notebooks -name "*.ipynb" -exec git add {} +
+          find Learn/Notebooks -name "*.ipynb" ! -name "index.ipynb" -exec git add {} +
           git commit -m "Auto-convert .qmd notebooks to .ipynb [skip ci]" || echo "No changes to commit"
           git push
