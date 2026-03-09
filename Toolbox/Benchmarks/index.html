@@ -407,7 +407,7 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="QmVuY2htYXJraW5nJTJDU29mdHdhcmUlMjBlbmdpbmVlcmluZyUyQ0NvZGUlMjBnZW5lcmF0aW9uJTJDTExNJTJDR2VuQUklMkNBZ2VudHM=" data-listing-date-sort="1772150400000" data-listing-file-modified-sort="1773071993225" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="735">
+<div class="g-col-1" data-index="0" data-categories="QmVuY2htYXJraW5nJTJDU29mdHdhcmUlMjBlbmdpbmVlcmluZyUyQ0NvZGUlMjBnZW5lcmF0aW9uJTJDTExNJTJDR2VuQUklMkNBZ2VudHM=" data-listing-date-sort="1772150400000" data-listing-file-modified-sort="1773072161293" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="735">
 <a href="../../Toolbox/Benchmarks/SWE-Bench.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -849,6 +849,35 @@ Chris Endemann
     }
   });
   </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="light">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "UW-Madison-DataScience/ML-X-Nexus";
+    script.dataset.repoId = "REPLACE_WITH_REPO_ID";
+    script.dataset.category = "Q&amp;A";
+    script.dataset.categoryId = "REPLACE_WITH_CATEGORY_ID";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
 <nav class="page-navigation column-body">
   <div class="nav-page nav-page-previous">
       <a href="../../Toolbox/index.html" class="pagination-link" aria-label="Toolbox">
