@@ -281,18 +281,22 @@ print(f"  {'NF4 (4-bit)':<12} {mem_4bit:>14,.1f} {params_4bit:>16,}")
 
 ## Part 4: The PyTorch parameter count gotcha
 
-If you ran the summary above, you may have noticed something odd: the parameter count reported by `numel()` drops after quantization. The 4-bit model might report roughly half or a quarter of the expected parameters.
+If you ran the summary above, you may have noticed something odd: the 4-bit model reports ~82M parameters via `numel()` instead of the expected ~124M. Did quantization remove 42 million weights?
 
-This is not because quantization removed weights. The model still has the same architecture and the same logical number of parameters. So what's going on?
+No. The model still has the same architecture and the same logical number of parameters. The discrepancy comes from how `bitsandbytes` stores quantized weights — and from the fact that **not all parameters get quantized**.
 
-### Why `numel()` is misleading for quantized models
+### What gets quantized (and what doesn't)
 
-When `bitsandbytes` quantizes a weight matrix, it doesn't store the weights as a normal PyTorch tensor. Instead, it packs multiple low-bit values into each byte:
+When you load a model with `bitsandbytes`, only the large linear layer weight matrices are quantized. Smaller parameters — biases, layer normalization weights, and embedding layers — are kept in their original precision (typically FP16 or FP32). This is by design: these small parameters contribute little to total memory, and quantizing them would hurt quality disproportionately.
 
-- 8-bit: Each weight occupies 1 byte (same as `numel()` would expect for uint8)
-- 4-bit: Two weights are packed into a single byte, stored as a `uint8` tensor of half the length
+### Why `numel()` is misleading for quantized parameters
 
-When you call `p.numel()` on a quantized parameter, PyTorch reports the number of elements in the storage tensor, not the number of logical weights. Since two 4-bit values are packed into one uint8 element, `numel()` returns roughly half the true count.
+For the parameters that *are* quantized, `bitsandbytes` packs multiple low-bit values into each byte:
+
+- **8-bit**: Each weight occupies 1 byte, stored as a `uint8` tensor. `numel()` still returns the correct count here, since it's one element per weight.
+- **4-bit**: Two weights are packed into a single byte, stored as a `uint8` tensor of **half the length**.
+
+When you call `p.numel()` on a 4-bit quantized parameter, PyTorch reports the number of elements in the storage tensor (the packed `uint8` values), not the number of logical weights. Since two 4-bit values are packed into one `uint8` element, `numel()` returns half the true count for those parameters. Combined with the non-quantized parameters (which report correctly), the total `numel()` across the model ends up somewhere between the true count and half — in GPT-2's case, ~82M instead of ~124M.
 
 ### Correctly counting parameters
 
