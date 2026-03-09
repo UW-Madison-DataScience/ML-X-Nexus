@@ -33,20 +33,47 @@ If you’re a UW-Madison researcher looking to train models, run experiments, or
 - **Dedicated support** — Research Computing Facilitators provide one-on-one consultations, help you optimize workflows, and troubleshoot issues.
 - **Handles most model sizes** — The GPU Lab’s high-VRAM GPUs (up to 80 GB on H100s) can run inference on models up to ~70B parameters with quantization, or fine-tune smaller models on a single GPU.
 
-## What to expect: friction points
+## CHTC vs. cloud: when to use which
 
-CHTC is powerful, but it works differently from your laptop, a Jupyter notebook, or a cloud VM. Being upfront about the learning curve helps you plan:
+CHTC and [UW cloud services](UW-Cloud-Services.qmd) (AWS, GCP, Azure) are complementary — many researchers use both. Here’s how they compare for ML/AI workloads:
 
-- **No interactive GUI** — CHTC is a batch computing system. You write submit files, queue jobs, and collect results. There’s no point-and-click interface or persistent Jupyter session (though short interactive jobs are available for testing). If you’re used to working in notebooks, expect to refactor your code into scripts.
-- **Queue wait times** — GPUs are shared across campus. During peak periods, you may wait hours (occasionally longer) for a GPU job to start. Planning ahead — and designing jobs that can run on backfill hardware — helps a lot.
-- **Job time limits** — Jobs have runtime caps (typically 72 hours for CPU, varying for GPU). Long training runs need checkpointing so they can resume across multiple jobs. This is good practice regardless, but it’s required here.
-- **Environment setup takes effort** — You’ll need to package your software environment into a Docker/Apptainer container and manage file transfers between your submit node and execute nodes. This is more hands-on than `pip install` on your laptop, but CHTC guides and facilitators can help.
-- **No persistent services** — CHTC runs batch jobs, not long-lived services. You can’t host a model endpoint, run a Gradio app, or keep a database running. For those use cases, see [UW cloud services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html).
-- **No NVLink multi-GPU** — GPUs are not interconnected with NVLink, so tensor parallelism across GPUs isn’t feasible. Single-GPU jobs and data-parallel multi-GPU jobs work fine, but frontier-scale training requiring fast inter-GPU communication needs cloud hardware.
+| Factor | CHTC | Cloud (AWS, GCP, Azure) |
+|--------|------|------------------------|
+| **Cost** | Free for all UW researchers | Pay per hour; [UW accounts](UW-Cloud-Services.qmd) get discounted rates and lower grant overhead |
+| **GPU availability** | Shared queue — wait times during peak periods | On-demand (subject to quota) |
+| **Job time limits** | 72 hrs default (CPU); varies for GPU; checkpointing needed for long runs | No time limits — jobs run as long as needed |
+| **Multi-GPU / NVLink** | Not available — single-GPU or data-parallel only | Available on demand — needed for frontier-scale training |
+| **Interactive use** | Limited — 4 hr interactive GPU sessions for testing; primarily a batch system | Full interactive access — Jupyter, VS Code, persistent VMs |
+| **Persistent services** | Not supported — batch jobs only | Host model endpoints, RAG apps, dashboards, databases |
+| **Software environment** | Docker/Apptainer containers — you build and manage them | Prebuilt ML containers + bring-your-own; managed platforms (Vertex AI, SageMaker) handle more plumbing |
+| **Scaling** | Thousands of independent jobs via HTCondor — excellent for hyperparameter sweeps, cross-validation | Scale up (bigger machines) or out (more machines); managed orchestration |
+| **Support** | Free 1-on-1 Research Computing Facilitator consultations | UW Public Cloud Team support; platform documentation |
+| **Data compliance** | On-campus infrastructure | Requires [risk assessment](https://kb.wisc.edu/115296) for sensitive/restricted data |
+
+### Use CHTC when you...
+
+- Have batch workloads that fit on a single GPU (most ML training and inference)
+- Want to run hundreds or thousands of parallel experiments at no cost
+- Can work within job time limits (with checkpointing for longer runs)
+- Are comfortable with (or willing to learn) command-line job submission
+
+### Use cloud when you...
+
+- Need NVLink multi-GPU for frontier-scale training (70B+ parameters, full fine-tuning of 13B+ models)
+- Need persistent services — model endpoints, RAG applications, interactive dashboards
+- Have a hard deadline and can’t wait in a shared queue
+- Need specific hardware CHTC doesn’t have (e.g., TPUs, B200s)
+- Want managed ML platforms (Vertex AI, SageMaker, Azure ML) to handle infrastructure
+
+### Use both when you...
+
+- Develop and test on CHTC, then scale to cloud for final large-scale runs
+- Run batch experiments on CHTC but deploy trained models as cloud endpoints
+- Use CHTC for free GPU experimentation while reserving cloud budget for specialized hardware
 
 ::: {.callout-tip}
-## The tradeoff is worth it
-The friction is real, but so is the payoff: free access to A100s and H100s, the ability to run thousands of parallel experiments, and dedicated staff who will help you get set up. Most researchers find that after the initial setup, CHTC becomes a core part of their workflow. And CHTC’s [Research Computing Facilitators](https://chtc.cs.wisc.edu/uw-research-computing/get-help) are genuinely helpful — reach out early and often.
+## The learning curve is real — but help is available
+CHTC is a batch system, not a notebook environment. You’ll write submit files, package environments in containers, and manage file transfers. That said, CHTC’s [Research Computing Facilitators](https://chtc.cs.wisc.edu/uw-research-computing/get-help) provide free 1-on-1 help and are genuinely great — reach out early and often. Most researchers find that after the initial setup, CHTC becomes a core part of their workflow.
 :::
 
 ## Available hardware
