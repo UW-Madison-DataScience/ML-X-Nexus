@@ -138,6 +138,29 @@ Beyond the developer-facing tools above, agentic coding tools can also run in se
 
 The key insight: **the more system access a tool has, the more carefully you need to manage it**.
 
+## A note for GitLab users
+
+Many teams — including many at UW-Madison — use GitLab rather than GitHub. Claude Code works with GitLab, but the integration is **less mature** than the GitHub experience. Here's what to know:
+
+### What works well
+
+- **Claude Code CLI with GitLab repos** — the core experience (reading code, editing files, running commands) works identically regardless of your git host. Claude Code operates on your local checkout, so the remote platform doesn't matter for day-to-day coding.
+- **GitLab CI/CD integration** — Anthropic provides [official documentation for running Claude Code in GitLab CI/CD pipelines](https://code.claude.com/docs/en/gitlab-ci-cd), including merge request review and test scaffolding.
+- **Git operations** — push, pull, branching, and committing all work normally since these are standard git operations.
+
+### What's different or limited compared to GitHub
+
+- **No native GitLab integration in Claude Code's Slack bot** — the Slack integration currently only supports GitHub repos. GitLab support is [an open feature request](https://github.com/anthropics/claude-code/issues/21527).
+- **No `@claude` mention in GitLab issues/MRs** — GitHub Copilot's coding agent lets you assign issues to Copilot or mention it in PRs. There's no equivalent native integration for GitLab yet, though [GitLab is working on it](https://gitlab.com/gitlab-org/gitlab/-/issues/557820).
+- **Community-built CI/CD tooling** — while official docs exist, you may find yourself using [community solutions](https://github.com/RealMikeChong/claude-code-for-gitlab) to replicate the smoother GitHub Actions experience.
+- **Self-hosted GitLab** — if your institution runs a self-hosted GitLab instance, be aware that Claude Code sends code context to Anthropic's API for processing. This may raise compliance concerns depending on your institution's data policies. There is currently no self-hosted or on-premise option for Claude's inference.
+
+### Practical advice for GitLab teams
+
+- The CLI workflow is essentially identical — focus your setup effort on CI/CD integration
+- For MR review automation, use Claude Code in your `.gitlab-ci.yml` with the `claude -p` (prompt) flag for non-interactive pipeline usage
+- If your institution has data sensitivity requirements, check with your IT governance team before sending code to external APIs — this applies to **all** cloud-based AI coding tools, not just Claude
+
 ## Security: Protecting your environment
 
 This is the "box of worms" section. When you give an AI agent access to your terminal, you're trusting it with everything your shell user can do. Here's how to limit the damage.
