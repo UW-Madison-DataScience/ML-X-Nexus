@@ -1,0 +1,12 @@
+<script>
+// Add "Comments & Reactions" heading above giscus widget when present
+document.addEventListener('DOMContentLoaded', function() {
+  var giscusScript = document.querySelector('script[src*="giscus.app"]');
+  if (!giscusScript) return;
+  var heading = document.createElement('h2');
+  heading.id = 'comments-reactions';
+  heading.textContent = 'Comments & Reactions';
+  heading.style.marginTop = '2em';
+  giscusScript.parentElement.insertBefore(heading, giscusScript);
+});
+</script>
