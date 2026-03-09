@@ -18,7 +18,7 @@ categories:
 
 AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://www.cursor.com/), [Windsurf](https://windsurf.com/), [Augment Code](https://www.augmentcode.com/), [Amazon Q Developer](https://aws.amazon.com/q/developer/), [Gemini Code Assist](https://cloud.google.com/products/gemini-code-assist), and [GitLab Duo](https://about.gitlab.com/gitlab-duo/) are among the most prominent, with new entrants appearing regularly.
 
-Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **[Claude Code](https://code.claude.com/)** as the primary lens. Claude Code is Anthropic's agentic coding tool — distinct from the [Claude.ai](https://claude.ai) chat interface — and it comes in two forms: a **CLI** you install locally and a **browser-based IDE**. Both give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We'll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.
+Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **[Claude Code](https://code.claude.com/)** as the primary lens. Claude Code is Anthropic's agentic coding tool — distinct from the [Claude.ai](https://claude.ai) chat interface — and it comes in several forms: a **CLI**, a **desktop app**, and a **web IDE** at [claude.ai/code](https://claude.ai/code). All give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We'll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.
 
 This is a first pass based on early experience — we expect it to evolve as the ML+X community builds more hands-on knowledge. If you have tips, corrections, or experiences to share, please leave a comment below or start a discussion on the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a).
 
@@ -40,7 +40,7 @@ Before diving into Claude Code specifically, here's a rough map of the major age
 
 | Tool | Interface | Agentic? | Cost model | Notable strengths |
 |---|---|---|---|---|
-| **Claude Code** | CLI, browser IDE | Yes — full shell access | Pay-per-token (API) or Max plan | Deep reasoning, explicit permission model, CLAUDE.md |
+| **Claude Code** | CLI, desktop app, [web IDE](https://claude.ai/code) | Yes — full shell access | Pay-per-token (API) or Max plan | Deep reasoning, explicit permission model, CLAUDE.md |
 | **GitHub Copilot** | VS Code/IDE, GitHub.com | Yes — agent mode + async coding agent | Subscription + usage-based | Tight GitHub integration, async PR creation, wide model selection |
 | **Cursor** | Custom IDE (VS Code fork) | Yes | Subscription | Best-in-class IDE UX, fast inline edits, multi-file context |
 | **Windsurf** | Custom IDE | Yes | Subscription (free tier available) | Good value, smooth agentic flow |
@@ -103,9 +103,9 @@ Claude Code will:
 
 **Best for:** Multi-step feature development, large refactors, debugging complex issues — any task that benefits from the agent being able to run and test its own code.
 
-#### Claude Code (Browser IDE)
+#### Claude Code (Browser IDE at [claude.ai/code](https://claude.ai/code))
 
-Claude Code also runs in **browser-based development environments** — you get the same agentic capabilities without installing anything locally. This includes Anthropic's hosted environment and integrations with cloud IDEs.
+Claude Code also runs as a **browser-based IDE** at [claude.ai/code](https://claude.ai/code) — you get the same agentic capabilities as the CLI without installing anything locally. Don't confuse this with the regular [claude.ai](https://claude.ai) chat: `claude.ai/code` gives you a full development environment with shell access, file editing, and the same permission model as the CLI.
 
 The workflow is essentially the same as the CLI version above, but:
 
@@ -152,12 +152,12 @@ Copilot will:
 
 The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more autonomous" doesn't always mean "smoother experience."
 
-Counterintuitively, **Claude.ai can feel lower-friction than Claude Code** for many tasks — the chat interface just *answers*, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (CLI or browser) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.
+Counterintuitively, **Claude.ai can feel lower-friction than Claude Code** for many tasks — the chat interface just *answers*, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (CLI, desktop app, or web) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.
 
 The trade-off is between **autonomy** and **control**:
 
 - **Claude.ai (chat)** — not agentic, but fluid and zero-risk. You do the manual work.
-- **Claude Code (CLI or browser)** — fully agentic, with an explicit permission model you can tune from conservative to autonomous.
+- **Claude Code (CLI, desktop, or web)** — fully agentic, with an explicit permission model you can tune from conservative to autonomous.
 - **Copilot agent mode (IDE)** — agentic within the IDE, fewer interruptions than Claude Code, but less granular control.
 - **Copilot coding agent (async)** — most hands-off, but least control during execution.
 
@@ -165,7 +165,7 @@ Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's gua
 
 ## Working effectively with Claude Code
 
-This is the core of the guide. Whether you're using the CLI or browser version, these practices will save you time, tokens, and headaches.
+This is the core of the guide. Whether you're using the CLI, desktop app, or web IDE, these practices apply across all Claude Code surfaces.
 
 ### Think in features, not projects
 
