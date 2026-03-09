@@ -18,7 +18,7 @@ categories:
 
 AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://www.cursor.com/), [Windsurf](https://windsurf.com/), [Augment Code](https://www.augmentcode.com/), [Amazon Q Developer](https://aws.amazon.com/q/developer/), [Gemini Code Assist](https://cloud.google.com/products/gemini-code-assist), and [GitLab Duo](https://about.gitlab.com/gitlab-duo/) are among the most prominent, with new entrants appearing regularly.
 
-Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **[Claude Code](https://code.claude.com/)** as the primary lens. Claude Code is Anthropic's agentic coding tool — distinct from the [Claude.ai](https://claude.ai) chat interface — and it comes in several forms: a **CLI**, a **desktop app**, and a **web IDE** at [claude.ai/code](https://claude.ai/code). All give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We'll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.
+Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **[Claude Code](https://code.claude.com/)** as the primary lens. Claude Code is Anthropic's agentic coding tool — distinct from the [Claude.ai](https://claude.ai) chat interface — and it comes in several forms: a **CLI**, a **desktop app**, **IDE extensions** ([VS Code](https://code.claude.com/docs/en/vs-code), [JetBrains](https://code.claude.com/docs/en/jetbrains)), and a **web IDE** at [claude.ai/code](https://claude.ai/code). All give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We'll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.
 
 This is a first pass based on early experience — we expect it to evolve as the ML+X community builds more hands-on knowledge. If you have tips, corrections, or experiences to share, please leave a comment below or start a discussion on the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a).
 
@@ -40,7 +40,7 @@ Before diving into Claude Code specifically, here's a rough map of the major age
 
 | Tool | Interface | Agentic? | Cost model | Notable strengths |
 |---|---|---|---|---|
-| **Claude Code** | CLI, desktop app, [web IDE](https://claude.ai/code) | Yes — full shell access | Pay-per-token (API) or Max plan | Deep reasoning, explicit permission model, CLAUDE.md |
+| **Claude Code** | CLI, desktop app, IDE extensions, [web IDE](https://claude.ai/code) | Yes — full shell access | Pay-per-token (API) or Max plan | Deep reasoning, explicit permission model, CLAUDE.md |
 | **GitHub Copilot** | VS Code/IDE, GitHub.com | Yes — agent mode + async coding agent | Subscription + usage-based | Tight GitHub integration, async PR creation, wide model selection |
 | **Cursor** | Custom IDE (VS Code fork) | Yes | Subscription | Best-in-class IDE UX, fast inline edits, multi-file context |
 | **Windsurf** | Custom IDE | Yes | Subscription (free tier available) | Good value, smooth agentic flow |
@@ -171,12 +171,12 @@ Copilot will:
 
 The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more autonomous" doesn't always mean "smoother experience."
 
-Counterintuitively, **Claude.ai can feel lower-friction than Claude Code** for many tasks — the chat interface just *answers*, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (CLI, desktop app, or web) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.
+Counterintuitively, **Claude.ai can feel lower-friction than Claude Code** for many tasks — the chat interface just *answers*, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (in any form) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.
 
 The trade-off is between **autonomy** and **control**:
 
 - **Claude.ai (chat)** — not agentic, but fluid and zero-risk. You do the manual work.
-- **Claude Code (CLI, desktop, or web)** — fully agentic, with an explicit permission model you can tune from conservative to autonomous.
+- **Claude Code (CLI, desktop, IDE extension, or web)** — fully agentic, with an explicit permission model you can tune from conservative to autonomous.
 - **Copilot agent mode (IDE)** — agentic within the IDE, fewer interruptions than Claude Code, but less granular control.
 - **Copilot coding agent (async)** — most hands-off, but least control during execution.
 
@@ -184,7 +184,7 @@ Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's gua
 
 ## Working effectively with Claude Code
 
-This is the core of the guide. Whether you're using the CLI, desktop app, or web IDE, these practices apply across all Claude Code surfaces.
+This is the core of the guide. Whether you're using the CLI, desktop app, an IDE extension, or the web IDE, these practices apply across all Claude Code surfaces. Anthropic's own [best practices guide](https://code.claude.com/docs/en/best-practices) goes deeper on context management, prompt patterns, and scaling across parallel sessions — we'll highlight the essentials here and add our own perspective.
 
 ### Think in features, not projects
 
@@ -407,7 +407,12 @@ Agentic coding is evolving fast. Here are some of the best resources for staying
 
 ### Official documentation and guides
 
-- [Best Practices for Claude Code](https://code.claude.com/docs/en/best-practices) — Anthropic's official guide, covering context management, multi-session patterns, CLAUDE.md, and batch operations
+- [Best Practices for Claude Code](https://code.claude.com/docs/en/best-practices) — Anthropic's official guide, covering context management, prompt patterns, CLAUDE.md, and scaling across parallel sessions
+- [How Claude Code Works](https://code.claude.com/docs/en/how-claude-code-works) — the agentic loop architecture, built-in tools, and how Claude interacts with your project
+- [Extend Claude Code](https://code.claude.com/docs/en/features-overview) — when to use CLAUDE.md vs skills vs subagents vs hooks vs MCP
+- [Common Workflows](https://code.claude.com/docs/en/common-workflows) — step-by-step guides for debugging, refactoring, testing, creating PRs, and more
+- [Claude Code on the Web](https://code.claude.com/docs/en/cloud) — running Claude Code tasks asynchronously on cloud infrastructure
+- [Claude Code Desktop](https://code.claude.com/docs/en/desktop) — the desktop GUI with visual diffs, parallel sessions, and managed updates
 - [Claude Code Sandboxing Documentation](https://code.claude.com/docs/en/sandboxing) — reference for configuring Claude Code's built-in sandboxing, including OS-level primitives (Linux bubblewrap, macOS Seatbelt) and deny rules for sensitive files
 - [Making Claude Code More Secure and Autonomous](https://www.anthropic.com/engineering/claude-code-sandboxing) — Anthropic Engineering's deep-dive into their dual-layer sandboxing architecture (filesystem + network isolation)
 - [Mitigating the Risk of Prompt Injections](https://www.anthropic.com/research/prompt-injection-defenses) — Anthropic Research on defending AI agents against prompt injection, including their use of reinforcement learning to build injection robustness into Claude
@@ -419,6 +424,7 @@ Agentic coding is evolving fast. Here are some of the best resources for staying
 
 - [Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/) — Simon Willison's guide to coding practices for getting the best results from agents like Claude Code and Codex. He frames this as "expertise amplification, not expertise replacement"
 - [A Guide to Which AI to Use in the Agentic Era](https://www.oneusefulthing.org/p/a-guide-to-which-ai-to-use-in-the) — Ethan Mollick's updated guide arguing that "using AI" now means agents with tools, not chatbots, and that users must think in terms of Models, Apps, and Harnesses
+- [Claude Code: What It Is, How It's Different, and Why Non-Technical People Should Use It](https://www.producttalk.org/claude-code-what-it-is-and-how-its-different/) — Teresa Torres's detailed comparison of Claude.ai, Claude Desktop, Claude Projects, and Claude Code, with a non-technical perspective on why the differences matter
 - [How I Use Claude Code (+ My Best Tips)](https://www.builder.io/blog/claude-code) — practical walkthrough from Builder.io on real-world Claude Code workflows
 - [The Complete Guide to Agentic Coding in 2026](https://www.teamday.ai/blog/complete-guide-agentic-coding-2026) — broad overview comparing tools, workflows, and team strategies
 - [Redefining the Software Engineering Profession for AI](https://cacm.acm.org/opinion/redefining-the-software-engineering-profession-for-ai/) — ACM opinion piece on how AI amplifies senior talent but risks leaving junior developers without the chance to develop architectural intuition
