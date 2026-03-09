@@ -132,6 +132,98 @@ GitHub Copilot is an **IDE-integrated** assistant. When you select Claude as the
 
 In practice, many developers use **multiple surfaces**: Claude.ai for brainstorming and review, Claude Code (CLI or browser) for multi-step feature work, and Copilot for inline completions throughout the day.
 
+### What the same task looks like across surfaces
+
+To make this concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across each surface.
+
+#### Claude.ai (Web UI)
+
+1. Go to [claude.ai](https://claude.ai), start a new conversation
+2. Connect your GitHub repo (Settings → Connected accounts → GitHub → select repo)
+3. Ask: *"Look at `src/utils/` and add a `slugify` function that matches the style of existing utilities. Also write tests."*
+4. Claude browses your repo, generates the code and tests in the chat
+5. **You** copy the code into your editor, create a branch, commit, and open the PR yourself
+
+**Friction:** You're the middleware for applying changes — every edit goes through your clipboard. But notice what's *not* here: permission prompts. Claude.ai just answers. There's no approve/deny flow because there's nothing risky happening — Claude can't touch your system. This makes the web UI feel faster and more fluid for the conversational part, even though you do more manual work on the integration side.
+
+#### Claude Code (CLI)
+
+```bash
+# Clone and navigate to your repo
+git clone git@github.com:yourorg/yourrepo.git && cd yourrepo
+
+# Start Claude Code
+claude
+
+# Now you're in an interactive session. Type your request:
+> Look at src/utils/ and add a slugify function that matches the style
+> of existing utilities. Write tests too. Create a branch, commit, and
+> open a PR when you're done.
+```
+
+Claude Code will:
+
+1. Read your existing utils to understand the style
+2. **Ask permission** to create a new file → you approve (or it auto-approves if you've configured that)
+3. Write the function
+4. **Ask permission** to create the test file → you approve
+5. Write tests
+6. **Ask permission** to run the tests → you approve
+7. Run `pytest` (or whatever your test runner is), see results
+8. If tests fail, iterate — fix the code, re-run
+9. **Ask permission** to create a branch and commit → you approve
+10. **Ask permission** to push and open a PR → you approve
+
+**Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring auto-approve for low-risk actions (file reads, test runs) in your settings or `CLAUDE.md`. The sweet spot is usually: auto-approve reads and test execution, manually approve writes and git operations.
+
+#### GitHub Copilot (Agent mode in VS Code)
+
+1. Open your repo in VS Code with the Copilot extension installed
+2. Open the Copilot chat panel (Ctrl/Cmd+Shift+I)
+3. Select agent mode, choose Claude as the model
+4. Type: *"Add a slugify function to src/utils/ matching the existing style. Write tests."*
+
+Copilot will:
+
+1. Read relevant files
+2. Create/edit files directly — **no permission prompt by default** in many configurations
+3. May run tests if it decides to (or you can ask it to)
+4. You review the changes in VS Code's diff view
+5. **You** handle the git workflow (branch, commit, push, PR) — or use the Copilot coding agent for that
+
+**Friction:** The IDE experience is smooth but you have less visibility into *why* the agent made certain choices. Agent mode is also still evolving — for complex multi-step tasks it may not iterate as effectively as Claude Code's loop. The upside is zero context-switching: you're already in your editor.
+
+#### GitHub Copilot (Coding agent — async)
+
+1. Go to your repo on GitHub.com
+2. Create an issue: *"Add a slugify utility function to src/utils/ with tests"*
+3. Assign the issue to Copilot (or comment `@copilot` on the issue)
+4. Walk away — Copilot works in a cloud environment
+
+Copilot will:
+
+1. Create a branch
+2. Implement the function and tests
+3. Open a PR referencing the issue
+4. You get a notification when the PR is ready to review
+
+**Friction:** This is the most hands-off option, but you have the least control during execution. Works best for well-scoped, clearly described issues. If the task is ambiguous or requires judgment calls, you may end up doing multiple rounds of PR review and comments to guide it.
+
+#### Key takeaway
+
+The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more powerful" doesn't always mean "smoother experience."
+
+Counterintuitively, **Claude.ai can feel less friction than Claude Code CLI** for many tasks — the web UI just *answers*, with no permission prompts, no approve/deny flow, and no risk of it running a bad command. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code CLI is more capable, but its default guardrails (which exist for good reason — it has real shell access) mean more interruptions.
+
+Across all the options, the trade-off is between **control** and **flow**:
+
+- **Claude.ai** — most fluid conversation, but you do all the manual work
+- **Claude Code CLI** — most capable, but defaults to the most permission prompts. You can loosen these as you build trust.
+- **Copilot agent mode** — fewer interruptions than Claude Code, but less granular control and less effective on complex multi-step tasks
+- **Copilot coding agent (async)** — most hands-off, but least control during execution
+
+Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's guardrails are a feature. Quick question about your repo? Claude.ai with a connected repo is hard to beat. Cranking through well-understood changes? Copilot's flow might be preferable.
+
 ## Cloud and remote deployment options
 
 Beyond the developer-facing tools above, agentic coding tools can also run in server and CI/CD contexts:
