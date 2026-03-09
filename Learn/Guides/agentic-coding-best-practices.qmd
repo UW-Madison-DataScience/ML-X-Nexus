@@ -57,13 +57,17 @@ In practice, many developers use **multiple tools**: a chat UI for brainstorming
 
 To make these distinctions concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across Claude.ai, Claude Code, and GitHub Copilot.
 
-#### Claude.ai (Chat)
+#### Claude.ai (Chat — not Claude Code)
 
-[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. The [Claude Desktop app](https://claude.ai/download) includes a **Chat** tab that provides the same experience as a native application (with added [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) support — an open standard that lets AI apps connect to external tools and data sources like databases, APIs, and file systems). The Chat tab is *not* an agentic coding tool — it can't execute code, edit files, or run commands on your system. You provide context by copying and pasting code snippets into the conversation.
+[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. It's *not* an agentic coding tool — it can't execute code, edit files, or run commands on your system. You provide context by pasting code into the conversation, and you copy the output back into your editor.
 
-Note that the Claude Desktop app actually has three tabs: **Chat** (standard conversation), **Code** (the full Claude Code agentic experience — see [below](#claude-code-desktop-web)), and **Cowork** (an AI companion that watches your screen and offers suggestions as you work). Only the **Code** tab is an agentic coding tool.
+::: {.callout-note collapse="true"}
+## The Claude Desktop app has multiple tabs — don't confuse them
 
-1. Start a new conversation at [claude.ai](https://claude.ai) or in the Claude Desktop app
+The [Claude Desktop app](https://claude.ai/download) includes three tabs: **Chat** (standard conversation, with [MCP](https://modelcontextprotocol.io/) support), **Code** (the full Claude Code agentic experience — see below), and **Cowork** (an AI companion that watches your screen and offers suggestions). Only the **Code** tab is an agentic coding tool. The Chat tab provides the same experience as [claude.ai](https://claude.ai) in a native app.
+:::
+
+1. Start a new conversation at [claude.ai](https://claude.ai) or in the Claude Desktop app's Chat tab
 2. Paste in the relevant code (e.g., the contents of `src/utils/` and a few example utilities)
 3. Ask: *"Add a `slugify` function that matches the style of these existing utilities. Also write tests."*
 4. Claude generates the code and tests in the chat
@@ -73,13 +77,13 @@ Note that the Claude Desktop app actually has three tabs: **Chat** (standard con
 
 **Best for:** Quick code generation, architecture discussions, explaining unfamiliar code, and brainstorming — any task where you're happy to provide context manually and apply changes yourself.
 
-#### Claude Code (Desktop & Web) {#claude-code-desktop-web}
+#### Claude Code
 
 [Claude Code](https://code.claude.com/) is Anthropic's agentic coding tool — completely different from the Claude.ai chat interface. It has full access to your filesystem and shell: it can read your codebase, edit files, run commands, execute tests, and iterate on its own output. A built-in permission system prompts you to approve or deny each action, so you stay in the loop while the agent does the heavy lifting.
 
-The easiest way to get started is through the [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) or [Claude Code on the web](https://code.claude.com/docs/en/cloud) at [claude.ai/code](https://claude.ai/code). Both provide the same GUI experience with the same agentic engine under the hood. The main difference is where it runs: the desktop app works with your local filesystem, while the web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile ([iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) / [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude)) for kicking off and monitoring tasks on the go.
+Claude Code is available across multiple surfaces — a [desktop app](https://code.claude.com/docs/en/desktop), a [web IDE](https://code.claude.com/docs/en/cloud), a [terminal CLI](https://code.claude.com/docs/en/getting-started), and IDE extensions for [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains) — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about *how you interact* and *where the work runs*, not what the agent can do.
 
-Type your request in the chat interface:
+Here's what a typical Claude Code session looks like, regardless of surface. You type a request like:
 
 > *Look at src/utils/ and add a slugify function that matches the style of existing utilities. Write tests too. Create a branch, commit, and open a PR when you're done.*
 
@@ -93,7 +97,13 @@ Claude Code will:
 6. If tests fail, iterate — fix the code, re-run
 7. **Ask permission** to create a branch, commit, push, and open a PR → you approve
 
-Key capabilities across both surfaces:
+**Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring auto-approve for low-risk actions (file reads, test runs) in your settings or `CLAUDE.md`. The sweet spot is usually: auto-approve reads and test execution, manually approve writes and git operations.
+
+##### Desktop & Web {#claude-code-desktop-web}
+
+The easiest way to get started is through the [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) or [Claude Code on the web](https://code.claude.com/docs/en/cloud) at [claude.ai/code](https://claude.ai/code). Both provide the same GUI experience. The main difference is where it runs: the desktop app works with your local filesystem, while the web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile ([iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) / [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude)) for kicking off and monitoring tasks on the go.
+
+Key capabilities:
 
 - **Visual diff review** — see exactly what Claude changed, leave inline comments on specific lines, and ask Claude to revise
 - **Live app preview** — Claude can start a dev server and verify its own changes in an embedded browser, taking screenshots and fixing issues it finds
@@ -103,13 +113,11 @@ Key capabilities across both surfaces:
 - **Connectors** — one-click integrations for GitHub, Slack, Linear, Notion, and more
 - **Async handoff** — start a task on the web and close your laptop; it runs in the cloud and notifies you when done. You can also start a task from the terminal with `claude --remote`, or pull a web session into your terminal with `claude --teleport`
 
-**Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring auto-approve for low-risk actions (file reads, test runs) in your settings or `CLAUDE.md`. The sweet spot is usually: auto-approve reads and test execution, manually approve writes and git operations.
+**Best for:** Most users — especially those who prefer a GUI, want visual diff review and parallel task management, or want to get started without installing anything.
 
-**Best for:** Multi-step feature development, large refactors, debugging complex issues — any task that benefits from the agent being able to run and test its own code. The web version is especially good for async work and getting started without installing anything.
+##### Terminal (CLI)
 
-#### Claude Code (Terminal)
-
-Claude Code is also available as a CLI, installed via npm (`npm install -g @anthropic-ai/claude-code`). You launch it from within any project directory and interact through an interactive terminal session. It's the same agentic engine as the desktop and web versions — same permission model, same capabilities — but the terminal interface offers some distinct advantages:
+Claude Code is also available as a CLI, installed via npm (`npm install -g @anthropic-ai/claude-code`). It's the same agentic engine, but the terminal interface offers some distinct advantages:
 
 - **IDE extensions** — Claude Code integrates directly into [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains), so you can use it without leaving your editor
 - **Scriptability** — pipe commands, chain with shell tools, and integrate into automated workflows (CI/CD, git hooks)
