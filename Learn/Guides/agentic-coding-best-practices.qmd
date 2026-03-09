@@ -36,22 +36,24 @@ Before diving into best practices, it's worth clarifying the landscape. "Claude"
 
 ### Claude.ai (Web UI)
 
-The [claude.ai](https://claude.ai) chat interface is where many people start. You paste code, ask questions, and get responses — but it has **no direct access to your computer**.
+The [claude.ai](https://claude.ai) chat interface is where many people start — and it's more capable than you might think. While it has **no direct access to your local computer**, you can connect GitHub repositories directly, giving Claude full read access to your codebase without any copy-pasting.
 
 **Strengths:**
 
-- Zero setup, zero risk to your local system
-- Great for brainstorming architecture, reviewing code snippets, debugging logic, or generating starter code
+- Zero local setup, zero risk to your local system
+- **Connect GitHub repos** directly — Claude can browse your full codebase, understand project structure, and answer questions with full context
+- Great for brainstorming architecture, reviewing code, debugging logic, or generating starter code
 - Artifacts feature lets you preview and iterate on generated code, HTML, or diagrams
-- Projects feature lets you upload files for persistent context across conversations
+- Projects feature lets you upload files and set custom instructions for persistent context across conversations
 
 **Limitations:**
 
-- You're the copy-paste middleware — Claude can't read your files, run your tests, or make changes directly
-- Context is limited to what you paste or upload
-- No agentic capability (no tool use, no shell access, no iteration loops)
+- Claude can read your connected repo but **can't push changes, run tests, or execute commands** — you still apply changes manually
+- Connected repos are GitHub-only (no GitLab or Bitbucket support currently)
+- No agentic execution loop (can't run code, see errors, and iterate autonomously)
+- Context window limits still apply — very large repos may not fit entirely in context
 
-**Best for:** Exploring ideas, learning, code review, generating snippets you'll integrate manually. This is the safest option — Claude can't break anything because it can't touch anything.
+**Best for:** Code review, architecture discussions, understanding unfamiliar codebases, generating code you'll integrate manually, and onboarding to new projects. The connected repo feature makes this dramatically more useful than plain copy-paste — Claude can see your whole project, not just the snippet you remembered to include.
 
 ### Claude Code (CLI agent)
 
@@ -119,8 +121,8 @@ GitHub Copilot is an **IDE-integrated** assistant. When you select Claude as the
 | | Claude.ai (Web) | Claude Code (CLI) | Claude Code (Browser) | Copilot + Claude (IDE) |
 |---|---|---|---|---|
 | **Agentic capability** | None | Full | Full | Moderate (growing) |
-| **System access** | None | Direct shell | Sandboxed remote | IDE-mediated |
-| **Multi-file edits** | Manual copy-paste | Native | Native | Agent mode only |
+| **System access** | Read-only (connected repos) | Direct shell | Sandboxed remote | IDE-mediated |
+| **Multi-file edits** | Manual (you apply changes) | Native | Native | Agent mode only |
 | **Security risk** | Minimal | Highest (local) | Low (sandboxed) | Moderate |
 | **Setup** | None | CLI install + API key | Browser login | IDE extension |
 | **Cost model** | Free tier / Pro subscription | Pay-per-token (API) | Pay-per-token (API) | Subscription + usage |
