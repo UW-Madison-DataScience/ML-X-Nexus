@@ -57,15 +57,33 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 ## Part 1: What is precision?
 
-Every number in a neural network — every weight, bias, and activation — is stored as a sequence of bits. The precision (or data type) determines how many bits are used per number, which controls both the range and granularity of values that can be represented.
+Every number in a neural network — every weight, bias, and activation — is stored as a sequence of bits. The **precision** (or data type) determines how many bits are used per number, which controls both the range and granularity of values that can be represented.
 
-| Data type | Bits per value | Approximate range | Typical use |
-|-----------|---------------|-------------------|-------------|
-| FP32 (float32) | 32 | ~1e-38 to ~3e38 | Default training precision |
-| FP16 (float16) | 16 | ~6e-5 to 65504 | Mixed-precision training |
-| BF16 (bfloat16) | 16 | ~1e-38 to ~3e38 | Training on modern GPUs (A100, H100) |
-| INT8 | 8 | -128 to 127 | Post-training quantization |
-| NF4 (4-bit) | 4 | Normalized float | Aggressive quantization via bitsandbytes |
+### The ruler analogy
+
+Think of precision like the markings on a ruler. A high-precision ruler has markings at every millimeter — you can represent fine distinctions like 3.217 cm vs. 3.218 cm. A low-precision ruler might only have markings at each centimeter — you can still measure things, but 3.217 cm and 3.218 cm both round to 3 cm. You've lost the ability to distinguish them, but you need far less space to write down your measurement.
+
+That's exactly what happens with neural network weights. At FP32, a weight might be stored as `0.31415927`. At FP16, it becomes `0.3142` — close, but not identical. At 4-bit, it gets mapped to one of only 16 possible values, like `0.3125`. The question is whether those small differences matter for the model's outputs. For most deep learning tasks, they don't.
+
+### How floating-point numbers are stored
+
+A floating-point number is stored in three parts:
+
+- **Sign bit** (1 bit): positive or negative
+- **Exponent bits**: control the *range* — how large or small the number can be (like the power in scientific notation)
+- **Fraction bits** (aka mantissa): control the *precision* — how many significant digits you get
+
+For example, FP32 uses 1 sign + 8 exponent + 23 fraction = 32 bits. FP16 cuts this to 1 + 5 + 10 = 16 bits. Fewer fraction bits means coarser rounding; fewer exponent bits means a narrower range of representable values. The table below summarizes the common formats:
+
+| Data type | Bits | Exponent | Fraction | Approximate range | Typical use |
+|-----------|------|----------|----------|-------------------|-------------|
+| FP32 (float32) | 32 | 8 | 23 | ~1e-38 to ~3e38 | Default training precision |
+| FP16 (float16) | 16 | 5 | 10 | ~6e-5 to 65504 | Mixed-precision training |
+| BF16 (bfloat16) | 16 | 8 | 7 | ~1e-38 to ~3e38 | Training on modern GPUs (A100, H100) |
+| INT8 | 8 | — | — | -128 to 127 | Post-training quantization |
+| NF4 (4-bit) | 4 | — | — | 16 discrete values | Aggressive quantization via bitsandbytes |
+
+Note that INT8 and NF4 are **integer/discrete** formats — they don't have exponent and fraction parts at all. They can only represent a small, fixed set of values, and real-valued weights must be *mapped* onto those values (more on this in Part 3).
 
 ### Key insight: precision controls memory per parameter
 
@@ -157,7 +175,7 @@ torch.cuda.empty_cache()
 
 ### BF16 (bfloat16)
 
-BF16 uses 16 bits like FP16, but splits those bits differently. A floating-point number has two main parts: the **exponent** (which controls the *range* — how large or small a number can be) and the **fraction bits** (which control the *precision* — how many decimal places you get). FP16 gives more bits to precision but sacrifices range, which is why it caps out around 65,504 and can't represent very small values. BF16 does the opposite: it keeps the same exponent size as FP32 (8 bits), giving it the same massive range (~1e-38 to ~3e38), at the cost of coarser decimal precision. In practice, this tradeoff works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.
+BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can't represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.
 
 ```{python}
 model_bf16, mem_bf16, params_bf16 = load_and_measure(
@@ -183,11 +201,40 @@ print(f"  BF16:  {params_bf16:,}")
 
 At this point, the key takeaway should be clear: reducing precision halves memory, but the parameter count is unchanged. Every weight is still there — it just takes up less space.
 
-## Part 3: Quantization with bitsandbytes
+### Precision reduction vs. quantization: what's the difference?
 
-Quantization goes a step further than simply choosing a lower-precision dtype at load time. Tools like [`bitsandbytes`](https://github.com/bitsandbytes-foundation/bitsandbytes) apply post-training quantization that converts weights to 8-bit or 4-bit representations using specialized algorithms (e.g., LLM.int8(), NF4 with double quantization).
+What we've done so far — loading a model in FP16 or BF16 instead of FP32 — is **precision reduction** (sometimes called "casting" or "downcasting"). It's straightforward: each floating-point value is converted to a format with fewer bits, using standard IEEE rounding rules. The value `0.31415927` in FP32 becomes `0.3142` in FP16. There's no special algorithm involved — it's just rounding.
 
-This can dramatically reduce memory — often enough to run a model that otherwise wouldn't fit on your GPU.
+**Quantization** is fundamentally different. It doesn't just round values to a lower-precision float — it *maps* them onto a small, discrete set of values (like the 256 integers in INT8, or just 16 values in NF4). This mapping requires decisions that simple rounding can't make:
+
+- **What range of weight values should map to what integers?** (This is called calibration.)
+- **Should all layers use the same mapping, or should each layer be calibrated separately?**
+- **What do you do about outlier weights that fall far outside the typical range?**
+
+Different quantization algorithms answer these questions differently, and their choices directly affect how much quality you lose. That's why quantization is a more involved process than just picking `torch.float16` — it's a compression technique with real engineering behind it.
+
+## Part 3: Quantization — mapping weights to fewer values
+
+Going back to our ruler analogy: precision reduction is like switching from a millimeter ruler to a centimeter ruler — you still have a continuous ruler, just with fewer markings. Quantization is like replacing the ruler entirely with a set of labeled bins. Every weight gets sorted into the nearest bin, and from that point on, it's stored as just a bin number (an integer). The bins are chosen carefully so that the most common weight values land close to a bin center, minimizing the error introduced by this binning.
+
+Here's the key idea more concretely. Suppose a layer has weights ranging from -1.0 to 1.0, and you're quantizing to INT8 (256 possible values). A simple approach would:
+
+1. **Find the range** of the weights: min = -1.0, max = 1.0.
+2. **Divide the range** into 256 equally spaced bins, each spanning ~0.0078.
+3. **Map each weight** to the nearest bin center and store just the bin index (an integer from 0 to 255).
+4. **Store the scale factor** (bin width) and **zero point** so you can approximately reconstruct the original value later: `reconstructed ≈ scale × integer + zero_point`.
+
+This is called **linear (uniform) quantization**, and it's the simplest scheme. More advanced methods — like the ones used in practice — improve on this in important ways:
+
+- [**LLM.int8()**](https://arxiv.org/abs/2208.07339) (Dettmers et al., 2022) discovered that a small fraction of "outlier" features in transformer models have very large magnitudes. If you force these into the same bins as normal-range weights, quality collapses. Their solution: detect outlier features at runtime, keep them in FP16, and quantize only the remaining ~99.9% of values to INT8. This mixed-precision decomposition makes 8-bit quantization effectively lossless.
+- [**NF4**](https://arxiv.org/abs/2305.14314) (Dettmers et al., 2023) takes a different approach for 4-bit. Instead of spacing bins evenly, it places them at the quantiles of a normal distribution — because neural network weights are approximately normally distributed. This means bins are denser where weights are most concentrated (near zero) and sparser in the tails, making optimal use of only 16 possible values. **Double quantization** further compresses the scale factors themselves, saving additional memory.
+- [**GPTQ**](https://arxiv.org/abs/2210.17323) (Frantar et al., 2023) uses a one-shot weight quantization approach that considers the interaction between weights: when one weight is rounded to a bin, it adjusts the remaining weights to compensate for the rounding error. This layer-wise optimization enables 3-4 bit quantization of 175B-parameter models with negligible accuracy loss.
+
+The tools below make these algorithms accessible through a simple configuration interface.
+
+### Using bitsandbytes for quantization
+
+[`bitsandbytes`](https://github.com/bitsandbytes-foundation/bitsandbytes) integrates directly with Hugging Face `transformers`, letting you apply these quantization algorithms at model load time with just a configuration flag. Let's see the memory savings in practice.
 
 ### 8-bit quantization
 
@@ -234,18 +281,22 @@ print(f"  {'NF4 (4-bit)':<12} {mem_4bit:>14,.1f} {params_4bit:>16,}")
 
 ## Part 4: The PyTorch parameter count gotcha
 
-If you ran the summary above, you may have noticed something odd: the parameter count reported by `numel()` drops after quantization. The 4-bit model might report roughly half or a quarter of the expected parameters.
+If you ran the summary above, you may have noticed something odd: the 4-bit model reports ~82M parameters via `numel()` instead of the expected ~124M. Did quantization remove 42 million weights?
 
-This is not because quantization removed weights. The model still has the same architecture and the same logical number of parameters. So what's going on?
+No. The model still has the same architecture and the same logical number of parameters. The discrepancy comes from how `bitsandbytes` stores quantized weights — and from the fact that **not all parameters get quantized**.
 
-### Why `numel()` is misleading for quantized models
+### What gets quantized (and what doesn't)
 
-When `bitsandbytes` quantizes a weight matrix, it doesn't store the weights as a normal PyTorch tensor. Instead, it packs multiple low-bit values into each byte:
+When you load a model with `bitsandbytes`, only the large linear layer weight matrices are quantized. Smaller parameters — biases, layer normalization weights, and embedding layers — are kept in their original precision (typically FP16 or FP32). This is by design: these small parameters contribute little to total memory, and quantizing them would hurt quality disproportionately.
 
-- 8-bit: Each weight occupies 1 byte (same as `numel()` would expect for uint8)
-- 4-bit: Two weights are packed into a single byte, stored as a `uint8` tensor of half the length
+### Why `numel()` is misleading for quantized parameters
 
-When you call `p.numel()` on a quantized parameter, PyTorch reports the number of elements in the storage tensor, not the number of logical weights. Since two 4-bit values are packed into one uint8 element, `numel()` returns roughly half the true count.
+For the parameters that *are* quantized, `bitsandbytes` packs multiple low-bit values into each byte:
+
+- **8-bit**: Each weight occupies 1 byte, stored as a `uint8` tensor. `numel()` still returns the correct count here, since it's one element per weight.
+- **4-bit**: Two weights are packed into a single byte, stored as a `uint8` tensor of **half the length**.
+
+When you call `p.numel()` on a 4-bit quantized parameter, PyTorch reports the number of elements in the storage tensor (the packed `uint8` values), not the number of logical weights. Since two 4-bit values are packed into one `uint8` element, `numel()` returns half the true count for those parameters. Combined with the non-quantized parameters (which report correctly), the total `numel()` across the model ends up somewhere between the true count and half — in GPT-2's case, ~82M instead of ~124M.
 
 ### Correctly counting parameters
 
@@ -279,11 +330,12 @@ naive_count = sum(p.numel() for p in model_4bit.parameters())
 correct_total, quantized_params, non_quantized_params = count_parameters_correct(model_4bit)
 
 print(f"4-bit quantized GPT-2:")
-print(f"  Naive numel() count:     {naive_count:,}")
-print(f"  Correct parameter count: {correct_total:,}")
-print(f"    - Quantized params:    {quantized_params:,}")
-print(f"    - Non-quantized params:{non_quantized_params:,}")
-print(f"  Expected (GPT-2):        ~124,000,000")
+print(f"  Naive numel() count:          {naive_count:,}")
+print(f"  Correct parameter count:      {correct_total:,}")
+print(f"    - Quantized (true count):   {quantized_params:,}  (numel reports ~{quantized_params // 2:,} due to packing)")
+print(f"    - Non-quantized:            {non_quantized_params:,}  (numel reports correctly)")
+print(f"  Expected (GPT-2):             ~124,000,000")
+print(f"\n  Sanity check: {quantized_params // 2:,} (packed) + {non_quantized_params:,} (unquantized) ≈ {naive_count:,} (naive total) ✓")
 ```
 
 ### What's happening under the hood
@@ -325,38 +377,61 @@ Quantization shines at inference time. Training requires high-precision gradient
 
 The notable exception is [QLoRA](https://arxiv.org/abs/2305.14314) (Dettmers et al., 2023), which freezes a 4-bit quantized base model and trains only small low-rank adapter (LoRA) layers in higher precision. This makes it possible to fine-tune a 65B-parameter model on a single 48GB GPU — but the base weights themselves are never updated in low precision.
 
-### "Good enough" vs. "the best": the quality-speed tradeoff
+### A bigger model at lower precision often beats a smaller model at full precision
+
+One of the most practical insights from quantization research: you can often get better results by running a larger model at 4-bit than a smaller model at FP16, using the same GPU memory. For example:
+
+- A **70B model at 4-bit** (~35 GB) can fit on a single 48GB GPU and typically outperforms a **13B model at FP16** (~26 GB) on reasoning and knowledge benchmarks.
+- A **13B model at 4-bit** (~6.5 GB) fits comfortably on a 12GB consumer GPU and often outperforms a **7B model at FP16** (~14 GB, which wouldn't even fit).
+
+The rule of thumb: **spend your memory budget on more parameters first, then reduce precision to fit.** A 4-bit model loses a small amount of quality from quantization, but it gains far more from having access to more learned knowledge and capacity.
+
+### Speed and cost: quantization isn't just about fitting
 
 Quantization isn't just about fitting a model onto your GPU — it also makes inference faster. Lower-precision operations use less memory bandwidth, and for small batch sizes (which are common in interactive applications), memory bandwidth is often the bottleneck. So a 4-bit model doesn't just use ~8x less memory than FP32 — it can also generate tokens noticeably faster.
 
-This creates a practical tradeoff worth thinking about:
+This creates a practical consideration:
 
-- A larger model at higher precision might give you the best possible quality, but it's slower and requires expensive hardware.
-- A larger model at lower precision (e.g., 70B at 4-bit) can often outperform a smaller model at full precision (e.g., 7B at FP16), while running on the same hardware.
-- For many applications, a well-quantized model is "good enough" — and the speed and cost savings make it the better engineering choice.
-
-The question worth asking is not just "which model is most accurate?" but "which model gives me acceptable quality at the speed and cost I need?" In many real-world settings, faster and cheaper wins over marginally better.
+- The question worth asking is not just "which model is most accurate?" but "which model gives me acceptable quality at the speed and cost I need?"
+- For batch applications (processing thousands of documents), the speed improvement from quantization can cut costs significantly.
+- For interactive applications (chatbots, coding assistants), faster token generation directly improves user experience.
 
 ### How low can you go?
 
-Research suggests 4-bit is a practical sweet spot for inference:
+Research suggests **4-bit is the practical sweet spot** for inference:
 
 - [Dettmers & Zettlemoyer (2023)](https://arxiv.org/abs/2212.09720) ran over 35,000 quantization experiments and found that 4-bit precision is nearly universally optimal when trading off total model bits against zero-shot accuracy. At 3-bit, quality degrades sharply.
 - 8-bit quantization (via [LLM.int8()](https://arxiv.org/abs/2208.07339)) is effectively lossless for most models — it's a safe default when memory is tight but you don't want to risk any quality loss.
 - [GPTQ](https://arxiv.org/abs/2210.17323) (Frantar et al., 2023) demonstrated that one-shot weight quantization to 3-4 bits is feasible even for 175B-parameter models with negligible accuracy loss, enabling single-GPU inference for models that otherwise require multiple GPUs.
 
-A recent study on [Scaling Laws for Precision](https://arxiv.org/abs/2411.04330) (Kumar, Ankner et al., 2024) adds nuance: the quality degradation from post-training quantization grows as models are trained on more data. In other words, a model trained to its full data budget may be more sensitive to aggressive quantization than one that was undertrained. This is worth keeping in mind as foundation models continue to scale up their training data.
+A recent study on [Scaling Laws for Precision](https://arxiv.org/abs/2411.04330) (Kumar, Ankner et al., 2024) adds important nuance: **the quality degradation from post-training quantization grows as models are trained on more data.** A model trained to its full data budget may be more sensitive to aggressive quantization than one that was undertrained. This means the "safe" bit-width may shift upward as foundation models continue to scale their training data.
 
-### Rules of thumb
+### Decision flowchart
+
+When deciding whether and how to quantize, work through these questions:
+
+1. **Does the model fit on your GPU at FP16/BF16?** If yes, start there — no quantization needed unless you want faster inference.
+2. **Is this for training or inference?**
+   - *Training from scratch*: Use BF16 (or FP32 if your GPU lacks BF16 support). Don't quantize.
+   - *Fine-tuning*: If the full model doesn't fit, use QLoRA (4-bit base + FP16 adapters).
+   - *Inference*: Continue to step 3.
+3. **How much quality loss can you tolerate?**
+   - *None*: Use INT8. It's effectively lossless for most models.
+   - *Minimal, with significant memory savings*: Use 4-bit NF4 with double quantization.
+   - *You need extreme compression*: Try 3-bit, but **benchmark on your specific task** — quality loss at 3-bit is sharp and task-dependent.
+4. **Could you run a larger model by quantizing more aggressively?** Often the answer is yes. A 70B model at 4-bit typically beats a 13B model at 16-bit.
+
+### Quick reference
 
 | Scenario | Recommended precision |
 |----------|----------------------|
 | Training from scratch | FP32 or BF16 (mixed precision) |
 | Fine-tuning (full) | BF16 or FP16 |
 | Fine-tuning (parameter-efficient on limited hardware) | QLoRA (4-bit base + FP16 adapters) |
-| Inference (quality-sensitive) | 8-bit (INT8) |
-| Inference (memory/speed-constrained) | 4-bit (NF4 or GPTQ) |
-| Inference (extreme compression) | 3-bit or below — expect quality loss, benchmark carefully |
+| Inference (quality-sensitive) | 8-bit (INT8) — effectively lossless |
+| Inference (memory/speed-constrained) | 4-bit (NF4 or GPTQ) — slight quality loss, large memory/speed gain |
+| Inference (extreme compression) | 3-bit or below — expect meaningful quality loss, benchmark carefully |
+| Choosing between model sizes | Prefer larger model at lower precision over smaller model at full precision |
 
 ## Cleanup
 
