@@ -23,6 +23,27 @@ This guide walks UW-Madison researchers and staff through setting up [Claude Cod
 See our companion guide, [Agentic Coding Best Practices with Claude Code](agentic-coding-best-practices.qmd), for a broader introduction to agentic coding tools and how to use them effectively.
 :::
 
+## Why use Vertex AI instead of a direct subscription?
+
+You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of Vertex AI on a GCP account?
+
+**What Vertex AI gives you:**
+
+- **Institutional billing and cost tracking** — charges go to your UW-Madison GCP project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has negotiated cloud computing discounts with GCP through [DoIT](https://it.wisc.edu/about/division-of-information-technology/enterprise-information-security/cloud-computing/), which can significantly reduce per-token costs compared to retail pricing.
+- **Enterprise security controls** — GCP lets you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you'd use for any sensitive cloud infrastructure.
+- **Audit and compliance** — GCP provides audit logs, access transparency, and compliance certifications (HIPAA, FedRAMP, etc.) that institutional review processes often require.
+- **Pay-as-you-go flexibility** — useful for teams with variable usage, short-term projects, or when you need access to specific models not included in subscription plans.
+
+**What Vertex AI does NOT change:**
+
+- **Model weights stay on Anthropic's infrastructure** regardless of how you access Claude. Vertex AI doesn't move the model into your GCP project — Google routes your requests to Anthropic's serving infrastructure.
+- **Data storage location** is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where *inference* runs, that's a separate [data residency](https://docs.anthropic.com/en/docs/build-with-claude/data-residency) feature, not a Vertex AI feature.
+- **Privacy terms** are set by Anthropic's commercial agreements, not by your GCP configuration. Under Anthropic's commercial terms (including Vertex AI), your prompts and outputs are [not used for model training](https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data).
+
+::: {.callout-note}
+**Bottom line:** If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Vertex AI makes sense when you need institutional billing, enterprise security controls, or compliance features — which is why UW-Madison provisions GCP accounts for research groups.
+:::
+
 ## Already set up? Returning User Quick-Start
 
 If you've already completed the full setup and just need to start a new session:
