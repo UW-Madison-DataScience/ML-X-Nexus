@@ -59,17 +59,17 @@ To make these distinctions concrete, let's walk through the same scenario — *"
 
 #### Claude.ai (chat — not Claude Code)
 
-[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. It's **not** an agentic coding tool — it can't execute code, edit files, or run commands on your system. But with its [connected repos feature](https://support.anthropic.com/en/articles/11## Claude.ai GitHub integration), it can read your GitHub repositories and generate code in conversation.
+[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. It's **not** an agentic coding tool — it can't execute code, edit files, or run commands on your system. It has no access to your codebase; you provide context by copying and pasting code snippets into the conversation.
 
 1. Start a new conversation at [claude.ai](https://claude.ai)
-2. Connect your GitHub repo (Settings → Connected accounts → GitHub → select repo)
-3. Ask: *"Look at `src/utils/` and add a `slugify` function that matches the style of existing utilities. Also write tests."*
-4. Claude reads your repo, generates the code and tests in the chat
-5. **You** copy the code into your editor, create a branch, commit, and open the PR yourself
+2. Paste in the relevant code (e.g., the contents of `src/utils/` and a few example utilities)
+3. Ask: *"Add a `slugify` function that matches the style of these existing utilities. Also write tests."*
+4. Claude generates the code and tests in the chat
+5. **You** copy the output back into your editor, create a branch, commit, and open the PR yourself
 
-**Friction:** You're the middleware — every edit goes through your clipboard. But notice what's *not* here: permission prompts, approve/deny flows, or any risk of it running a bad command. Claude.ai can't touch your system, so the conversation feels fast and fluid even though you do more manual work on the integration side.
+**Friction:** You're the middleware in both directions — pasting code in and copying code out. But notice what's *not* here: permission prompts, approve/deny flows, or any risk of it running a bad command. Claude.ai can't touch your system, so the conversation feels fast and fluid even though you do all the manual work.
 
-**Best for:** Code review, architecture discussions, understanding unfamiliar codebases, generating code you'll integrate manually. The connected repo feature means Claude can see your whole project, not just the snippet you remembered to paste.
+**Best for:** Quick code generation, architecture discussions, explaining unfamiliar code, and brainstorming — any task where you're happy to provide context manually and apply changes yourself.
 
 #### Claude Code (CLI)
 
