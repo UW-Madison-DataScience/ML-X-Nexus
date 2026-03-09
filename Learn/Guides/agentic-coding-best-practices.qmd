@@ -99,11 +99,34 @@ This is the "box of worms" section. When you give an AI agent access to your ter
 
 ### 1. Scope your tokens and credentials
 
-- **Never store secrets in plain text** in your project directory. Use environment variables, credential managers, or secret stores.
-- **Use fine-grained GitHub tokens** (classic tokens with minimal scopes, or fine-grained personal access tokens limited to specific repos). If an agent accidentally leaks or misuses a token, the blast radius is smaller.
-- **Rotate tokens regularly**, especially any used in agentic contexts.
-- **Use `.gitignore` and `.env` conventions** religiously. Add `.env`, `credentials.json`, `*.pem`, etc. to `.gitignore` before the agent ever runs.
-- Consider using a **dedicated GitHub bot account** with limited permissions for agent-driven operations rather than your personal token.
+The general advice — "don't store secrets in plain text" — isn't enough when an AI agent has shell access. The agent can read environment variables, inspect dotfiles, and run commands like `cat ~/.ssh/id_rsa` or `echo $GITHUB_TOKEN`. You need to make credentials **structurally inaccessible**, not just hidden.
+
+#### Use separate, minimal-scope credentials
+
+- **Create a dedicated GitHub token** (fine-grained personal access token) scoped to only the repos and permissions the agent needs. If it only needs to push to one repo, don't give it access to your entire GitHub account.
+- **Use a bot account** for agent-driven git operations rather than your personal credentials. If something goes wrong, you revoke the bot — not your own access.
+- **Never reuse your daily-driver SSH keys** in an agentic environment. Generate a dedicated deploy key for the specific repo.
+
+#### Isolate credentials outside the agent's reach
+
+The most reliable way to prevent an agent from accessing credentials is to **not have them in the environment at all**:
+
+- **Use a credential helper for git** instead of tokens in environment variables. Git credential managers (like `git-credential-store` pointed at a file outside the mounted volume, or `gh auth` configured on the host) can provide auth without exposing the token to the shell environment.
+- **In containers**, don't pass secrets as environment variables (`-e GITHUB_TOKEN=...`). Instead, use Docker secrets, mount a read-only credential socket, or configure git to use a credential helper on the host that the container calls out to.
+- **Use SSH agent forwarding** cautiously — it gives the container access to your SSH key for connections but doesn't expose the key file itself. This is better than copying keys into the container, but the agent can still use the forwarded key for the duration of the session.
+- **For API keys** (like `ANTHROPIC_API_KEY`), the agent obviously needs this one to function. But limit the scope: set spending limits on the API key, and use a separate key from your personal/production one.
+
+#### Filesystem hygiene
+
+- Add `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc`, and similar patterns to `.gitignore` **before the agent ever runs**
+- In containers, mount your project directory but **not your home directory**. This keeps `~/.ssh`, `~/.aws`, `~/.config/gh`, and other credential stores out of reach.
+- Use read-only mounts (`-v $(pwd):/workspace:ro`) for any directories the agent only needs to read
+
+#### Rotate and audit
+
+- **Rotate tokens regularly**, especially any used in agentic contexts
+- **Audit agent sessions** — review what commands were run and what files were accessed
+- **Set token expiration dates** — fine-grained GitHub tokens support this natively
 
 ### 2. Use the permission system
 
@@ -264,14 +287,42 @@ The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent n
 
 ### Manage costs
 
-Agentic coding tools that use API tokens (like Claude Code) can get expensive if you're not careful. Some strategies:
+Agentic coding tools that use API tokens (like Claude Code) charge per token, and agentic workflows are token-hungry — the agent reads files, reasons through problems, writes code, runs commands, reads output, and iterates. A single focused task might use 50K–200K tokens. A sprawling, underspecified session can easily burn through 1M+ tokens.
 
-- **Start with cheaper models for exploration**, then switch to more capable models for complex tasks
-- **Be specific in your prompts** — vague requests lead to more back-and-forth, which means more tokens
-- **Use the right tool for the job**: simple completions in the IDE (subscription-based) vs. multi-step tasks in the CLI (token-based)
-- **Set spending alerts and limits** on your API account
-- **Monitor session token usage** — Claude Code shows token counts, so you can see when a session is getting expensive
-- **Break large tasks into smaller ones** — each focused session is cheaper than one sprawling conversation that loses context
+#### What does this actually cost?
+
+Rough estimates for Claude Code usage (as of early 2026, using Claude Sonnet as the default model):
+
+| Usage pattern | Tokens/day (est.) | Daily cost (est.) |
+|---|---|---|
+| Light — a few focused tasks | 100K–300K | $0.50–$2 |
+| Moderate — active feature development | 500K–1.5M | $3–$10 |
+| Heavy — large refactors, multi-step debugging | 2M–5M+ | $15–$40+ |
+
+These are rough ranges and will vary based on model choice (Opus costs more than Sonnet, Haiku costs less), codebase size (larger context = more input tokens), and how many agentic loops occur. Anthropic also offers a **Max plan** with higher rate limits for teams doing heavy agentic work.
+
+For comparison, GitHub Copilot subscriptions run $10–$39/month depending on tier, with usage-based pricing for premium models beyond included allowances.
+
+#### Strategies to keep costs down
+
+- **Be specific in your prompts** — vague requests lead to more agentic loops, which means more tokens. "Add a login form" costs more than "Add a React component at `src/components/LoginForm.tsx` that posts email/password to `/api/auth/login`"
+- **Use the right tier of model for the task** — use Haiku or Sonnet for straightforward tasks, reserve Opus for complex reasoning
+- **Break large tasks into smaller ones** — each focused session is cheaper than one sprawling conversation that loses context and re-reads files
+- **Use `CLAUDE.md`** to provide project context upfront — this reduces the amount of exploration the agent needs to do
+- **Set spending alerts and hard limits** on your Anthropic API account
+- **Monitor session token usage** — Claude Code shows token counts in the session, so you can see when things are getting expensive and redirect
+
+#### Energy and environmental considerations
+
+It's worth acknowledging that agentic coding is more compute-intensive than traditional code completion. Each agentic loop involves multiple LLM inference calls, each of which consumes GPU compute (and the energy that powers it). A heavy day of agentic coding might involve hundreds of inference calls.
+
+The environmental cost of AI inference is an active area of research and debate. Some perspective:
+
+- A single LLM inference call uses roughly 0.001–0.01 kWh of energy (varies widely by model size and provider infrastructure)
+- A heavy day of agentic coding (thousands of calls) might use 1–10 kWh — comparable to running a desktop computer for a day
+- Cloud providers are increasingly powering data centers with renewable energy, but this varies by region and provider
+
+This doesn't mean you shouldn't use agentic tools — the productivity gains can be substantial. But it's a reason to be intentional: don't let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. **Efficient prompting is both cheaper and greener.**
 
 ### Commit early, commit often
 
@@ -306,6 +357,31 @@ Agentic coding tools are genuinely powerful — they can dramatically accelerate
 8. **Review everything** — you're the engineer; the agent is a very fast intern
 
 The technology is moving fast, and best practices will continue to evolve. The core principle stays the same: **give agents the minimum access they need, provide maximum clarity in your instructions, and always keep a human in the loop for decisions that matter**.
+
+## Further reading and perspectives
+
+Agentic coding is evolving fast. Here are some of the best resources for staying current:
+
+### Official documentation and guides
+
+- [Best Practices for Claude Code](https://code.claude.com/docs/en/best-practices) — Anthropic's official guide, covering context management, multi-session patterns, CLAUDE.md, and batch operations
+- [GitHub Copilot Coding Agent 101](https://github.blog/ai-and-ml/github-copilot/github-copilot-coding-agent-101-getting-started-with-agentic-workflows-on-github/) — GitHub's getting-started guide for their agentic workflow, including how the agent spins up environments and creates PRs
+- [What's New with GitHub Copilot Coding Agent](https://github.blog/ai-and-ml/github-copilot/whats-new-with-github-copilot-coding-agent/) — latest updates including self-review, security scanning, and custom agents
+
+### Community voices and analysis
+
+- [Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/) — Simon Willison's guide to coding practices for getting the best results from agents like Claude Code and Codex. He frames this as "expertise amplification, not expertise replacement"
+- [How I Use Claude Code (+ My Best Tips)](https://www.builder.io/blog/claude-code) — practical walkthrough from Builder.io on real-world Claude Code workflows
+- [The Complete Guide to Agentic Coding in 2026](https://www.teamday.ai/blog/complete-guide-agentic-coding-2026) — broad overview comparing tools, workflows, and team strategies
+
+### Security
+
+- [AI Coding Tools Exploded in 2025. The First Security Exploits Show What Could Go Wrong](https://fortune.com/2025/12/15/ai-coding-tools-security-exploit-software/) — Fortune's reporting on the "IDEsaster" vulnerabilities found across Cursor, Copilot, Windsurf, and other tools
+- [Researcher Uncovers 30+ Flaws in AI Coding Tools](https://thehackernews.com/2025/12/researchers-uncover-30-flaws-in-ai.html) — technical breakdown of the universal attack chains affecting major AI IDEs
+- [Security Flaws in Claude Code Risk Stolen Data, System Takeover](https://devops.com/security-flaws-in-anthropics-claude-code-risk-stolen-data-system-takeover/) — Check Point's findings on Claude Code-specific CVEs, including hook injection and API key theft
+- [AI Agent Security Risks in 2026: A Practitioner's Guide](https://blog.cyberdesserts.com/ai-agent-security-risks/) — practical guide to defending against prompt injection, credential theft, and MCP vulnerabilities
+
+This is an area where best practices are being written in real time. What works today may be outdated in six months. Stay plugged into the communities above, and don't assume any single tool or configuration is permanently "safe."
 
 ## Questions
 If you have any lingering questions about this resource, please feel free to post to the [Nexus Q&A](https://github.com/UW-Madison-DataScience/ML-X-Nexus/discussions/categories/q-a) on GitHub. We will improve materials on this website as additional questions come in.
