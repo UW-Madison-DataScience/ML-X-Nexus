@@ -55,7 +55,7 @@ In practice, many developers use **multiple tools**: a chat UI for brainstorming
 
 ### What the same task looks like across different tools
 
-To make these distinctions concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across Claude.ai, both forms of Claude Code, and GitHub Copilot.
+To make these distinctions concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across Claude.ai, the three forms of Claude Code (CLI, desktop app, and browser IDE), and GitHub Copilot.
 
 #### Claude.ai (chat — not Claude Code)
 
@@ -104,6 +104,14 @@ Claude Code will:
 **Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring auto-approve for low-risk actions (file reads, test runs) in your settings or `CLAUDE.md`. The sweet spot is usually: auto-approve reads and test execution, manually approve writes and git operations.
 
 **Best for:** Multi-step feature development, large refactors, debugging complex issues — any task that benefits from the agent being able to run and test its own code.
+
+#### Claude Code (Desktop app)
+
+Claude Code is also available as a **standalone desktop application** — a GUI wrapper around the same agentic engine that powers the CLI. You get a visual interface for the conversation, file diffs, and permission approvals instead of working in a terminal. Under the hood it's the same tool: full shell access, file editing, test execution, and the permission model.
+
+The workflow mirrors the CLI, but with a graphical interface. In practice, some developers [report](https://www.reddit.com/r/ClaudeCode/comments/1q7ti7i/claude_code_desktop_gui_vs_claude_code_cli/) that the desktop app follows `CLAUDE.md` instructions more reliably than the CLI — though this may reflect version differences rather than fundamental architectural gaps (the desktop and CLI can run different versions at any given time). Worth trying both to see which fits your workflow.
+
+**Best for:** Developers who prefer a visual interface over the terminal, or who want the agentic capabilities of Claude Code without living in a shell.
 
 #### Claude Code (Browser IDE at [claude.ai/code](https://claude.ai/code))
 
