@@ -36,23 +36,26 @@ This is powerful, but it also means these tools have real access to your system 
 
 ## The landscape at a glance
 
-Before diving in, here's how the major options compare. This isn't exhaustive, but it covers the tools most developers will encounter:
+Before diving into Claude Code specifically, here's a rough map of the major agentic coding tools as of early 2026:
 
-| | Claude.ai (Web) | Claude Code (CLI) | Claude Code (Browser) | Copilot + Claude (IDE) |
+| Tool | Interface | Agentic? | Cost model | Notable strengths |
 |---|---|---|---|---|
-| **Agentic capability** | None | Full (conservative defaults) | Full (sandboxed) | Moderate (fewer guardrails) |
-| **System access** | Read-only (connected repos) | Direct shell | Sandboxed remote | IDE-mediated |
-| **Multi-file edits** | Manual (you apply changes) | Native | Native | Agent mode only |
-| **Security risk** | Minimal | Highest (local) | Low (sandboxed) | Moderate |
-| **Setup** | None | CLI install + API key | Browser login | IDE extension |
-| **Cost model** | Free tier / Pro subscription | Pay-per-token (API) | Pay-per-token (API) | Subscription + usage |
-| **Best for** | Learning, brainstorming, review | Feature dev, refactors | Quick start, sandboxed work | Daily coding, completions |
+| **Claude Code** | CLI, browser IDE | Yes — full shell access | Pay-per-token (API) or Max plan | Deep reasoning, explicit permission model, CLAUDE.md |
+| **GitHub Copilot** | VS Code/IDE, GitHub.com | Yes — agent mode + async coding agent | Subscription + usage-based | Tight GitHub integration, async PR creation, wide model selection |
+| **Cursor** | Custom IDE (VS Code fork) | Yes | Subscription | Best-in-class IDE UX, fast inline edits, multi-file context |
+| **Windsurf** | Custom IDE | Yes | Subscription (free tier available) | Good value, smooth agentic flow |
+| **Augment Code** | IDE extension | Yes | Subscription | Large context window, codebase-aware |
+| **Amazon Q Developer** | IDE, CLI, AWS console | Yes | Free tier / Pro | Deep AWS integration |
+| **Gemini Code Assist** | IDE, Google Cloud | Yes | Free tier / Enterprise | Google Cloud integration |
+| **GitLab Duo** | GitLab IDE, MR workflows | Yes | GitLab subscription add-on | Native GitLab CI/CD integration |
 
-In practice, many developers use **multiple surfaces**: Claude.ai for brainstorming and review, Claude Code (CLI or browser) for multi-step feature work, and Copilot for inline completions throughout the day.
+This space is moving fast — capabilities and pricing change frequently. See [Coding Agents Comparison](https://artificialanalysis.ai/insights/coding-agents-comparison) for up-to-date benchmarks and pricing.
 
-### What the same task looks like across surfaces
+In practice, many developers use **multiple tools**: a chat UI for brainstorming and review, an agentic tool for multi-step feature work, and an IDE copilot for inline completions throughout the day.
 
-To make this concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across each surface.
+### What the same task looks like across Claude Code surfaces
+
+Since this guide focuses on Claude Code, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across each way you can use it, plus GitHub Copilot for comparison.
 
 #### Claude.ai (Web UI)
 
