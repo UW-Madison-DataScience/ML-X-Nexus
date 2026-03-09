@@ -370,7 +370,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#previewing-locally-optional" id="toc-previewing-locally-optional" class="nav-link" data-scroll-target="#previewing-locally-optional">Previewing locally (optional)</a></li>
   <li><a href="#notebooks" id="toc-notebooks" class="nav-link" data-scroll-target="#notebooks">Contributing a Jupyter notebook</a></li>
   </ul></li>
-  <li><a href="#how-to-improve-an-existing-post" id="toc-how-to-improve-an-existing-post" class="nav-link" data-scroll-target="#how-to-improve-an-existing-post">How to improve an existing post</a></li>
+  <li><a href="#how-to-improve-an-existing-post" id="toc-how-to-improve-an-existing-post" class="nav-link" data-scroll-target="#how-to-improve-an-existing-post">How to improve an existing post</a>
+  <ul class="collapse">
+  <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments &amp; reactions</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/How-to-contribute.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
@@ -574,8 +577,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Click <strong>Propose changes</strong>, then <strong>Create pull request</strong>.</li>
 </ol>
 <p>That’s it — the maintainers will review and merge if everything looks good.</p>
+<section id="comments" class="level3">
+<h3 class="anchored" data-anchor-id="comments">Comments &amp; reactions</h3>
+<p>Every resource post on Nexus has a <strong>Comments &amp; Reactions</strong> section at the bottom, powered by <a href="https://giscus.app/">giscus</a> (backed by GitHub Discussions). Visitors can leave reactions and comments using their GitHub account. This is enabled automatically for all posts — you don’t need to add anything to your front matter. If you ever need to disable comments on a specific page, add <code>comments: false</code> to the YAML front matter.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -979,6 +986,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script>
+<input type="hidden" id="giscus-base-theme" value="preferred-color-scheme">
+<input type="hidden" id="giscus-alt-theme" value="preferred-color-scheme">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "UW-Madison-DataScience/ML-X-Nexus";
+    script.dataset.repoId = "R_kgDOKVN_Vw";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOKVN_V84CgacK";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../index.html" class="pagination-link" aria-label="Home">
@@ -992,8 +1028,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/How-to-contribute.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer><script>
+// Add "Comments & Reactions" heading above giscus widget when present
+document.addEventListener('DOMContentLoaded', function() {
+  var giscusScript = document.querySelector('script[src*="giscus.app"]');
+  if (!giscusScript) return;
+  var heading = document.createElement('h2');
+  heading.id = 'comments-reactions';
+  heading.textContent = 'Comments & Reactions';
+  heading.style.marginTop = '2em';
+  giscusScript.parentElement.insertBefore(heading, giscusScript);
+});
+</script>
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/How-to-contribute.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+</body></html>
