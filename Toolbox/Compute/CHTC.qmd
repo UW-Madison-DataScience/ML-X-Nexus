@@ -1,31 +1,141 @@
 ---
 title: "Center for High Throughput Computing (CHTC)"
-author: 
+author:
   - name: Chris Endemann
     email: endemann@wisc.edu
-date: 2024-06-25
+date: 2026-03-09
 date-format: long
 image: "../../../images/CHTC.png"
 categories:
   - Compute
   - UW-Madison
   - GPU
+  - HPC
+  - HTC
 ---
 
-Established in 2006, the [Center for High Throughput Computing (CHTC)](https://chtc.cs.wisc.edu/) is committed to democratizing access to powerful computing resources across all research domains. From their website:
+Established in 2006, the [Center for High Throughput Computing (CHTC)](https://chtc.cs.wisc.edu/) is UW-Madison’s core computational service provider for large-scale computing. CHTC offers two main systems — a **High Throughput Computing (HTC)** pool and a **High Performance Computing (HPC)** cluster — along with GPUs, high-memory servers, data storage, personalized consulting, and classroom support, all **at no cost** to UW-Madison researchers.
 
-> We are the University of Wisconsin-Madison's core computational service provider for large scale computing. CHTC services are open to UW-Madison staff, students, faculty, and external collaborators.
-> We offer both a High Throughput Computing system and a High Performance Computing cluster. Access to CPUs/GPUs, high-memory servers, data storage capacity, as well as personalized consultations and classroom support, are provided at no-cost.
+CHTC services are open to UW-Madison staff, students, faculty, and external collaborators (with a UW faculty/staff sponsor).
 
-Are you a researcher at UW-Madison seeking to extend your computing capabilities beyond local resources, particularly for machine learning tasks?  [Request an account now](https://chtc.cs.wisc.edu/uw-research-computing/form.html) to take advantage of the open computing services offered by the CHTC! 
+::: {.callout-tip}
+## Get started now
+[Request an account](https://chtc.cs.wisc.edu/uw-research-computing/form.html) to start using CHTC. A Research Computing Facilitator will follow up to discuss your computational needs and help you get set up.
+:::
 
-### Run machine learning jobs on CHTC — GPUs available
-This [guide](https://chtc.cs.wisc.edu/uw-research-computing/machine-learning-htc) provides some of our recommendations for success in running machine learning (specifically deep learning) jobs in CHTC. If you need help leveraging any of the CHTC resources, please reach out to [chtc@cs.wisc.edu](mailto:chtc@cs.wisc.edu).
+## Why use CHTC for ML/AI?
+
+If you’re a UW-Madison researcher looking to train models, run experiments, or scale ML workflows beyond your laptop, CHTC is the first place to look:
+
+- **Free GPU access** — A100s (40 and 80 GB), H100s (80 GB), and more are available at no cost through the [GPU Lab](https://chtc.cs.wisc.edu/uw-research-computing/gpu-lab).
+- **No cloud bills** — Unlike AWS/GCP/Azure, you don’t pay per hour. CHTC is funded institutionally.
+- **Scale to thousands of jobs** — HTCondor is designed for massive throughput: submit thousands of jobs from a single submit file for hyperparameter sweeps, cross-validation, or batch inference.
+- **Dedicated support** — Research Computing Facilitators provide one-on-one consultations, help you optimize workflows, and troubleshoot issues.
+- **Handles most model sizes** — The GPU Lab’s high-VRAM GPUs (up to 80 GB on H100s) can run inference on models up to ~70B parameters with quantization, or fine-tune smaller models on a single GPU.
+
+::: {.callout-note}
+CHTC GPUs are **not NVLink-connected**, so multi-GPU parallelism is limited to methods that don’t require fast inter-GPU communication (e.g., data parallelism works, but tensor parallelism across GPUs does not). For NVLink multi-GPU or multi-node setups needed for frontier-scale training, consider [UW cloud services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html).
+:::
+
+## Available hardware
+
+### HTC system
+
+The HTC system is CHTC’s primary resource, managed by [HTCondor](https://htcondor.org/). It is optimized for running many independent jobs in parallel — ideal for hyperparameter searches, cross-validation folds, batch inference, Monte Carlo simulations, and similar workflows.
+
+- ~30,000 CPU cores across shared execute nodes
+- Several high-memory servers with terabytes of RAM for memory-intensive single-node jobs
+- Dozens of GPUs available through the [GPU Lab](https://chtc.cs.wisc.edu/uw-research-computing/gpu-lab)
+- 200 Gbps backbone network connectivity
+
+### GPU Lab
+
+The [GPU Lab](https://chtc.cs.wisc.edu/uw-research-computing/gpu-lab) is a pool of shared GPU servers within the HTC system. Any CHTC user can opt in. Available GPU hardware includes:
+
+| GPU | VRAM | Notes |
+|-----|------|-------|
+| **A100** | 40 GB or 80 GB | Strong general-purpose ML GPU; widely available in the GPU Lab |
+| **H100** | 80 GB | Higher performance and memory bandwidth; available via [DSI H100 cluster](https://dsi.wisc.edu/services/gpu/h100-gpu-cluster/) (DSI Affiliates get priority) |
+| **L40** | 48 GB | Available via [DSI L40 cluster](https://dsi.wisc.edu/services/gpu/l40/) |
+
+To request GPUs in your jobs, add GPU requirements to your HTCondor submit file. See the [GPU jobs guide](https://chtc.cs.wisc.edu/uw-research-computing/gpu-jobs) for details.
+
+::: {.callout-tip}
+## Backfill for short jobs
+If your jobs run in under 4–6 hours (or can checkpoint that frequently), you can access **additional GPU servers** beyond the GPU Lab as backfill — significantly increasing your available capacity. CHTC strongly recommends this for short or checkpointable jobs.
+:::
+
+### HPC cluster
+
+The [HPC cluster](https://chtc.cs.wisc.edu/uw-research-computing/hpc-overview) is a traditional shared-memory cluster managed with SLURM. It is suited for tightly coupled parallel jobs (e.g., MPI-based simulations) that need fast communication between nodes. The HPC cluster also supports [Apptainer containers](https://chtc.cs.wisc.edu/uw-research-computing/hpc/guides) and software management via Spack.
+
+## Job time limits
+
+| Job type | Runtime limit | Notes |
+|----------|--------------|-------|
+| Standard HTC jobs | 72 hours | Default; contact facilitators if you need longer |
+| GPU Lab batch jobs | Varies by GPU tier | Check the [GPU Lab page](https://chtc.cs.wisc.edu/uw-research-computing/gpu-lab) for current limits |
+| Interactive GPU jobs | 4 hours, 1 GPU | For testing and debugging |
+| Backfill jobs (group-owned GPUs) | No guaranteed runtime | Jobs may be preempted; best for short or checkpointable work |
+
+::: {.callout-tip}
+## Long training runs
+If your training exceeds the job time limit, implement **checkpointing** — save model weights periodically so you can resume from the last checkpoint in a new job. CHTC’s [machine learning guide](https://chtc.cs.wisc.edu/uw-research-computing/machine-learning-htc) covers this workflow. You can also contact facilitators about extended runtimes.
+:::
+
+## Running ML jobs on CHTC
+
+CHTC’s [machine learning guide](https://chtc.cs.wisc.edu/uw-research-computing/machine-learning-htc) is the best starting point for deep learning workflows. Key considerations:
+
+- **Software environment**: CHTC supports containers (Docker/Apptainer) for packaging your ML environment — PyTorch, TensorFlow, JAX, etc. This gives you full control over your software stack.
+- **Data transfer**: Use `/home` for small files (< 100 MB) and `/staging` for large datasets. HTCondor’s file transfer mechanism handles up to ~500 MB total per job; for larger data, see the [file availability guide](https://chtc.cs.wisc.edu/uw-research-computing/htc/guides).
+- **Scaling out**: HTCondor makes it easy to submit thousands of parallel jobs — useful for hyperparameter sweeps, k-fold cross-validation, or processing many datasets independently.
+- **Checkpointing**: For long training runs, save checkpoints regularly so jobs can resume if they hit time limits or are preempted on backfill hardware.
+
+## Data storage
+
+| Location | Purpose | Default quota |
+|----------|---------|---------------|
+| `/home` | Small files, scripts, submit files | 20 GB |
+| `/staging` | Large datasets and model files | Request as needed |
+
+Temporary working space can support up to hundreds of terabytes for active jobs. For long-term storage needs, talk to your CHTC facilitator about options.
+
+## Scaling beyond CHTC
+
+If CHTC’s local resources aren’t enough, you can opt into additional compute pools:
+
+- **UW Grid** — Access additional campus resources beyond the CHTC pool.
+- **OS Pool** (Open Science Pool) — An NSF-supported network of 100+ universities, national labs, and research collaborations. Jobs that run under ~10 hours and use less than ~20 GB of data per job are good candidates.
+
+These options let you burst to significantly more CPUs and GPUs without any additional cost.
+
+## Citing CHTC in publications and proposals
+
+### Publications
+
+CHTC asks that you cite their services in any publications that benefited from CHTC resources:
+
+> Center for High Throughput Computing. (2006). *Center for High Throughput Computing.* doi:[10.21231/GNT1-HW21](https://doi.org/10.21231/GNT1-HW21)
+
+### Grant proposals
+
+CHTC provides [boilerplate language and letters of support](https://chtc.cs.wisc.edu/uw-research-computing/cite-chtc) for grant proposals. Key points to include: all standard CHTC services are free, CHTC has 20+ full-time staff, and local resources total ~30,000 CPU cores with access to national-scale computing through the OS Pool.
+
+## Getting help
+
+- **Email**: [chtc@cs.wisc.edu](mailto:chtc@cs.wisc.edu)
+- **Office hours**: Tuesdays, 10:30 AM – 12:00 PM (virtual via Zoom — see a facilitator’s email signature or your CHTC login message for the link)
+- **Appointments**: Email to arrange a meeting outside of office hours.
+- **Guides**: [HTC guides](https://chtc.cs.wisc.edu/uw-research-computing/htc/guides) | [HPC guides](https://chtc.cs.wisc.edu/uw-research-computing/hpc/guides) | [GPU jobs guide](https://chtc.cs.wisc.edu/uw-research-computing/gpu-jobs)
+- **Location**: WI Institute for Discovery, 333 N Randall Ave, Room 2262
 
 ## Related resources
 
-- [**Compute**: Intro to AWS SageMaker for Predictive ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html). Learn how to launch and scale machine learning workflows in the cloud using AWS SageMaker.
-- [**Compute**: Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html) - Learn how to use Google Colab for machine learning workflows.
-- [**Compute**: BadgerCompute](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html) – UW–Madison’s lightweight, NetID-authenticated Jupyter service for short interactive sessions and classroom use. Includes a 4-hour runtime limit (which may sometimes beat the free version of Colab).
+- [**Compute**: UW-Madison Cloud Services (AWS, GCP, Azure)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) – When you need NVLink multi-GPU setups, on-demand hardware, or long-running services that exceed CHTC job time limits.
+- [**Workshop/Compute**: Intro to GCP for Machine Learning & AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-GCP.html) – Hands-on workshop covering Vertex AI, model training/tuning, and RAG pipelines on GCP.
+- [**Workshop/Compute**: Intro to AWS SageMaker for Predictive ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) – Workshop covering ML workflows in AWS SageMaker.
+- [**Compute**: Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html) – Free cloud-based Jupyter notebooks with GPU access for quick prototyping.
+- [**Compute**: BadgerCompute](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html) – UW–Madison’s lightweight, NetID-authenticated Jupyter service for short interactive sessions.
 
 ## Comments
