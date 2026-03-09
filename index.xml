@@ -39,14 +39,14 @@
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="28d38c7f" class="cell" data-execution_count="1">
+<div id="895656a9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="4d267a11" class="cell" data-execution_count="2">
+<div id="17c83a53" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -159,7 +159,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="e0dc6302" class="cell" data-execution_count="3">
+<div id="b2d28544" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -396,7 +396,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="a762dfd3" class="cell" data-execution_count="4">
+<div id="aa51c2bb" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -424,7 +424,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="58910e98" class="cell" data-execution_count="5">
+<div id="bf033e08" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -447,7 +447,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="805e4221" class="cell" data-execution_count="6">
+<div id="c1c3a8a4" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -469,7 +469,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="01ba8d53" class="cell" data-execution_count="7">
+<div id="0d5a080e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -592,7 +592,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="39a62d45" class="cell" data-execution_count="8">
+<div id="a5745cde" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -622,7 +622,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="c209cb3f" class="cell" data-execution_count="9">
+<div id="96e702bb" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -667,7 +667,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="b878b995" class="cell" data-execution_count="10">
+<div id="4377f5ab" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -903,7 +903,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="b8c2e36c" class="cell" data-execution_count="11">
+<div id="81f8ec87" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -979,7 +979,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="c37f28ba" class="cell" data-execution_count="12">
+<div id="f1a8e352" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -1095,7 +1095,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="b5fbab36" class="cell" data-execution_count="13">
+<div id="e8af3e9d" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1341,7 +1341,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="454e24af" class="cell" data-execution_count="14">
+<div id="bbd8acc8" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1362,6 +1362,9 @@ font-style: inherit;">"GPU memory cleared."</span>)</span></code></pre></div></d
 <li><a href="https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes">Hugging Face: bitsandbytes integration</a>: Official documentation on using bitsandbytes with the <code>transformers</code> library.</li>
 <li><a href="https://github.com/bitsandbytes-foundation/bitsandbytes">bitsandbytes on GitHub</a>: The bitsandbytes library for 8-bit and 4-bit quantization.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -1430,6 +1433,9 @@ font-style: inherit;">"GPU memory cleared."</span>)</span></code></pre></div></d
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> – Learn how to use CHTC for machine learning jobs.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Compute</strong>: AWS SageMaker</a> – Parallel workshop covering similar cloud ML concepts using AWS infrastructure.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -1629,11 +1635,14 @@ font-style: inherit;">&gt;</span></span></code></pre></div></div>
 </ol>
 <p>That’s it — the maintainers will review and merge if everything looks good.</p>
 <section id="comments" class="level3">
-<h3 class="anchored" data-anchor-id="comments">Comments &amp; reactions</h3>
-<p>Every resource post on Nexus has a <strong>Comments &amp; Reactions</strong> section at the bottom, powered by <a href="https://giscus.app/">giscus</a> (backed by GitHub Discussions). Visitors can leave reactions and comments using their GitHub account. This is enabled automatically for all posts — you don’t need to add anything to your front matter. If you ever need to disable comments on a specific page, add <code>comments: false</code> to the YAML front matter.</p>
-
-
+<h3 class="anchored" data-anchor-id="comments">Comments</h3>
+<p>Every resource post on Nexus has a <strong>Comments</strong> section at the bottom, powered by <a href="https://giscus.app/">giscus</a> (backed by GitHub Discussions). Visitors can leave reactions and comments using their GitHub account. This is enabled automatically for all posts — you don’t need to add anything to your front matter. If you ever need to disable comments on a specific page, add <code>comments: false</code> to the YAML front matter.</p>
 </section>
+</section>
+<section id="comments-1" class="level2">
+<h2 class="anchored" data-anchor-id="comments-1">Comments</h2>
+
+
 </section>
 
  ]]></description>
@@ -1981,6 +1990,9 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html"><strong>Compute</strong>: BadgerCompute</a> – UW-Madison’s lightweight, NetID-authenticated Jupyter service.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: UW Generative AI Services &amp; Policies</a> – Overview of UW-vetted AI tools including pay-as-you-go cloud AI services.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2093,6 +2105,9 @@ Tip
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: GenAI at UW-Madison</a>: Overview of generative AI tools and resources available at UW-Madison.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2231,6 +2246,9 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html"><strong>Forum</strong>: Deploying RAG in Bedrock vs.&nbsp;Local</a>: A case study comparing cloud-based and local RAG deployment strategies.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: The platform hosting OpenScholar’s model weights and retriever — learn more about the Hub, pipelines, and model hosting.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2287,6 +2305,9 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html"><strong>GenAI</strong>: OpenScholar</a>: A fully open, retrieval-augmented language model for searching and synthesizing scientific literature — relevant as an alternative RAG architecture for citation-grounded answers.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: The local deployment in this talk uses Hugging Face models — learn more about the platform and how to find and run open-source models.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2364,6 +2385,9 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> - Learn how to use Google Colab for machine learning workflows.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2409,6 +2433,9 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-09-09.html"><strong>Talk</strong>: AI’s Environmental Footprint: Insights and Actions</a>: Benchmarking the energy, water, and carbon costs of LLM inference—motivation for why KV-cache compression and inference efficiency matter.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Books/Intro-Deeplearning_SimonJDPrince.html"><strong>Book</strong>: Understanding Deep Learning</a>: A modern overview of deep learning fundamentals including transformer architecture, with interactive Colab notebooks.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2556,6 +2583,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Compute</strong>: Intro to AWS SageMaker for Predictive ML/AI</a>. Learn how to launch and scale machine learning workflows in the cloud using AWS SageMaker.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2659,6 +2689,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> - Learn how to use Google Colab for machine learning workflows.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2740,6 +2773,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://huggingface.co/BGLab/BioTrove-CLIP"><strong>Hugging Face</strong>: BioTrove-CLIP models</a></li>
 <li><a href="https://github.com/baskargroup/BioTrove/"><strong>GitHub</strong>: BioTrove tools and scripts</a></li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2795,6 +2831,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: Build foundational deep learning skills relevant to contrastive learning and embedding-based clustering.</li>
 <li><strong>Paper</strong>: <a href="https://arxiv.org/abs/2406.17720">BioTrove: A Large Curated Image Dataset Enabling AI for Biodiversity (NeurIPS 2024)</a></li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2846,6 +2885,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html"><strong>Workshop</strong>: Intro to Natural Language Processing (NLP)</a>: Brush up on text processing and language model basics relevant to the text decoding target.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: Top solutions fine-tuned LLMs from Hugging Face — learn how to discover and use open-source models.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2895,6 +2937,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: Protein language models like ESM are hosted on Hugging Face — learn how to discover and fine-tune open-source models.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: Learn deep learning fundamentals in PyTorch, the framework underlying most protein language models.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -2965,6 +3010,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/"><strong>Video Archive</strong>: ML+X forum archive</a>: Check out other recorded forums from ML+X.</li>
 <li><a href="https://ml-marathon.wisc.edu/">Machine Learning Marathon</a>: Learn about the annual Machine Learning Marathon (3-month AI/ML hackathon) hosted by ML+X each fall.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -3024,6 +3072,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: Exploring Fact-Based QA with RAG: Romeo and Juliet</a>: Build an end-to-end RAG pipeline from scratch – a great starting point before tackling WattBot.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Workshop</strong>: Intro to AWS SageMaker for Predictive ML/AI</a>: Covers AWS SageMaker and Bedrock for cloud-based ML/AI workflows, including RAG deployment.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -3209,6 +3260,9 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <li><a href="https://www.youtube.com/watch?v=3mju52xBFK8">Getting Started With Torchaudio | PyTorch Tutorial (YouTube)</a>: In this youtube video from the AssemblyAI youtube channel, you can learn how to code the basic features of TorchAudio, including resampling and incorporating an audio dataset.</li>
 <li><a href="https://magenta.tensorflow.org/datasets/maestro">The MAESTRO Dataset</a>: Popular dataset containing hundreds of paired audio and MIDI recordings that can be processed with TorchAudio and used for training.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -3307,7 +3361,7 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="31d0a20a" class="cell" data-execution_count="1">
+<div id="1796b5e4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -3316,7 +3370,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="22c69fd8" class="cell" data-execution_count="2">
+<div id="d30583ea" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -3350,7 +3404,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="775bee65" class="cell" data-execution_count="3">
+<div id="3af9912b" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -3622,7 +3676,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="16de44fe" class="cell" data-execution_count="4">
+<div id="32a0969e" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -3802,7 +3856,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="cb3c0dcf" class="cell" data-execution_count="5">
+<div id="e320d51a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>
@@ -3945,6 +3999,9 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/PyTesseract.html"><strong>Library</strong>: Pytesseract</a>: An OCR tool for extracting text from images — a key step in GeoDeepDive’s document processing.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/Gutenberg.html"><strong>Data</strong>: Project Gutenberg</a>: Another large-scale text corpus useful for NLP and text mining research.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
@@ -4000,6 +4057,9 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/iNaturalist.html"><strong>Data</strong>: iNaturalist</a>: A large-scale biodiversity dataset relevant to wildlife and ecology applications.</li>
 <li><a href="https://github.com/microsoft/CameraTraps">Microsoft PyTorch Wildlife</a>: The Microsoft-run fork of their support to the MegaDetector project.</li>
 </ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
 </section>
