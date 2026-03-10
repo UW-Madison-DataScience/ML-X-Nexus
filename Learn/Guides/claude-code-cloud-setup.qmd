@@ -864,7 +864,17 @@ wsl -l -v
 
 You should see `VERSION 2` next to your distribution. If you're on WSL1, [upgrade to WSL2](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) first. Once confirmed, open your **WSL2 terminal** — all remaining steps run inside WSL.
 
-**Step 2 — Install dependencies:**
+**Step 2 — Install Claude Code inside WSL2:**
+
+WSL2 is a separate Linux environment — your Windows PowerShell installation of Claude Code doesn't carry over. Inside your WSL2 terminal, install it with npm:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+You'll also need to reconfigure your cloud CLI credentials (`gcloud auth login` or `aws configure`) inside WSL2, since it has its own filesystem and config.
+
+**Step 3 — Install sandbox dependencies:**
 
 ```bash
 # Ubuntu/Debian (most common WSL distro)
@@ -874,7 +884,7 @@ sudo apt-get update && sudo apt-get install bubblewrap socat
 sudo dnf install bubblewrap socat
 ```
 
-**Step 3 — Launch Claude Code and enable sandboxing:**
+**Step 4 — Launch Claude Code and enable sandboxing:**
 
 ```bash
 cd ~/projects/my-project   # navigate to your project first
@@ -889,7 +899,7 @@ Then inside the Claude Code session, run:
 
 Choose **"Auto-allow mode"** — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.
 
-**Step 4 — Verify it's working:**
+**Step 5 — Verify it's working:**
 
 After enabling, Claude's bash commands should run without permission prompts as long as they stay within your project directory. If a command needs to write outside the project or access a new network domain, you'll still get a prompt.
 
