@@ -1,5 +1,5 @@
 ---
-title: "Claude Code + Vertex AI Setup Guide (UW-Madison GCP)"
+title: "Claude Code Cloud Setup Guide (Vertex AI & Bedrock)"
 author:
   - name: Chris Endemann
     email: endemann@wisc.edu
@@ -14,54 +14,40 @@ categories:
   - Agentic coding
   - Cloud computing
   - GCP
+  - AWS
 ---
 
-This guide walks UW-Madison researchers and staff through setting up [Claude Code](https://code.claude.com/) with [Google Vertex AI](https://cloud.google.com/vertex-ai) on a UW-provisioned GCP account. It covers Windows and macOS.
+This guide walks UW-Madison researchers and staff through setting up [Claude Code](https://code.claude.com/) with a cloud provider — either [Google Vertex AI](https://cloud.google.com/vertex-ai) or [Amazon Bedrock](https://aws.amazon.com/bedrock/). It covers Windows and macOS, with provider-specific steps in tabs so you can follow whichever path matches your institutional account.
 
 ::: {.callout-tip}
 ## New to agentic coding?
 See our companion guide, [Claude Code Best Practices](claude-code-best-practices.qmd), for a broader introduction to agentic coding tools and how to use them effectively.
 :::
 
-## Why use Vertex AI instead of a direct subscription?
-
-You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of Vertex AI on a GCP account?
-
-**What Vertex AI gives you:**
-
-- **Institutional billing and cost tracking** — charges go to your UW-Madison GCP project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has [negotiated cloud discounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) including reduced overhead on grants (26% vs 55.5% F&A) and NIH STRIDES pricing.
-- **Enterprise security controls** — GCP lets you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you'd use for any sensitive cloud infrastructure.
-- **Audit and compliance** — GCP provides audit logs, access transparency, and compliance certifications (HIPAA, FedRAMP, etc.) that institutional review processes often require.
-- **Pay-as-you-go flexibility** — useful for teams with variable usage, short-term projects, or when you need access to specific models not included in subscription plans.
-
-**What Vertex AI does NOT change:**
-
-- **Model weights stay on Anthropic's infrastructure** regardless of how you access Claude. Vertex AI doesn't move the model into your GCP project — Google routes your requests to Anthropic's serving infrastructure.
-- **Data storage location** is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where *inference* runs, that's a separate [data residency](https://docs.anthropic.com/en/docs/build-with-claude/data-residency) feature, not a Vertex AI feature.
-- **Privacy terms** are set by Anthropic's commercial agreements, not by your GCP configuration. Under Anthropic's commercial terms (including Vertex AI), your prompts and outputs are [not used for model training](https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data).
-
-::: {.callout-note}
-**Bottom line:** If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Vertex AI makes sense when you need institutional billing, enterprise security controls, or compliance features. UW-Madison already [provisions GCP accounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) for research groups for a wide range of cloud computing needs — running Claude Code through Vertex AI is just one of many uses.
+::: {.callout-important}
+## CLI only — cloud providers don't work with the Desktop app or Web IDE
+Vertex AI and Bedrock routing is only supported in the **Claude Code CLI** (terminal) and **IDE extensions** (VS Code, JetBrains). The [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) and [Web IDE](https://claude.ai/code) require a direct Anthropic login (Max plan or API credits) — they cannot be configured to route through a cloud provider. If you need the desktop GUI or web experience, you'll need a separate Claude Max subscription. This guide covers the CLI path.
 :::
 
-::: {.callout-tip collapse="true"}
-## Using AWS instead? Claude Code works with Amazon Bedrock too
+## Why use a cloud provider instead of a direct subscription?
 
-This guide focuses on Vertex AI, but UW-Madison also provisions AWS accounts with the same institutional protections — negotiated pricing, lower F&A overhead on grants, security monitoring, and BAA coverage. See our [UW Cloud Services page](../../Toolbox/Compute/UW-Cloud-Services.qmd) for full details on requesting accounts. Claude Code supports [Amazon Bedrock](https://code.claude.com/docs/en/amazon-bedrock) as an equally capable alternative. The setup is similar — you configure environment variables in `~/.claude/settings.json`:
+You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of routing through a cloud provider?
 
-```jsonc
-{
-  "env": {
-    "CLAUDE_CODE_USE_BEDROCK": "1",
-    "AWS_REGION": "us-east-1",
-    "AWS_PROFILE": "your-profile"  // or use AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY
-  }
-}
-```
+**What cloud providers give you:**
 
-Everything else in this guide — permissions, sandboxing, cost management, safety practices — applies identically regardless of whether you're using Vertex AI or Bedrock. The only differences are the authentication mechanism (AWS IAM / `aws configure` instead of `gcloud auth`) and the billing destination (AWS account instead of GCP project).
+- **Institutional billing and cost tracking** — charges go to your UW-Madison cloud project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has [negotiated cloud discounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) with both GCP and AWS, including reduced overhead on grants (26% vs 55.5% F&A) and NIH STRIDES pricing.
+- **Enterprise security controls** — both GCP and AWS let you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you'd use for any sensitive cloud infrastructure.
+- **Audit and compliance** — both providers offer audit logs, access transparency, and compliance certifications (HIPAA, FedRAMP, etc.) that institutional review processes often require.
+- **Pay-as-you-go flexibility** — useful for teams with variable usage, short-term projects, or when you need access to specific models not included in subscription plans.
 
-If your institution has AWS agreements rather than GCP, swap the provider config and follow the [official Bedrock setup docs](https://code.claude.com/docs/en/amazon-bedrock).
+**What cloud providers do NOT change:**
+
+- **Model weights stay on Anthropic's infrastructure** regardless of how you access Claude. Neither Vertex AI nor Bedrock moves the model into your cloud project — your provider routes requests to Anthropic's serving infrastructure.
+- **Data storage location** is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where *inference* runs, that's a separate [data residency](https://docs.anthropic.com/en/docs/build-with-claude/data-residency) feature, not a cloud provider feature.
+- **Privacy terms** are set by Anthropic's commercial agreements, not by your cloud configuration. Under Anthropic's commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are [not used for model training](https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data).
+
+::: {.callout-note}
+**Bottom line:** If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing, enterprise security controls, or compliance features. UW-Madison [provisions both GCP and AWS accounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) for research groups — running Claude Code through either provider is just one of many uses.
 :::
 
 ## Already set up? Returning User Quick-Start
@@ -70,25 +56,28 @@ If you've already completed the full setup and just need to start a new session:
 
 ::: {.panel-tabset}
 
-### Windows (PowerShell)
-
-```powershell
-# If your credentials have expired (you'll get auth errors):
-gcloud auth application-default login
-
-# Navigate to your project and launch
-cd C:\Users\you\projects\my-project
-claude
-```
-
-### macOS (Terminal)
+### Vertex AI
 
 ```bash
 # If your credentials have expired (you'll get auth errors):
 gcloud auth application-default login
 
 # Navigate to your project and launch
-cd ~/projects/my-project
+cd ~/projects/my-project   # macOS/Linux
+# cd C:\Users\you\projects\my-project   # Windows PowerShell
+claude
+```
+
+### Amazon Bedrock
+
+```bash
+# If your credentials have expired (you'll get auth errors):
+aws sso login --profile your-profile
+# Or re-export your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+
+# Navigate to your project and launch
+cd ~/projects/my-project   # macOS/Linux
+# cd C:\Users\you\projects\my-project   # Windows PowerShell
 claude
 ```
 
@@ -97,22 +86,36 @@ claude
 **Once inside Claude Code:**
 
 ```text
-/status       # Confirm Vertex AI is active and your project ID is correct
+/status       # Confirm your cloud provider is active and project/region are correct
 /sandbox      # Enable sandboxing if not already persistent in settings
 /cost         # Check token usage at any time during your session
 ```
 
 ::: {.callout-tip}
-If you get 401/403 errors, re-run `gcloud auth application-default login`. If you get 404 "model not found" errors, check your region settings in `~/.claude/settings.json` (see [Section 5](#configure-claude-code-for-vertex-ai)). If you get 429 "resource exhausted" errors, you need a quota increase (see [Troubleshooting](#troubleshooting)).
+**Vertex AI:** If you get 401/403 errors, re-run `gcloud auth application-default login`. If you get 404 "model not found" errors, check your region settings in `~/.claude/settings.json` (see [Section 5](#configure-claude-code)). If you get 429 "resource exhausted" errors, you need a quota increase (see [Troubleshooting](#troubleshooting)).
+
+**Bedrock:** If you get `AccessDeniedException`, check your IAM permissions and ensure model access is enabled. If you get `ValidationException: Model not found`, verify your `AWS_REGION` and model IDs. If credentials expired, re-run `aws sso login` or refresh your access keys.
 :::
 
 ## 1. Prerequisites
 
 **Both platforms:**
 
+- Internet connection
+
+::: {.panel-tabset}
+
+### Vertex AI
+
 - A **UW-Madison GCP project** with billing enabled (e.g., `doit-rci-sandbox-gcp-baa4`)
 - Your **UW-Madison Google account** with IAM access to the GCP project
-- Internet connection
+
+### Amazon Bedrock
+
+- A **UW-Madison AWS account** with billing enabled
+- Your **UW-Madison identity** with IAM access to the AWS account (via IAM user, SSO, or federated identity)
+
+:::
 
 **Windows:**
 
@@ -183,13 +186,17 @@ claude --version
 
 :::
 
-## 3. Install & Configure Google Cloud CLI
+## 3. Install & Configure Your Cloud CLI {#install-cloud-cli}
+
+::: {.panel-tabset}
+
+### Vertex AI (gcloud)
 
 > Official gcloud install docs: [cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
 
 ::: {.panel-tabset}
 
-### Windows
+#### Windows
 
 Download and install the [Google Cloud CLI for Windows](https://cloud.google.com/sdk/docs/install). The installer adds `gcloud` to your PATH automatically.
 
@@ -203,7 +210,7 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 Type **Y** to confirm.
 
-### macOS
+#### macOS
 
 Option A — Homebrew (easiest):
 
@@ -225,7 +232,7 @@ source ~/.zshrc   # or source ~/.bashrc
 
 :::
 
-### Authenticate (both platforms)
+**Authenticate (both platforms):**
 
 These commands are identical on both Windows and macOS:
 
@@ -242,28 +249,105 @@ gcloud auth application-default login
 
 Both `login` commands open a browser window. Sign in with your UW-Madison email and grant the requested permissions.
 
-## 4. Enable Vertex AI & Request Model Access {#enable-vertex-ai}
+### Amazon Bedrock (AWS CLI)
+
+> Official AWS CLI install docs: [docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+::: {.panel-tabset}
+
+#### Windows
+
+Download and run the [AWS CLI MSI installer for Windows](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html). The installer adds `aws` to your PATH automatically.
+
+Verify:
+
+```powershell
+aws --version
+```
+
+#### macOS
+
+Option A — Homebrew (easiest):
+
+```bash
+brew install awscli
+```
+
+Option B — Official installer:
+
+```bash
+curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+sudo installer -pkg AWSCLIV2.pkg -target /
+```
+
+Verify:
+
+```bash
+aws --version
+```
+
+:::
+
+**Authenticate (both platforms):**
+
+Claude Code uses the standard [AWS credential chain](https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html). Choose one of these methods:
+
+**Option A — AWS SSO (recommended for UW-Madison):**
+
+```bash
+# Configure your SSO profile (one-time setup)
+aws configure sso
+# Follow the prompts: SSO start URL, region, account, role
+
+# Log in (do this whenever credentials expire)
+aws sso login --profile your-profile-name
+```
+
+**Option B — IAM access keys:**
+
+```bash
+aws configure
+# Enter your AWS Access Key ID, Secret Access Key, and region
+```
+
+**Option C — Environment variables:**
+
+```bash
+export AWS_ACCESS_KEY_ID="your-access-key"
+export AWS_SECRET_ACCESS_KEY="your-secret-key"
+export AWS_REGION="us-east-1"
+```
+
+::: {.callout-tip}
+If your institution uses AWS SSO or federated identity, Option A is the most secure — no long-lived credentials on disk. Ask your UW-Madison AWS administrator which method your account uses.
+:::
+
+:::
+
+## 4. Enable API Access & Request Models {#enable-api}
+
+::: {.panel-tabset}
+
+### Vertex AI
 
 > Official Vertex AI setup: [code.claude.com/docs/en/google-vertex-ai](https://code.claude.com/docs/en/google-vertex-ai)
 >
 > Google's Claude on Vertex docs: [cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude)
 
-This section is identical on both platforms — all commands run in your terminal/PowerShell.
-
-### Enable the API
+**Enable the API:**
 
 ```bash
 gcloud services enable aiplatform.googleapis.com --project=YOUR-PROJECT-ID
 ```
 
-### Request access to Claude models
+**Request access to Claude models:**
 
 1. Go to the [Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden) in the GCP Console.
 2. Search for the Claude model you want (e.g., **Claude Sonnet 4**).
 3. Click the model card and **complete the access request form**.
 4. Approval may take minutes to a couple of days.
 
-### Verify IAM permissions
+**Verify IAM permissions:**
 
 Your GCP account needs the **`roles/aiplatform.user`** role ([Vertex IAM docs](https://cloud.google.com/vertex-ai/docs/general/access-control)), which includes:
 
@@ -272,9 +356,50 @@ Your GCP account needs the **`roles/aiplatform.user`** role ([Vertex IAM docs](h
 
 If you don't have this, ask your UW-Madison GCP administrator to grant it.
 
-## 5. Configure Claude Code for Vertex AI {#configure-claude-code-for-vertex-ai}
+### Amazon Bedrock
 
-> Full configuration reference: [code.claude.com/docs/en/google-vertex-ai](https://code.claude.com/docs/en/google-vertex-ai)
+> Official Bedrock setup: [code.claude.com/docs/en/amazon-bedrock](https://code.claude.com/docs/en/amazon-bedrock)
+>
+> AWS Bedrock model access docs: [docs.aws.amazon.com/bedrock/latest/userguide/model-access.html](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html)
+
+**Enable model access:**
+
+1. Open the [Amazon Bedrock console](https://console.aws.amazon.com/bedrock/) and select your region (e.g., **us-east-1**).
+2. Go to **Model catalog** in the left sidebar.
+3. Find the Claude model you want (e.g., **Claude Sonnet 4.6**) and click **Request model access**.
+4. AWS will ask for a brief use-case description. A one-sentence explanation is sufficient. For most Claude models, approval is automatic and takes less than a minute.
+
+::: {.callout-note}
+The first time you request access to Anthropic models on a new AWS account, you'll need to complete a First Time Use (FTU) form with use-case details. This is a one-time per-account requirement.
+:::
+
+**Verify IAM permissions:**
+
+Your AWS identity needs permissions to invoke Bedrock models. At minimum, create (or ask your admin to attach) an IAM policy with:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream",
+        "bedrock:ListInferenceProfiles",
+        "bedrock:ListFoundationModels"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+If your account uses AWS Marketplace for model access, you may also need `aws-marketplace:Subscribe` and `aws-marketplace:ViewSubscriptions` permissions.
+
+:::
+
+## 5. Configure Claude Code {#configure-claude-code}
 
 Edit (or create) your settings file at `~/.claude/settings.json`.
 
@@ -283,7 +408,9 @@ Edit (or create) your settings file at `~/.claude/settings.json`.
 | Windows | `C:\Users\<your-username>\.claude\settings.json` |
 | macOS | `/Users/<your-username>/.claude/settings.json` |
 
-Add the following content:
+::: {.panel-tabset}
+
+### Vertex AI
 
 ```json
 {
@@ -300,18 +427,9 @@ Add the following content:
 }
 ```
 
-::: {.callout-warning}
-**Do not include `//` comments in `settings.json`.** The examples elsewhere in this guide use `jsonc` syntax for readability, but `settings.json` is parsed as **plain JSON**, which does not support comments. If you copy-paste a block with comments, Claude Code will report "Invalid or malformed JSON" in `claude doctor`.
-:::
+Replace `YOUR-PROJECT-ID` with your actual GCP project ID (e.g., `doit-rci-sandbox-gcp-baa4`).
 
-Replace `YOUR-PROJECT-ID` with your actual GCP project ID (e.g., `doit-rci-sandbox-gcp-baa4`). The `model` field sets your default model — `claude-sonnet-4-6` is a good balance of cost and capability. Change it to `claude-opus-4-6` if you need maximum reasoning power (at higher cost).
-
-::: {.callout-important}
-## Sandbox platform prerequisites
-The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` — see [Section 7](#enable-sandboxing) for step-by-step instructions including how to verify you're on WSL2 (WSL1 is not supported). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 7](#enable-sandboxing) for full configuration details.
-:::
-
-### Region notes
+**Region notes:**
 
 - **`global`** is typically the cheapest and is a good default.
 - Not all models are available on the global endpoint. If you get 404 "model not found" errors, add region overrides for specific models by adding more entries to the `env` block:
@@ -320,6 +438,53 @@ The sandbox config above enables OS-level isolation that restricts Claude's bash
 "VERTEX_REGION_CLAUDE_3_5_HAIKU": "us-east5",
 "VERTEX_REGION_CLAUDE_4_0_SONNET": "us-east5"
 ```
+
+### Amazon Bedrock
+
+```json
+{
+  "model": "claude-sonnet-4-6",
+  "autoUpdatesChannel": "latest",
+  "env": {
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "AWS_REGION": "us-east-1",
+    "AWS_PROFILE": "your-profile-name"
+  },
+  "sandbox": {
+    "enabled": true
+  }
+}
+```
+
+Replace `your-profile-name` with your AWS CLI profile name (from `aws configure sso` or `aws configure`). If you're using environment variables for credentials instead of a profile, omit `AWS_PROFILE` and set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in the `env` block.
+
+**Region notes:**
+
+- **`us-east-1`** has the broadest model availability and is a good default.
+- Not all models are available in all regions. Check the [Bedrock model support by region](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html) page if you get "model not found" errors.
+
+**Model pinning (recommended):**
+
+Bedrock model aliases can change when new versions are released. To avoid surprises, pin specific model versions in your `env` block:
+
+```jsonc
+"ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
+"ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
+"ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5-20251001"
+```
+
+:::
+
+::: {.callout-warning}
+**Do not include `//` comments in `settings.json`.** The examples elsewhere in this guide use `jsonc` syntax for readability, but `settings.json` is parsed as **plain JSON**, which does not support comments. If you copy-paste a block with comments, Claude Code will report "Invalid or malformed JSON" in `claude doctor`.
+:::
+
+The `model` field sets your default model — `claude-sonnet-4-6` is a good balance of cost and capability. Change it to `claude-opus-4-6` if you need maximum reasoning power (at higher cost).
+
+::: {.callout-important}
+## Sandbox platform prerequisites
+The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` — see [Section 7](#enable-sandboxing) for step-by-step instructions including how to verify you're on WSL2 (WSL1 is not supported). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 7](#enable-sandboxing) for full configuration details.
+:::
 
 ## 6. Verify the Setup
 
@@ -350,7 +515,11 @@ claude
 
 :::
 
-Once inside Claude Code, run `/status` to confirm it's using Vertex AI:
+Once inside Claude Code, run `/status` to confirm your provider is active:
+
+::: {.panel-tabset}
+
+### Vertex AI
 
 ```
 API provider: Google Vertex AI
@@ -358,8 +527,17 @@ GCP project: your-project-id
 Default region: global
 ```
 
+### Amazon Bedrock
+
+```
+API provider: Amazon Bedrock
+AWS region: us-east-1
+```
+
+:::
+
 ::: {.callout-note}
-When using Vertex AI, the [`/login` and `/logout` commands are disabled](https://code.claude.com/docs/en/google-vertex-ai) — authentication is handled entirely through your `gcloud` credentials.
+When using either cloud provider, the [`/login` and `/logout` commands are disabled](https://code.claude.com/docs/en/google-vertex-ai) — authentication is handled entirely through your cloud CLI credentials (`gcloud` or `aws`).
 :::
 
 ## 7. Filesystem Safety, Permissions & Sandboxing
@@ -438,35 +616,33 @@ You can customize this behavior with three types of rules in `settings.json`:
 
 ### Add `deny` rules to protect sensitive areas {#add-deny-rules}
 
-Add a `permissions` block to your **`~/.claude/settings.json`** file (the same file you edited in [Section 5](#configure-settings)). Think of `deny` rules as guardrails. Here's what's worth blocking and why:
+Add a `permissions` block to your **`~/.claude/settings.json`** file (the same file you edited in [Section 5](#configure-claude-code)). Think of `deny` rules as guardrails — they block Claude from accessing sensitive paths regardless of what it tries to do.
 
-```jsonc
+These examples block: SSH keys, `.env` files, cloud credentials (`~/.config/gcloud/` and `~/.aws/`), destructive commands (`rm -rf`), and network tools (`curl`, `wget`). **Replace `endemann` with your actual username** before pasting into `settings.json`.
+
+::: {.callout-warning}
+**`settings.json` is plain JSON — no comments allowed.** The blocks below are ready to copy-paste. Do not add `//` comments or Claude Code will report "Invalid or malformed JSON" in `claude doctor`.
+:::
+
+::: {.panel-tabset}
+
+#### macOS
+
+Home directory is `/Users/endemann`. Run `whoami` to check your username.
+
+```json
 {
   "permissions": {
     "deny": [
-      // SSH keys — if Claude reads or modifies these, your remote server
-      // access could be compromised. There's no reason Claude needs these.
-      // Replace <your-home> with your actual home path (see note below).
-      "Read(//<your-home>/.ssh/**)",
-      "Edit(//<your-home>/.ssh/**)",
-
-      // Environment files — these typically contain API keys, database
-      // passwords, and other secrets. Claude could accidentally include
-      // them in its context (and thus send them to the API).
-      "Read(//<your-home>/.env)",
-      "Edit(//<your-home>/.env)",
-
-      // Cloud credentials — same reasoning as .env files. Application
-      // Default Credentials for gcloud live here.
-      "Read(//<your-home>/.config/gcloud/**)",
-      "Edit(//<your-home>/.config/gcloud/**)",
-
-      // Broad destructive commands — prevent catastrophic mistakes.
+      "Read(//Users/endemann/.ssh/**)",
+      "Edit(//Users/endemann/.ssh/**)",
+      "Read(//Users/endemann/.env)",
+      "Edit(//Users/endemann/.env)",
+      "Read(//Users/endemann/.config/gcloud/**)",
+      "Edit(//Users/endemann/.config/gcloud/**)",
+      "Read(//Users/endemann/.aws/**)",
+      "Edit(//Users/endemann/.aws/**)",
       "Bash(rm -rf *)",
-
-      // Network tools — prevents Claude from exfiltrating data or
-      // downloading untrusted code. Use WebFetch rules instead if you
-      // need Claude to access specific URLs.
       "Bash(curl:*)",
       "Bash(wget:*)"
     ]
@@ -474,14 +650,58 @@ Add a `permissions` block to your **`~/.claude/settings.json`** file (the same f
 }
 ```
 
-::: {.callout-warning}
-**Replace `<your-home>` with your actual home directory path.** The `//` prefix in permission rules means "absolute path from the filesystem root" — there is no `~/` shorthand. Use the full path:
+#### Windows (PowerShell)
 
-- **macOS:** `//Users/yourname/.ssh/**`
-- **Linux/WSL2:** `//home/yourname/.ssh/**`
-- **Windows (PowerShell):** `//C:/Users/yourname/.ssh/**`
+Home directory is `C:\Users\endemann`. Run `echo $env:USERNAME` to check your username. Note: use forward slashes in permission rules, even on Windows.
 
-Run `echo $HOME` (macOS/Linux) or `echo $env:USERPROFILE` (PowerShell) to find yours.
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(//C:/Users/endemann/.ssh/**)",
+      "Edit(//C:/Users/endemann/.ssh/**)",
+      "Read(//C:/Users/endemann/.env)",
+      "Edit(//C:/Users/endemann/.env)",
+      "Read(//C:/Users/endemann/.config/gcloud/**)",
+      "Edit(//C:/Users/endemann/.config/gcloud/**)",
+      "Read(//C:/Users/endemann/.aws/**)",
+      "Edit(//C:/Users/endemann/.aws/**)",
+      "Bash(rm -rf *)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}
+```
+
+#### Linux / WSL2
+
+Home directory is `/home/endemann`. Run `whoami` to check your username.
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(//home/endemann/.ssh/**)",
+      "Edit(//home/endemann/.ssh/**)",
+      "Read(//home/endemann/.env)",
+      "Edit(//home/endemann/.env)",
+      "Read(//home/endemann/.config/gcloud/**)",
+      "Edit(//home/endemann/.config/gcloud/**)",
+      "Read(//home/endemann/.aws/**)",
+      "Edit(//home/endemann/.aws/**)",
+      "Bash(rm -rf *)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}
+```
+
+:::
+
+::: {.callout-tip}
+The `//` prefix in permission rules means "absolute path from the filesystem root" — there is no `~/` shorthand. That's why you need the full path like `//Users/endemann/` rather than `~/.ssh/`.
 :::
 
 ::: {.callout-note}
@@ -589,7 +809,7 @@ You can also create a `.claude/settings.json` in your project root and commit it
 ### Enable sandboxing (strongly recommended) {#enable-sandboxing}
 
 ::: {.callout-tip}
-If you followed [Section 5](#configure-claude-code-for-vertex-ai), sandboxing is already enabled in your `settings.json`. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.
+If you followed [Section 5](#configure-claude-code), sandboxing is already enabled in your `settings.json`. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.
 :::
 
 Sandboxing is the **strongest protection available** against Claude modifying files outside your project. It uses OS-level enforcement (not just Claude's own judgment) to restrict what bash commands can access — even if a prompt injection bypasses Claude's decision-making.
@@ -702,12 +922,10 @@ Some tools are incompatible with sandboxing (e.g., `docker`, `watchman`). If a t
 ## 8. Billing, Cost Management & Avoiding Runaway Costs
 
 > Official cost management docs: [code.claude.com/docs/en/costs](https://code.claude.com/docs/en/costs)
->
-> GCP budget alerts: [cloud.google.com/billing/docs/how-to/budgets](https://cloud.google.com/billing/docs/how-to/budgets)
 
 ::: {.callout-warning}
-## Claude Code on Vertex AI is pay-as-you-go
-Every token you send and receive is billed to your GCP project. Unlike a Claude Pro/Max subscription with fixed monthly pricing, there is no spending cap unless you set one up yourself. **You can rack up significant charges quickly if you're not careful.**
+## Claude Code on cloud providers is pay-as-you-go
+Every token you send and receive is billed to your cloud project. Unlike a Claude Pro/Max subscription with fixed monthly pricing, there is no spending cap unless you set one up yourself. **You can rack up significant charges quickly if you're not careful.**
 :::
 
 ### Typical costs to expect
@@ -750,9 +968,15 @@ An **agentic loop** happens when Claude gets stuck in a cycle — repeatedly rea
 - **Use plan mode (Shift+Tab)** before expensive operations. Claude outlines its approach for your approval before writing code, preventing costly rework.
 - **Start with Sonnet, not Opus.** Only escalate to Opus for genuinely complex reasoning tasks. Opus costs significantly more per token.
 
-### Set up GCP budget alerts (do this NOW) {#budget-alerts}
+### Set up budget alerts (do this NOW) {#budget-alerts}
 
 Budget alerts won't automatically stop spending, but they'll email you when you're approaching a threshold. **Set this up before your first Claude Code session.**
+
+::: {.panel-tabset}
+
+### Vertex AI (GCP)
+
+> GCP budget alerts: [cloud.google.com/billing/docs/how-to/budgets](https://cloud.google.com/billing/docs/how-to/budgets)
 
 1. Go to [**Billing → Budgets & Alerts**](https://console.cloud.google.com/billing/budgets) in the GCP Console.
 2. Click **Create Budget**.
@@ -765,17 +989,37 @@ Budget alerts won't automatically stop spending, but they'll email you when you'
 Budget alerts are [**notifications only**](https://cloud.google.com/billing/docs/how-to/budgets) — they do NOT automatically stop your services or disable billing. If you hit 100% of your budget at 2 AM, charges will continue until you manually intervene. Check your billing console daily.
 :::
 
-### Check your billing console daily
-
-Make it a habit to visit the [**GCP Billing Reports**](https://console.cloud.google.com/billing/reports) page at least once a day while actively using Claude Code. Look for:
-
-- Unexpected spikes in Vertex AI charges
-- Daily costs that exceed your expectations
-- Any charges from services you didn't intentionally use
-
-### Set quota limits as a hard ceiling
+**Set quota limits as a hard ceiling:**
 
 Unlike budget alerts, **quotas can actually stop usage.** Go to [**Quotas & System Limits**](https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas) and set reasonable TPM (tokens per minute) quotas for the Claude models you're using. If you hit your quota, Claude Code will get 429 errors instead of running up your bill.
+
+### Amazon Bedrock (AWS)
+
+> AWS Budgets docs: [docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html)
+
+1. Go to [**AWS Budgets**](https://console.aws.amazon.com/billing/home#/budgets) in the AWS Console.
+2. Click **Create budget**.
+3. Choose **Cost budget** and set a monthly amount (e.g., $50, $100, $200).
+4. Add alert thresholds at **50%, 80%, and 100%** of your budget.
+5. Add your email as a notification recipient.
+
+::: {.callout-important}
+Like GCP, AWS budget alerts are [**notifications only**](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) by default — they do NOT automatically stop your services. However, AWS does support [budget actions](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-controls.html) that can automatically restrict IAM permissions when a threshold is hit. Consider setting up an action to revoke `bedrock:InvokeModel` at 100% of budget as a hard stop.
+:::
+
+**Bedrock quotas:**
+
+Bedrock enforces per-model quotas on RPM (requests per minute) and TPM (tokens per minute). Default quotas are relatively low (e.g., 25 RPM for Opus). View and request increases at [**Service Quotas → Amazon Bedrock**](https://console.aws.amazon.com/servicequotas/home/services/bedrock/quotas) in the AWS Console.
+
+:::
+
+### Check your billing console daily
+
+Make it a habit to check your cloud billing daily while actively using Claude Code. Look for:
+
+- Unexpected spikes in AI/ML charges
+- Daily costs that exceed your expectations
+- Any charges from services you didn't intentionally use
 
 ### Cost-saving tips
 
@@ -789,24 +1033,26 @@ Unlike budget alerts, **quotas can actually stop usage.** Go to [**Quotas & Syst
 | Use **plan mode** before big refactors | Catches wrong approaches before expensive execution |
 | Disable non-essential model calls | `DISABLE_NON_ESSENTIAL_MODEL_CALLS=1` in env |
 
-### Vertex AI pricing reference
+### Pricing reference
 
-For the latest Claude model pricing on Vertex AI, see:
+For the latest Claude model pricing, see:
 
-- [**Vertex AI Generative AI Pricing**](https://cloud.google.com/vertex-ai/generative-ai/pricing) — official Google pricing page with per-token rates for each Claude model
 - [**Anthropic Pricing**](https://platform.claude.com/docs/en/about-claude/pricing) — base token rates by model, including cache and batch discounts
 - [**Claude Code Cost Management**](https://code.claude.com/docs/en/costs) — Anthropic's official guide to tracking and reducing Claude Code costs
-- [**GCP Quotas for Vertex AI**](https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas) — view and adjust your TPM/RPM quotas
+- [**Vertex AI Generative AI Pricing**](https://cloud.google.com/vertex-ai/generative-ai/pricing) — Google's per-token rates (regional endpoints carry a [10% premium](https://cloud.google.com/vertex-ai/generative-ai/pricing) over global)
+- [**Amazon Bedrock Pricing**](https://aws.amazon.com/bedrock/pricing/) — AWS per-token rates for Claude models
 
 ::: {.callout-note}
-The token usage shown on the [GCP Quotas page may be inaccurate](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude) for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use `/cost` inside Claude Code.
-
-Regional endpoints carry a [**10% premium**](https://cloud.google.com/vertex-ai/generative-ai/pricing) over global endpoints. If you selected the global endpoint, you're on the cheaper tier.
+On Vertex AI, the token usage shown on the [GCP Quotas page may be inaccurate](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude) for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use `/cost` inside Claude Code.
 :::
 
 ## 9. Troubleshooting {#troubleshooting}
 
-### "model not found" (404)
+::: {.panel-tabset}
+
+### Vertex AI
+
+**"model not found" (404):**
 
 The model may not be available on the `global` endpoint. Try changing your region:
 
@@ -814,29 +1060,83 @@ The model may not be available on the `global` endpoint. Try changing your regio
 "CLOUD_ML_REGION": "us-east5"
 ```
 
-Or add a model-specific override (see [Section 5](#configure-claude-code-for-vertex-ai)).
+Or add a model-specific override (see [Section 5](#configure-claude-code)).
 
-### 429 "Resource Exhausted"
+**429 "Resource Exhausted":**
 
 You need a quota increase. Go to [Cloud Console → Quotas](https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas), filter by the Claude model, and request an increase.
 
-### Permission denied / IAM errors
+**Permission denied / IAM errors:**
 
 Ask your UW-Madison GCP admin to ensure you have the `roles/aiplatform.user` role on the project.
 
-### `gcloud` command not found
+**`gcloud` command not found:**
 
 ::: {.panel-tabset}
 
-### Windows
+#### Windows
 Make sure the Google Cloud SDK is installed and restart PowerShell.
 
-### macOS
+#### macOS
 If you installed via Homebrew, run `source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"` or restart your terminal. If you used the curl installer, make sure you ran `source ~/.zshrc` after install.
 
 :::
 
-### `claude` command not found
+**Authentication expired:**
+
+Re-run (both platforms):
+
+```bash
+gcloud auth application-default login
+```
+
+### Amazon Bedrock
+
+**`AccessDeniedException`:**
+
+Your IAM user/role doesn't have the required Bedrock permissions. Ensure your policy includes `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream`. See [Section 4](#enable-api) for the full policy.
+
+**`ValidationException: Model not found`:**
+
+Check that: (1) you've enabled model access for the specific Claude model in the Bedrock console, (2) your `AWS_REGION` is set to a region where the model is available, and (3) your model ID is correct. Try `us-east-1` if unsure.
+
+**`ResourceNotFoundException`:**
+
+You haven't completed model access approval. Go to the [Bedrock Model catalog](https://console.aws.amazon.com/bedrock/) and request access.
+
+**429 "ThrottlingException":**
+
+You've hit your Bedrock quota. Request an increase at [Service Quotas → Amazon Bedrock](https://console.aws.amazon.com/servicequotas/home/services/bedrock/quotas). Default quotas are low (e.g., 25 RPM for Opus).
+
+**`aws` command not found:**
+
+::: {.panel-tabset}
+
+#### Windows
+Make sure the AWS CLI is installed and restart PowerShell.
+
+#### macOS
+If you installed via Homebrew, restart your terminal. If you used the pkg installer, ensure `/usr/local/bin` is in your `$PATH`.
+
+:::
+
+**Credentials expired (SSO):**
+
+Re-run:
+
+```bash
+aws sso login --profile your-profile-name
+```
+
+::: {.callout-tip}
+Claude Code supports [automatic credential refresh](https://code.claude.com/docs/en/amazon-bedrock) for AWS SSO. Configure `awsAuthRefresh` in your settings so Claude Code automatically re-authenticates when credentials expire mid-session, instead of failing with auth errors.
+:::
+
+:::
+
+### Common issues (both providers)
+
+**`claude` command not found:**
 
 ::: {.panel-tabset}
 
@@ -848,15 +1148,7 @@ Ensure `~/.claude/bin` or `~/.local/bin` is in your `$PATH`. Restart your termin
 
 :::
 
-### Authentication expired
-
-Re-run (both platforms):
-
-```bash
-gcloud auth application-default login
-```
-
-### Run diagnostics
+**Run diagnostics:**
 
 ```bash
 claude doctor
@@ -868,7 +1160,7 @@ This checks your installation, authentication, and configuration for common issu
 
 ::: {.panel-tabset}
 
-### Windows (PowerShell)
+### Vertex AI + Windows
 
 ```powershell
 # Install Claude Code
@@ -886,7 +1178,7 @@ cd C:\your\project
 claude
 ```
 
-### macOS (Terminal)
+### Vertex AI + macOS
 
 ```bash
 # Install Claude Code
@@ -906,12 +1198,49 @@ cd ~/your/project
 claude
 ```
 
+### Bedrock + Windows
+
+```powershell
+# Install Claude Code
+irm https://claude.ai/install.ps1 | iex
+
+# Install AWS CLI (if needed)
+# Download from https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+# Authenticate with AWS
+aws sso login --profile your-profile
+# or: aws configure
+
+# Launch Claude Code
+cd C:\your\project
+claude
+```
+
+### Bedrock + macOS
+
+```bash
+# Install Claude Code
+curl -fsSL https://claude.ai/install.sh | bash
+# or: brew install --cask claude-code
+
+# Install AWS CLI (if needed)
+brew install awscli
+
+# Authenticate with AWS
+aws sso login --profile your-profile
+# or: aws configure
+
+# Launch Claude Code
+cd ~/your/project
+claude
+```
+
 :::
 
-### In-session commands (both platforms)
+### In-session commands (all providers)
 
 ```text
-/status        # Confirm Vertex AI is the active provider
+/status        # Confirm your cloud provider is active
 /cost          # Check current session token usage and cost
 /compact       # Compress conversation context to save tokens
 /clear         # Wipe context when switching tasks
@@ -925,8 +1254,12 @@ Shift+Tab      # Cycle through permission modes
 
 - [Claude Code Setup Docs](https://code.claude.com/docs/en/setup)
 - [Claude Code on Vertex AI](https://code.claude.com/docs/en/google-vertex-ai)
+- [Claude Code on Amazon Bedrock](https://code.claude.com/docs/en/amazon-bedrock)
 - [Claude Code Permissions](https://code.claude.com/docs/en/permissions)
 - [Claude Code Sandboxing](https://code.claude.com/docs/en/sandboxing)
 - [Claude Code Cost Management](https://code.claude.com/docs/en/costs)
 - [Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)
+- [Amazon Bedrock Model Catalog](https://console.aws.amazon.com/bedrock/)
 - [GCP Budget Alerts](https://cloud.google.com/billing/docs/how-to/budgets)
+- [AWS Budgets](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html)
+- [UW-Madison Cloud Services](../../Toolbox/Compute/UW-Cloud-Services.qmd)
