@@ -22,6 +22,11 @@ Best practices in this space are still being discovered — by the ML+X communit
 
 This is a first pass based on early experience — we expect it to evolve as the ML+X community builds more hands-on knowledge. If you have tips, corrections, or experiences to share, please leave a comment below.
 
+::: {.callout-note collapse="true"}
+## Sources and attribution
+Much of the Claude Code-specific guidance in this post draws on Anthropic's official documentation, including their [best practices guide](https://code.claude.com/docs/en/best-practices), [permissions](https://code.claude.com/docs/en/permissions) and [sandboxing](https://code.claude.com/docs/en/sandboxing) docs, [CLAUDE.md reference](https://code.claude.com/docs/en/claude-md), [data usage policy](https://code.claude.com/docs/en/data-usage), and [cost management guide](https://code.claude.com/docs/en/costs). GitHub Copilot sections draw on GitHub's [coding agent docs](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) and [changelog](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/). Where we paraphrase official documentation, we've linked to the source. Community perspectives and independent analyses are cited inline throughout.
+:::
+
 ## What is agentic coding?
 
 Traditional AI code assistants (like early GitHub Copilot or ChatGPT) work in a simple loop: you ask, they suggest, you accept or reject. **Agentic** coding tools go further. They can:
@@ -309,7 +314,7 @@ This single instruction saves enormous headaches. Without it, the agent might pu
 - Tests mirror the source structure under `tests/`
 ```
 
-The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project.
+The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project. See the [official CLAUDE.md reference](https://code.claude.com/docs/en/claude-md) for the full spec, including file resolution order and advanced features.
 
 ### Tune the permission dial
 
@@ -322,7 +327,7 @@ The key insight: **permissions aren't all-or-nothing**. You can configure a spec
 - **Manually approve writes and git operations** — this is where real damage can happen (overwriting files, force-pushing, committing secrets)
 - **Use `CLAUDE.md` safety rules** as a second layer — even if you auto-approve shell commands, the agent will respect instructions like "never force-push"
 
-The sweet spot for most developers: auto-approve reads and test runs, manually approve everything else. As you build trust with specific workflows, you can loosen further.
+The sweet spot for most developers: auto-approve reads and test runs, manually approve everything else. As you build trust with specific workflows, you can loosen further. See Anthropic's [permissions reference](https://code.claude.com/docs/en/permissions) for the full rule syntax and available tool names.
 
 ### Commit early, commit often
 
@@ -366,7 +371,7 @@ Skip this for small, clear tasks — if you could describe the diff in one sente
 
 ### Manage context aggressively
 
-Claude's context window is your most important resource. As it fills up with conversation history, file contents, and command outputs, performance degrades — Claude may "forget" earlier instructions or make more mistakes.
+Claude's context window is your most important resource. As it fills up with conversation history, file contents, and command outputs, performance degrades — Claude may "forget" earlier instructions or make more mistakes. (This section is adapted from Anthropic's [official best practices](https://code.claude.com/docs/en/best-practices).)
 
 - **Use `/clear` between unrelated tasks** — a clean context dramatically improves quality
 - **Use `/compact` to summarize long conversations** — run `/compact focus on the API changes` to keep what matters and discard the rest
@@ -383,7 +388,7 @@ Beyond `CLAUDE.md`, Claude Code has a rich [extension system](https://code.claud
 - **[MCP](https://code.claude.com/docs/en/mcp)** — connect Claude to external services. Query your database, post to Slack, control a browser, or pull issues from your project tracker — all from within a Claude Code session.
 - **[Subagents](https://code.claude.com/docs/en/sub-agents)** — isolated workers with their own context. Useful for research tasks, code review, or any work where you don't want the intermediate steps cluttering your main conversation.
 
-Start with `CLAUDE.md` for your core conventions. Add skills when you find yourself repeating the same workflows. Add hooks when you need guaranteed automation. Add MCP when you need external integrations.
+Start with `CLAUDE.md` for your core conventions. Add skills when you find yourself repeating the same workflows. Add hooks when you need guaranteed automation. Add MCP when you need external integrations. For a deeper dive, see Anthropic's [extension system overview](https://code.claude.com/docs/en/features-overview), which covers when to use each mechanism.
 
 ## Managing costs
 
@@ -391,7 +396,7 @@ Agentic coding tools that use API tokens (like Claude Code) charge per token, an
 
 ### What does this actually cost?
 
-There are two ways to pay for Claude Code: **subscription plans** (fixed monthly cost) or **API tokens** (pay-per-use). Most individuals should start with a subscription; API pricing is better for automation and CI/CD pipelines.
+There are two ways to pay for Claude Code: **subscription plans** (fixed monthly cost) or **API tokens** (pay-per-use). Most individuals should start with a subscription; API pricing is better for automation and CI/CD pipelines. (Pricing details adapted from [Anthropic's pricing page](https://www.anthropic.com/pricing) and [Claude Code cost management docs](https://code.claude.com/docs/en/costs) — verify current prices, as they change frequently.)
 
 **Subscription plans** (as of early 2026):
 
