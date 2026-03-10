@@ -137,8 +137,14 @@ cd yourrepo && claude
 ##### A note on security: Claude Code runs with *your* permissions {#security-note}
 
 ::: {.callout-warning}
-## Claude Code can read, write, and execute anything you can
-Whether you use the desktop app, the CLI, or an IDE extension, Claude Code operates with your full user-level filesystem and shell permissions. It can read your SSH keys, modify files outside your project, run arbitrary shell commands, and access anything your user account can reach. This is true of *any* agentic coding tool with shell access — it's not unique to Claude Code.
+## Agentic coding tools can access more than you might expect
+The level of system access depends on which surface you use:
+
+- **CLI and desktop app** — Claude Code operates with your full user-level filesystem and shell permissions. It can read your SSH keys, modify files outside your project, run arbitrary shell commands, and access anything your user account can reach.
+- **IDE extensions** (VS Code, JetBrains) — same access as the CLI, since the extension runs Claude Code as a local process under your user account.
+- **Web version** (claude.ai/code) — runs in an isolated cloud VM with access only to your cloned GitHub repo. It cannot reach your local filesystem, SSH keys, or other local resources. This is the most restricted surface by default.
+
+This isn't unique to Claude Code — any agentic tool with shell access (Cursor, Windsurf, Copilot coding agent) has similar access on your local machine. The difference is in what mitigations each tool provides.
 :::
 
 Claude Code mitigates this with several layers of protection:
