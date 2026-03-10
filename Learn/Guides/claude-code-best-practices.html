@@ -477,7 +477,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Much of the Claude Code-specific guidance in this post draws on Anthropic’s official documentation, including their <a href="https://code.claude.com/docs/en/best-practices">best practices guide</a>, <a href="https://code.claude.com/docs/en/permissions">permissions</a> and <a href="https://code.claude.com/docs/en/sandboxing">sandboxing</a> docs, <a href="https://code.claude.com/docs/en/claude-md">CLAUDE.md reference</a>, <a href="https://code.claude.com/docs/en/data-usage">data usage policy</a>, and <a href="https://code.claude.com/docs/en/costs">cost management guide</a>. GitHub Copilot sections draw on GitHub’s <a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">coding agent docs</a> and <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">changelog</a>. Where we paraphrase official documentation, we’ve linked to the source. Community perspectives and independent analyses are cited inline throughout.</p>
+<p>Much of the Claude Code-specific guidance in this post draws on Anthropic’s official documentation, including their <a href="https://code.claude.com/docs/en/best-practices">best practices guide</a>, <a href="https://code.claude.com/docs/en/permissions">permissions</a> and <a href="https://code.claude.com/docs/en/sandboxing">sandboxing</a> docs, <a href="https://code.claude.com/docs/en/memory">CLAUDE.md reference</a>, <a href="https://code.claude.com/docs/en/data-usage">data usage policy</a>, and <a href="https://code.claude.com/docs/en/costs">cost management guide</a>. GitHub Copilot sections draw on GitHub’s <a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">coding agent docs</a> and <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">changelog</a>. Where we paraphrase official documentation, we’ve linked to the source. Community perspectives and independent analyses are cited inline throughout.</p>
 </div>
 </div>
 </div>
@@ -543,7 +543,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Deep AWS service integration, infrastructure-aware suggestions</td>
 </tr>
 <tr class="odd">
-<td><a href="https://cloud.google.com/products/gemini-code-assist"><strong>Gemini Code Assist</strong></a></td>
+<td><a href="https://codeassist.google/"><strong>Gemini Code Assist</strong></a></td>
 <td>IDE, Google Cloud</td>
 <td>Free tier / Enterprise</td>
 <td>Google Cloud integration, Gemini model access</td>
@@ -633,7 +633,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong><code>CLAUDE.md</code> authoring</strong> — the terminal is the natural place to set up and iterate on your project’s <code>CLAUDE.md</code> configuration</li>
 <li><strong>SSH and remote environments</strong> — works anywhere you have a terminal, including remote servers, containers, and cloud dev environments</li>
 <li><strong>Full local control</strong> — no cloud dependency; everything runs on your machine (or wherever your terminal is)</li>
-<li><strong>Flexible auth and billing</strong> — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through <a href="https://code.claude.com/docs/en/cloud-providers#google-cloud-vertex-ai">Google Vertex AI</a> or <a href="https://code.claude.com/docs/en/cloud-providers#amazon-bedrock">AWS Bedrock</a>, so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our <a href="../../Learn/Guides/claude-code-cloud-setup.html">Claude Code Cloud Setup Guide</a> for a step-by-step walkthrough using UW-Madison GCP or AWS</li>
+<li><strong>Flexible auth and billing</strong> — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through <a href="https://code.claude.com/docs/en/google-vertex-ai">Google Vertex AI</a> or <a href="https://code.claude.com/docs/en/amazon-bedrock">AWS Bedrock</a>, so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our <a href="../../Learn/Guides/claude-code-cloud-setup.html">Claude Code Cloud Setup Guide</a> for a step-by-step walkthrough using UW-Madison GCP or AWS</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install npm if needed (e.g., on a fresh WSL2 or Ubuntu setup)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install npm</span>
@@ -790,7 +790,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="use-claude.md-as-your-control-surface" class="level3">
 <h3 class="anchored" data-anchor-id="use-claude.md-as-your-control-surface">Use <code>CLAUDE.md</code> as your control surface</h3>
-<p><a href="https://code.claude.com/docs/en/claude-md"><code>CLAUDE.md</code></a> is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it’s loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:</p>
+<p><a href="https://code.claude.com/docs/en/memory"><code>CLAUDE.md</code></a> is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it’s loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:</p>
 <ul>
 <li>How your project is structured (key directories, entry points)</li>
 <li>Coding conventions (naming, formatting, patterns to follow or avoid)</li>
@@ -823,7 +823,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Business logic goes in <span class="in">`src/services/`</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Database models are in <span class="in">`src/models/`</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Tests mirror the source structure under <span class="in">`tests/`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The more context you provide in <code>CLAUDE.md</code>, the fewer agentic loops the agent needs to figure out your project. See the <a href="https://code.claude.com/docs/en/claude-md">official CLAUDE.md reference</a> for the full spec, including file resolution order and advanced features.</p>
+<p>The more context you provide in <code>CLAUDE.md</code>, the fewer agentic loops the agent needs to figure out your project. See the <a href="https://code.claude.com/docs/en/memory">official CLAUDE.md reference</a> for the full spec, including file resolution order and advanced features.</p>
 </section>
 <section id="tune-the-permission-dial" class="level3">
 <h3 class="anchored" data-anchor-id="tune-the-permission-dial">Tune the permission dial</h3>
@@ -1005,7 +1005,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="for-uw-madison-researchers-institutional-cloud-benefits" class="level3">
 <h3 class="anchored" data-anchor-id="for-uw-madison-researchers-institutional-cloud-benefits">For UW-Madison researchers: institutional cloud benefits</h3>
 <p>If you’re at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.</p>
-<p>Contact your department’s IT staff or <a href="https://it.wisc.edu/services/research-computing/">Research Computing</a> to ask about available cloud credits and whether AI API costs are eligible.</p>
+<p>Contact your department’s IT staff or <a href="https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/">Research Computing</a> to ask about available cloud credits and whether AI API costs are eligible.</p>
 </section>
 <section id="strategies-to-keep-costs-down" class="level3">
 <h3 class="anchored" data-anchor-id="strategies-to-keep-costs-down">Strategies to keep costs down</h3>
