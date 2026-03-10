@@ -476,17 +476,25 @@ Think of `deny` rules as guardrails. Here's what's worth blocking and why:
 **Important caveat:** `Read` deny rules apply on a "best-effort" basis to built-in tools like Grep and Glob. However, if a Bash command (like `cat .env`) is allowed, it can still read the file. This is why denying both `Read` and the relevant `Bash` commands together gives stronger protection. See [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details.
 :::
 
-### Optionally add `allow` rules to reduce prompt fatigue
+### Add `allow` rules to reduce prompt fatigue {#allow-rules}
 
-If you find yourself constantly approving the same safe commands, you can add `allow` rules so Claude runs them without asking. **Only do this for commands you're comfortable with Claude running at any time without your review:**
+By default, Claude Code asks "Do you want to proceed?" before *every* file write, shell command, and git operation. This gets old fast — in a typical session you might approve the same `git add`, `git commit`, and `git push` sequence a dozen times. You can add `allow` rules so Claude runs trusted commands without asking:
+
+**Minimal — just stop the git and test prompts:**
 
 ```jsonc
 {
   "permissions": {
     "allow": [
-      "Bash(git status)",
-      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
       "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git status)",
+      "Bash(git rm *)",
+      "Bash(gh *)",
       "Bash(python *)",
       "Bash(pytest *)"
     ]
@@ -494,7 +502,35 @@ If you find yourself constantly approving the same safe commands, you can add `a
 }
 ```
 
-These are sensible starting points because they're read-only or run within your project. But you don't have to add any allow rules at all — the default "ask before doing" behavior is perfectly fine, especially when you're starting out.
+**More aggressive — also auto-approve file edits:**
+
+```jsonc
+{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(python *)",
+      "Bash(pytest *)",
+      "Bash(npm *)",
+      "Bash(pip *)"
+    ]
+  }
+}
+```
+
+::: {.callout-tip}
+## The fastest way: use `acceptEdits` mode or enable sandboxing
+Instead of listing individual allow rules, you can:
+
+- **Switch to `acceptEdits` mode** (`Shift+Tab` inside a session) — auto-approves all file edits while still prompting for bash commands.
+- **Enable sandboxing** (see [Section 7](#enable-sandboxing)) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, which [reduces permission prompts by 84%](https://www.anthropic.com/engineering/claude-code-sandboxing) while actually *increasing* security.
+- **Use the interactive prompt** — when Claude asks "Do you want to proceed?", select **"Yes, and don't ask again for [command pattern]"** to build up your allow list organically during a session.
+:::
+
+You don't *have* to add any allow rules — the default "ask before doing" behavior is safe, especially when you're starting out. But if you find yourself mindlessly hitting "Yes" on every prompt, that's a sign you should either add allow rules or enable sandboxing.
 
 ### Check your current permissions
 
