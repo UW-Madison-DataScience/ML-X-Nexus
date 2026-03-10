@@ -164,7 +164,7 @@
 <section id="claude-code" class="level4">
 <h4 class="anchored" data-anchor-id="claude-code">Claude Code</h4>
 <p><a href="https://code.claude.com/">Claude Code</a> is Anthropic’s agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project. A built-in permission system prompts you to approve or deny each action, so you stay in the loop while the agent does the heavy lifting.</p>
-<p>Claude Code is available across multiple surfaces — a <a href="https://code.claude.com/docs/en/desktop">desktop app</a>, a <a href="https://code.claude.com/docs/en/cloud">web IDE</a>, a <a href="https://code.claude.com/docs/en/getting-started">terminal CLI</a>, and IDE extensions for <a href="https://code.claude.com/docs/en/vs-code">VS Code</a> and <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a> — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about <em>how you interact</em> and <em>where the work runs</em>, not what the agent can do.</p>
+<p>Claude Code is available across multiple surfaces — a <a href="https://code.claude.com/docs/en/desktop">desktop app</a>, a <a href="https://code.claude.com/docs/en/claude-code-on-the-web">web IDE</a>, a <a href="https://code.claude.com/docs/en/getting-started">terminal CLI</a>, and IDE extensions for <a href="https://code.claude.com/docs/en/vs-code">VS Code</a> and <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a> — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about <em>how you interact</em> and <em>where the work runs</em>, not what the agent can do.</p>
 <p>Here’s what a typical Claude Code session looks like, regardless of surface. You type a request like:</p>
 <blockquote class="blockquote">
 <p><em>Look at src/utils/ and add a slugify function that matches the style of existing utilities. Write tests too. Create a branch, commit, and open a PR when you’re done.</em></p>
@@ -182,7 +182,7 @@
 <p><strong>Friction:</strong> The permission prompts keep you in the loop but slow things down. You can reduce this by configuring <a href="https://code.claude.com/docs/en/permissions">allow rules</a> in your settings to auto-approve actions you trust. Many experienced users auto-approve <em>most</em> actions — file edits, test runs, even git operations — and instead invest their review time at the PR stage, where they can inspect the full diff before merging. This “let it cook, review the PR” approach works well when you’ve written clear prompts and have CI checks in place. If you’re just getting started, a more conservative sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.</p>
 <section id="claude-code-desktop-web" class="level5">
 <h5 class="anchored" data-anchor-id="claude-code-desktop-web">Desktop &amp; Web</h5>
-<p>The easiest way to get started is through the <a href="https://code.claude.com/docs/en/desktop">Claude Desktop app</a> (Code tab) or <a href="https://code.claude.com/docs/en/cloud">Claude Code on the web</a> at <a href="https://claude.ai/code">claude.ai/code</a>. Both provide the same GUI experience. The main difference is where it runs: the desktop app works with local git repositories on your machine, with each session getting its own isolated <a href="https://git-scm.com/docs/git-worktree">git worktree</a> so parallel tasks don’t collide. The web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile (<a href="https://apps.apple.com/us/app/claude-by-anthropic/id6473753684">iOS</a> / <a href="https://play.google.com/store/apps/details?id=com.anthropic.claude">Android</a>) for kicking off and monitoring tasks on the go. <strong>Note:</strong> the desktop app requires Git — your project must be a git repo with at least one commit.</p>
+<p>The easiest way to get started is through the <a href="https://code.claude.com/docs/en/desktop">Claude Desktop app</a> (Code tab) or <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web</a> at <a href="https://claude.ai/code">claude.ai/code</a>. Both provide the same GUI experience. The main difference is where it runs: the desktop app works with local git repositories on your machine, with each session getting its own isolated <a href="https://git-scm.com/docs/git-worktree">git worktree</a> so parallel tasks don’t collide. The web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile (<a href="https://apps.apple.com/us/app/claude-by-anthropic/id6473753684">iOS</a> / <a href="https://play.google.com/store/apps/details?id=com.anthropic.claude">Android</a>) for kicking off and monitoring tasks on the go. <strong>Note:</strong> the desktop app requires Git — your project must be a git repo with at least one commit.</p>
 <p>Key capabilities:</p>
 <ul>
 <li><strong>Visual diff review</strong> — see exactly what Claude changed, leave inline comments on specific lines, and ask Claude to revise</li>
@@ -920,7 +920,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 <li><a href="https://code.claude.com/docs/en/how-claude-code-works">How Claude Code Works</a> — the agentic loop architecture, built-in tools, and how Claude interacts with your project</li>
 <li><a href="https://code.claude.com/docs/en/features-overview">Extend Claude Code</a> — when to use CLAUDE.md vs skills vs subagents vs hooks vs MCP</li>
 <li><a href="https://code.claude.com/docs/en/common-workflows">Common Workflows</a> — step-by-step guides for debugging, refactoring, testing, creating PRs, and more</li>
-<li><a href="https://code.claude.com/docs/en/cloud">Claude Code on the Web</a> — running Claude Code tasks asynchronously on cloud infrastructure</li>
+<li><a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the Web</a> — running Claude Code tasks asynchronously on cloud infrastructure</li>
 <li><a href="https://code.claude.com/docs/en/desktop">Claude Code Desktop</a> — the desktop GUI with visual diffs, parallel sessions, and managed updates</li>
 <li><a href="https://code.claude.com/docs/en/sandboxing">Claude Code Sandboxing Documentation</a> — reference for configuring Claude Code’s built-in sandboxing, including OS-level primitives (Linux bubblewrap, macOS Seatbelt) and deny rules for sensitive files</li>
 <li><a href="https://www.anthropic.com/engineering/claude-code-sandboxing">Making Claude Code More Secure and Autonomous</a> — Anthropic Engineering’s deep-dive into their dual-layer sandboxing architecture (filesystem + network isolation)</li>
@@ -1016,14 +1016,14 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="68c4245f" class="cell" data-execution_count="1">
+<div id="5183d863" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="a5079e54" class="cell" data-execution_count="2">
+<div id="edf9a595" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1136,7 +1136,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="31c0261b" class="cell" data-execution_count="3">
+<div id="69cf1f69" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1373,7 +1373,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="323536e8" class="cell" data-execution_count="4">
+<div id="0b45f8cf" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1401,7 +1401,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="26ec0295" class="cell" data-execution_count="5">
+<div id="27901bc6" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1424,7 +1424,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="722b8c68" class="cell" data-execution_count="6">
+<div id="3a3486b0" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1446,7 +1446,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="fe844961" class="cell" data-execution_count="7">
+<div id="69d4b2f1" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1569,7 +1569,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="56eb6f3c" class="cell" data-execution_count="8">
+<div id="e9f74784" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1599,7 +1599,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="4ee36c2a" class="cell" data-execution_count="9">
+<div id="ddf7f02b" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1644,7 +1644,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="f148b2ec" class="cell" data-execution_count="10">
+<div id="294add07" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1880,7 +1880,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="13e849c6" class="cell" data-execution_count="11">
+<div id="276aa437" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -1956,7 +1956,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="6c79ac57" class="cell" data-execution_count="12">
+<div id="a4d48aac" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2072,7 +2072,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="268e9ea9" class="cell" data-execution_count="13">
+<div id="4c0fb7ce" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2318,7 +2318,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="7a43c2c6" class="cell" data-execution_count="14">
+<div id="81f3eb62" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2587,6 +2587,12 @@ background-color: null;
 font-style: inherit;">&lt;</span>your_file.qmd<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">&gt;</span></span></code></pre></div></div>
+<p><strong>Previewing in VSCode:</strong> Install the <a href="https://marketplace.visualstudio.com/items?itemName=quarto.quarto">Quarto extension</a> for VSCode. Once installed, you can preview <code>.qmd</code> files with:</p>
+<ul>
+<li><strong>Ctrl+Shift+K</strong> (Windows/Linux) or <strong>Cmd+Shift+K</strong> (Mac) — renders a preview of the document.</li>
+<li>Or click the <strong>Preview</strong> button that appears in the top-right corner of the editor when a <code>.qmd</code> file is open.</li>
+</ul>
+<p>Note: VSCode’s built-in Markdown preview (<code>Ctrl+Shift+V</code>) does not work with <code>.qmd</code> files — you need the Quarto extension.</p>
 <p>Don’t spend too much time perfecting things locally — you can always iterate after the PR is open.</p>
 </section>
 <section id="notebooks" class="level3">
