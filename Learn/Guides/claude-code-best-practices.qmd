@@ -1,0 +1,670 @@
+---
+title: "Claude Code Best Practices"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-03-09
+date-format: long
+image: "../../../images/agentic-coding.png"
+categories:
+  - Guides
+  - GenAI
+  - LLM
+  - Agentic coding
+  - Software development
+  - Best practices
+  - Security
+---
+
+AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://www.cursor.com/), [Windsurf](https://windsurf.com/), [Augment Code](https://www.augmentcode.com/), [Amazon Q Developer](https://aws.amazon.com/q/developer/), [Gemini Code Assist](https://cloud.google.com/products/gemini-code-assist), and [GitLab Duo](https://about.gitlab.com/gitlab-duo/) are among the most prominent, with new entrants appearing regularly.
+
+Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **[Claude Code](https://code.claude.com/)** as the primary lens. Claude Code is Anthropic's agentic coding tool — distinct from the [Claude.ai](https://claude.ai) chat interface — and it comes in several forms: a **CLI**, a **desktop app**, **IDE extensions** ([VS Code](https://code.claude.com/docs/en/vs-code), [JetBrains](https://code.claude.com/docs/en/jetbrains)), and a **web IDE** at [claude.ai/code](https://claude.ai/code). All give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We'll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.
+
+This is a first pass based on early experience — we expect it to evolve as the ML+X community builds more hands-on knowledge. If you have tips, corrections, or experiences to share, please leave a comment below.
+
+::: {.callout-note collapse="true"}
+## Sources and attribution
+Much of the Claude Code-specific guidance in this post draws on Anthropic's official documentation, including their [best practices guide](https://code.claude.com/docs/en/best-practices), [permissions](https://code.claude.com/docs/en/permissions) and [sandboxing](https://code.claude.com/docs/en/sandboxing) docs, [CLAUDE.md reference](https://code.claude.com/docs/en/claude-md), [data usage policy](https://code.claude.com/docs/en/data-usage), and [cost management guide](https://code.claude.com/docs/en/costs). GitHub Copilot sections draw on GitHub's [coding agent docs](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) and [changelog](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/). Where we paraphrase official documentation, we've linked to the source. Community perspectives and independent analyses are cited inline throughout.
+:::
+
+## What is agentic coding?
+
+Traditional AI code assistants (like early GitHub Copilot or ChatGPT) work in a simple loop: you ask, they suggest, you accept or reject. **Agentic** coding tools go further. They can:
+
+- Read and navigate your entire codebase
+- Execute shell commands and run tests
+- Edit multiple files in a single pass
+- Iterate on their own output (fix errors, re-run tests, refine)
+- Operate semi-autonomously over multi-step tasks
+
+This is powerful, but it also means these tools have real access to your system — and the potential to do real damage if not managed carefully.
+
+## The landscape at a glance
+
+Before diving into Claude Code specifically, here's a rough map of the major agentic coding tools as of early 2026:
+
+| Tool | Interface | Agentic? | Cost model | Notable strengths |
+|---|---|---|---|---|
+| **Claude Code** | CLI, desktop app, IDE extensions, [web IDE](https://claude.ai/code) | Yes — full shell access | Pay-per-token (API) or Max plan | Deep reasoning, explicit permission model, CLAUDE.md |
+| **GitHub Copilot** | VS Code/IDE, GitHub.com | Yes — agent mode + async coding agent | Subscription + usage-based | Tight GitHub integration, async PR creation, wide model selection |
+| **Cursor** | Custom IDE (VS Code fork) | Yes | Subscription | Best-in-class IDE UX, fast inline edits, multi-file context |
+| **Windsurf** | Custom IDE | Yes | Subscription (free tier available) | Good value, smooth agentic flow |
+| **Augment Code** | IDE extension | Yes | Subscription | Large context window, codebase-aware |
+| **Amazon Q Developer** | IDE, CLI, AWS console | Yes | Free tier / Pro | Deep AWS integration |
+| **Gemini Code Assist** | IDE, Google Cloud | Yes | Free tier / Enterprise | Google Cloud integration |
+| **GitLab Duo** | GitLab IDE, MR workflows | Yes | GitLab subscription add-on | Native GitLab CI/CD integration |
+
+This space is moving fast — capabilities and pricing change frequently. See [Coding Agents Comparison](https://artificialanalysis.ai/insights/coding-agents-comparison) for up-to-date benchmarks and pricing.
+
+In practice, many developers use **multiple tools**: a chat UI for brainstorming and review, an agentic tool for multi-step feature work, and an IDE copilot for inline completions throughout the day.
+
+### What the same task looks like across different tools
+
+To make these distinctions concrete, let's walk through the same scenario — *"I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR"* — across Claude.ai, Claude Code, and GitHub Copilot.
+
+#### Claude.ai (Chat — not Claude Code)
+
+[Claude.ai](https://claude.ai) is Anthropic's general-purpose chat interface. It's *not* an agentic coding tool — it can't execute code, edit files, or run commands on your system. You provide context by pasting code into the conversation, and you copy the output back into your editor.
+
+::: {.callout-note collapse="true"}
+## The Claude Desktop app has multiple tabs — don't confuse them
+
+The [Claude Desktop app](https://claude.ai/download) includes three tabs: **Chat** (standard conversation, with [MCP](https://modelcontextprotocol.io/) support), **Code** (the full Claude Code agentic experience — see below), and **Cowork** (an AI companion that watches your screen and offers suggestions). Only the **Code** tab is an agentic coding tool. The Chat tab provides the same experience as [claude.ai](https://claude.ai) in a native app.
+:::
+
+1. Start a new conversation at [claude.ai](https://claude.ai) or in the Claude Desktop app's Chat tab
+2. Paste in the relevant code (e.g., the contents of `src/utils/` and a few example utilities)
+3. Ask: *"Add a `slugify` function that matches the style of these existing utilities. Also write tests."*
+4. Claude generates the code and tests in the chat
+5. **You** copy the output back into your editor, create a branch, commit, and open the PR yourself
+
+**Friction:** You're the middleware in both directions — pasting code in and copying code out. But notice what's *not* here: permission prompts, approve/deny flows, or any risk of it running a bad command. Claude can't touch your system, so the conversation feels fast and fluid even though you do all the manual work.
+
+**Best for:** Quick code generation, architecture discussions, explaining unfamiliar code, and brainstorming — any task where you're happy to provide context manually and apply changes yourself.
+
+#### Claude Code
+
+[Claude Code](https://code.claude.com/) is Anthropic's agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project. A built-in permission system prompts you to approve or deny each action, so you stay in the loop while the agent does the heavy lifting.
+
+Claude Code is available across multiple surfaces — a [desktop app](https://code.claude.com/docs/en/desktop), a [web IDE](https://code.claude.com/docs/en/cloud), a [terminal CLI](https://code.claude.com/docs/en/getting-started), and IDE extensions for [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains) — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about *how you interact* and *where the work runs*, not what the agent can do.
+
+Here's what a typical Claude Code session looks like, regardless of surface. You type a request like:
+
+> *Look at src/utils/ and add a slugify function that matches the style of existing utilities. Write tests too. Create a branch, commit, and open a PR when you're done.*
+
+Claude Code will:
+
+1. Read your existing utils to understand the style
+2. **Ask permission** to create a new file → you approve (or it auto-approves if you've configured that)
+3. Write the function and tests
+4. **Ask permission** to run the tests → you approve (or it auto-approves if you've [allowed your test command](https://code.claude.com/docs/en/permissions))
+5. Run `pytest` (or whatever your test runner is), see results
+6. If tests fail, iterate — fix the code, re-run
+7. **Ask permission** to create a branch, commit, push, and open a PR → you approve (this can also be auto-approved via [allow rules](https://code.claude.com/docs/en/permissions), but most users prefer to keep git operations manual for safety)
+
+**Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring [allow rules](https://code.claude.com/docs/en/permissions) in your settings to auto-approve actions you trust. Many experienced users auto-approve *most* actions — file edits, test runs, even git operations — and instead invest their review time at the PR stage, where they can inspect the full diff before merging. This "let it cook, review the PR" approach works well when you've written clear prompts and have CI checks in place. If you're just getting started, a more conservative sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.
+
+##### Desktop & Web {#claude-code-desktop-web}
+
+The easiest way to get started is through the [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) or [Claude Code on the web](https://code.claude.com/docs/en/cloud) at [claude.ai/code](https://claude.ai/code). Both provide the same GUI experience. The main difference is where it runs: the desktop app works with local git repositories on your machine, with each session getting its own isolated [git worktree](https://git-scm.com/docs/git-worktree) so parallel tasks don't collide. The web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile ([iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) / [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude)) for kicking off and monitoring tasks on the go. **Note:** the desktop app requires Git — your project must be a git repo with at least one commit.
+
+Key capabilities:
+
+- **Visual diff review** — see exactly what Claude changed, leave inline comments on specific lines, and ask Claude to revise
+- **Live app preview** — Claude can start a dev server and verify its own changes in an embedded browser, taking screenshots and fixing issues it finds
+- **Parallel sessions** — run multiple tasks simultaneously in separate tabs, each on its own isolated branch
+- **GitHub PR monitoring** — watch CI status, auto-fix failing checks, and auto-merge when everything passes
+- **[Scheduled tasks](https://code.claude.com/docs/en/scheduled-tasks)** — set up recurring tasks using cron expressions (e.g., daily dependency checks, periodic code reviews, deployment monitoring). On desktop, these persist across sessions; on the web, you can [schedule them in Cowork](https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-cowork). In the CLI, use the `/loop` skill for lightweight in-session polling
+- **Connectors** — one-click integrations for GitHub, Slack, Linear, Notion, and more
+- **Async handoff** — start a task on the web and close your laptop; it runs in the cloud and notifies you when done. You can also start a task from the terminal with `claude --remote`, or pull a web session into your terminal with `claude --teleport`
+
+**Best for:** Users who prefer a GUI, want visual diff review and parallel task management, or want to get started without installing anything. The web version is the fastest way to try Claude Code — just open [claude.ai/code](https://claude.ai/code) and point it at a repo.
+
+##### Terminal (CLI)
+
+Claude Code is also available as a CLI, installed via npm (`npm install -g @anthropic-ai/claude-code`). It's the same agentic engine, but the terminal interface offers some distinct advantages:
+
+- **IDE extensions** — Claude Code integrates directly into [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains), so you can use it without leaving your editor
+- **Scriptability** — pipe commands, chain with shell tools, and integrate into automated workflows (CI/CD, git hooks)
+- **`CLAUDE.md` authoring** — the terminal is the natural place to set up and iterate on your project's `CLAUDE.md` configuration
+- **SSH and remote environments** — works anywhere you have a terminal, including remote servers, containers, and cloud dev environments
+- **Full local control** — no cloud dependency; everything runs on your machine (or wherever your terminal is)
+- **Flexible auth and billing** — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through [Google Vertex AI](https://code.claude.com/docs/en/cloud-providers#google-cloud-vertex-ai) or [AWS Bedrock](https://code.claude.com/docs/en/cloud-providers#amazon-bedrock), so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our [Claude Code + Vertex AI Setup Guide](claude-code-vertex-setup.qmd) for a step-by-step walkthrough using UW-Madison GCP
+
+```bash
+# Install and start Claude Code
+npm install -g @anthropic-ai/claude-code
+cd yourrepo && claude
+```
+
+**Best for:** Developers comfortable with the terminal, CI/CD integration, scripting and automation, working in remote/SSH environments, and organizations that need to route traffic through their own cloud provider.
+
+##### A note on security: Claude Code runs with *your* permissions {#security-note}
+
+::: {.callout-warning}
+## Agentic coding tools can access more than you might expect
+The level of system access depends on which surface you use:
+
+- **CLI and desktop app** — Claude Code operates with your full user-level filesystem and shell permissions. It can read your SSH keys, modify files outside your project, run arbitrary shell commands, and access anything your user account can reach.
+- **IDE extensions** (VS Code, JetBrains) — same access as the CLI, since the extension runs Claude Code as a local process under your user account.
+- **Web version** (claude.ai/code) — runs in an isolated cloud VM with access only to your cloned GitHub repo. It cannot reach your local filesystem, SSH keys, or other local resources. This is the most restricted surface by default.
+
+This isn't unique to Claude Code — any agentic tool with shell access (Cursor, Windsurf, Copilot coding agent) has similar access on your local machine. The difference is in what mitigations each tool provides.
+:::
+
+Claude Code mitigates this with several layers of protection:
+
+- **Permission prompts** — by default, Claude asks before every file write, shell command, and git operation. You can [configure allow/deny rules](https://code.claude.com/docs/en/permissions) to auto-approve trusted actions and hard-block sensitive paths like `~/.ssh`, `~/.aws`, and `.env` files.
+- **Built-in sandboxing** — Claude Code's [OS-level sandbox](https://code.claude.com/docs/en/sandboxing) (Linux bubblewrap / macOS Seatbelt) restricts filesystem access to your project directory and limits outbound network traffic to approved domains. Credentials (git credentials, signing keys) are never placed inside the sandbox. Anthropic reports this [reduces permission prompts by 84%](https://www.anthropic.com/engineering/claude-code-sandboxing) while *increasing* security — and it's faster than Docker (~3x less overhead). **This is the single most impactful security measure you can enable.**
+- **Desktop app** — adds git worktree isolation on top of the OS-level sandbox. Each session gets its own isolated copy of the repo (stored in `.claude/worktrees/`), so changes in one session don't affect others until committed.
+- **Web version** (claude.ai/code) — the most restricted surface. Each task runs in a fresh, ephemeral VM with [Gvisor-based kernel isolation](https://gvisor.dev/). Claude can only access the cloned repo; storage is wiped when the task completes. Credentials are handled by a proxy service and never exist inside the sandbox.
+**Enable the built-in sandbox.** It provides strong filesystem and network isolation with minimal setup and near-zero performance overhead — there's no reason not to use it. See [Security fundamentals](#security-fundamentals) later in this guide, or the [Vertex AI setup guide's security section](claude-code-vertex-setup.qmd#understand-risk) for a step-by-step walkthrough.
+
+#### GitHub Copilot
+
+[GitHub Copilot](https://github.com/features/copilot) is GitHub's AI coding assistant. It's a **multi-model platform** — you can choose from Claude, GPT, Gemini, and others as the underlying model. This is fundamentally different from Claude Code, and the distinction matters.
+
+##### "Claude" in Copilot vs. Claude Code: what's actually different?
+
+When you select Claude as the model in Copilot (whether in VS Code agent mode or the async coding agent), you're using Claude's *language model* — but **GitHub's orchestration layer** is driving it. GitHub controls the system prompts, the tool-calling framework, the context management, and how your instructions are delivered to the model. Think of it as Claude's brain in GitHub's body.
+
+Claude Code, by contrast, is Anthropic's *own* agentic system built specifically around Claude. Anthropic controls the entire stack: the system prompts are purpose-built for agentic coding, the tool framework is designed for Claude's strengths, and features like extended thinking, `CLAUDE.md` project configuration, and the permission model are all tightly integrated.
+
+**Why this matters in practice:**
+
+- **Context handling** — Copilot primarily derives context from open tabs and (when indexing is enabled) broader repo structure, with a [platform-level cap of ~128k tokens](https://docs.github.com/en/copilot/reference/ai-models/supported-models). Claude Code uses Claude's full 200k-token context window and maps your entire repository, accumulating context through conversation threading. For multi-file tasks, Claude Code generally [understands project architecture more holistically](https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/).
+- **Instruction following** — Claude Code reads your `CLAUDE.md` files natively. Copilot has its own instruction mechanism (`copilot-instructions.md`), but users have [reported](https://github.com/orgs/community/discussions/176156) that Claude models don't always follow Copilot's instruction files as reliably — because the model is being orchestrated by a system designed for multiple models, not optimized for any one.
+- **Extended thinking** — Claude Code uses extended thinking by default with adjustable token budgets. Copilot support for thinking tokens has been [inconsistent](https://github.com/orgs/community/discussions/176156), with some configurations producing errors when extended thinking parameters are passed.
+- **Tools and sub-agents** — Claude Code ships with 18+ built-in tools (file editing, bash, search, git, sub-agents), plus full [MCP](https://modelcontextprotocol.io/) support and hooks. Copilot agent mode uses its own curated tool set, which is capable but less extensive.
+- **Quality on complex tasks** — In a [50-session benchmark study](https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/), Claude Code produced a higher accept rate (44% vs 38%) and scored significantly better on bug-fixing context fidelity (8.5/10 vs 5.9/10). Copilot was ~15 seconds faster per task on average and excels at inline completions.
+
+::: {.callout-note collapse="true"}
+## Claude as a standalone agent on GitHub (Feb 2026)
+
+As of [February 2026](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/), Claude is also available as a **standalone agent** on GitHub — not just a model choice within Copilot. You can assign issues directly to `@claude` (or `@copilot`, or `@codex`) on GitHub.com, and in [VS Code 1.109+](https://code.visualstudio.com/blogs/2026/02/05/multi-agent-development) you can start Claude agent sessions that use Anthropic's own agent harness rather than Copilot's orchestration. In these modes, you get the same prompts, tools, and architecture as Claude Code — which should close the quality gap vs. using Claude as a model within Copilot. Initially available for Pro+ and Enterprise plans; [expanded to Copilot Business and Pro](https://github.blog/changelog/2026-02-26-claude-and-codex-now-available-for-copilot-business-pro-users/) on Feb 26 at no additional cost.
+:::
+
+##### Agent mode (in VS Code)
+
+1. Open your repo in VS Code with the Copilot extension installed
+2. Open the Copilot chat panel (Ctrl/Cmd+Shift+I)
+3. Select agent mode, choose Claude as the model
+4. Type: *"Add a slugify function to src/utils/ matching the existing style. Write tests."*
+
+Copilot will:
+
+1. Read relevant files
+2. Create/edit files directly — **no permission prompt by default** in many configurations
+3. May run tests if it decides to (or you can ask it to)
+4. You review the changes in VS Code's diff view
+5. **You** handle the git workflow (branch, commit, push, PR) — or use the async coding agent for that
+
+**Friction:** The IDE experience is smooth but you have less visibility into *why* the agent made certain choices. Agent mode is still evolving — for complex multi-step tasks it may not iterate as effectively as Claude Code's agentic loop. The upside is zero context-switching: you're already in your editor.
+
+##### Coding agent (async)
+
+GitHub's async coding agents let you delegate work directly from issues and PRs — no IDE or terminal needed:
+
+1. Go to your repo on GitHub.com
+2. Create an issue: *"Add a slugify utility function to src/utils/ with tests"*
+3. Assign the issue to `@copilot`, `@claude`, or `@codex` via the Assignees dropdown
+4. Walk away — the agent works in a secure cloud environment
+
+The agent will:
+
+1. Create a branch
+2. Implement the function and tests in an ephemeral environment
+3. Open a draft PR referencing the issue
+4. You get a notification when the PR is ready to review
+5. You can leave review comments mentioning `@claude` to request changes — the agent iterates like a human collaborator
+
+**What's running under the hood?** When you assign to `@claude`, GitHub runs Anthropic's [Claude Code Action](https://github.com/anthropics/claude-code-action) — which uses the same Claude Code engine (agentic loop, tools, extended thinking) that powers the CLI and desktop app. The key difference is that it runs in GitHub's managed environment rather than your local machine, and its scope is limited to the repo and issue context. Assigning to `@copilot` uses GitHub's own orchestration with your selected model, and `@codex` uses OpenAI's agent.
+
+By default, the async coding agent uses Claude Sonnet 4.6 when no model is explicitly selected. You can choose from Claude Opus 4.6, Claude Sonnet 4.5, GPT-5.1-Codex-Max, GPT-5.2-Codex, and others via the model picker.
+
+**Friction:** This is the most hands-off option, but you have the least control during execution. Works best for well-scoped, clearly described issues. If the task is ambiguous or requires judgment calls, you may end up doing multiple rounds of PR review and comments to guide it.
+
+**Best for:** Inline autocomplete, single-file edits, and quick agent tasks within the IDE. Also excellent for async PR generation on well-defined issues. Many developers use Copilot *alongside* Claude Code — Copilot for inline completions in the editor, Claude Code in the terminal for deep multi-file work.
+
+#### Key takeaway
+
+The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But "more autonomous" doesn't always mean "better results."
+
+Counterintuitively, **Claude.ai can feel lower-friction than Claude Code** for many tasks — the chat interface just *answers*, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (in any form) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.
+
+The trade-off is between **autonomy**, **control**, and **optimization**:
+
+- **Claude.ai (chat)** — not agentic, but fluid and zero-risk. You do the manual work.
+- **Claude Code (desktop, web, CLI, or IDE extension)** — fully agentic, with Anthropic's purpose-built orchestration optimized for Claude. The deepest integration between model and tooling.
+- **Copilot with Claude model (IDE)** — agentic within the IDE, fewer interruptions, but Claude is running through GitHub's orchestration layer rather than Anthropic's. Good for inline work; less optimized for complex multi-step reasoning.
+- **Claude agent on GitHub (async)** — Anthropic's own agent harness running on GitHub's infrastructure. Assign issues to `@claude` for async PR generation.
+
+Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code's guardrails are a feature. Quick question or brainstorming? Claude.ai chat is hard to beat. Already in VS Code and want inline help? Copilot is hard to beat. Need Claude's full reasoning depth on a complex refactor? Claude Code is the most direct path to the model's capabilities.
+
+## Working effectively with Claude Code
+
+This is the core of the guide. Whether you're using the CLI, desktop app, an IDE extension, or the web IDE, these practices apply across all Claude Code surfaces. Anthropic's own [best practices guide](https://code.claude.com/docs/en/best-practices) goes deeper on context management, prompt patterns, and scaling across parallel sessions — we'll highlight the essentials here and add our own perspective.
+
+### Think in features, not projects
+
+One of the biggest lessons from working with agentic coding tools: **use them for feature-level development, not for building entire projects in one shot.**
+
+Why? Because agents work best with clear, well-scoped requests. The less clarity you provide, the more the agent has to guess — and guessing leads to:
+
+- Agentic loops (trying approaches, failing, trying again)
+- Drift from your intended architecture
+- Wasted tokens and time
+- Code that technically works but doesn't match your vision
+
+**Precise requests get precise results.** Instead of "build me a web app with auth," try:
+
+- "Add a login form component that submits to `/api/auth/login` and stores the JWT in a httpOnly cookie"
+- "Write a pytest fixture that creates a test database with the schema from `models.py`"
+- "Refactor the `process_data` function in `pipeline.py` to handle the case where `input_df` has missing columns"
+
+Each of these is a single, well-defined task that an agent can execute without ambiguity.
+
+### Use `CLAUDE.md` as your control surface
+
+[`CLAUDE.md`](https://code.claude.com/docs/en/claude-md) is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it's loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:
+
+- How your project is structured (key directories, entry points)
+- Coding conventions (naming, formatting, patterns to follow or avoid)
+- Testing and build commands
+- Safety rules ("never force-push," "don't modify migrations/")
+- Links to docs or specs the agent should reference
+
+Claude Code also supports `CLAUDE.md` files in subdirectories (loaded when Claude works in that directory) and a global `~/.claude/CLAUDE.md` for preferences that apply across all projects. The file is advisory — Claude will follow these instructions in good faith, but they're not enforced at the system level the way [hooks](https://code.claude.com/docs/en/hooks) or [deny rules](https://code.claude.com/docs/en/permissions) are. For anything safety-critical, back it up with a hook or deny rule.
+
+This is one of the most underrated features — it's your main lever for shaping how the agent behaves across sessions.
+
+**Prevent runaway loops:**
+```markdown
+## Testing requirements
+- Always run the full test suite (`pytest tests/`) after making changes
+- If tests fail, fix the failing tests before moving on
+- Do not push code with failing tests
+```
+
+This single instruction saves enormous headaches. Without it, the agent might push broken code, you discover test failures in CI, and then you're spending time fixing things that should have been caught locally.
+
+**Enforce project conventions:**
+```markdown
+## Code style
+- Use type hints for all function signatures
+- Follow the existing import ordering convention
+- Do not add new dependencies without asking first
+```
+
+**Limit destructive actions:**
+```markdown
+## Safety
+- Never run `rm -rf` on any directory
+- Never force-push to any branch
+- Never modify files in the `config/production/` directory
+- Always create a new branch for changes; never commit directly to main
+```
+
+**Provide architectural context:**
+```markdown
+## Project structure
+- API routes go in `src/routes/`
+- Business logic goes in `src/services/`
+- Database models are in `src/models/`
+- Tests mirror the source structure under `tests/`
+```
+
+The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project. See the [official CLAUDE.md reference](https://code.claude.com/docs/en/claude-md) for the full spec, including file resolution order and advanced features.
+
+### Tune the permission dial
+
+Claude Code's permission system is the main thing that distinguishes it from tools that "just go." By default, it asks before every file write, shell command, and git operation. This is safe but slow.
+
+The key insight: **permissions aren't all-or-nothing**. You can configure a spectrum:
+
+- **Start conservative** — approve everything manually while you're learning what the agent does
+- **Auto-approve low-risk actions** — file reads, grep/search, test execution. These rarely cause harm and the prompts add friction without adding safety.
+- **Manually approve writes and git operations** — this is where real damage can happen (overwriting files, force-pushing, committing secrets)
+- **Use `CLAUDE.md` safety rules** as a second layer — even if you auto-approve shell commands, the agent will respect instructions like "never force-push"
+
+The sweet spot for most developers: auto-approve reads and test runs, manually approve everything else. As you build trust with specific workflows, you can loosen further. See Anthropic's [permissions reference](https://code.claude.com/docs/en/permissions) for the full rule syntax and available tool names.
+
+### Use branches and commit frequently
+
+The non-negotiable: **always work on a branch**, never let an agent commit directly to `main`. Beyond that, there are two common workflows:
+
+- **Auto-commit freely, review at the PR stage.** Let the agent commit (and even push) as it works. You review the full diff when you open the PR, just like you would with a human contributor. This keeps momentum high and works well when you have CI checks and a good test suite gating your merges.
+- **Commit manually after reviewing each change.** Approve each commit yourself so you stay close to every change as it happens. This is safer when you're learning the tool, working on sensitive code, or don't yet have strong CI guardrails.
+
+Either way, frequent commits help — they give you clean revert points if the agent goes off track. A good `CLAUDE.md` instruction like *"commit after each completed task"* keeps things granular regardless of which workflow you prefer.
+
+### Review everything (at the right level)
+
+Agent-generated code isn't exempt from review — but *when* you review is a matter of workflow. Some developers review each diff before committing; others let the agent run and review the full PR diff before merging. Both are valid. What matters is that *someone* (you, a teammate, or CI) checks the code before it lands on `main`:
+
+- Read the diffs
+- Check for security issues (hardcoded secrets, SQL injection, etc.)
+- Verify it matches your architectural patterns
+- Make sure it doesn't introduce unnecessary complexity
+
+### Give the agent a way to verify its own work
+
+This is the single highest-leverage thing you can do. Claude performs dramatically better when it can check its own output — running tests, comparing screenshots, validating behavior — rather than relying on you as the only feedback loop.
+
+- **Include test cases in your prompt**: *"Write a `validateEmail` function. Test cases: `user@example.com` → true, `invalid` → false, `user@.com` → false. Run the tests after implementing."*
+- **Ask it to verify UI changes visually**: *"[paste screenshot] Implement this design. Take a screenshot of the result and compare it to the original."*
+- **Point to the symptom, not just the fix**: *"The build fails with this error: [paste error]. Fix it and verify the build succeeds. Address the root cause, don't suppress the error."*
+
+The more you invest in making your verification rock-solid (a good test suite, a linter, a build check), the more autonomously the agent can work.
+
+### Explore first, then plan, then code
+
+For complex tasks, resist the urge to let Claude jump straight to implementation. Use **[Plan Mode](https://code.claude.com/docs/en/common-workflows#use-plan-mode-for-safe-code-analysis)** (toggle with `Shift+Tab`) to separate exploration from execution:
+
+1. **Explore**: In Plan Mode, Claude reads files and answers questions without making changes. *"Read `src/auth/` and understand how we handle sessions and login."*
+2. **Plan**: Ask Claude to create an implementation plan. *"I want to add Google OAuth. What files need to change? Create a plan."*
+3. **Implement**: Switch back to Normal Mode and let Claude execute the plan, verifying against tests.
+4. **Commit**: Ask Claude to commit with a descriptive message.
+
+Skip this for small, clear tasks — if you could describe the diff in one sentence, just ask Claude to do it directly. Planning is most useful when you're uncertain about the approach or the change touches multiple files.
+
+### Manage context aggressively
+
+Claude's context window is your most important resource. As it fills up with conversation history, file contents, and command outputs, performance degrades — Claude may "forget" earlier instructions or make more mistakes. (This section is adapted from Anthropic's [official best practices](https://code.claude.com/docs/en/best-practices).)
+
+- **Use `/clear` between unrelated tasks** — a clean context dramatically improves quality
+- **Use `/compact` to summarize long conversations** — run `/compact focus on the API changes` to keep what matters and discard the rest
+- **Delegate exploration to subagents** — when Claude needs to read dozens of files to investigate something, have it use a [subagent](https://code.claude.com/docs/en/sub-agents). The subagent works in its own context and returns a summary, keeping your main conversation lean.
+- **Run `/context`** to see what's consuming your context window (MCP servers can be surprisingly expensive)
+- **Course-correct early** — if Claude is going in the wrong direction, interrupt with `Esc` rather than letting it generate more output that clutters context. After two failed corrections, `/clear` and start fresh with a better prompt.
+
+### Extend Claude Code with skills, hooks, and MCP
+
+Beyond `CLAUDE.md`, Claude Code has a rich [extension system](https://code.claude.com/docs/en/features-overview) for customizing behavior:
+
+- **[Skills](https://code.claude.com/docs/en/skills)** — reusable knowledge and workflows. Create a `/deploy` skill that runs your deployment checklist, or an API conventions skill that Claude loads when working on your endpoints. Skills load on demand, so they don't bloat every session like `CLAUDE.md` does.
+- **[Hooks](https://code.claude.com/docs/en/hooks)** — deterministic scripts that run at specific points in Claude's workflow. Unlike `CLAUDE.md` instructions (which are advisory), hooks are guaranteed to fire. Use them for things like running ESLint after every file edit or blocking writes to a `migrations/` directory.
+- **[MCP](https://code.claude.com/docs/en/mcp)** — connect Claude to external services. Query your database, post to Slack, control a browser, or pull issues from your project tracker — all from within a Claude Code session.
+- **[Subagents](https://code.claude.com/docs/en/sub-agents)** — isolated workers with their own context. Useful for research tasks, code review, or any work where you don't want the intermediate steps cluttering your main conversation.
+
+Start with `CLAUDE.md` for your core conventions. Add skills when you find yourself repeating the same workflows. Add hooks when you need guaranteed automation. Add MCP when you need external integrations. For a deeper dive, see Anthropic's [extension system overview](https://code.claude.com/docs/en/features-overview), which covers when to use each mechanism.
+
+## Managing costs
+
+Agentic coding tools that use API tokens (like Claude Code) charge per token, and agentic workflows are token-hungry — the agent reads files, reasons through problems, writes code, runs commands, reads output, and iterates. A single focused task might use 50K–200K tokens. A sprawling, underspecified session can easily burn through 1M+ tokens.
+
+### What does this actually cost?
+
+There are two ways to pay for Claude Code: **subscription plans** (fixed monthly cost) or **API tokens** (pay-per-use). Most individuals should start with a subscription; API pricing is better for automation and CI/CD pipelines. (Pricing details adapted from [Anthropic's pricing page](https://www.anthropic.com/pricing) and [Claude Code cost management docs](https://code.claude.com/docs/en/costs) — verify current prices, as they change frequently.)
+
+**Subscription plans** (as of early 2026):
+
+| Plan | Price | What you get |
+|---|---|---|
+| **Pro** | $20/month | Claude Code access with moderate usage limits |
+| **Max 5x** | $100/month | 5× the Pro usage limit — sweet spot for most active developers |
+| **Max 20x** | $200/month | 20× the Pro usage limit — for heavy agentic work or parallel sessions |
+| **Team (premium seats)** | $150/user/month (min 5 seats) | Team management, shared billing, org-level policies |
+
+With subscription plans, you never get a surprise bill — you hit rate limits instead. The `/cost` command shows your token usage in a session, but on a subscription plan this is informational only; it doesn't affect your bill.
+
+**API token pricing** (pay-per-use):
+
+| Model | Input tokens | Output tokens | Best for |
+|---|---|---|---|
+| **Haiku 4.5** | $1/MTok | $5/MTok | Fast, cheap tasks (linting, simple edits) |
+| **Sonnet 4.6** | $3/MTok | $15/MTok | Default for most coding work |
+| **Opus 4.6** | $5/MTok | $25/MTok | Complex reasoning, architecture decisions |
+
+Note that output tokens cost **5× more** than input tokens across all models — and code generation is output-heavy. Also, requests exceeding 200K input tokens are charged at 2× input / 1.5× output rates, which matters for large codebases. [Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) can reduce input costs by up to 90% on repeated system prompts, and the [Batch API](https://platform.claude.com/docs/en/build-with-claude/batch-processing) offers a 50% discount for async processing.
+
+Anthropic reports that the average Claude Code user on API pricing spends [roughly $6/day](https://code.claude.com/docs/en/costs), with 90% of users under $12/day. That translates to **$100–200/month** for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit [$5,000+](https://jeffry.in/expensive-ai/). One detailed [usage report](https://ccusage.com/guide/monthly-reports) showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.
+
+**Rule of thumb:** If your monthly API costs would exceed $60–80, Max 5x is cheaper. If they'd exceed $150, Max 20x is the clear winner.
+
+For comparison, GitHub Copilot runs $10–$39/month depending on tier, with usage-based pricing for premium models beyond included allowances.
+
+### Watch out for runaway costs
+
+Agentic workflows can burn through tokens fast, especially when things go wrong:
+
+- **Agentic loops**: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens. One developer documented an [orchestrator agent flow that hit $150/hour](https://jeffry.in/expensive-ai/).
+- **Context accumulation**: As your conversation grows, every new message includes the full context window — so the 50th message in a session costs far more than the 1st. Use `/clear` between unrelated tasks and `/compact` to summarize long conversations.
+- **Parallel sessions**: Running multiple Claude Code sessions simultaneously (especially on the web or with agent teams) multiplies your token consumption proportionally. Five parallel sessions = 5× the cost.
+- **Extended thinking**: Thinking tokens are billed as output tokens. A complex Opus session with deep reasoning can generate thousands of thinking tokens per turn.
+
+**How to protect yourself:**
+
+- **On a subscription**: You can't overspend, but you can hit rate limits mid-task. Monitor with `/cost` and plan your usage around your limit.
+- **On API pricing**: Set [spending alerts and hard limits](https://console.anthropic.com/) on your Anthropic account. Use separate API keys for different projects so you can track spending.
+- **In both cases**: Use `/cost` to monitor token usage mid-session. If a session is getting expensive, `/clear` and start fresh with a more specific prompt. Break large tasks into focused sessions.
+
+### For UW-Madison researchers: institutional cloud benefits
+
+If you're at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.
+
+Contact your department's IT staff or [Research Computing](https://it.wisc.edu/services/research-computing/) to ask about available cloud credits and whether AI API costs are eligible.
+
+### Strategies to keep costs down
+
+- **Be specific in your prompts** — vague requests lead to more agentic loops, which means more tokens. "Add a login form" costs more than "Add a React component at `src/components/LoginForm.tsx` that posts email/password to `/api/auth/login`"
+- **Use `/clear` aggressively** — reset context between unrelated tasks. A clean context means fewer input tokens per message.
+- **Use `/compact`** — summarize long conversations to free up context space without losing key information
+- **Use the right model for the task** — Haiku or Sonnet for straightforward tasks, reserve Opus for complex reasoning
+- **Break large tasks into smaller sessions** — each focused session is cheaper than one sprawling conversation that loses context and re-reads files
+- **Use `CLAUDE.md`** to provide project context upfront — this reduces the amount of exploration the agent needs to do
+- **Delegate exploration to subagents** — they run in isolated context and return summaries, keeping your main session lean
+- **Monitor session costs** — run `/cost` periodically to see where you stand
+
+For more detail, see Anthropic's [cost management guide](https://code.claude.com/docs/en/costs).
+
+### Energy and environmental considerations
+
+Agentic coding is more compute-intensive than a simple chat query or web search. A single LLM text query now uses [roughly 0.3 Wh](https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use) — about the same as a Google search — thanks to hardware improvements and model optimization. But an agentic coding session chains **hundreds or thousands** of such calls together as the agent reads files, reasons, writes code, runs commands, and iterates.
+
+**How much energy does agentic coding actually use?**
+
+A [detailed analysis by Simon P. Couch](https://www.simonpcouch.com/blog/2026-01-20-cc-impact/) estimated Claude Code's energy footprint at roughly **41 Wh per session** — over 130× a single chat query. A heavy day of usage (multiple sessions, parallel agents) can reach **~1,300 Wh/day**. To put that in perspective:
+
+| Activity | Energy |
+|---|---|
+| Google search or single AI chat query | ~0.3 Wh |
+| LED lightbulb (1 hour) | ~10 Wh |
+| One Claude Code session | ~41 Wh |
+| Streaming 1 hour of video (incl. device) | ~36–80 Wh |
+| Heavy Claude Code daily use | ~1,300 Wh |
+| Running a dishwasher once | ~1,300 Wh |
+| Daily refrigerator use | ~1,200–1,500 Wh |
+
+So a heavy day of agentic coding is roughly equivalent to running your dishwasher — modest at the individual level, but significant in aggregate.
+
+**The bigger picture:**
+
+- The [IEA projects](https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai) that global data center electricity consumption will roughly double from ~415 TWh in 2024 to over 945 TWh by 2030, driven largely by AI workloads. In the US, data centers are projected to consume [more electricity than all energy-intensive manufacturing combined](https://www.carbonbrief.org/ai-five-charts-that-put-data-centre-energy-use-and-emissions-into-context/) (aluminum, steel, cement, chemicals) by 2030.
+- An estimated [60–90% of AI computing energy](https://aimultiple.com/ai-energy-consumption) goes to inference (running models), not training. Training grabs headlines, but inference — every agentic session, every chat query — is where the ongoing energy cost lives.
+- Cloud providers are investing in renewable energy, but coverage varies. Anthropic has [pledged to offset energy costs](https://www.anthropic.com/news/investing-in-energy-to-secure-america-s-ai-future) and invested in grid optimization research, though the company [lacks formal carbon reduction targets](https://ditchcarbon.com/organizations/anthropic) and a significant portion of new capacity is [natural gas powered](https://www.fastcompany.com/91336991/openai-anthropic-deepseek-ai-models-environmental-impact).
+- On the efficiency side, a [University of Rhode Island study](https://www.fastcompany.com/91336991/openai-anthropic-deepseek-ai-models-environmental-impact) found Claude Sonnet to be among the most energy-efficient frontier models, and energy per token has [improved ~120× from GPT-3 to current models](https://muxup.com/2026q1/per-query-energy-consumption-of-llms) due to hardware and architecture advances.
+
+**What this means for you:**
+
+This doesn't mean you shouldn't use agentic tools — the productivity gains can be substantial, and the energy per unit of *useful output* may be better than the alternative (a human developer running builds, searching docs, and context-switching for hours). But it's a reason to be intentional: don't let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. **Efficient prompting is both cheaper and greener.**
+
+## Data privacy: who sees your code? {#data-privacy}
+
+When you use Claude Code, your code and prompts are sent to Anthropic's servers for inference. This is a reasonable concern — here's what actually happens to that data, depending on how you access Claude.
+
+### Is your data used for model training?
+
+| Access method | Used for training? | Default retention |
+|---|---|---|
+| **Claude API** (commercial terms) | **No** — prohibited by default | 30 days |
+| **Vertex AI / Bedrock** | **No** — prohibited by commercial agreement | 30 days |
+| **Claude Max / Pro subscription** (claude.ai) | **Yes, unless you opt out** — toggle "Help improve Claude" off in [Privacy Settings](https://claude.ai/settings) | 5 years (with training) / 30 days (opted out) |
+
+::: {.callout-warning}
+## If you're on a Max or Pro plan: opt out of training
+As of October 2025, Anthropic [uses consumer plan data for training by default](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training). You must actively opt out in your Privacy Settings. This applies to Claude Code sessions on consumer plans too.
+:::
+
+**For researchers with sensitive data:** The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate [zero-data retention (ZDR)](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) agreements where Anthropic stores nothing after the API response. See our [Vertex AI setup guide](claude-code-vertex-setup.qmd) for how UW-Madison researchers can use institutional cloud accounts for this path.
+
+### Can Anthropic employees see your code?
+
+Not by default. Employee access to conversation data requires one of:
+
+- **You submit feedback** (thumbs up/down, `/bug` command) — that specific interaction becomes reviewable
+- **A trust & safety investigation** — if Anthropic's automated systems flag a policy violation
+- **Explicit consent** — you voluntarily share data with Anthropic
+
+Under commercial terms (API, Vertex AI, Bedrock), access is further restricted by contractual obligations.
+
+### What about the web version?
+
+When you use Claude Code on the web (claude.ai/code), your GitHub repo is cloned into an ephemeral VM. The VM is destroyed when the task completes — there's no persistent repo storage between sessions. The same retention policies above apply to any code Claude reads during the session.
+
+### Further reading on data privacy
+
+- [Is my data used for model training?](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training) — Anthropic Privacy Center
+- [How long do you store my data?](https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data) — retention periods by account type
+- [Data usage — Claude Code docs](https://code.claude.com/docs/en/data-usage) — what Claude Code specifically transmits and how cloud sessions handle your repo
+- [Security — Claude Code docs](https://code.claude.com/docs/en/security) — prompt injection safeguards, data retention, and web session isolation
+- [How do I change my model improvement privacy settings?](https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings) — step-by-step opt-out instructions
+- [How does Anthropic protect personal data?](https://privacy.claude.com/en/articles/10458704-how-does-anthropic-protect-the-personal-data-of-claude-users) — security practices and encryption
+
+## Security fundamentals
+
+When you give an AI agent access to your terminal, you're trusting it with everything your shell user can do. Here's how to limit the blast radius.
+
+### Scope your credentials
+
+The agent can read environment variables, inspect dotfiles, and run commands like `cat ~/.ssh/id_rsa` or `echo $GITHUB_TOKEN`. You need to make credentials **structurally inaccessible**, not just hidden.
+
+- **Create dedicated, minimal-scope tokens** — a fine-grained GitHub token scoped to only the repos and permissions the agent needs. If it only needs to push to one repo, don't give it access to your entire GitHub account.
+- **Use a bot account** for agent-driven git operations rather than your personal credentials
+- **Never reuse your daily-driver SSH keys** in an agentic environment — generate dedicated deploy keys
+- **Don't pass secrets as environment variables** in containers — use Docker secrets, mount a read-only credential socket, or configure a git credential helper on the host
+- **Set spending limits** on API keys and use separate keys from your personal/production ones
+- Add `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc` to `.gitignore` **before the agent ever runs**
+
+### Sandbox when possible
+
+Running an agent on your bare metal dev machine means it has access to everything you do. **Any sandboxing is better than none.**
+
+| Scenario | Recommendation |
+|---|---|
+| **Solo dev, familiar with Docker** | Standard container with a mounted project directory — gives you full control |
+| **Team environment, need consistency** | Purpose-built sandbox (Anthropic's sandboxed containers, E2B) — reduces setup burden |
+| **CI/CD pipelines** | Ephemeral containers destroyed after each run — the safest option at scale |
+| **Working with sensitive data** | Purpose-built sandbox with network restrictions — limits exfiltration risk |
+| **Quick local experimentation** | Even a basic container is better than bare metal |
+
+A standard Docker container gets you 80% of the way there — the agent can't access your host filesystem outside the mounted volume. Purpose-built sandboxes close the remaining gaps around network isolation, filesystem snapshotting, and security hardening. See [Anthropic's sandboxing documentation](https://code.claude.com/docs/en/sandboxing) and their [engineering deep-dive](https://www.anthropic.com/engineering/claude-code-sandboxing) for details.
+
+### Watch for prompt injection and runaway agents
+
+- Be careful with files that contain instructions or prompts — an agent reading a malicious `README.md` or issue body could be tricked into harmful actions
+- **Never** give an agent unsupervised access to production systems, databases, or deployment pipelines
+- Set up **git hooks** or CI checks as safety nets (e.g., prevent force-pushes to `main`)
+- Keep your work committed frequently so you can recover from mistakes
+- Set **spending limits** and don't hesitate to interrupt (`Ctrl+C`) and redirect when the agent is looping
+
+## Platform and deployment notes
+
+### CI/CD and remote deployment
+
+Agentic coding tools can run beyond your local machine:
+
+- **Cloud VMs and remote servers** — run Claude Code over SSH. Your local system stays untouched, and you can use more powerful hardware.
+- **CI/CD pipelines** — GitHub Actions, GitLab CI, and similar systems can invoke Claude Code or Copilot coding agent in **ephemeral environments** that are destroyed after each run. This is the safest way to use agentic tools at scale.
+- **Sandboxed containers** — Anthropic offers purpose-built sandboxed environments for running Claude Code in isolated contexts. Third-party providers like E2B offer similar capabilities.
+
+The key insight: **the more system access a tool has, the more carefully you need to manage it**.
+
+### A note for GitLab users
+
+Many teams — including many at UW-Madison — use GitLab rather than GitHub. Claude Code works with GitLab, but the integration is **less mature** than the GitHub experience.
+
+**What works well:**
+
+- **Claude Code CLI with GitLab repos** — the core experience (reading code, editing files, running commands) works identically regardless of your git host. Claude Code operates on your local checkout, so the remote platform doesn't matter for day-to-day coding.
+- **GitLab CI/CD integration** — Anthropic provides [official documentation for running Claude Code in GitLab CI/CD pipelines](https://code.claude.com/docs/en/gitlab-ci-cd), including merge request review and test scaffolding.
+- **Git operations** — push, pull, branching, and committing all work normally since these are standard git operations.
+
+**What's different or limited compared to GitHub:**
+
+- **No native GitLab integration in Claude Code's Slack bot** — the Slack integration currently only supports GitHub repos. GitLab support is [an open feature request](https://github.com/anthropics/claude-code/issues/21527).
+- **No `@claude` mention in GitLab issues/MRs** — GitHub Copilot's coding agent lets you assign issues to Copilot or mention it in PRs. There's no equivalent native integration for GitLab yet, though [GitLab is working on it](https://gitlab.com/gitlab-org/gitlab/-/issues/557820).
+- **Community-built CI/CD tooling** — while official docs exist, you may find yourself using [community solutions](https://github.com/RealMikeChong/claude-code-for-gitlab) to replicate the smoother GitHub Actions experience.
+- **Self-hosted GitLab** — if your institution runs a self-hosted GitLab instance, be aware that Claude Code sends code context to Anthropic's API for processing. This may raise compliance concerns depending on your institution's data policies.
+
+**Practical advice:** The CLI workflow is essentially identical — focus your setup effort on CI/CD integration. For MR review automation, use Claude Code in your `.gitlab-ci.yml` with the `claude -p` (prompt) flag for non-interactive pipeline usage. If your institution has data sensitivity requirements, check with your IT governance team before sending code to external APIs — this applies to **all** cloud-based AI coding tools, not just Claude.
+
+## Summary
+
+Agentic coding tools are genuinely powerful — they can dramatically accelerate feature development, help you explore unfamiliar codebases, and automate tedious multi-step tasks. But they require a different mindset than traditional code assistants:
+
+1. **Scope your requests tightly** — features, not projects
+2. **Use `CLAUDE.md`** to encode guardrails and project context
+3. **Tune permissions deliberately** — start conservative, loosen as you build trust
+4. **Protect your credentials** — fine-grained tokens, structural isolation, `.gitignore`
+5. **Sandbox when possible** — containers, VMs, ephemeral CI environments
+6. **Monitor costs** — set limits, be specific, use the right model for the task
+7. **Commit frequently** — keep escape hatches available
+8. **Review everything** — you're the engineer; the agent is a very fast intern
+
+The technology is moving fast, and best practices will continue to evolve. The core principle stays the same: **give agents the minimum access they need, provide maximum clarity in your instructions, and always keep a human in the loop for decisions that matter**.
+
+## Further reading and perspectives
+
+Agentic coding is evolving fast. Here are some of the best resources for staying current:
+
+### Official documentation and guides
+
+- [Best Practices for Claude Code](https://code.claude.com/docs/en/best-practices) — Anthropic's official guide, covering context management, prompt patterns, CLAUDE.md, and scaling across parallel sessions
+- [How Claude Code Works](https://code.claude.com/docs/en/how-claude-code-works) — the agentic loop architecture, built-in tools, and how Claude interacts with your project
+- [Extend Claude Code](https://code.claude.com/docs/en/features-overview) — when to use CLAUDE.md vs skills vs subagents vs hooks vs MCP
+- [Common Workflows](https://code.claude.com/docs/en/common-workflows) — step-by-step guides for debugging, refactoring, testing, creating PRs, and more
+- [Claude Code on the Web](https://code.claude.com/docs/en/cloud) — running Claude Code tasks asynchronously on cloud infrastructure
+- [Claude Code Desktop](https://code.claude.com/docs/en/desktop) — the desktop GUI with visual diffs, parallel sessions, and managed updates
+- [Claude Code Sandboxing Documentation](https://code.claude.com/docs/en/sandboxing) — reference for configuring Claude Code's built-in sandboxing, including OS-level primitives (Linux bubblewrap, macOS Seatbelt) and deny rules for sensitive files
+- [Making Claude Code More Secure and Autonomous](https://www.anthropic.com/engineering/claude-code-sandboxing) — Anthropic Engineering's deep-dive into their dual-layer sandboxing architecture (filesystem + network isolation)
+- [Mitigating the Risk of Prompt Injections](https://www.anthropic.com/research/prompt-injection-defenses) — Anthropic Research on defending AI agents against prompt injection, including their use of reinforcement learning to build injection robustness into Claude
+- [GitHub Copilot: Meet the New Coding Agent](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) — GitHub's announcement of their enterprise-ready coding agent that spins up secure environments via GitHub Actions
+- [GitHub Copilot Coding Agent 101](https://github.blog/ai-and-ml/github-copilot/github-copilot-coding-agent-101-getting-started-with-agentic-workflows-on-github/) — GitHub's getting-started guide for agentic workflows, including environment setup and PR creation
+- [What's New with GitHub Copilot Coding Agent](https://github.blog/ai-and-ml/github-copilot/whats-new-with-github-copilot-coding-agent/) — latest updates including self-review, security scanning, and custom agents
+
+### Community voices and analysis
+
+- [Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/) — Simon Willison's guide to coding practices for getting the best results from agents like Claude Code and Codex. He frames this as "expertise amplification, not expertise replacement"
+- [A Guide to Which AI to Use in the Agentic Era](https://www.oneusefulthing.org/p/a-guide-to-which-ai-to-use-in-the) — Ethan Mollick's updated guide arguing that "using AI" now means agents with tools, not chatbots, and that users must think in terms of Models, Apps, and Harnesses
+- [How I Use Claude Code (+ My Best Tips)](https://www.builder.io/blog/claude-code) — practical walkthrough from Builder.io on real-world Claude Code workflows
+- [The Complete Guide to Agentic Coding in 2026](https://www.teamday.ai/blog/complete-guide-agentic-coding-2026) — broad overview comparing tools, workflows, and team strategies
+- [Redefining the Software Engineering Profession for AI](https://cacm.acm.org/opinion/redefining-the-software-engineering-profession-for-ai/) — ACM opinion piece on how AI amplifies senior talent but risks leaving junior developers without the chance to develop architectural intuition
+
+### Tool comparisons
+
+- [Cursor vs Windsurf vs Claude Code in 2026](https://dev.to/pockit_tools/cursor-vs-windsurf-vs-claude-code-in-2026-the-honest-comparison-after-using-all-three-3gof) — hands-on comparison arguing Cursor has the best IDE UX, Claude Code leads on deep reasoning and terminal-first workflows, and Windsurf offers the best value
+
+### Benchmarks and leaderboards
+
+Agentic coding benchmarks are evolving rapidly. These track how well different models and agent scaffolds perform on real-world software engineering tasks:
+
+- [SWE-bench Leaderboards](https://www.swebench.com/) — the most widely cited benchmark for agentic coding. Models are evaluated on their ability to resolve real GitHub issues from open-source Python repos. The "Verified" split is the standard comparison point, though [contamination concerns](https://scale.com/blog/swe-bench-pro) have motivated harder variants
+- [SWE-bench Pro](https://scale.com/leaderboard/swe_bench_pro_public) — Scale AI's harder benchmark (1,865 tasks across 41 repos). Top models that score 70%+ on SWE-bench Verified score only ~23% here
+- [SWE-Lancer](https://openai.com/index/swe-lancer/) — OpenAI's benchmark based on 1,400+ real Upwork freelance tasks valued at $1M in payouts, ranging from $50 bug fixes to $32K feature implementations. Provides a natural difficulty gradient tied to real-world economics
+- [Terminal-Bench](https://www.tbench.ai/) — evaluates agents on multi-step terminal workflows (not just code generation). Tests planning, execution, and recovery in sandboxed command-line environments
+- [Coding Agents Comparison](https://artificialanalysis.ai/insights/coding-agents-comparison) — Artificial Analysis's ongoing comparison with pricing breakdowns alongside benchmark scores
+- [Quantifying Infrastructure Noise in Agentic Coding Evals](https://www.anthropic.com/engineering/infrastructure-noise) — Anthropic's analysis showing that a 2-point leaderboard lead may reflect hardware differences rather than genuine capability gaps — important context for interpreting any benchmark
+
+**Caveat:** Benchmarks measure specific capabilities under controlled conditions. Real-world performance depends heavily on your prompt quality, project structure, and `CLAUDE.md` configuration. Use benchmarks to track the field's trajectory, not to pick a tool.
+
+### Security
+
+- [AI Coding Tools Exploded in 2025. The First Security Exploits Show What Could Go Wrong](https://fortune.com/2025/12/15/ai-coding-tools-security-exploit-software/) — Fortune's reporting on the "IDEsaster" vulnerabilities found across Cursor, Copilot, Windsurf, and other tools
+- [Researcher Uncovers 30+ Flaws in AI Coding Tools](https://thehackernews.com/2025/12/researchers-uncover-30-flaws-in-ai.html) — technical breakdown of the universal attack chains affecting major AI IDEs
+- [Security Flaws in Claude Code Risk Stolen Data, System Takeover](https://devops.com/security-flaws-in-anthropics-claude-code-risk-stolen-data-system-takeover/) — Check Point's findings on Claude Code-specific CVEs, including hook injection and API key theft
+- [AI Agent Security Risks in 2026: A Practitioner's Guide](https://blog.cyberdesserts.com/ai-agent-security-risks/) — practical guide to defending against prompt injection, credential theft, and MCP vulnerabilities
+
+This is an area where best practices are being written in real time. What works today may be outdated in six months. Stay plugged into the communities above, and don't assume any single tool or configuration is permanently "safe."
+
+## Comments
