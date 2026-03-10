@@ -501,7 +501,7 @@ The `model` field sets your default model — `claude-sonnet-4-6` is a good bala
 
 ::: {.callout-important}
 ## Sandbox platform prerequisites
-The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` — see [Section 7](#enable-sandboxing) for step-by-step instructions including how to verify you're on WSL2 (WSL1 is not supported). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 7](#enable-sandboxing) for full configuration details.
+The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` — see [Section 8](#enable-sandboxing) for step-by-step instructions including how to verify you're on WSL2 (WSL1 is not supported). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 8](#enable-sandboxing) for full configuration details.
 :::
 
 ## 6. Verify the Setup
@@ -560,7 +560,7 @@ AWS region: us-east-1
 When using either cloud provider, the [`/login` and `/logout` commands are disabled](https://code.claude.com/docs/en/google-vertex-ai) — authentication is handled entirely through your cloud CLI credentials (`gcloud` or `aws`).
 :::
 
-## 7. Filesystem Safety, Permissions & Sandboxing
+## 7. Filesystem Safety & Permissions
 
 > Official permissions docs: [code.claude.com/docs/en/permissions](https://code.claude.com/docs/en/permissions)
 >
@@ -780,7 +780,7 @@ These also go in **`~/.claude/settings.json`**, inside the same `permissions` bl
 Instead of listing individual allow rules, you can:
 
 - **Switch to `acceptEdits` mode** (`Shift+Tab` inside a session) — auto-approves all file edits while still prompting for bash commands.
-- **Enable sandboxing** (see [Section 7](#enable-sandboxing)) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually *increasing* security.
+- **Enable sandboxing** (see [Section 8](#enable-sandboxing)) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually *increasing* security.
 - **Use the interactive prompt** — when Claude asks "Do you want to proceed?", select **"Yes, and don't ask again for [command pattern]"** to build up your allow list organically during a session.
 :::
 
@@ -837,7 +837,7 @@ The project-level file lives inside your Git repo, so you can commit it and ever
 | **dontAsk** | Auto-denies anything not explicitly in `allow` list | Strict automation |
 | **bypassPermissions** | Skips ALL checks | Isolated containers only — **never on your local machine** |
 
-### Enable sandboxing (strongly recommended) {#enable-sandboxing}
+## 8. Sandboxing (Strongly Recommended) {#enable-sandboxing}
 
 ::: {.callout-tip}
 If you followed [Section 5](#configure-claude-code), sandboxing is already enabled in your `settings.json`. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.
@@ -890,7 +890,26 @@ WSL2 is a separate Linux environment — your Windows PowerShell installation of
 npm install -g @anthropic-ai/claude-code
 ```
 
-You'll also need to reconfigure your cloud CLI credentials (`gcloud auth login` or `aws configure`) inside WSL2, since it has its own filesystem and config.
+You'll also need to reconfigure your cloud CLI credentials inside WSL2, since it has its own filesystem and config:
+
+::: {.panel-tabset}
+
+##### Vertex AI
+
+```bash
+gcloud auth login
+gcloud auth application-default login
+gcloud config set project YOUR_PROJECT_ID
+```
+
+##### Bedrock
+
+```bash
+aws configure
+# Enter your Access Key ID, Secret Access Key, and default region when prompted
+```
+
+:::
 
 **Step 3 — Install sandbox dependencies:**
 
@@ -967,7 +986,7 @@ Some tools are incompatible with sandboxing (e.g., `docker`, `watchman`). If a t
 - [**Security deep-dive by Pete Freitag**](https://www.petefreitag.com/blog/claude-code-permissions/) — independent analysis of how permissions actually work under the hood, including gotchas and bypasses
 - [**Permission modes guide**](https://claudefa.st/blog/guide/development/permission-management) — when to use each mode, with workflow examples
 
-## 8. Billing, Cost Management & Avoiding Runaway Costs
+## 9. Billing, Cost Management & Avoiding Runaway Costs
 
 > Official cost management docs: [code.claude.com/docs/en/costs](https://code.claude.com/docs/en/costs)
 
@@ -1094,7 +1113,7 @@ For the latest Claude model pricing, see:
 On Vertex AI, the token usage shown on the [GCP Quotas page may be inaccurate](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude) for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use `/cost` inside Claude Code.
 :::
 
-## 9. Troubleshooting {#troubleshooting}
+## 10. Troubleshooting {#troubleshooting}
 
 ::: {.panel-tabset}
 
@@ -1204,7 +1223,7 @@ claude doctor
 
 This checks your installation, authentication, and configuration for common issues.
 
-## 10. Quick Reference
+## 11. Quick Reference
 
 ::: {.panel-tabset}
 
