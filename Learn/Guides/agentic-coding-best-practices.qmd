@@ -134,6 +134,22 @@ cd yourrepo && claude
 
 **Best for:** Developers comfortable with the terminal, CI/CD integration, scripting and automation, working in remote/SSH environments, and organizations that need to route traffic through their own cloud provider.
 
+##### A note on security: Claude Code runs with *your* permissions {#security-note}
+
+::: {.callout-warning}
+## Claude Code can read, write, and execute anything you can
+Whether you use the desktop app, the CLI, or an IDE extension, Claude Code operates with your full user-level filesystem and shell permissions. It can read your SSH keys, modify files outside your project, run arbitrary shell commands, and access anything your user account can reach. This is true of *any* agentic coding tool with shell access — it's not unique to Claude Code.
+:::
+
+Claude Code mitigates this with several layers of protection:
+
+- **Permission prompts** — by default, Claude asks before every file write, shell command, and git operation. You can [configure allow/deny rules](https://code.claude.com/docs/en/permissions) to auto-approve trusted actions and hard-block sensitive paths like `~/.ssh`, `~/.aws`, and `.env` files.
+- **Built-in sandboxing** — Claude Code's [OS-level sandbox](https://code.claude.com/docs/en/sandboxing) (Linux bubblewrap / macOS Seatbelt) restricts filesystem writes to your project directory and limits network access to approved domains. This is the single most impactful security measure you can enable. Anthropic reports it [reduces permission prompts by 84%](https://www.anthropic.com/engineering/claude-code-sandboxing) while *increasing* security.
+- **Container isolation** — for stronger guarantees, run Claude Code inside a Docker container with only your project directory mounted. This prevents access to your host filesystem entirely. Purpose-built sandboxes like [E2B](https://e2b.dev/) add network isolation and filesystem snapshotting on top.
+- **The web version** (claude.ai/code) is inherently sandboxed — it runs in an isolated cloud VM, so there's no risk to your local machine at all.
+
+**We strongly recommend enabling the built-in sandbox at minimum**, and using container isolation for sensitive work. See [Security fundamentals](#security-fundamentals) later in this guide, or the [Vertex AI setup guide's security section](claude-code-vertex-setup.qmd#understand-risk) for a step-by-step walkthrough.
+
 #### GitHub Copilot
 
 [GitHub Copilot](https://github.com/features/copilot) is GitHub's AI coding assistant. It's a **multi-model platform** — you can choose from Claude, GPT, Gemini, and others as the underlying model. This is fundamentally different from Claude Code, and the distinction matters.
