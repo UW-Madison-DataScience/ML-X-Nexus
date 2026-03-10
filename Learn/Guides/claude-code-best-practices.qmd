@@ -29,7 +29,7 @@ If you're at UW-Madison and want to use Claude Code through your institutional c
 
 ::: {.callout-note collapse="true"}
 ## Sources and attribution
-Much of the Claude Code-specific guidance in this post draws on Anthropic's official documentation, including their [best practices guide](https://code.claude.com/docs/en/best-practices), [permissions](https://code.claude.com/docs/en/permissions) and [sandboxing](https://code.claude.com/docs/en/sandboxing) docs, [CLAUDE.md reference](https://code.claude.com/docs/en/claude-md), [data usage policy](https://code.claude.com/docs/en/data-usage), and [cost management guide](https://code.claude.com/docs/en/costs). GitHub Copilot sections draw on GitHub's [coding agent docs](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) and [changelog](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/). Where we paraphrase official documentation, we've linked to the source. Community perspectives and independent analyses are cited inline throughout.
+Much of the Claude Code-specific guidance in this post draws on Anthropic's official documentation, including their [best practices guide](https://code.claude.com/docs/en/best-practices), [permissions](https://code.claude.com/docs/en/permissions) and [sandboxing](https://code.claude.com/docs/en/sandboxing) docs, [CLAUDE.md reference](https://code.claude.com/docs/en/memory), [data usage policy](https://code.claude.com/docs/en/data-usage), and [cost management guide](https://code.claude.com/docs/en/costs). GitHub Copilot sections draw on GitHub's [coding agent docs](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) and [changelog](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/). Where we paraphrase official documentation, we've linked to the source. Community perspectives and independent analyses are cited inline throughout.
 :::
 
 ## What is agentic coding?
@@ -56,7 +56,7 @@ Before diving into Claude Code specifically, here's a rough map of the major age
 | [**Windsurf**](https://windsurf.com/) | Custom IDE | Subscription (free tier available) | Low-friction agentic workflow, accessible pricing |
 | [**Augment Code**](https://www.augmentcode.com/) | IDE extension | Subscription | Large context window, whole-codebase awareness |
 | [**Amazon Q Developer**](https://aws.amazon.com/q/developer/) | IDE, CLI, AWS console | Free tier / Pro | Deep AWS service integration, infrastructure-aware suggestions |
-| [**Gemini Code Assist**](https://cloud.google.com/products/gemini-code-assist) | IDE, Google Cloud | Free tier / Enterprise | Google Cloud integration, Gemini model access |
+| [**Gemini Code Assist**](https://codeassist.google/) | IDE, Google Cloud | Free tier / Enterprise | Google Cloud integration, Gemini model access |
 | [**GitLab Duo**](https://about.gitlab.com/gitlab-duo/) | GitLab IDE, MR workflows | GitLab subscription add-on | Native GitLab CI/CD and merge request integration |
 
 This space is moving fast — capabilities and pricing change frequently. See [Coding Agents Comparison](https://artificialanalysis.ai/insights/coding-agents-comparison) for up-to-date benchmarks and pricing.
@@ -134,7 +134,7 @@ Claude Code is also available as a CLI, installed via npm (`npm install -g @anth
 - **`CLAUDE.md` authoring** — the terminal is the natural place to set up and iterate on your project's `CLAUDE.md` configuration
 - **SSH and remote environments** — works anywhere you have a terminal, including remote servers, containers, and cloud dev environments
 - **Full local control** — no cloud dependency; everything runs on your machine (or wherever your terminal is)
-- **Flexible auth and billing** — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through [Google Vertex AI](https://code.claude.com/docs/en/cloud-providers#google-cloud-vertex-ai) or [AWS Bedrock](https://code.claude.com/docs/en/cloud-providers#amazon-bedrock), so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our [Claude Code Cloud Setup Guide](claude-code-cloud-setup.qmd) for a step-by-step walkthrough using UW-Madison GCP or AWS
+- **Flexible auth and billing** — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through [Google Vertex AI](https://code.claude.com/docs/en/google-vertex-ai) or [AWS Bedrock](https://code.claude.com/docs/en/amazon-bedrock), so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our [Claude Code Cloud Setup Guide](claude-code-cloud-setup.qmd) for a step-by-step walkthrough using UW-Madison GCP or AWS
 
 ```bash
 # Install npm if needed (e.g., on a fresh WSL2 or Ubuntu setup)
@@ -280,7 +280,7 @@ Each of these is a single, well-defined task that an agent can execute without a
 
 ### Use `CLAUDE.md` as your control surface
 
-[`CLAUDE.md`](https://code.claude.com/docs/en/claude-md) is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it's loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:
+[`CLAUDE.md`](https://code.claude.com/docs/en/memory) is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it's loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:
 
 - How your project is structured (key directories, entry points)
 - Coding conventions (naming, formatting, patterns to follow or avoid)
@@ -328,7 +328,7 @@ This single instruction saves enormous headaches. Without it, the agent might pu
 - Tests mirror the source structure under `tests/`
 ```
 
-The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project. See the [official CLAUDE.md reference](https://code.claude.com/docs/en/claude-md) for the full spec, including file resolution order and advanced features.
+The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project. See the [official CLAUDE.md reference](https://code.claude.com/docs/en/memory) for the full spec, including file resolution order and advanced features.
 
 ### Tune the permission dial
 
@@ -457,7 +457,7 @@ Agentic workflows can burn through tokens fast, especially when things go wrong:
 
 If you're at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.
 
-Contact your department's IT staff or [Research Computing](https://it.wisc.edu/services/research-computing/) to ask about available cloud credits and whether AI API costs are eligible.
+Contact your department's IT staff or [Research Computing](https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/) to ask about available cloud credits and whether AI API costs are eligible.
 
 ### Strategies to keep costs down
 
