@@ -621,13 +621,15 @@ Choose **"Auto-allow mode"** (recommended) — sandboxed commands run automatica
 
 WSL2 uses [bubblewrap](https://github.com/containers/bubblewrap) for sandbox isolation — the same mechanism used on native Linux. **WSL1 is not supported** because bubblewrap requires kernel features only available in WSL2.
 
-**Step 1 — Confirm you're on WSL2 (run this from PowerShell, not inside WSL):**
+**Step 1 — Confirm you're on WSL2:**
+
+Open a **Windows PowerShell** window (not your WSL terminal) and run:
 
 ```powershell
 wsl -l -v
 ```
 
-You should see `VERSION 2` next to your distribution. If you're on WSL1, [upgrade to WSL2](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) first. The remaining steps below run *inside* your WSL2 terminal.
+You should see `VERSION 2` next to your distribution. If you're on WSL1, [upgrade to WSL2](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) first. Once confirmed, open your **WSL2 terminal** — all remaining steps run inside WSL.
 
 **Step 2 — Install dependencies:**
 
