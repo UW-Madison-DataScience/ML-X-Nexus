@@ -92,12 +92,12 @@ Claude Code will:
 1. Read your existing utils to understand the style
 2. **Ask permission** to create a new file → you approve (or it auto-approves if you've configured that)
 3. Write the function and tests
-4. **Ask permission** to run the tests → you approve
+4. **Ask permission** to run the tests → you approve (or it auto-approves if you've [allowed your test command](https://code.claude.com/docs/en/permissions))
 5. Run `pytest` (or whatever your test runner is), see results
 6. If tests fail, iterate — fix the code, re-run
-7. **Ask permission** to create a branch, commit, push, and open a PR → you approve
+7. **Ask permission** to create a branch, commit, push, and open a PR → you approve (this can also be auto-approved via [allow rules](https://code.claude.com/docs/en/permissions), but most users prefer to keep git operations manual for safety)
 
-**Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring auto-approve for low-risk actions (file reads, test runs) in your settings or `CLAUDE.md`. The sweet spot is usually: auto-approve reads and test execution, manually approve writes and git operations.
+**Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring [allow rules](https://code.claude.com/docs/en/permissions) in your settings to auto-approve actions you trust. Many experienced users auto-approve *most* actions — file edits, test runs, even git operations — and instead invest their review time at the PR stage, where they can inspect the full diff before merging. This "let it cook, review the PR" approach works well when you've written clear prompts and have CI checks in place. If you're just getting started, a more conservative sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.
 
 ##### Desktop & Web {#claude-code-desktop-web}
 
