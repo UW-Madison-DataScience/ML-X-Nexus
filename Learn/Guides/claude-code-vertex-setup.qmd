@@ -305,7 +305,7 @@ Replace `YOUR-PROJECT-ID` with your actual GCP project ID (e.g., `doit-rci-sandb
 
 ::: {.callout-important}
 ## Sandbox platform prerequisites
-The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` (see [Section 7](#enable-sandboxing)). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 7](#enable-sandboxing) for full configuration details.
+The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` — see [Section 7](#enable-sandboxing) for step-by-step instructions including how to verify you're on WSL2 (WSL1 is not supported). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 7](#enable-sandboxing) for full configuration details.
 :::
 
 ### Region notes
@@ -601,26 +601,78 @@ Works **out of the box** using Apple's Seatbelt framework. Inside a Claude Code 
 /sandbox
 ```
 
-Choose "Accept-edits mode" (recommended) — sandboxed commands run automatically, while anything outside the sandbox falls back to the normal approval prompt.
+Choose **"Auto-allow mode"** (recommended) — sandboxed commands run automatically without permission prompts, while anything that would exceed the sandbox boundaries falls back to the normal approval flow.
 
 ### Windows (WSL2)
 
-Install dependencies first, then enable:
+WSL2 uses [bubblewrap](https://github.com/containers/bubblewrap) for sandbox isolation — the same mechanism used on native Linux. **WSL1 is not supported** because bubblewrap requires kernel features only available in WSL2.
+
+**Step 1 — Confirm you're on WSL2:**
 
 ```bash
-sudo apt install bubblewrap socat
+wsl -l -v
 ```
 
-Then run `/sandbox` inside Claude Code.
+You should see `VERSION 2` next to your distribution. If you're on WSL1, [upgrade to WSL2](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) first.
+
+**Step 2 — Install dependencies:**
+
+```bash
+# Ubuntu/Debian (most common WSL distro)
+sudo apt-get update && sudo apt-get install bubblewrap socat
+
+# Fedora
+sudo dnf install bubblewrap socat
+```
+
+**Step 3 — Enable sandboxing inside Claude Code:**
+
+```
+/sandbox
+```
+
+Choose **"Auto-allow mode"** — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.
+
+**Step 4 — Verify it's working:**
+
+After enabling, Claude's bash commands should run without permission prompts as long as they stay within your project directory. If a command needs to write outside the project or access a new network domain, you'll still get a prompt.
+
+::: {.callout-tip}
+If you need tools like `npm`, `pip`, or `kubectl` to write outside your project directory (e.g., to `~/.npm` or `~/.kube`), grant specific write access in your `settings.json`:
+
+```jsonc
+{
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "allowWrite": ["~/.npm", "~/.kube", "//tmp"]
+    }
+  }
+}
+```
+
+Path prefixes: `//` = absolute path, `~/` = home directory, `/` = relative to settings file. See the [official sandboxing docs](https://code.claude.com/docs/en/sandboxing) for full path syntax.
+:::
 
 ### Windows (native PowerShell)
 
-Sandboxing is **not yet supported**. Use deny rules as your primary protection, and consider running Claude Code from WSL2 if you need stronger isolation.
+Sandboxing is **not yet supported** on native Windows. Use [deny rules](#add-deny-rules) and [allow rules](#allow-rules) as your primary protection. If you need stronger isolation, consider running Claude Code from WSL2 instead.
 
 :::
 
+**Sandbox modes explained:**
+
+| Mode | Behavior | Best for |
+|------|----------|----------|
+| **Auto-allow** | Sandboxed commands run without prompts. Commands that exceed sandbox boundaries fall back to normal approval flow. | Day-to-day work — fewer interruptions, same security |
+| **Regular permissions** | All commands go through standard approval, even when sandboxed. | When you want to review every command regardless |
+
+In both modes, the OS-level filesystem and network restrictions are identical. The only difference is whether sandboxed commands are auto-approved.
+
 ::: {.callout-note}
-Sandboxing applies only to Bash commands and their child processes. The built-in Read/Edit tools are governed by permission rules. Use both together for the strongest security posture — this is what Anthropic calls ["defense in depth"](https://code.claude.com/docs/en/sandboxing).
+Sandboxing applies only to Bash commands and their child processes. The built-in Read/Edit tools are governed by [permission rules](#add-deny-rules). Use both together for the strongest security posture — this is what Anthropic calls ["defense in depth"](https://code.claude.com/docs/en/sandboxing).
+
+Some tools are incompatible with sandboxing (e.g., `docker`, `watchman`). If a tool fails inside the sandbox, you can exclude it with `"excludedCommands"` in your [sandbox settings](https://code.claude.com/docs/en/sandboxing) so it runs outside the sandbox with normal permission prompts instead.
 :::
 
 ### Further reading on permissions & security
