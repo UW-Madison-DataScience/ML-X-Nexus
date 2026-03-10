@@ -28,7 +28,7 @@ See our companion guide, [Claude Code Best Practices](claude-code-best-practices
 
 ::: {.callout-important}
 ## CLI only — cloud providers don't work with the Desktop app or Web IDE
-Vertex AI and Bedrock routing is only supported in the **Claude Code CLI** (terminal) and **IDE extensions** (VS Code, JetBrains). The [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) and [Web IDE](https://claude.ai/code) require a direct Anthropic login (Max plan or API credits) — they cannot be configured to route through a cloud provider. If you need the desktop GUI or web experience, you'll need a separate Claude Max subscription. This guide covers the CLI path.
+Vertex AI and Bedrock routing is only supported in the **Claude Code CLI** (terminal) and **IDE extensions** (VS Code, JetBrains). The [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) and [Web IDE](https://claude.ai/code) require a direct Anthropic login (Max plan or API credits) — they cannot be configured to route through a cloud provider at this time. If you need the desktop GUI or web experience, you'll need a separate Claude Max subscription. This guide covers the CLI path.
 :::
 
 ## Why use a cloud provider instead of a direct subscription?
@@ -213,6 +213,17 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
 Type **Y** to confirm.
+
+#### Windows (WSL2)
+
+If you're running Claude Code from WSL2, you need `gcloud` installed **inside** your WSL2 environment (the Windows installation is not accessible from WSL2):
+
+```bash
+sudo apt-get install apt-transport-https ca-certificates gnupg curl
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update && sudo apt-get install google-cloud-cli
+```
 
 #### macOS
 
@@ -409,8 +420,13 @@ Edit (or create) your settings file at `~/.claude/settings.json`.
 
 | Platform | Full path |
 |----------|-----------|
-| Windows | `C:\Users\<your-username>\.claude\settings.json` |
+| Windows (PowerShell) | `C:\Users\<your-username>\.claude\settings.json` |
+| Windows (WSL2) | `/home/<your-username>/.claude/settings.json` |
 | macOS | `/Users/<your-username>/.claude/settings.json` |
+
+::: {.callout-important}
+**WSL2 has its own home directory.** If you set up Claude Code in both Windows PowerShell and WSL2, you need `settings.json` in **both** locations — they are completely separate filesystems. The Windows file at `C:\Users\you\.claude\settings.json` is **not** visible to WSL2. Similarly, `gcloud` must be installed and authenticated separately inside WSL2 (see [Section 3](#install--configure-google-cloud-cli-1)).
+:::
 
 ::: {.panel-tabset}
 
@@ -487,7 +503,7 @@ The `model` field sets your default model — `claude-sonnet-4-6` is a good bala
 
 ::: {.callout-important}
 ## Sandbox platform prerequisites
-The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` — see [Section 7](#enable-sandboxing) for step-by-step instructions including how to verify you're on WSL2 (WSL1 is not supported). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 7](#enable-sandboxing) for full configuration details.
+The sandbox config above enables OS-level isolation that restricts Claude's bash commands to your project directory. It works **out of the box on macOS** (uses Apple's Seatbelt). On **Linux/WSL2**, you must first install `bubblewrap` and `socat` — see [Section 8](#enable-sandboxing) for step-by-step instructions including how to verify you're on WSL2 (WSL1 is not supported). **Native Windows (PowerShell)** does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See [Section 8](#enable-sandboxing) for full configuration details.
 :::
 
 ## 6. Verify the Setup
@@ -519,6 +535,8 @@ claude
 
 :::
 
+On first launch, Claude Code will present a login method selection screen. Since you're using a 3rd-party cloud provider, select **option 3 ("3rd-party platform")** and then choose your provider (e.g., Vertex AI) when prompted. Claude Code will detect your cloud credentials automatically — no API key is needed.
+
 Once inside Claude Code, run `/status` to confirm your provider is active:
 
 ::: {.panel-tabset}
@@ -544,7 +562,7 @@ AWS region: us-east-1
 When using either cloud provider, the [`/login` and `/logout` commands are disabled](https://code.claude.com/docs/en/google-vertex-ai) — authentication is handled entirely through your cloud CLI credentials (`gcloud` or `aws`).
 :::
 
-## 7. Filesystem Safety, Permissions & Sandboxing
+## 7. Filesystem Safety & Permissions
 
 > Official permissions docs: [code.claude.com/docs/en/permissions](https://code.claude.com/docs/en/permissions)
 >
@@ -764,7 +782,7 @@ These also go in **`~/.claude/settings.json`**, inside the same `permissions` bl
 Instead of listing individual allow rules, you can:
 
 - **Switch to `acceptEdits` mode** (`Shift+Tab` inside a session) — auto-approves all file edits while still prompting for bash commands.
-- **Enable sandboxing** (see [Section 7](#enable-sandboxing)) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually *increasing* security.
+- **Enable sandboxing** (see [Section 8](#enable-sandboxing)) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually *increasing* security.
 - **Use the interactive prompt** — when Claude asks "Do you want to proceed?", select **"Yes, and don't ask again for [command pattern]"** to build up your allow list organically during a session.
 :::
 
@@ -821,7 +839,7 @@ The project-level file lives inside your Git repo, so you can commit it and ever
 | **dontAsk** | Auto-denies anything not explicitly in `allow` list | Strict automation |
 | **bypassPermissions** | Skips ALL checks | Isolated containers only — **never on your local machine** |
 
-### Enable sandboxing (strongly recommended) {#enable-sandboxing}
+## 8. Sandboxing (Strongly Recommended) {#enable-sandboxing}
 
 ::: {.callout-tip}
 If you followed [Section 5](#configure-claude-code), sandboxing is already enabled in your `settings.json`. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.
@@ -874,7 +892,26 @@ WSL2 is a separate Linux environment — your Windows PowerShell installation of
 npm install -g @anthropic-ai/claude-code
 ```
 
-You'll also need to reconfigure your cloud CLI credentials (`gcloud auth login` or `aws configure`) inside WSL2, since it has its own filesystem and config.
+You'll also need to reconfigure your cloud CLI credentials inside WSL2, since it has its own filesystem and config:
+
+::: {.panel-tabset}
+
+##### Vertex AI
+
+```bash
+gcloud auth login
+gcloud auth application-default login
+gcloud config set project YOUR_PROJECT_ID
+```
+
+##### Bedrock
+
+```bash
+aws configure
+# Enter your Access Key ID, Secret Access Key, and default region when prompted
+```
+
+:::
 
 **Step 3 — Install sandbox dependencies:**
 
@@ -951,7 +988,7 @@ Some tools are incompatible with sandboxing (e.g., `docker`, `watchman`). If a t
 - [**Security deep-dive by Pete Freitag**](https://www.petefreitag.com/blog/claude-code-permissions/) — independent analysis of how permissions actually work under the hood, including gotchas and bypasses
 - [**Permission modes guide**](https://claudefa.st/blog/guide/development/permission-management) — when to use each mode, with workflow examples
 
-## 8. Billing, Cost Management & Avoiding Runaway Costs
+## 9. Billing, Cost Management & Avoiding Runaway Costs
 
 > Official cost management docs: [code.claude.com/docs/en/costs](https://code.claude.com/docs/en/costs)
 
@@ -1130,6 +1167,7 @@ Claude Code sends operational metrics and error reports by default when using th
 
 To disable everything at once regardless of provider, set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. Environment variables can be set in your [`settings.json`](https://code.claude.com/docs/en/settings).
 :::
+
 
 ## 10. Troubleshooting {#troubleshooting}
 

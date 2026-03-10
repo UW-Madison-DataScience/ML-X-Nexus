@@ -5,7 +5,7 @@ author:
     email: endemann@wisc.edu
 date: 2026-03-09
 date-format: long
-image: "../../../images/agentic-coding.png"
+image: "../../../images/claudecode.jpg"
 toc-depth: 3
 toc-expand: true
 categories:
@@ -18,7 +18,7 @@ categories:
   - Security
 ---
 
-AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://www.cursor.com/), [Windsurf](https://windsurf.com/), [Augment Code](https://www.augmentcode.com/), [Amazon Q Developer](https://aws.amazon.com/q/developer/), [Gemini Code Assist](https://cloud.google.com/products/gemini-code-assist), and [GitLab Duo](https://about.gitlab.com/gitlab-duo/) are among the most prominent, with new entrants appearing regularly.
+AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://www.cursor.com/), [Windsurf](https://windsurf.com/), [Augment Code](https://www.augmentcode.com/), [Amazon Q Developer](https://aws.amazon.com/q/developer/), [Gemini Code Assist](https://cloud.google.com/products/gemini/code-assist), and [GitLab Duo](https://about.gitlab.com/gitlab-duo/) are among the most prominent, with new entrants appearing regularly.
 
 Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using **[Claude Code](https://code.claude.com/)** as the primary lens. Claude Code is Anthropic's agentic coding tool — distinct from the [Claude.ai](https://claude.ai) chat interface — and it comes in several forms: a **CLI**, a **desktop app**, **IDE extensions** ([VS Code](https://code.claude.com/docs/en/vs-code), [JetBrains](https://code.claude.com/docs/en/jetbrains)), and a **web IDE** at [claude.ai/code](https://claude.ai/code). All give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We'll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.
 
@@ -31,7 +31,7 @@ If you're at UW-Madison and want to use Claude Code through your institutional c
 
 ::: {.callout-note collapse="true"}
 ## Sources and attribution
-Much of the Claude Code-specific guidance in this post draws on Anthropic's official documentation, including their [best practices guide](https://code.claude.com/docs/en/best-practices), [permissions](https://code.claude.com/docs/en/permissions) and [sandboxing](https://code.claude.com/docs/en/sandboxing) docs, [CLAUDE.md reference](https://code.claude.com/docs/en/claude-md), [data usage policy](https://code.claude.com/docs/en/data-usage), and [cost management guide](https://code.claude.com/docs/en/costs). GitHub Copilot sections draw on GitHub's [coding agent docs](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) and [changelog](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/). Where we paraphrase official documentation, we've linked to the source. Community perspectives and independent analyses are cited inline throughout.
+Much of the Claude Code-specific guidance in this post draws on Anthropic's official documentation, including their [best practices guide](https://code.claude.com/docs/en/best-practices), [permissions](https://code.claude.com/docs/en/permissions) and [sandboxing](https://code.claude.com/docs/en/sandboxing) docs, [CLAUDE.md reference](https://code.claude.com/docs/en/memory), [data usage policy](https://code.claude.com/docs/en/data-usage), and [cost management guide](https://code.claude.com/docs/en/costs). GitHub Copilot sections draw on GitHub's [coding agent docs](https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/) and [changelog](https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/). Where we paraphrase official documentation, we've linked to the source. Community perspectives and independent analyses are cited inline throughout.
 :::
 
 ## What is agentic coding?
@@ -58,7 +58,7 @@ Before diving into Claude Code specifically, here's a rough map of the major age
 | [**Windsurf**](https://windsurf.com/) | Custom IDE | Subscription (free tier available) | Low-friction agentic workflow, accessible pricing |
 | [**Augment Code**](https://www.augmentcode.com/) | IDE extension | Subscription | Large context window, whole-codebase awareness |
 | [**Amazon Q Developer**](https://aws.amazon.com/q/developer/) | IDE, CLI, AWS console | Free tier / Pro | Deep AWS service integration, infrastructure-aware suggestions |
-| [**Gemini Code Assist**](https://cloud.google.com/products/gemini-code-assist) | IDE, Google Cloud | Free tier / Enterprise | Google Cloud integration, Gemini model access |
+| [**Gemini Code Assist**](https://codeassist.google/) | IDE, Google Cloud | Free tier / Enterprise | Google Cloud integration, Gemini model access |
 | [**GitLab Duo**](https://about.gitlab.com/gitlab-duo/) | GitLab IDE, MR workflows | GitLab subscription add-on | Native GitLab CI/CD and merge request integration |
 
 This space is moving fast — capabilities and pricing change frequently. See [Coding Agents Comparison](https://artificialanalysis.ai/insights/coding-agents-comparison) for up-to-date benchmarks and pricing.
@@ -93,7 +93,7 @@ The [Claude Desktop app](https://claude.ai/download) includes three tabs: **Chat
 
 [Claude Code](https://code.claude.com/) is Anthropic's agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project. A built-in permission system prompts you to approve or deny each action, so you stay in the loop while the agent does the heavy lifting.
 
-Claude Code is available across multiple surfaces — a [desktop app](https://code.claude.com/docs/en/desktop), a [web IDE](https://code.claude.com/docs/en/cloud), a [terminal CLI](https://code.claude.com/docs/en/getting-started), and IDE extensions for [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains) — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about *how you interact* and *where the work runs*, not what the agent can do.
+Claude Code is available across multiple surfaces — a [desktop app](https://code.claude.com/docs/en/desktop), a [web IDE](https://code.claude.com/docs/en/claude-code-on-the-web), a [terminal CLI](https://code.claude.com/docs/en/getting-started), and IDE extensions for [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains) — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about *how you interact* and *where the work runs*, not what the agent can do.
 
 Here's what a typical Claude Code session looks like, regardless of surface. You type a request like:
 
@@ -113,7 +113,7 @@ Claude Code will:
 
 ##### Desktop & Web {#claude-code-desktop-web}
 
-The easiest way to get started is through the [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) or [Claude Code on the web](https://code.claude.com/docs/en/cloud) at [claude.ai/code](https://claude.ai/code). Both provide the same GUI experience. The main difference is where it runs: the desktop app works with local git repositories on your machine, with each session getting its own isolated [git worktree](https://git-scm.com/docs/git-worktree) so parallel tasks don't collide. The web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile ([iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) / [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude)) for kicking off and monitoring tasks on the go. **Note:** the desktop app requires Git — your project must be a git repo with at least one commit.
+The easiest way to get started is through the [Claude Desktop app](https://code.claude.com/docs/en/desktop) (Code tab) or [Claude Code on the web](https://code.claude.com/docs/en/claude-code-on-the-web) at [claude.ai/code](https://claude.ai/code). Both provide the same GUI experience. The main difference is where it runs: the desktop app works with local git repositories on your machine, with each session getting its own isolated [git worktree](https://git-scm.com/docs/git-worktree) so parallel tasks don't collide. The web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile ([iOS](https://apps.apple.com/us/app/claude-by-anthropic/id6473753684) / [Android](https://play.google.com/store/apps/details?id=com.anthropic.claude)) for kicking off and monitoring tasks on the go. **Note:** the desktop app requires Git — your project must be a git repo with at least one commit.
 
 Key capabilities:
 
@@ -136,11 +136,20 @@ Claude Code is also available as a CLI, installed via npm (`npm install -g @anth
 - **`CLAUDE.md` authoring** — the terminal is the natural place to set up and iterate on your project's `CLAUDE.md` configuration
 - **SSH and remote environments** — works anywhere you have a terminal, including remote servers, containers, and cloud dev environments
 - **Full local control** — no cloud dependency; everything runs on your machine (or wherever your terminal is)
-- **Flexible auth and billing** — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through [Google Vertex AI](https://code.claude.com/docs/en/cloud-providers#google-cloud-vertex-ai) or [AWS Bedrock](https://code.claude.com/docs/en/cloud-providers#amazon-bedrock), so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our [Claude Code Cloud Setup Guide](claude-code-cloud-setup.qmd) for a step-by-step walkthrough using UW-Madison GCP or AWS
+- **Flexible auth and billing** — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through [Google Vertex AI](https://code.claude.com/docs/en/google-vertex-ai) or [AWS Bedrock](https://code.claude.com/docs/en/amazon-bedrock), so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our [Claude Code Cloud Setup Guide](claude-code-cloud-setup.qmd) for a step-by-step walkthrough using UW-Madison GCP or AWS
 
 ```bash
-# Install and start Claude Code
-npm install -g @anthropic-ai/claude-code
+# Install npm if needed (e.g., on a fresh WSL2 or Ubuntu setup)
+sudo apt install npm
+
+# Install and start Claude Code (sudo needed on Linux/WSL2)
+sudo npm install -g @anthropic-ai/claude-code
+
+# Install sandbox dependencies (WSL2/Linux only)
+sudo apt-get update && sudo apt-get install bubblewrap socat
+
+# Navigate to your project and launch Claude Code
+# Note: in WSL2, your Windows files are at /mnt/c/Users/<username>/...
 cd yourrepo && claude
 ```
 
@@ -273,7 +282,7 @@ Each of these is a single, well-defined task that an agent can execute without a
 
 ### Use `CLAUDE.md` as your control surface
 
-[`CLAUDE.md`](https://code.claude.com/docs/en/claude-md) is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it's loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:
+[`CLAUDE.md`](https://code.claude.com/docs/en/memory) is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it's loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:
 
 - How your project is structured (key directories, entry points)
 - Coding conventions (naming, formatting, patterns to follow or avoid)
@@ -321,7 +330,7 @@ This single instruction saves enormous headaches. Without it, the agent might pu
 - Tests mirror the source structure under `tests/`
 ```
 
-The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project. See the [official CLAUDE.md reference](https://code.claude.com/docs/en/claude-md) for the full spec, including file resolution order and advanced features.
+The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project. See the [official CLAUDE.md reference](https://code.claude.com/docs/en/memory) for the full spec, including file resolution order and advanced features.
 
 ### Tune the permission dial
 
@@ -450,7 +459,7 @@ Agentic workflows can burn through tokens fast, especially when things go wrong:
 
 If you're at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.
 
-Contact your department's IT staff or [Research Computing](https://it.wisc.edu/services/research-computing/) to ask about available cloud credits and whether AI API costs are eligible.
+Contact your department's IT staff or [Research Computing](https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/) to ask about available cloud credits and whether AI API costs are eligible.
 
 ### Strategies to keep costs down
 
@@ -646,7 +655,7 @@ Agentic coding is evolving fast. Here are some of the best resources for staying
 - [How Claude Code Works](https://code.claude.com/docs/en/how-claude-code-works) — the agentic loop architecture, built-in tools, and how Claude interacts with your project
 - [Extend Claude Code](https://code.claude.com/docs/en/features-overview) — when to use CLAUDE.md vs skills vs subagents vs hooks vs MCP
 - [Common Workflows](https://code.claude.com/docs/en/common-workflows) — step-by-step guides for debugging, refactoring, testing, creating PRs, and more
-- [Claude Code on the Web](https://code.claude.com/docs/en/cloud) — running Claude Code tasks asynchronously on cloud infrastructure
+- [Claude Code on the Web](https://code.claude.com/docs/en/claude-code-on-the-web) — running Claude Code tasks asynchronously on cloud infrastructure
 - [Claude Code Desktop](https://code.claude.com/docs/en/desktop) — the desktop GUI with visual diffs, parallel sessions, and managed updates
 - [Claude Code Sandboxing Documentation](https://code.claude.com/docs/en/sandboxing) — reference for configuring Claude Code's built-in sandboxing, including OS-level primitives (Linux bubblewrap, macOS Seatbelt) and deny rules for sensitive files
 - [Making Claude Code More Secure and Autonomous](https://www.anthropic.com/engineering/claude-code-sandboxing) — Anthropic Engineering's deep-dive into their dual-layer sandboxing architecture (filesystem + network isolation)
