@@ -358,7 +358,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#enable-api" id="toc-enable-api" class="nav-link" data-scroll-target="#enable-api">4. Enable API Access &amp; Request Models</a></li>
   <li><a href="#configure-claude-code" id="toc-configure-claude-code" class="nav-link" data-scroll-target="#configure-claude-code">5. Configure Claude Code</a></li>
   <li><a href="#verify-the-setup" id="toc-verify-the-setup" class="nav-link" data-scroll-target="#verify-the-setup">6. Verify the Setup</a></li>
-  <li><a href="#filesystem-safety-permissions-sandboxing" id="toc-filesystem-safety-permissions-sandboxing" class="nav-link" data-scroll-target="#filesystem-safety-permissions-sandboxing">7. Filesystem Safety, Permissions &amp; Sandboxing</a>
+  <li><a href="#filesystem-safety-permissions" id="toc-filesystem-safety-permissions" class="nav-link" data-scroll-target="#filesystem-safety-permissions">7. Filesystem Safety &amp; Permissions</a>
   <ul class="collapse">
   <li><a href="#understand-risk" id="toc-understand-risk" class="nav-link" data-scroll-target="#understand-risk">Understand the risk before you start</a></li>
   <li><a href="#always-launch-from-your-project-directory" id="toc-always-launch-from-your-project-directory" class="nav-link" data-scroll-target="#always-launch-from-your-project-directory">Always launch from your project directory</a></li>
@@ -371,10 +371,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#project-settings" id="toc-project-settings" class="nav-link" data-scroll-target="#project-settings">Use project-level settings for shared repos</a></li>
   <li><a href="#interactive-safeguards-during-a-session" id="toc-interactive-safeguards-during-a-session" class="nav-link" data-scroll-target="#interactive-safeguards-during-a-session">Interactive safeguards during a session</a></li>
   <li><a href="#permission-mode-cheat-sheet" id="toc-permission-mode-cheat-sheet" class="nav-link" data-scroll-target="#permission-mode-cheat-sheet">Permission mode cheat sheet</a></li>
-  <li><a href="#enable-sandboxing" id="toc-enable-sandboxing" class="nav-link" data-scroll-target="#enable-sandboxing">Enable sandboxing (strongly recommended)</a></li>
+  </ul></li>
+  <li><a href="#enable-sandboxing" id="toc-enable-sandboxing" class="nav-link" data-scroll-target="#enable-sandboxing">8. Sandboxing (Strongly Recommended)</a>
+  <ul class="collapse">
   <li><a href="#further-reading-on-permissions-security" id="toc-further-reading-on-permissions-security" class="nav-link" data-scroll-target="#further-reading-on-permissions-security">Further reading on permissions &amp; security</a></li>
   </ul></li>
-  <li><a href="#billing-cost-management-avoiding-runaway-costs" id="toc-billing-cost-management-avoiding-runaway-costs" class="nav-link" data-scroll-target="#billing-cost-management-avoiding-runaway-costs">8. Billing, Cost Management &amp; Avoiding Runaway Costs</a>
+  <li><a href="#billing-cost-management-avoiding-runaway-costs" id="toc-billing-cost-management-avoiding-runaway-costs" class="nav-link" data-scroll-target="#billing-cost-management-avoiding-runaway-costs">9. Billing, Cost Management &amp; Avoiding Runaway Costs</a>
   <ul class="collapse">
   <li><a href="#typical-costs-to-expect" id="toc-typical-costs-to-expect" class="nav-link" data-scroll-target="#typical-costs-to-expect">Typical costs to expect</a></li>
   <li><a href="#understand-what-drives-costs" id="toc-understand-what-drives-costs" class="nav-link" data-scroll-target="#understand-what-drives-costs">Understand what drives costs</a></li>
@@ -384,11 +386,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cost-saving-tips" id="toc-cost-saving-tips" class="nav-link" data-scroll-target="#cost-saving-tips">Cost-saving tips</a></li>
   <li><a href="#pricing-reference" id="toc-pricing-reference" class="nav-link" data-scroll-target="#pricing-reference">Pricing reference</a></li>
   </ul></li>
-  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">9. Troubleshooting</a>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">10. Troubleshooting</a>
   <ul class="collapse">
   <li><a href="#common-issues-both-providers" id="toc-common-issues-both-providers" class="nav-link" data-scroll-target="#common-issues-both-providers">Common issues (both providers)</a></li>
   </ul></li>
-  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">10. Quick Reference</a>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">11. Quick Reference</a>
   <ul class="collapse">
   <li><a href="#in-session-commands-all-providers" id="toc-in-session-commands-all-providers" class="nav-link" data-scroll-target="#in-session-commands-all-providers">In-session commands (all providers)</a></li>
   </ul></li>
@@ -936,7 +938,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The sandbox config above enables OS-level isolation that restricts Claude’s bash commands to your project directory. It works <strong>out of the box on macOS</strong> (uses Apple’s Seatbelt). On <strong>Linux/WSL2</strong>, you must first install <code>bubblewrap</code> and <code>socat</code> — see <a href="#enable-sandboxing">Section 7</a> for step-by-step instructions including how to verify you’re on WSL2 (WSL1 is not supported). <strong>Native Windows (PowerShell)</strong> does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See <a href="#enable-sandboxing">Section 7</a> for full configuration details.</p>
+<p>The sandbox config above enables OS-level isolation that restricts Claude’s bash commands to your project directory. It works <strong>out of the box on macOS</strong> (uses Apple’s Seatbelt). On <strong>Linux/WSL2</strong>, you must first install <code>bubblewrap</code> and <code>socat</code> — see <a href="#enable-sandboxing">Section 8</a> for step-by-step instructions including how to verify you’re on WSL2 (WSL1 is not supported). <strong>Native Windows (PowerShell)</strong> does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See <a href="#enable-sandboxing">Section 8</a> for full configuration details.</p>
 </div>
 </div>
 </section>
@@ -989,8 +991,8 @@ Note
 </div>
 </div>
 </section>
-<section id="filesystem-safety-permissions-sandboxing" class="level2">
-<h2 class="anchored" data-anchor-id="filesystem-safety-permissions-sandboxing">7. Filesystem Safety, Permissions &amp; Sandboxing</h2>
+<section id="filesystem-safety-permissions" class="level2">
+<h2 class="anchored" data-anchor-id="filesystem-safety-permissions">7. Filesystem Safety &amp; Permissions</h2>
 <blockquote class="blockquote">
 <p>Official permissions docs: <a href="https://code.claude.com/docs/en/permissions">code.claude.com/docs/en/permissions</a></p>
 <p>Sandboxing docs: <a href="https://code.claude.com/docs/en/sandboxing">code.claude.com/docs/en/sandboxing</a></p>
@@ -1224,7 +1226,7 @@ Note
 <p>Instead of listing individual allow rules, you can:</p>
 <ul>
 <li><strong>Switch to <code>acceptEdits</code> mode</strong> (<code>Shift+Tab</code> inside a session) — auto-approves all file edits while still prompting for bash commands.</li>
-<li><strong>Enable sandboxing</strong> (see <a href="#enable-sandboxing">Section 7</a>) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually <em>increasing</em> security.</li>
+<li><strong>Enable sandboxing</strong> (see <a href="#enable-sandboxing">Section 8</a>) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually <em>increasing</em> security.</li>
 <li><strong>Use the interactive prompt</strong> — when Claude asks “Do you want to proceed?”, select <strong>“Yes, and don’t ask again for [command pattern]”</strong> to build up your allow list organically during a session.</li>
 </ul>
 </div>
@@ -1343,8 +1345,9 @@ Note
 </tbody>
 </table>
 </section>
-<section id="enable-sandboxing" class="level3">
-<h3 class="anchored" data-anchor-id="enable-sandboxing">Enable sandboxing (strongly recommended)</h3>
+</section>
+<section id="enable-sandboxing" class="level2">
+<h2 class="anchored" data-anchor-id="enable-sandboxing">8. Sandboxing (Strongly Recommended)</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1368,14 +1371,14 @@ Tip
 <p>Anthropic reports that sandboxing <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">reduces permission prompts by 84%</a> while <em>increasing</em> security — you get fewer interruptions and better protection.</p>
 <p><strong>How to enable it:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" role="tab" aria-controls="tabset-14-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-14-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-2" role="tab" aria-controls="tabset-14-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-14-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-3" role="tab" aria-controls="tabset-14-3" aria-selected="false" href="">Windows (native PowerShell)</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-15-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-1" role="tab" aria-controls="tabset-15-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-15-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-2" role="tab" aria-controls="tabset-15-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-15-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-3" role="tab" aria-controls="tabset-15-3" aria-selected="false" href="">Windows (native PowerShell)</a></li></ul>
 <div class="tab-content">
-<div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
+<div id="tabset-15-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-15-1-tab">
 <p>Works <strong>out of the box</strong> using Apple’s Seatbelt framework. Inside a Claude Code session, run:</p>
 <pre><code>/sandbox</code></pre>
 <p>Choose <strong>“Auto-allow mode”</strong> (recommended) — sandboxed commands run automatically without permission prompts, while anything that would exceed the sandbox boundaries falls back to the normal approval flow.</p>
 </div>
-<div id="tabset-14-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-2-tab">
+<div id="tabset-15-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-2-tab">
 <p>WSL2 uses <a href="https://github.com/containers/bubblewrap">bubblewrap</a> for sandbox isolation — the same mechanism used on native Linux. <strong>WSL1 is not supported</strong> because bubblewrap requires kernel features only available in WSL2.</p>
 <p><strong>Step 1 — Confirm you’re on WSL2:</strong></p>
 <p>Open a <strong>Windows PowerShell</strong> window (not your WSL terminal) and run:</p>
@@ -1384,16 +1387,30 @@ Tip
 <p><strong>Step 2 — Install Claude Code inside WSL2:</strong></p>
 <p>WSL2 is a separate Linux environment — your Windows PowerShell installation of Claude Code doesn’t carry over. Inside your WSL2 terminal, install it with npm:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You’ll also need to reconfigure your cloud CLI credentials (<code>gcloud auth login</code> or <code>aws configure</code>) inside WSL2, since it has its own filesystem and config.</p>
+<p>You’ll also need to reconfigure your cloud CLI credentials inside WSL2, since it has its own filesystem and config:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" role="tab" aria-controls="tabset-14-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-14-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-2" role="tab" aria-controls="tabset-14-2" aria-selected="false" href="">Bedrock</a></li></ul>
+<div class="tab-content">
+<div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> config set project YOUR_PROJECT_ID</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-14-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> configure</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Enter your Access Key ID, Secret Access Key, and default region when prompted</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
 <p><strong>Step 3 — Install sandbox dependencies:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian (most common WSL distro)</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install bubblewrap socat</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install bubblewrap socat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian (most common WSL distro)</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install bubblewrap socat</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install bubblewrap socat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Step 4 — Launch Claude Code and enable sandboxing:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project   <span class="co"># navigate to your project first</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span>                      <span class="co"># launch Claude Code</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project   <span class="co"># navigate to your project first</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span>                      <span class="co"># launch Claude Code</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then inside the Claude Code session, run:</p>
 <pre><code>/sandbox</code></pre>
 <p>Choose <strong>“Auto-allow mode”</strong> — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.</p>
@@ -1422,7 +1439,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="tabset-14-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-3-tab">
+<div id="tabset-15-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-3-tab">
 <p>Sandboxing is <strong>not yet supported</strong> on native Windows. Use <a href="#add-deny-rules">deny rules</a> and <a href="#allow-rules">allow rules</a> as your primary protection. If you need stronger isolation, consider running Claude Code from WSL2 instead.</p>
 </div>
 </div>
@@ -1469,7 +1486,6 @@ Note
 <p>Some tools are incompatible with sandboxing (e.g., <code>docker</code>, <code>watchman</code>). If a tool fails inside the sandbox, you can exclude it with <code>"excludedCommands"</code> in your <a href="https://code.claude.com/docs/en/sandboxing">sandbox settings</a> so it runs outside the sandbox with normal permission prompts instead.</p>
 </div>
 </div>
-</section>
 <section id="further-reading-on-permissions-security" class="level3">
 <h3 class="anchored" data-anchor-id="further-reading-on-permissions-security">Further reading on permissions &amp; security</h3>
 <ul>
@@ -1482,7 +1498,7 @@ Note
 </section>
 </section>
 <section id="billing-cost-management-avoiding-runaway-costs" class="level2">
-<h2 class="anchored" data-anchor-id="billing-cost-management-avoiding-runaway-costs">8. Billing, Cost Management &amp; Avoiding Runaway Costs</h2>
+<h2 class="anchored" data-anchor-id="billing-cost-management-avoiding-runaway-costs">9. Billing, Cost Management &amp; Avoiding Runaway Costs</h2>
 <blockquote class="blockquote">
 <p>Official cost management docs: <a href="https://code.claude.com/docs/en/costs">code.claude.com/docs/en/costs</a></p>
 </blockquote>
@@ -1550,9 +1566,9 @@ Warning
 <h3 class="anchored" data-anchor-id="budget-alerts">Set up budget alerts (do this NOW)</h3>
 <p>Budget alerts won’t automatically stop spending, but they’ll email you when you’re approaching a threshold. <strong>Set this up before your first Claude Code session.</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-15-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-1" role="tab" aria-controls="tabset-15-1" aria-selected="true" href="">Vertex AI (GCP)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-15-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-2" role="tab" aria-controls="tabset-15-2" aria-selected="false" href="">Amazon Bedrock (AWS)</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-16-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-1" role="tab" aria-controls="tabset-16-1" aria-selected="true" href="">Vertex AI (GCP)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-16-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-2" role="tab" aria-controls="tabset-16-2" aria-selected="false" href="">Amazon Bedrock (AWS)</a></li></ul>
 <div class="tab-content">
-<div id="tabset-15-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-15-1-tab">
+<div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
 <blockquote class="blockquote">
 <p>GCP budget alerts: <a href="https://cloud.google.com/billing/docs/how-to/budgets">cloud.google.com/billing/docs/how-to/budgets</a></p>
 </blockquote>
@@ -1580,7 +1596,7 @@ Important
 <p><strong>Set quota limits as a hard ceiling:</strong></p>
 <p>Unlike budget alerts, <strong>quotas can actually stop usage.</strong> Go to <a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas"><strong>Quotas &amp; System Limits</strong></a> and set reasonable TPM (tokens per minute) quotas for the Claude models you’re using. If you hit your quota, Claude Code will get 429 errors instead of running up your bill.</p>
 </div>
-<div id="tabset-15-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-2-tab">
+<div id="tabset-16-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-16-2-tab">
 <blockquote class="blockquote">
 <p>AWS Budgets docs: <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html">docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html</a></p>
 </blockquote>
@@ -1689,11 +1705,11 @@ Note
 </section>
 </section>
 <section id="troubleshooting" class="level2">
-<h2 class="anchored" data-anchor-id="troubleshooting">9. Troubleshooting</h2>
+<h2 class="anchored" data-anchor-id="troubleshooting">10. Troubleshooting</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" role="tab" aria-controls="tabset-18-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" role="tab" aria-controls="tabset-18-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
 <div class="tab-content">
-<div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
+<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
 <p><strong>“model not found” (404):</strong></p>
 <p>The model may not be available on the <code>global</code> endpoint. Try changing your region:</p>
 <pre class="jsonc"><code>"CLOUD_ML_REGION": "us-east5"</code></pre>
@@ -1704,21 +1720,21 @@ Note
 <p>Ask your UW-Madison GCP admin to ensure you have the <code>roles/aiplatform.user</code> role on the project.</p>
 <p><strong><code>gcloud</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-16-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-1" role="tab" aria-controls="tabset-16-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-16-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-2" role="tab" aria-controls="tabset-16-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" role="tab" aria-controls="tabset-17-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" role="tab" aria-controls="tabset-17-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
+<div id="tabset-17-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-17-1-tab">
 <p>Make sure the Google Cloud SDK is installed and restart PowerShell.</p>
 </div>
-<div id="tabset-16-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-16-2-tab">
+<div id="tabset-17-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-17-2-tab">
 <p>If you installed via Homebrew, run <code>source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"</code> or restart your terminal. If you used the curl installer, make sure you ran <code>source ~/.zshrc</code> after install.</p>
 </div>
 </div>
 </div>
 <p><strong>Authentication expired:</strong></p>
 <p>Re-run (both platforms):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tabset-18-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-18-2-tab">
+<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
 <p><strong><code>AccessDeniedException</code>:</strong></p>
 <p>Your IAM user/role doesn’t have the required Bedrock permissions. Ensure your policy includes <code>bedrock:InvokeModel</code> and <code>bedrock:InvokeModelWithResponseStream</code>. See <a href="#enable-api">Section 4</a> for the full policy.</p>
 <p><strong><code>ValidationException: Model not found</code>:</strong></p>
@@ -1729,19 +1745,19 @@ Note
 <p>You’ve hit your Bedrock quota. Request an increase at <a href="https://console.aws.amazon.com/servicequotas/home/services/bedrock/quotas">Service Quotas → Amazon Bedrock</a>. Default quotas are low (e.g., 25 RPM for Opus).</p>
 <p><strong><code>aws</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" role="tab" aria-controls="tabset-17-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" role="tab" aria-controls="tabset-17-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" role="tab" aria-controls="tabset-18-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" role="tab" aria-controls="tabset-18-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-17-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-17-1-tab">
+<div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
 <p>Make sure the AWS CLI is installed and restart PowerShell.</p>
 </div>
-<div id="tabset-17-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-17-2-tab">
+<div id="tabset-18-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-18-2-tab">
 <p>If you installed via Homebrew, restart your terminal. If you used the pkg installer, ensure <code>/usr/local/bin</code> is in your <code>$PATH</code>.</p>
 </div>
 </div>
 </div>
 <p><strong>Credentials expired (SSO):</strong></p>
 <p>Re-run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile-name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile-name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1762,88 +1778,88 @@ Tip
 <h3 class="anchored" data-anchor-id="common-issues-both-providers">Common issues (both providers)</h3>
 <p><strong><code>claude</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" role="tab" aria-controls="tabset-20-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" role="tab" aria-controls="tabset-20-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
+<div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
 <p>Ensure <code>C:\Users\&lt;you&gt;\.local\bin</code> is in your user PATH (see <a href="#install-claude-code">Section 2</a>). Restart PowerShell after editing PATH.</p>
 </div>
-<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
+<div id="tabset-20-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-2-tab">
 <p>Ensure <code>~/.claude/bin</code> or <code>~/.local/bin</code> is in your <code>$PATH</code>. Restart your terminal or run <code>source ~/.zshrc</code>.</p>
 </div>
 </div>
 </div>
 <p><strong>Run diagnostics:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This checks your installation, authentication, and configuration for common issues.</p>
 </section>
 </section>
 <section id="quick-reference" class="level2">
-<h2 class="anchored" data-anchor-id="quick-reference">10. Quick Reference</h2>
+<h2 class="anchored" data-anchor-id="quick-reference">11. Quick Reference</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" role="tab" aria-controls="tabset-20-1" aria-selected="true" href="">Vertex AI + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" role="tab" aria-controls="tabset-20-2" aria-selected="false" href="">Vertex AI + macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-3" role="tab" aria-controls="tabset-20-3" aria-selected="false" href="">Bedrock + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-4" role="tab" aria-controls="tabset-20-4" aria-selected="false" href="">Bedrock + macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" role="tab" aria-controls="tabset-21-1" aria-selected="true" href="">Vertex AI + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" role="tab" aria-controls="tabset-21-2" aria-selected="false" href="">Vertex AI + macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-3" role="tab" aria-controls="tabset-21-3" aria-selected="false" href="">Bedrock + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-4" role="tab" aria-controls="tabset-21-4" aria-selected="false" href="">Bedrock + macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://cloud.google.com/sdk/docs/install</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>gcloud auth login</span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>gcloud auth application-default login</span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\your\project</span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="tabset-20-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or: brew install --cask claude-code</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or: curl https://sdk.cloud.google.com | bash</span></span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
-<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
-<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
-<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="tabset-20-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-3-tab">
+<div id="tabset-21-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-21-1-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install AWS CLI (if needed)</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://cloud.google.com/sdk/docs/install</span></span>
 <span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with AWS</span></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>aws sso login <span class="op">--</span>profile your-profile</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="co"># or: aws configure</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>gcloud auth login</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>gcloud auth application-default login</span>
 <span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
 <span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\your\project</span>
 <span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tabset-20-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-4-tab">
+<div id="tabset-21-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-21-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or: brew install --cask claude-code</span></span>
 <span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install AWS CLI (if needed)</span></span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install awscli</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with AWS</span></span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile</span>
-<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a><span class="co"># or: aws configure</span></span>
-<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
-<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
-<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or: curl https://sdk.cloud.google.com | bash</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-21-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-21-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install AWS CLI (if needed)</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with AWS</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>aws sso login <span class="op">--</span>profile your-profile</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="co"># or: aws configure</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\your\project</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-21-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-21-4-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or: brew install --cask claude-code</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install AWS CLI (if needed)</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install awscli</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with AWS</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="co"># or: aws configure</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
