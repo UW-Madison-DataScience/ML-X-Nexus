@@ -635,9 +635,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Full local control</strong> — no cloud dependency; everything runs on your machine (or wherever your terminal is)</li>
 <li><strong>Flexible auth and billing</strong> — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through <a href="https://code.claude.com/docs/en/cloud-providers#google-cloud-vertex-ai">Google Vertex AI</a> or <a href="https://code.claude.com/docs/en/cloud-providers#amazon-bedrock">AWS Bedrock</a>, so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our <a href="../../Learn/Guides/claude-code-cloud-setup.html">Claude Code Cloud Setup Guide</a> for a step-by-step walkthrough using UW-Madison GCP or AWS</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and start Claude Code</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> yourrepo <span class="kw">&amp;&amp;</span> <span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install npm if needed (e.g., on a fresh WSL2 or Ubuntu setup)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install npm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and start Claude Code (sudo needed on Linux/WSL2)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> npm install <span class="at">-g</span> @anthropic-ai/claude-code</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Install sandbox dependencies (WSL2/Linux only)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install bubblewrap socat</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to your project and launch Claude Code</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: in WSL2, your Windows files are at /mnt/c/Users/&lt;username&gt;/...</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> yourrepo <span class="kw">&amp;&amp;</span> <span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Best for:</strong> Developers comfortable with the terminal, CI/CD integration, scripting and automation, working in remote/SSH environments, and organizations that need to route traffic through their own cloud provider.</p>
 </section>
 <section id="security-note" class="level5">
