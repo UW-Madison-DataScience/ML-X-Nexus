@@ -198,17 +198,22 @@ Copilot will:
 
 ##### Coding agent (async)
 
+GitHub's async coding agents let you delegate work directly from issues and PRs — no IDE or terminal needed:
+
 1. Go to your repo on GitHub.com
 2. Create an issue: *"Add a slugify utility function to src/utils/ with tests"*
-3. Assign the issue to Copilot (or `@claude` / `@codex` for those agents)
-4. Walk away — the agent works in a cloud environment
+3. Assign the issue to `@copilot`, `@claude`, or `@codex` via the Assignees dropdown
+4. Walk away — the agent works in a secure cloud environment
 
 The agent will:
 
 1. Create a branch
-2. Implement the function and tests
+2. Implement the function and tests in an ephemeral environment
 3. Open a draft PR referencing the issue
 4. You get a notification when the PR is ready to review
+5. You can leave review comments mentioning `@claude` to request changes — the agent iterates like a human collaborator
+
+**What's running under the hood?** When you assign to `@claude`, GitHub runs Anthropic's [Claude Code Action](https://github.com/anthropics/claude-code-action) — which uses the same Claude Code engine (agentic loop, tools, extended thinking) that powers the CLI and desktop app. The key difference is that it runs in GitHub's managed environment rather than your local machine, and its scope is limited to the repo and issue context. Assigning to `@copilot` uses GitHub's own orchestration with your selected model, and `@codex` uses OpenAI's agent.
 
 By default, the async coding agent uses Claude Sonnet 4.6 when no model is explicitly selected. You can choose from Claude Opus 4.6, Claude Sonnet 4.5, GPT-5.1-Codex-Max, GPT-5.2-Codex, and others via the model picker.
 
