@@ -17,6 +17,7 @@ categories:
   - Cloud computing
   - GCP
   - AWS
+toc-depth: 2
 ---
 
 This guide walks UW-Madison researchers and staff through setting up [Claude Code](https://code.claude.com/) with a cloud provider — either [Google Vertex AI](https://cloud.google.com/vertex-ai) or [Amazon Bedrock](https://aws.amazon.com/bedrock/). It covers Windows and macOS, with provider-specific steps in tabs so you can follow whichever path matches your institutional account.
@@ -921,7 +922,33 @@ aws configure
 
 :::
 
-**Step 3 — Install sandbox dependencies:**
+Verify both are working:
+
+```bash
+claude --version
+```
+
+**Step 3 — Copy your settings into WSL2:**
+
+WSL2 has its own home directory (`/home/<you>/`), completely separate from Windows (`C:\Users\<you>\`). Claude Code won't see your Windows `settings.json` — you need a copy inside WSL2:
+
+```bash
+# Create the config directory if it doesn't exist
+mkdir -p ~/.claude
+
+# Copy your Windows settings into WSL2
+cp /mnt/c/Users/$(cmd.exe /C "echo %USERNAME%" 2>/dev/null | tr -d '\r')/.claude/settings.json ~/.claude/settings.json
+```
+
+Or if you prefer, create `~/.claude/settings.json` manually with the same content you used in [Section 5](#configure-claude-code) (use `nano ~/.claude/settings.json`).
+
+Verify the settings look correct:
+
+```bash
+cat ~/.claude/settings.json
+```
+
+**Step 4 — Install sandbox dependencies:**
 
 ```bash
 # Ubuntu/Debian (most common WSL distro)
@@ -931,7 +958,7 @@ sudo apt-get update && sudo apt-get install bubblewrap socat
 sudo dnf install bubblewrap socat
 ```
 
-**Step 4 — Launch Claude Code and enable sandboxing:**
+**Step 5 — Launch Claude Code and enable sandboxing:**
 
 ```bash
 cd ~/projects/my-project   # navigate to your project first
