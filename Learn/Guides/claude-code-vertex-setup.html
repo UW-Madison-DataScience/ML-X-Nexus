@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2026-02-15">
+
+<title>Claude Code + Vertex AI Setup Guide (UW-Madison GCP) – Nexus: Crowdsourced ML Resources</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ee74a852250da7abdbda3c7c1a549c45.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Claude Code + Vertex AI Setup Guide (UW-Madison GCP)</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+    <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
+    <a href="../../index.xml" title="Subscribe via RSS" class="quarto-navigation-tool px-1" aria-label="Subscribe via RSS"><i class="bi bi-rss"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to contribute?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learn</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notebooks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workshops</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Projects/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Projects</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Projects/ML-Marathon/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML Marathon</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stories</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI @ UW</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML+X</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML4MI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SILO</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Other</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Toolbox</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Benchmarks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benchmarks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compute</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GenAI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Libraries</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">MLOps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Category glossary</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-use-vertex-ai-instead-of-a-direct-subscription" id="toc-why-use-vertex-ai-instead-of-a-direct-subscription" class="nav-link active" data-scroll-target="#why-use-vertex-ai-instead-of-a-direct-subscription">Why use Vertex AI instead of a direct subscription?</a></li>
+  <li><a href="#already-set-up-returning-user-quick-start" id="toc-already-set-up-returning-user-quick-start" class="nav-link" data-scroll-target="#already-set-up-returning-user-quick-start">Already set up? Returning User Quick-Start</a></li>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">1. Prerequisites</a></li>
+  <li><a href="#install-claude-code" id="toc-install-claude-code" class="nav-link" data-scroll-target="#install-claude-code">2. Install Claude Code</a></li>
+  <li><a href="#install-configure-google-cloud-cli" id="toc-install-configure-google-cloud-cli" class="nav-link" data-scroll-target="#install-configure-google-cloud-cli">3. Install &amp; Configure Google Cloud CLI</a>
+  <ul class="collapse">
+  <li><a href="#authenticate-both-platforms" id="toc-authenticate-both-platforms" class="nav-link" data-scroll-target="#authenticate-both-platforms">Authenticate (both platforms)</a></li>
+  </ul></li>
+  <li><a href="#enable-vertex-ai" id="toc-enable-vertex-ai" class="nav-link" data-scroll-target="#enable-vertex-ai">4. Enable Vertex AI &amp; Request Model Access</a>
+  <ul class="collapse">
+  <li><a href="#enable-the-api" id="toc-enable-the-api" class="nav-link" data-scroll-target="#enable-the-api">Enable the API</a></li>
+  <li><a href="#request-access-to-claude-models" id="toc-request-access-to-claude-models" class="nav-link" data-scroll-target="#request-access-to-claude-models">Request access to Claude models</a></li>
+  <li><a href="#verify-iam-permissions" id="toc-verify-iam-permissions" class="nav-link" data-scroll-target="#verify-iam-permissions">Verify IAM permissions</a></li>
+  </ul></li>
+  <li><a href="#configure-claude-code-for-vertex-ai" id="toc-configure-claude-code-for-vertex-ai" class="nav-link" data-scroll-target="#configure-claude-code-for-vertex-ai">5. Configure Claude Code for Vertex AI</a>
+  <ul class="collapse">
+  <li><a href="#region-notes" id="toc-region-notes" class="nav-link" data-scroll-target="#region-notes">Region notes</a></li>
+  </ul></li>
+  <li><a href="#verify-the-setup" id="toc-verify-the-setup" class="nav-link" data-scroll-target="#verify-the-setup">6. Verify the Setup</a></li>
+  <li><a href="#filesystem-safety-permissions-sandboxing" id="toc-filesystem-safety-permissions-sandboxing" class="nav-link" data-scroll-target="#filesystem-safety-permissions-sandboxing">7. Filesystem Safety, Permissions &amp; Sandboxing</a>
+  <ul class="collapse">
+  <li><a href="#understand-risk" id="toc-understand-risk" class="nav-link" data-scroll-target="#understand-risk">Understand the risk before you start</a></li>
+  <li><a href="#always-launch-from-your-project-directory" id="toc-always-launch-from-your-project-directory" class="nav-link" data-scroll-target="#always-launch-from-your-project-directory">Always launch from your project directory</a></li>
+  <li><a href="#use-git-as-your-safety-net" id="toc-use-git-as-your-safety-net" class="nav-link" data-scroll-target="#use-git-as-your-safety-net">Use Git as your safety net</a></li>
+  <li><a href="#use-the-default-permission-mode" id="toc-use-the-default-permission-mode" class="nav-link" data-scroll-target="#use-the-default-permission-mode">Use the default permission mode</a></li>
+  <li><a href="#understand-how-permissions-actually-work" id="toc-understand-how-permissions-actually-work" class="nav-link" data-scroll-target="#understand-how-permissions-actually-work">Understand how permissions actually work</a></li>
+  <li><a href="#add-deny-rules" id="toc-add-deny-rules" class="nav-link" data-scroll-target="#add-deny-rules">Add <code>deny</code> rules to protect sensitive areas</a></li>
+  <li><a href="#allow-rules" id="toc-allow-rules" class="nav-link" data-scroll-target="#allow-rules">Add <code>allow</code> rules to reduce prompt fatigue</a></li>
+  <li><a href="#check-your-current-permissions" id="toc-check-your-current-permissions" class="nav-link" data-scroll-target="#check-your-current-permissions">Check your current permissions</a></li>
+  <li><a href="#use-project-level-settings-for-shared-repos" id="toc-use-project-level-settings-for-shared-repos" class="nav-link" data-scroll-target="#use-project-level-settings-for-shared-repos">Use project-level settings for shared repos</a></li>
+  <li><a href="#interactive-safeguards-during-a-session" id="toc-interactive-safeguards-during-a-session" class="nav-link" data-scroll-target="#interactive-safeguards-during-a-session">Interactive safeguards during a session</a></li>
+  <li><a href="#permission-mode-cheat-sheet" id="toc-permission-mode-cheat-sheet" class="nav-link" data-scroll-target="#permission-mode-cheat-sheet">Permission mode cheat sheet</a></li>
+  <li><a href="#enable-sandboxing" id="toc-enable-sandboxing" class="nav-link" data-scroll-target="#enable-sandboxing">Enable sandboxing (strongly recommended)</a></li>
+  <li><a href="#further-reading-on-permissions-security" id="toc-further-reading-on-permissions-security" class="nav-link" data-scroll-target="#further-reading-on-permissions-security">Further reading on permissions &amp; security</a></li>
+  </ul></li>
+  <li><a href="#billing-cost-management-avoiding-runaway-costs" id="toc-billing-cost-management-avoiding-runaway-costs" class="nav-link" data-scroll-target="#billing-cost-management-avoiding-runaway-costs">8. Billing, Cost Management &amp; Avoiding Runaway Costs</a>
+  <ul class="collapse">
+  <li><a href="#typical-costs-to-expect" id="toc-typical-costs-to-expect" class="nav-link" data-scroll-target="#typical-costs-to-expect">Typical costs to expect</a></li>
+  <li><a href="#understand-what-drives-costs" id="toc-understand-what-drives-costs" class="nav-link" data-scroll-target="#understand-what-drives-costs">Understand what drives costs</a></li>
+  <li><a href="#agentic-loops" id="toc-agentic-loops" class="nav-link" data-scroll-target="#agentic-loops">Agentic loops — the #1 cost risk</a></li>
+  <li><a href="#budget-alerts" id="toc-budget-alerts" class="nav-link" data-scroll-target="#budget-alerts">Set up GCP budget alerts (do this NOW)</a></li>
+  <li><a href="#check-your-billing-console-daily" id="toc-check-your-billing-console-daily" class="nav-link" data-scroll-target="#check-your-billing-console-daily">Check your billing console daily</a></li>
+  <li><a href="#set-quota-limits-as-a-hard-ceiling" id="toc-set-quota-limits-as-a-hard-ceiling" class="nav-link" data-scroll-target="#set-quota-limits-as-a-hard-ceiling">Set quota limits as a hard ceiling</a></li>
+  <li><a href="#cost-saving-tips" id="toc-cost-saving-tips" class="nav-link" data-scroll-target="#cost-saving-tips">Cost-saving tips</a></li>
+  <li><a href="#vertex-ai-pricing-reference" id="toc-vertex-ai-pricing-reference" class="nav-link" data-scroll-target="#vertex-ai-pricing-reference">Vertex AI pricing reference</a></li>
+  </ul></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">9. Troubleshooting</a>
+  <ul class="collapse">
+  <li><a href="#model-not-found-404" id="toc-model-not-found-404" class="nav-link" data-scroll-target="#model-not-found-404">“model not found” (404)</a></li>
+  <li><a href="#resource-exhausted" id="toc-resource-exhausted" class="nav-link" data-scroll-target="#resource-exhausted">429 “Resource Exhausted”</a></li>
+  <li><a href="#permission-denied-iam-errors" id="toc-permission-denied-iam-errors" class="nav-link" data-scroll-target="#permission-denied-iam-errors">Permission denied / IAM errors</a></li>
+  <li><a href="#gcloud-command-not-found" id="toc-gcloud-command-not-found" class="nav-link" data-scroll-target="#gcloud-command-not-found"><code>gcloud</code> command not found</a></li>
+  <li><a href="#claude-command-not-found" id="toc-claude-command-not-found" class="nav-link" data-scroll-target="#claude-command-not-found"><code>claude</code> command not found</a></li>
+  <li><a href="#authentication-expired" id="toc-authentication-expired" class="nav-link" data-scroll-target="#authentication-expired">Authentication expired</a></li>
+  <li><a href="#run-diagnostics" id="toc-run-diagnostics" class="nav-link" data-scroll-target="#run-diagnostics">Run diagnostics</a></li>
+  </ul></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">10. Quick Reference</a>
+  <ul class="collapse">
+  <li><a href="#in-session-commands-both-platforms" id="toc-in-session-commands-both-platforms" class="nav-link" data-scroll-target="#in-session-commands-both-platforms">In-session commands (both platforms)</a></li>
+  </ul></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-vertex-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Claude Code + Vertex AI Setup Guide (UW-Madison GCP)</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Guides</div>
+    <div class="quarto-category">GenAI</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">Agentic coding</div>
+    <div class="quarto-category">Cloud computing</div>
+    <div class="quarto-category">GCP</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 15, 2026</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">March 10, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This guide walks UW-Madison researchers and staff through setting up <a href="https://code.claude.com/">Claude Code</a> with <a href="https://cloud.google.com/vertex-ai">Google Vertex AI</a> on a UW-provisioned GCP account. It covers Windows and macOS.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>New to agentic coding?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>See our companion guide, <a href="../../Learn/Guides/claude-code-best-practices.html">Claude Code Best Practices</a>, for a broader introduction to agentic coding tools and how to use them effectively.</p>
+</div>
+</div>
+<section id="why-use-vertex-ai-instead-of-a-direct-subscription" class="level2">
+<h2 class="anchored" data-anchor-id="why-use-vertex-ai-instead-of-a-direct-subscription">Why use Vertex AI instead of a direct subscription?</h2>
+<p>You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of Vertex AI on a GCP account?</p>
+<p><strong>What Vertex AI gives you:</strong></p>
+<ul>
+<li><strong>Institutional billing and cost tracking</strong> — charges go to your UW-Madison GCP project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has <a href="../../Toolbox/Compute/UW-Cloud-Services.html">negotiated cloud discounts</a> including reduced overhead on grants (26% vs 55.5% F&amp;A) and NIH STRIDES pricing.</li>
+<li><strong>Enterprise security controls</strong> — GCP lets you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you’d use for any sensitive cloud infrastructure.</li>
+<li><strong>Audit and compliance</strong> — GCP provides audit logs, access transparency, and compliance certifications (HIPAA, FedRAMP, etc.) that institutional review processes often require.</li>
+<li><strong>Pay-as-you-go flexibility</strong> — useful for teams with variable usage, short-term projects, or when you need access to specific models not included in subscription plans.</li>
+</ul>
+<p><strong>What Vertex AI does NOT change:</strong></p>
+<ul>
+<li><strong>Model weights stay on Anthropic’s infrastructure</strong> regardless of how you access Claude. Vertex AI doesn’t move the model into your GCP project — Google routes your requests to Anthropic’s serving infrastructure.</li>
+<li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://docs.anthropic.com/en/docs/build-with-claude/data-residency">data residency</a> feature, not a Vertex AI feature.</li>
+<li><strong>Privacy terms</strong> are set by Anthropic’s commercial agreements, not by your GCP configuration. Under Anthropic’s commercial terms (including Vertex AI), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Bottom line:</strong> If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Vertex AI makes sense when you need institutional billing, enterprise security controls, or compliance features. UW-Madison already <a href="../../Toolbox/Compute/UW-Cloud-Services.html">provisions GCP accounts</a> for research groups for a wide range of cloud computing needs — running Claude Code through Vertex AI is just one of many uses.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Using AWS instead? Claude Code works with Amazon Bedrock too
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This guide focuses on Vertex AI, but UW-Madison also provisions AWS accounts with the same institutional protections — negotiated pricing, lower F&amp;A overhead on grants, security monitoring, and BAA coverage. See our <a href="../../Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services page</a> for full details on requesting accounts. Claude Code supports <a href="https://code.claude.com/docs/en/amazon-bedrock">Amazon Bedrock</a> as an equally capable alternative. The setup is similar — you configure environment variables in <code>~/.claude/settings.json</code>:</p>
+<pre class="jsonc"><code>{
+  "env": {
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "AWS_REGION": "us-east-1",
+    "AWS_PROFILE": "your-profile"  // or use AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY
+  }
+}</code></pre>
+<p>Everything else in this guide — permissions, sandboxing, cost management, safety practices — applies identically regardless of whether you’re using Vertex AI or Bedrock. The only differences are the authentication mechanism (AWS IAM / <code>aws configure</code> instead of <code>gcloud auth</code>) and the billing destination (AWS account instead of GCP project).</p>
+<p>If your institution has AWS agreements rather than GCP, swap the provider config and follow the <a href="https://code.claude.com/docs/en/amazon-bedrock">official Bedrock setup docs</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="already-set-up-returning-user-quick-start" class="level2">
+<h2 class="anchored" data-anchor-id="already-set-up-returning-user-quick-start">Already set up? Returning User Quick-Start</h2>
+<p>If you’ve already completed the full setup and just need to start a new session:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Windows (PowerShell)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">macOS (Terminal)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If your credentials have expired (you'll get auth errors):</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gcloud auth application-default login</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to your project and launch</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If your credentials have expired (you'll get auth errors):</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to your project and launch</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><strong>Once inside Claude Code:</strong></p>
+<pre class="text"><code>/status       # Confirm Vertex AI is active and your project ID is correct
+/sandbox      # Enable sandboxing if not already persistent in settings
+/cost         # Check token usage at any time during your session</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you get 401/403 errors, re-run <code>gcloud auth application-default login</code>. If you get 404 “model not found” errors, check your region settings in <code>~/.claude/settings.json</code> (see <a href="#configure-claude-code-for-vertex-ai">Section 5</a>). If you get 429 “resource exhausted” errors, you need a quota increase (see <a href="#troubleshooting">Troubleshooting</a>).</p>
+</div>
+</div>
+</section>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">1. Prerequisites</h2>
+<p><strong>Both platforms:</strong></p>
+<ul>
+<li>A <strong>UW-Madison GCP project</strong> with billing enabled (e.g., <code>doit-rci-sandbox-gcp-baa4</code>)</li>
+<li>Your <strong>UW-Madison Google account</strong> with IAM access to the GCP project</li>
+<li>Internet connection</li>
+</ul>
+<p><strong>Windows:</strong></p>
+<ul>
+<li>Windows 10 (build 1809+) or Windows 11</li>
+<li><strong>PowerShell</strong> (use this — not Git Bash, not CMD)</li>
+</ul>
+<p><strong>macOS:</strong></p>
+<ul>
+<li>macOS 13.0 (Ventura) or later</li>
+<li><strong>Terminal</strong> (built-in) or any terminal emulator (iTerm2, Warp, etc.)</li>
+</ul>
+<blockquote class="blockquote">
+<p>See the official <a href="https://code.claude.com/docs/en/setup">Claude Code system requirements</a> for the full list (OS versions, RAM, shell, etc.).</p>
+</blockquote>
+</section>
+<section id="install-claude-code" class="level2">
+<h2 class="anchored" data-anchor-id="install-claude-code">2. Install Claude Code</h2>
+<blockquote class="blockquote">
+<p>Official install docs: <a href="https://code.claude.com/docs/en/setup">code.claude.com/docs/en/setup</a></p>
+</blockquote>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Open <strong>PowerShell</strong> and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Do NOT use Git Bash (MINGW64)</strong> — the installer does not support it. Use PowerShell only.</p>
+</div>
+</div>
+<p>After installation, you’ll likely see a message that <code>C:\Users\&lt;you&gt;\.local\bin</code> is not in your PATH. Fix this:</p>
+<ol type="1">
+<li>Press <strong>Win + R</strong>, type <code>sysdm.cpl</code>, press Enter.</li>
+<li>Go to <strong>Advanced</strong> tab → <strong>Environment Variables</strong>.</li>
+<li>Under <strong>User variables</strong>, select <code>Path</code> → click <strong>Edit</strong>.</li>
+<li>Click <strong>New</strong> and add: <code>C:\Users\&lt;your-username&gt;\.local\bin</code></li>
+<li>Click <strong>OK</strong> on all dialogs.</li>
+<li><strong>Close and reopen PowerShell.</strong></li>
+</ol>
+<p>Verify:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>claude <span class="op">--</span>version</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Open <strong>Terminal</strong> and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Alternatively, if you use Homebrew:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After installation, restart your terminal (or run <code>source ~/.zshrc</code>), then verify:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>The native installer places the binary at <code>~/.claude/bin/claude</code> or <code>~/.local/bin/claude</code> and updates your shell profile automatically. If <code>claude</code> isn’t found, ensure one of these paths is in your <code>$PATH</code>.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</section>
+<section id="install-configure-google-cloud-cli" class="level2">
+<h2 class="anchored" data-anchor-id="install-configure-google-cloud-cli">3. Install &amp; Configure Google Cloud CLI</h2>
+<blockquote class="blockquote">
+<p>Official gcloud install docs: <a href="https://cloud.google.com/sdk/docs/install">cloud.google.com/sdk/docs/install</a></p>
+</blockquote>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>Download and install the <a href="https://cloud.google.com/sdk/docs/install">Google Cloud CLI for Windows</a>. The installer adds <code>gcloud</code> to your PATH automatically.</p>
+<p><strong>Fix PowerShell Execution Policy (if needed):</strong></p>
+<p>If <code>gcloud</code> gives you a “running scripts is disabled” error:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Set-ExecutionPolicy</span> RemoteSigned <span class="op">-</span>Scope CurrentUser</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Type <strong>Y</strong> to confirm.</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<p>Option A — Homebrew (easiest):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Option B — Official installer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://sdk.cloud.google.com <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then restart your terminal or run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.zshrc   <span class="co"># or source ~/.bashrc</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<section id="authenticate-both-platforms" class="level3">
+<h3 class="anchored" data-anchor-id="authenticate-both-platforms">Authenticate (both platforms)</h3>
+<p>These commands are identical on both Windows and macOS:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Log in with your UW-Madison Google account</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set your GCP project</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> config set project YOUR-PROJECT-ID</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># CRITICAL — this is what Claude Code actually uses to authenticate</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Both <code>login</code> commands open a browser window. Sign in with your UW-Madison email and grant the requested permissions.</p>
+</section>
+</section>
+<section id="enable-vertex-ai" class="level2">
+<h2 class="anchored" data-anchor-id="enable-vertex-ai">4. Enable Vertex AI &amp; Request Model Access</h2>
+<blockquote class="blockquote">
+<p>Official Vertex AI setup: <a href="https://code.claude.com/docs/en/google-vertex-ai">code.claude.com/docs/en/google-vertex-ai</a></p>
+<p>Google’s Claude on Vertex docs: <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude">cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude</a></p>
+</blockquote>
+<p>This section is identical on both platforms — all commands run in your terminal/PowerShell.</p>
+<section id="enable-the-api" class="level3">
+<h3 class="anchored" data-anchor-id="enable-the-api">Enable the API</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> services enable aiplatform.googleapis.com <span class="at">--project</span><span class="op">=</span>YOUR-PROJECT-ID</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="request-access-to-claude-models" class="level3">
+<h3 class="anchored" data-anchor-id="request-access-to-claude-models">Request access to Claude models</h3>
+<ol type="1">
+<li>Go to the <a href="https://console.cloud.google.com/vertex-ai/model-garden">Vertex AI Model Garden</a> in the GCP Console.</li>
+<li>Search for the Claude model you want (e.g., <strong>Claude Sonnet 4</strong>).</li>
+<li>Click the model card and <strong>complete the access request form</strong>.</li>
+<li>Approval may take minutes to a couple of days.</li>
+</ol>
+</section>
+<section id="verify-iam-permissions" class="level3">
+<h3 class="anchored" data-anchor-id="verify-iam-permissions">Verify IAM permissions</h3>
+<p>Your GCP account needs the <strong><code>roles/aiplatform.user</code></strong> role (<a href="https://cloud.google.com/vertex-ai/docs/general/access-control">Vertex IAM docs</a>), which includes:</p>
+<ul>
+<li><code>aiplatform.endpoints.predict</code> (model invocation)</li>
+<li><code>aiplatform.endpoints.computeTokens</code> (token counting)</li>
+</ul>
+<p>If you don’t have this, ask your UW-Madison GCP administrator to grant it.</p>
+</section>
+</section>
+<section id="configure-claude-code-for-vertex-ai" class="level2">
+<h2 class="anchored" data-anchor-id="configure-claude-code-for-vertex-ai">5. Configure Claude Code for Vertex AI</h2>
+<blockquote class="blockquote">
+<p>Full configuration reference: <a href="https://code.claude.com/docs/en/google-vertex-ai">code.claude.com/docs/en/google-vertex-ai</a></p>
+</blockquote>
+<p>Edit (or create) your settings file at <code>~/.claude/settings.json</code>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Platform</th>
+<th>Full path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Windows</td>
+<td><code>C:\Users\&lt;your-username&gt;\.claude\settings.json</code></td>
+</tr>
+<tr class="even">
+<td>macOS</td>
+<td><code>/Users/&lt;your-username&gt;/.claude/settings.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>Add the following content:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"model"</span><span class="fu">:</span> <span class="st">"claude-sonnet-4-6"</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"autoUpdatesChannel"</span><span class="fu">:</span> <span class="st">"latest"</span><span class="fu">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"env"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLAUDE_CODE_USE_VERTEX"</span><span class="fu">:</span> <span class="st">"1"</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLOUD_ML_REGION"</span><span class="fu">:</span> <span class="st">"global"</span><span class="fu">,</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"ANTHROPIC_VERTEX_PROJECT_ID"</span><span class="fu">:</span> <span class="st">"YOUR-PROJECT-ID"</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"sandbox"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"enabled"</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Do not include <code>//</code> comments in <code>settings.json</code>.</strong> The examples elsewhere in this guide use <code>jsonc</code> syntax for readability, but <code>settings.json</code> is parsed as <strong>plain JSON</strong>, which does not support comments. If you copy-paste a block with comments, Claude Code will report “Invalid or malformed JSON” in <code>claude doctor</code>.</p>
+</div>
+</div>
+<p>Replace <code>YOUR-PROJECT-ID</code> with your actual GCP project ID (e.g., <code>doit-rci-sandbox-gcp-baa4</code>). The <code>model</code> field sets your default model — <code>claude-sonnet-4-6</code> is a good balance of cost and capability. Change it to <code>claude-opus-4-6</code> if you need maximum reasoning power (at higher cost).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Sandbox platform prerequisites
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The sandbox config above enables OS-level isolation that restricts Claude’s bash commands to your project directory. It works <strong>out of the box on macOS</strong> (uses Apple’s Seatbelt). On <strong>Linux/WSL2</strong>, you must first install <code>bubblewrap</code> and <code>socat</code> — see <a href="#enable-sandboxing">Section 7</a> for step-by-step instructions including how to verify you’re on WSL2 (WSL1 is not supported). <strong>Native Windows (PowerShell)</strong> does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See <a href="#enable-sandboxing">Section 7</a> for full configuration details.</p>
+</div>
+</div>
+<section id="region-notes" class="level3">
+<h3 class="anchored" data-anchor-id="region-notes">Region notes</h3>
+<ul>
+<li><strong><code>global</code></strong> is typically the cheapest and is a good default.</li>
+<li>Not all models are available on the global endpoint. If you get 404 “model not found” errors, add region overrides for specific models by adding more entries to the <code>env</code> block:</li>
+</ul>
+<pre class="jsonc"><code>"VERTEX_REGION_CLAUDE_3_5_HAIKU": "us-east5",
+"VERTEX_REGION_CLAUDE_4_0_SONNET": "us-east5"</code></pre>
+</section>
+</section>
+<section id="verify-the-setup" class="level2">
+<h2 class="anchored" data-anchor-id="verify-the-setup">6. Verify the Setup</h2>
+<p>Run these in your terminal (PowerShell on Windows, Terminal on macOS):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then launch Claude Code from a project directory:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Once inside Claude Code, run <code>/status</code> to confirm it’s using Vertex AI:</p>
+<pre><code>API provider: Google Vertex AI
+GCP project: your-project-id
+Default region: global</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When using Vertex AI, the <a href="https://code.claude.com/docs/en/google-vertex-ai"><code>/login</code> and <code>/logout</code> commands are disabled</a> — authentication is handled entirely through your <code>gcloud</code> credentials.</p>
+</div>
+</div>
+</section>
+<section id="filesystem-safety-permissions-sandboxing" class="level2">
+<h2 class="anchored" data-anchor-id="filesystem-safety-permissions-sandboxing">7. Filesystem Safety, Permissions &amp; Sandboxing</h2>
+<blockquote class="blockquote">
+<p>Official permissions docs: <a href="https://code.claude.com/docs/en/permissions">code.claude.com/docs/en/permissions</a></p>
+<p>Sandboxing docs: <a href="https://code.claude.com/docs/en/sandboxing">code.claude.com/docs/en/sandboxing</a></p>
+</blockquote>
+<section id="understand-risk" class="level3">
+<h3 class="anchored" data-anchor-id="understand-risk">Understand the risk before you start</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Claude Code runs with your user’s full filesystem permissions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is the single most important thing to understand before using it.</p>
+</div>
+</div>
+<p>When you launch Claude Code from the CLI, it has access to your current working directory — but it is <strong>not strictly confined to it</strong>. Without sandboxing enabled, Claude can read, modify, create, or delete files <strong>anywhere your user account has access</strong>, including parent directories, your home folder, and system files. <a href="https://zenn.dev/tomioka/articles/0496a427f8bcd0?locale=en">Independent testing has confirmed</a> that without sandboxing, Claude can create files in parent directories above the working directory without any special prompt.</p>
+<p>This means a poorly worded prompt, an agentic loop, or a <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attack</a> embedded in a file Claude reads could cause changes in places you didn’t intend.</p>
+<p><strong>Practical recommendations:</strong></p>
+<ul>
+<li><strong>Test only within isolated Git repositories</strong>, with no sensitive data present in the local repo.</li>
+<li><strong>Until you’ve enabled sandboxing (see <a href="#enable-sandboxing">below</a>), it’s safest to only run Claude Code on machines without sensitive data stored anywhere</strong> — or at minimum, add deny rules (see <a href="#add-deny-rules">below</a>) to protect your most critical files.</li>
+<li><strong>Sandboxing is the real solution</strong> to this problem. It uses OS-level enforcement to restrict bash commands to the working directory, regardless of what Claude tries to do. It’s available on macOS (built-in) and Linux/WSL2 (requires <code>bubblewrap</code>). Native Windows does not yet support it.</li>
+</ul>
+</section>
+<section id="always-launch-from-your-project-directory" class="level3">
+<h3 class="anchored" data-anchor-id="always-launch-from-your-project-directory">Always launch from your project directory</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Claude Code defaults to operating in the directory where it’s launched. Starting from <code>C:\</code> or <code>/</code> or your home directory gives it an unnecessarily broad scope.</p>
+</section>
+<section id="use-git-as-your-safety-net" class="level3">
+<h3 class="anchored" data-anchor-id="use-git-as-your-safety-net">Use Git as your safety net</h3>
+<p><strong>Always work inside a Git repository.</strong> This is your most important protection:</p>
+<ul>
+<li>You can instantly see what changed with <code>git diff</code>.</li>
+<li>You can revert any unwanted changes with <code>git checkout .</code> or <code>git stash</code>.</li>
+<li>Claude Code itself is Git-aware and will generally respect repository boundaries.</li>
+</ul>
+<p><strong>Before starting a Claude Code session, make sure your working tree is clean</strong> (commit or stash pending changes). That way, anything Claude does can be cleanly reviewed or rolled back.</p>
+</section>
+<section id="use-the-default-permission-mode" class="level3">
+<h3 class="anchored" data-anchor-id="use-the-default-permission-mode">Use the default permission mode</h3>
+<p>Out of the box, Claude Code asks for your approval before running most commands. <strong>Do not change this unless you understand the implications.</strong> Specifically:</p>
+<ul>
+<li><strong>Do NOT use <code>--dangerously-skip-permissions</code></strong> unless you’re in an isolated container/VM. This flag bypasses all safety checks.</li>
+<li><strong>Do NOT set the mode to <code>bypassPermissions</code></strong> in settings.</li>
+</ul>
+</section>
+<section id="understand-how-permissions-actually-work" class="level3">
+<h3 class="anchored" data-anchor-id="understand-how-permissions-actually-work">Understand how permissions actually work</h3>
+<p>In the <strong>default mode</strong>, Claude Code already asks for your approval before running most commands that modify your system (file writes, bash commands, network requests, etc.). Read-only operations like viewing files generally run without prompting.</p>
+<p>You can customize this behavior with three types of rules in <code>settings.json</code>:</p>
+<ul>
+<li><strong><code>deny</code></strong> — Hard block. Claude <strong>cannot</strong> use the tool, period. You won’t even be asked. Deny rules always win over allow rules.</li>
+<li><strong><code>allow</code></strong> — Auto-approve. Claude can use the tool <strong>without asking you first</strong>. This is a convenience shortcut — it skips the approval prompt for things you trust.</li>
+<li><strong><code>ask</code></strong> — Force a prompt, even if something else would auto-approve it.</li>
+</ul>
+<p><strong>You do NOT need to add <code>allow</code> rules for Claude Code to work.</strong> Without any custom rules, it will simply ask you to approve each action as it comes up. The default behavior is already safe — <code>deny</code> rules are the ones that add protection, while <code>allow</code> rules just reduce the number of prompts you see.</p>
+</section>
+<section id="add-deny-rules" class="level3">
+<h3 class="anchored" data-anchor-id="add-deny-rules">Add <code>deny</code> rules to protect sensitive areas</h3>
+<p>Add a <code>permissions</code> block to your <strong><code>~/.claude/settings.json</code></strong> file (the same file you edited in <a href="#configure-settings">Section 5</a>). Think of <code>deny</code> rules as guardrails. Here’s what’s worth blocking and why:</p>
+<pre class="jsonc"><code>{
+  "permissions": {
+    "deny": [
+      // SSH keys — if Claude reads or modifies these, your remote server
+      // access could be compromised. There's no reason Claude needs these.
+      // Replace &lt;your-home&gt; with your actual home path (see note below).
+      "Read(//&lt;your-home&gt;/.ssh/**)",
+      "Edit(//&lt;your-home&gt;/.ssh/**)",
+
+      // Environment files — these typically contain API keys, database
+      // passwords, and other secrets. Claude could accidentally include
+      // them in its context (and thus send them to the API).
+      "Read(//&lt;your-home&gt;/.env)",
+      "Edit(//&lt;your-home&gt;/.env)",
+
+      // Cloud credentials — same reasoning as .env files. Application
+      // Default Credentials for gcloud live here.
+      "Read(//&lt;your-home&gt;/.config/gcloud/**)",
+      "Edit(//&lt;your-home&gt;/.config/gcloud/**)",
+
+      // Broad destructive commands — prevent catastrophic mistakes.
+      "Bash(rm -rf *)",
+
+      // Network tools — prevents Claude from exfiltrating data or
+      // downloading untrusted code. Use WebFetch rules instead if you
+      // need Claude to access specific URLs.
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Replace <code>&lt;your-home&gt;</code> with your actual home directory path.</strong> The <code>//</code> prefix in permission rules means “absolute path from the filesystem root” — there is no <code>~/</code> shorthand. Use the full path:</p>
+<ul>
+<li><strong>macOS:</strong> <code>//Users/yourname/.ssh/**</code></li>
+<li><strong>Linux/WSL2:</strong> <code>//home/yourname/.ssh/**</code></li>
+<li><strong>Windows (PowerShell):</strong> <code>//C:/Users/yourname/.ssh/**</code></li>
+</ul>
+<p>Run <code>echo $HOME</code> (macOS/Linux) or <code>echo $env:USERPROFILE</code> (PowerShell) to find yours.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Why not just rely on the approval prompt?</strong> Because deny rules are absolute — they work even if you accidentally click “allow” or “always allow” on a prompt. They also protect against <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attacks</a> where malicious content in a file tricks Claude into running something harmful. The approval prompt is your first line of defense; deny rules are the backup that can’t be bypassed.</p>
+<p><strong>Important caveat:</strong> <code>Read</code> deny rules apply on a “best-effort” basis to built-in tools like Grep and Glob. However, if a Bash command (like <code>cat .env</code>) is allowed, it can still read the file. This is why denying both <code>Read</code> and the relevant <code>Bash</code> commands together gives stronger protection. See <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for details.</p>
+</div>
+</div>
+</section>
+<section id="allow-rules" class="level3">
+<h3 class="anchored" data-anchor-id="allow-rules">Add <code>allow</code> rules to reduce prompt fatigue</h3>
+<p>These also go in <strong><code>~/.claude/settings.json</code></strong>, inside the same <code>permissions</code> block as your deny rules. By default, Claude Code asks “Do you want to proceed?” before <em>every</em> file write, shell command, and git operation. This gets old fast — in a typical session you might approve the same <code>git add</code>, <code>git commit</code>, and <code>git push</code> sequence a dozen times. You can add <code>allow</code> rules so Claude runs trusted commands without asking:</p>
+<p><strong>Minimal — just stop the git and test prompts:</strong></p>
+<pre class="jsonc"><code>{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git status)",
+      "Bash(git rm *)",
+      "Bash(gh *)",
+      "Bash(python *)",
+      "Bash(pytest *)"
+    ]
+  }
+}</code></pre>
+<p><strong>More aggressive — also auto-approve file edits:</strong></p>
+<pre class="jsonc"><code>{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(python *)",
+      "Bash(pytest *)",
+      "Bash(npm *)",
+      "Bash(pip *)"
+    ]
+  }
+}</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The fastest way: use <code>acceptEdits</code> mode or enable sandboxing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Instead of listing individual allow rules, you can:</p>
+<ul>
+<li><strong>Switch to <code>acceptEdits</code> mode</strong> (<code>Shift+Tab</code> inside a session) — auto-approves all file edits while still prompting for bash commands.</li>
+<li><strong>Enable sandboxing</strong> (see <a href="#enable-sandboxing">Section 7</a>) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually <em>increasing</em> security.</li>
+<li><strong>Use the interactive prompt</strong> — when Claude asks “Do you want to proceed?”, select <strong>“Yes, and don’t ask again for [command pattern]”</strong> to build up your allow list organically during a session.</li>
+</ul>
+</div>
+</div>
+<p>You don’t <em>have</em> to add any allow rules — the default “ask before doing” behavior is safe, especially when you’re starting out. But if you find yourself mindlessly hitting “Yes” on every prompt, that’s a sign you should either add allow rules or enable sandboxing.</p>
+</section>
+<section id="check-your-current-permissions" class="level3">
+<h3 class="anchored" data-anchor-id="check-your-current-permissions">Check your current permissions</h3>
+<p>Run <code>/permissions</code> inside a Claude Code session at any time to see what rules are active and which settings file they came from. This is especially helpful to verify your deny rules are loaded correctly.</p>
+</section>
+<section id="use-project-level-settings-for-shared-repos" class="level3">
+<h3 class="anchored" data-anchor-id="use-project-level-settings-for-shared-repos">Use project-level settings for shared repos</h3>
+<p>You can also create a <code>.claude/settings.json</code> in your project root and commit it to version control. This ensures all team members inherit the same permission rules. Project-level deny rules apply to everyone, even if their personal settings are more permissive.</p>
+<pre class="jsonc"><code>{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./secrets/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}</code></pre>
+<blockquote class="blockquote">
+<p><strong>Path syntax note:</strong> Paths starting with <code>//</code> are absolute paths on your machine. Paths without <code>//</code> are relative to the settings file location. Use <code>**</code> to match recursively. See the <a href="https://code.claude.com/docs/en/permissions">permission rules reference</a> for full pattern syntax.</p>
+</blockquote>
+</section>
+<section id="interactive-safeguards-during-a-session" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-safeguards-during-a-session">Interactive safeguards during a session</h3>
+<ul>
+<li><strong>Press <code>Esc</code></strong> at any time to interrupt Claude Code mid-operation.</li>
+<li><strong>Press <code>Shift+Tab</code></strong> to cycle through permission modes during a session.</li>
+<li><strong>Use <code>/permissions</code></strong> to view and manage active permissions.</li>
+<li><strong>Review every command</strong> before approving it — especially <code>rm</code>, <code>mv</code>, file writes outside your project, and anything involving <code>sudo</code>.</li>
+</ul>
+</section>
+<section id="permission-mode-cheat-sheet" class="level3">
+<h3 class="anchored" data-anchor-id="permission-mode-cheat-sheet">Permission mode cheat sheet</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 37%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>What it does</th>
+<th>When to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>default</strong></td>
+<td>Asks before most operations</td>
+<td>Day-to-day work (recommended)</td>
+</tr>
+<tr class="even">
+<td><strong>acceptEdits</strong></td>
+<td>Auto-approves file edits, still asks for bash commands</td>
+<td>Trusted refactoring tasks</td>
+</tr>
+<tr class="odd">
+<td><strong>plan</strong></td>
+<td>Read-only, no modifications allowed</td>
+<td>Exploring a codebase, code review</td>
+</tr>
+<tr class="even">
+<td><strong>dontAsk</strong></td>
+<td>Auto-denies anything not explicitly in <code>allow</code> list</td>
+<td>Strict automation</td>
+</tr>
+<tr class="odd">
+<td><strong>bypassPermissions</strong></td>
+<td>Skips ALL checks</td>
+<td>Isolated containers only — <strong>never on your local machine</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="enable-sandboxing" class="level3">
+<h3 class="anchored" data-anchor-id="enable-sandboxing">Enable sandboxing (strongly recommended)</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you followed <a href="#configure-claude-code-for-vertex-ai">Section 5</a>, sandboxing is already enabled in your <code>settings.json</code>. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.</p>
+</div>
+</div>
+<p>Sandboxing is the <strong>strongest protection available</strong> against Claude modifying files outside your project. It uses OS-level enforcement (not just Claude’s own judgment) to restrict what bash commands can access — even if a prompt injection bypasses Claude’s decision-making.</p>
+<p><strong>What sandboxing does (<a href="https://code.claude.com/docs/en/sandboxing">official docs</a>):</strong></p>
+<ul>
+<li><strong>Filesystem isolation:</strong> Write access is restricted to the current working directory and its subdirectories. Claude can still <em>read</em> files elsewhere (unless denied), but it <strong>cannot modify, create, or delete files outside your project directory</strong>. This is enforced at the OS kernel level.</li>
+<li><strong>Network isolation:</strong> Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.</li>
+</ul>
+<p><strong>Without sandboxing</strong>, these protections do not exist — Claude operates with your full user permissions, and <a href="https://zenn.dev/tomioka/articles/0496a427f8bcd0?locale=en">can create/modify files in parent directories</a> without any special prompt.</p>
+<p>Anthropic reports that sandboxing <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">reduces permission prompts by 84%</a> while <em>increasing</em> security — you get fewer interruptions and better protection.</p>
+<p><strong>How to enable it:</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false" href="">Windows (native PowerShell)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<p>Works <strong>out of the box</strong> using Apple’s Seatbelt framework. Inside a Claude Code session, run:</p>
+<pre><code>/sandbox</code></pre>
+<p>Choose <strong>“Auto-allow mode”</strong> (recommended) — sandboxed commands run automatically without permission prompts, while anything that would exceed the sandbox boundaries falls back to the normal approval flow.</p>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<p>WSL2 uses <a href="https://github.com/containers/bubblewrap">bubblewrap</a> for sandbox isolation — the same mechanism used on native Linux. <strong>WSL1 is not supported</strong> because bubblewrap requires kernel features only available in WSL2.</p>
+<p><strong>Step 1 — Confirm you’re on WSL2:</strong></p>
+<p>Open a <strong>Windows PowerShell</strong> window (not your WSL terminal) and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">-</span>l <span class="op">-</span>v</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You should see <code>VERSION 2</code> next to your distribution. If you’re on WSL1, <a href="https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2">upgrade to WSL2</a> first. Once confirmed, open your <strong>WSL2 terminal</strong> — all remaining steps run inside WSL.</p>
+<p><strong>Step 2 — Install dependencies:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian (most common WSL distro)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install bubblewrap socat</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install bubblewrap socat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Step 3 — Enable sandboxing inside Claude Code:</strong></p>
+<pre><code>/sandbox</code></pre>
+<p>Choose <strong>“Auto-allow mode”</strong> — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.</p>
+<p><strong>Step 4 — Verify it’s working:</strong></p>
+<p>After enabling, Claude’s bash commands should run without permission prompts as long as they stay within your project directory. If a command needs to write outside the project or access a new network domain, you’ll still get a prompt.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you need tools like <code>npm</code>, <code>pip</code>, or <code>kubectl</code> to write outside your project directory (e.g., to <code>~/.npm</code> or <code>~/.kube</code>), grant specific write access in your <code>settings.json</code>:</p>
+<pre class="jsonc"><code>{
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "allowWrite": ["~/.npm", "~/.kube", "//tmp"]
+    }
+  }
+}</code></pre>
+<p>Path prefixes: <code>//</code> = absolute path, <code>~/</code> = home directory, <code>/</code> = relative to settings file. See the <a href="https://code.claude.com/docs/en/sandboxing">official sandboxing docs</a> for full path syntax.</p>
+</div>
+</div>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<p>Sandboxing is <strong>not yet supported</strong> on native Windows. Use <a href="#add-deny-rules">deny rules</a> and <a href="#allow-rules">allow rules</a> as your primary protection. If you need stronger isolation, consider running Claude Code from WSL2 instead.</p>
+</div>
+</div>
+</div>
+<p><strong>Sandbox modes explained:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 38%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>Behavior</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Auto-allow</strong></td>
+<td>Sandboxed commands run without prompts. Commands that exceed sandbox boundaries fall back to normal approval flow.</td>
+<td>Day-to-day work — fewer interruptions, same security</td>
+</tr>
+<tr class="even">
+<td><strong>Regular permissions</strong></td>
+<td>All commands go through standard approval, even when sandboxed.</td>
+<td>When you want to review every command regardless</td>
+</tr>
+</tbody>
+</table>
+<p>In both modes, the OS-level filesystem and network restrictions are identical. The only difference is whether sandboxed commands are auto-approved.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sandboxing applies only to Bash commands and their child processes. The built-in Read/Edit tools are governed by <a href="#add-deny-rules">permission rules</a>. Use both together for the strongest security posture — this is what Anthropic calls <a href="https://code.claude.com/docs/en/sandboxing">“defense in depth”</a>.</p>
+<p>Some tools are incompatible with sandboxing (e.g., <code>docker</code>, <code>watchman</code>). If a tool fails inside the sandbox, you can exclude it with <code>"excludedCommands"</code> in your <a href="https://code.claude.com/docs/en/sandboxing">sandbox settings</a> so it runs outside the sandbox with normal permission prompts instead.</p>
+</div>
+</div>
+</section>
+<section id="further-reading-on-permissions-security" class="level3">
+<h3 class="anchored" data-anchor-id="further-reading-on-permissions-security">Further reading on permissions &amp; security</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/permissions"><strong>Official permissions docs</strong></a> — full reference for rule syntax, tool names, managed policies</li>
+<li><a href="https://code.claude.com/docs/en/sandboxing"><strong>Official sandboxing docs</strong></a> — setup, configuration, and security model for OS-level isolation</li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-sandboxing"><strong>Anthropic engineering blog on sandboxing</strong></a> — explains the design rationale and how filesystem + network isolation work together</li>
+<li><a href="https://www.petefreitag.com/blog/claude-code-permissions/"><strong>Security deep-dive by Pete Freitag</strong></a> — independent analysis of how permissions actually work under the hood, including gotchas and bypasses</li>
+<li><a href="https://claudefa.st/blog/guide/development/permission-management"><strong>Permission modes guide</strong></a> — when to use each mode, with workflow examples</li>
+</ul>
+</section>
+</section>
+<section id="billing-cost-management-avoiding-runaway-costs" class="level2">
+<h2 class="anchored" data-anchor-id="billing-cost-management-avoiding-runaway-costs">8. Billing, Cost Management &amp; Avoiding Runaway Costs</h2>
+<blockquote class="blockquote">
+<p>Official cost management docs: <a href="https://code.claude.com/docs/en/costs">code.claude.com/docs/en/costs</a></p>
+<p>GCP budget alerts: <a href="https://cloud.google.com/billing/docs/how-to/budgets">cloud.google.com/billing/docs/how-to/budgets</a></p>
+</blockquote>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Claude Code on Vertex AI is pay-as-you-go
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every token you send and receive is billed to your GCP project. Unlike a Claude Pro/Max subscription with fixed monthly pricing, there is no spending cap unless you set one up yourself. <strong>You can rack up significant charges quickly if you’re not careful.</strong></p>
+</div>
+</div>
+<section id="typical-costs-to-expect" class="level3">
+<h3 class="anchored" data-anchor-id="typical-costs-to-expect">Typical costs to expect</h3>
+<p>According to <a href="https://code.claude.com/docs/en/costs">Anthropic’s own documentation</a>, the average Claude Code session costs about <strong>$6 per developer per day</strong>, with 90% of users staying under $12/day. However, this is an <em>average</em> — complex tasks, long sessions, or agentic loops can blow past this easily. Monthly costs with Sonnet typically run <strong>$100–$200/developer</strong>, but there’s large variance.</p>
+<p>Use the <strong><code>/cost</code></strong> command inside Claude Code at any time to see your current session’s token usage and estimated cost:</p>
+<pre><code>/cost</code></pre>
+</section>
+<section id="understand-what-drives-costs" class="level3">
+<h3 class="anchored" data-anchor-id="understand-what-drives-costs">Understand what drives costs</h3>
+<p>Token costs scale with <strong>context size</strong> — the more context Claude processes, the more you pay. Key cost drivers:</p>
+<ul>
+<li><strong>Long conversations:</strong> Claude re-processes the entire conversation history with each message. A session that’s been going for hours costs more per-message than a fresh one.</li>
+<li><strong>Large codebases:</strong> If Claude reads many files to understand your project, that’s all input tokens.</li>
+<li><strong>Extended thinking:</strong> Enabled by default with a budget of <a href="https://code.claude.com/docs/en/costs">~32K tokens</a>. Thinking tokens are billed as output tokens (the expensive kind). For simple tasks, this is overkill.</li>
+<li><strong>Agentic loops (see below):</strong> The single biggest risk for runaway costs.</li>
+</ul>
+</section>
+<section id="agentic-loops" class="level3">
+<h3 class="anchored" data-anchor-id="agentic-loops">Agentic loops — the #1 cost risk</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An <strong>agentic loop</strong> happens when Claude gets stuck in a cycle — repeatedly reading the same files, running the same commands, or auto-compacting and re-expanding its context. This can burn through tokens at an alarming rate.</p>
+</div>
+</div>
+<p><strong>Real-world examples from the community:</strong></p>
+<ul>
+<li>One user <a href="https://github.com/anthropics/claude-code/issues/9579">reported a bug</a> where an auto-compacting loop consumed <strong>108 million tokens in a single day ($64–$78)</strong>, compared to their normal 12–68M tokens/day.</li>
+<li>Runaway spikes of <strong>$235+ over a 4-day period</strong> were documented from that same loop bug.</li>
+<li>Version updates have occasionally caused <a href="https://github.com/anthropics/claude-code/issues/16856"><strong>4x faster token consumption</strong></a> on the same tasks.</li>
+</ul>
+<p><strong>How to protect yourself:</strong></p>
+<ul>
+<li><strong>Watch for signs:</strong> If Claude seems to be reading the same files over and over, or your <code>/cost</code> jumps unusually fast, press <strong><code>Esc</code></strong> immediately to interrupt.</li>
+<li><strong>Use <code>/compact</code></strong> to compress long conversations before they bloat.</li>
+<li><strong>Use <code>/clear</code></strong> when switching to unrelated tasks — don’t let stale context accumulate.</li>
+<li><strong>Be specific in prompts.</strong> Vague requests like “improve this codebase” trigger broad scanning. “Add input validation to the login function in <code>auth.ts</code>” is much cheaper.</li>
+<li><strong>Use plan mode (Shift+Tab)</strong> before expensive operations. Claude outlines its approach for your approval before writing code, preventing costly rework.</li>
+<li><strong>Start with Sonnet, not Opus.</strong> Only escalate to Opus for genuinely complex reasoning tasks. Opus costs significantly more per token.</li>
+</ul>
+</section>
+<section id="budget-alerts" class="level3">
+<h3 class="anchored" data-anchor-id="budget-alerts">Set up GCP budget alerts (do this NOW)</h3>
+<p>Budget alerts won’t automatically stop spending, but they’ll email you when you’re approaching a threshold. <strong>Set this up before your first Claude Code session.</strong></p>
+<ol type="1">
+<li>Go to <a href="https://console.cloud.google.com/billing/budgets"><strong>Billing → Budgets &amp; Alerts</strong></a> in the GCP Console.</li>
+<li>Click <strong>Create Budget</strong>.</li>
+<li>Scope it to your project (e.g., <code>doit-rci-sandbox-gcp-baa4</code>).</li>
+<li>Set a monthly budget amount you’re comfortable with (e.g., $50, $100, $200).</li>
+<li>Set alert thresholds at <strong>50%, 80%, and 100%</strong> of your budget.</li>
+<li>Add your email as a notification recipient.</li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Budget alerts are <a href="https://cloud.google.com/billing/docs/how-to/budgets"><strong>notifications only</strong></a> — they do NOT automatically stop your services or disable billing. If you hit 100% of your budget at 2 AM, charges will continue until you manually intervene. Check your billing console daily.</p>
+</div>
+</div>
+</section>
+<section id="check-your-billing-console-daily" class="level3">
+<h3 class="anchored" data-anchor-id="check-your-billing-console-daily">Check your billing console daily</h3>
+<p>Make it a habit to visit the <a href="https://console.cloud.google.com/billing/reports"><strong>GCP Billing Reports</strong></a> page at least once a day while actively using Claude Code. Look for:</p>
+<ul>
+<li>Unexpected spikes in Vertex AI charges</li>
+<li>Daily costs that exceed your expectations</li>
+<li>Any charges from services you didn’t intentionally use</li>
+</ul>
+</section>
+<section id="set-quota-limits-as-a-hard-ceiling" class="level3">
+<h3 class="anchored" data-anchor-id="set-quota-limits-as-a-hard-ceiling">Set quota limits as a hard ceiling</h3>
+<p>Unlike budget alerts, <strong>quotas can actually stop usage.</strong> Go to <a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas"><strong>Quotas &amp; System Limits</strong></a> and set reasonable TPM (tokens per minute) quotas for the Claude models you’re using. If you hit your quota, Claude Code will get 429 errors instead of running up your bill.</p>
+</section>
+<section id="cost-saving-tips" class="level3">
+<h3 class="anchored" data-anchor-id="cost-saving-tips">Cost-saving tips</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 52%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Strategy</th>
+<th>Savings</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Use <strong>Sonnet</strong> instead of Opus for routine tasks</td>
+<td>Significantly lower per-token cost</td>
+</tr>
+<tr class="even">
+<td>Run <strong><code>/clear</code></strong> between unrelated tasks</td>
+<td>Avoids paying to re-process old context</td>
+</tr>
+<tr class="odd">
+<td>Run <strong><code>/compact</code></strong> during long sessions</td>
+<td>Compresses context, reduces per-message cost</td>
+</tr>
+<tr class="even">
+<td>Lower extended thinking budget (<code>MAX_THINKING_TOKENS=8000</code>)</td>
+<td>Reduces output token costs on simple tasks</td>
+</tr>
+<tr class="odd">
+<td>Keep your <code>CLAUDE.md</code> files lean (&lt;500 lines)</td>
+<td>Less context loaded on every message</td>
+</tr>
+<tr class="even">
+<td>Use <strong>plan mode</strong> before big refactors</td>
+<td>Catches wrong approaches before expensive execution</td>
+</tr>
+<tr class="odd">
+<td>Disable non-essential model calls</td>
+<td><code>DISABLE_NON_ESSENTIAL_MODEL_CALLS=1</code> in env</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vertex-ai-pricing-reference" class="level3">
+<h3 class="anchored" data-anchor-id="vertex-ai-pricing-reference">Vertex AI pricing reference</h3>
+<p>For the latest Claude model pricing on Vertex AI, see:</p>
+<ul>
+<li><a href="https://cloud.google.com/vertex-ai/generative-ai/pricing"><strong>Vertex AI Generative AI Pricing</strong></a> — official Google pricing page with per-token rates for each Claude model</li>
+<li><a href="https://platform.claude.com/docs/en/about-claude/pricing"><strong>Anthropic Pricing</strong></a> — base token rates by model, including cache and batch discounts</li>
+<li><a href="https://code.claude.com/docs/en/costs"><strong>Claude Code Cost Management</strong></a> — Anthropic’s official guide to tracking and reducing Claude Code costs</li>
+<li><a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas"><strong>GCP Quotas for Vertex AI</strong></a> — view and adjust your TPM/RPM quotas</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The token usage shown on the <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude">GCP Quotas page may be inaccurate</a> for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use <code>/cost</code> inside Claude Code.</p>
+<p>Regional endpoints carry a <a href="https://cloud.google.com/vertex-ai/generative-ai/pricing"><strong>10% premium</strong></a> over global endpoints. If you selected the global endpoint, you’re on the cheaper tier.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="troubleshooting" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting">9. Troubleshooting</h2>
+<section id="model-not-found-404" class="level3">
+<h3 class="anchored" data-anchor-id="model-not-found-404">“model not found” (404)</h3>
+<p>The model may not be available on the <code>global</code> endpoint. Try changing your region:</p>
+<pre class="jsonc"><code>"CLOUD_ML_REGION": "us-east5"</code></pre>
+<p>Or add a model-specific override (see <a href="#configure-claude-code-for-vertex-ai">Section 5</a>).</p>
+</section>
+<section id="resource-exhausted" class="level3">
+<h3 class="anchored" data-anchor-id="resource-exhausted">429 “Resource Exhausted”</h3>
+<p>You need a quota increase. Go to <a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas">Cloud Console → Quotas</a>, filter by the Claude model, and request an increase.</p>
+</section>
+<section id="permission-denied-iam-errors" class="level3">
+<h3 class="anchored" data-anchor-id="permission-denied-iam-errors">Permission denied / IAM errors</h3>
+<p>Ask your UW-Madison GCP admin to ensure you have the <code>roles/aiplatform.user</code> role on the project.</p>
+</section>
+<section id="gcloud-command-not-found" class="level3">
+<h3 class="anchored" data-anchor-id="gcloud-command-not-found"><code>gcloud</code> command not found</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<p>Make sure the Google Cloud SDK is installed and restart PowerShell.</p>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<p>If you installed via Homebrew, run <code>source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"</code> or restart your terminal. If you used the curl installer, make sure you ran <code>source ~/.zshrc</code> after install.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="claude-command-not-found" class="level3">
+<h3 class="anchored" data-anchor-id="claude-command-not-found"><code>claude</code> command not found</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<p>Ensure <code>C:\Users\&lt;you&gt;\.local\bin</code> is in your user PATH (see <a href="#install-claude-code">Section 2</a>). Restart PowerShell after editing PATH.</p>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<p>Ensure <code>~/.claude/bin</code> or <code>~/.local/bin</code> is in your <code>$PATH</code>. Restart your terminal or run <code>source ~/.zshrc</code>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="authentication-expired" class="level3">
+<h3 class="anchored" data-anchor-id="authentication-expired">Authentication expired</h3>
+<p>Re-run (both platforms):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="run-diagnostics" class="level3">
+<h3 class="anchored" data-anchor-id="run-diagnostics">Run diagnostics</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This checks your installation, authentication, and configuration for common issues.</p>
+</section>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">10. Quick Reference</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true" href="">Windows (PowerShell)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false" href="">macOS (Terminal)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://cloud.google.com/sdk/docs/install</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>gcloud auth login</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>gcloud auth application-default login</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\your\project</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or: brew install --cask claude-code</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or: curl https://sdk.cloud.google.com | bash</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<section id="in-session-commands-both-platforms" class="level3">
+<h3 class="anchored" data-anchor-id="in-session-commands-both-platforms">In-session commands (both platforms)</h3>
+<pre class="text"><code>/status        # Confirm Vertex AI is the active provider
+/cost          # Check current session token usage and cost
+/compact       # Compress conversation context to save tokens
+/clear         # Wipe context when switching tasks
+/permissions   # View and manage active permission rules
+/sandbox       # Check or enable OS-level sandboxing
+Esc            # Interrupt Claude mid-operation
+Shift+Tab      # Cycle through permission modes</code></pre>
+</section>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<ul>
+<li><a href="https://code.claude.com/docs/en/setup">Claude Code Setup Docs</a></li>
+<li><a href="https://code.claude.com/docs/en/google-vertex-ai">Claude Code on Vertex AI</a></li>
+<li><a href="https://code.claude.com/docs/en/permissions">Claude Code Permissions</a></li>
+<li><a href="https://code.claude.com/docs/en/sandboxing">Claude Code Sandboxing</a></li>
+<li><a href="https://code.claude.com/docs/en/costs">Claude Code Cost Management</a></li>
+<li><a href="https://console.cloud.google.com/vertex-ai/model-garden">Vertex AI Model Garden</a></li>
+<li><a href="https://cloud.google.com/billing/docs/how-to/budgets">GCP Budget Alerts</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/uw-madison-datascience\.github\.io\/ML-X-Nexus");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="preferred-color-scheme">
+<input type="hidden" id="giscus-alt-theme" value="preferred-color-scheme">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "UW-Madison-DataScience/ML-X-Nexus";
+    script.dataset.repoId = "R_kgDOKVN_Vw";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOKVN_V84CgacK";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-vertex-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>

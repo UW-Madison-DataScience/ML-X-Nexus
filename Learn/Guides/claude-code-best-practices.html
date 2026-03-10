@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2026-03-09">
+
+<title>Claude Code Best Practices – Nexus: Crowdsourced ML Resources</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ee74a852250da7abdbda3c7c1a549c45.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Claude Code Best Practices</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+    <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
+    <a href="../../index.xml" title="Subscribe via RSS" class="quarto-navigation-tool px-1" aria-label="Subscribe via RSS"><i class="bi bi-rss"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to contribute?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learn</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notebooks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workshops</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Projects/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Projects</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Projects/ML-Marathon/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML Marathon</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stories</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Blogs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Videos</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI @ UW</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML+X</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML4MI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SILO</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Other</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Toolbox</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Benchmarks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benchmarks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compute</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GenAI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Libraries</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">MLOps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Category glossary</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-agentic-coding" id="toc-what-is-agentic-coding" class="nav-link active" data-scroll-target="#what-is-agentic-coding">What is agentic coding?</a></li>
+  <li><a href="#the-landscape-at-a-glance" id="toc-the-landscape-at-a-glance" class="nav-link" data-scroll-target="#the-landscape-at-a-glance">The landscape at a glance</a>
+  <ul class="collapse">
+  <li><a href="#what-the-same-task-looks-like-across-different-tools" id="toc-what-the-same-task-looks-like-across-different-tools" class="nav-link" data-scroll-target="#what-the-same-task-looks-like-across-different-tools">What the same task looks like across different tools</a></li>
+  </ul></li>
+  <li><a href="#working-effectively-with-claude-code" id="toc-working-effectively-with-claude-code" class="nav-link" data-scroll-target="#working-effectively-with-claude-code">Working effectively with Claude Code</a>
+  <ul class="collapse">
+  <li><a href="#think-in-features-not-projects" id="toc-think-in-features-not-projects" class="nav-link" data-scroll-target="#think-in-features-not-projects">Think in features, not projects</a></li>
+  <li><a href="#use-claude.md-as-your-control-surface" id="toc-use-claude.md-as-your-control-surface" class="nav-link" data-scroll-target="#use-claude.md-as-your-control-surface">Use <code>CLAUDE.md</code> as your control surface</a></li>
+  <li><a href="#tune-the-permission-dial" id="toc-tune-the-permission-dial" class="nav-link" data-scroll-target="#tune-the-permission-dial">Tune the permission dial</a></li>
+  <li><a href="#use-branches-and-commit-frequently" id="toc-use-branches-and-commit-frequently" class="nav-link" data-scroll-target="#use-branches-and-commit-frequently">Use branches and commit frequently</a></li>
+  <li><a href="#review-everything-at-the-right-level" id="toc-review-everything-at-the-right-level" class="nav-link" data-scroll-target="#review-everything-at-the-right-level">Review everything (at the right level)</a></li>
+  <li><a href="#give-the-agent-a-way-to-verify-its-own-work" id="toc-give-the-agent-a-way-to-verify-its-own-work" class="nav-link" data-scroll-target="#give-the-agent-a-way-to-verify-its-own-work">Give the agent a way to verify its own work</a></li>
+  <li><a href="#explore-first-then-plan-then-code" id="toc-explore-first-then-plan-then-code" class="nav-link" data-scroll-target="#explore-first-then-plan-then-code">Explore first, then plan, then code</a></li>
+  <li><a href="#manage-context-aggressively" id="toc-manage-context-aggressively" class="nav-link" data-scroll-target="#manage-context-aggressively">Manage context aggressively</a></li>
+  <li><a href="#extend-claude-code-with-skills-hooks-and-mcp" id="toc-extend-claude-code-with-skills-hooks-and-mcp" class="nav-link" data-scroll-target="#extend-claude-code-with-skills-hooks-and-mcp">Extend Claude Code with skills, hooks, and MCP</a></li>
+  </ul></li>
+  <li><a href="#managing-costs" id="toc-managing-costs" class="nav-link" data-scroll-target="#managing-costs">Managing costs</a>
+  <ul class="collapse">
+  <li><a href="#what-does-this-actually-cost" id="toc-what-does-this-actually-cost" class="nav-link" data-scroll-target="#what-does-this-actually-cost">What does this actually cost?</a></li>
+  <li><a href="#watch-out-for-runaway-costs" id="toc-watch-out-for-runaway-costs" class="nav-link" data-scroll-target="#watch-out-for-runaway-costs">Watch out for runaway costs</a></li>
+  <li><a href="#for-uw-madison-researchers-institutional-cloud-benefits" id="toc-for-uw-madison-researchers-institutional-cloud-benefits" class="nav-link" data-scroll-target="#for-uw-madison-researchers-institutional-cloud-benefits">For UW-Madison researchers: institutional cloud benefits</a></li>
+  <li><a href="#strategies-to-keep-costs-down" id="toc-strategies-to-keep-costs-down" class="nav-link" data-scroll-target="#strategies-to-keep-costs-down">Strategies to keep costs down</a></li>
+  <li><a href="#energy-and-environmental-considerations" id="toc-energy-and-environmental-considerations" class="nav-link" data-scroll-target="#energy-and-environmental-considerations">Energy and environmental considerations</a></li>
+  </ul></li>
+  <li><a href="#data-privacy" id="toc-data-privacy" class="nav-link" data-scroll-target="#data-privacy">Data privacy: who sees your code?</a>
+  <ul class="collapse">
+  <li><a href="#is-your-data-used-for-model-training" id="toc-is-your-data-used-for-model-training" class="nav-link" data-scroll-target="#is-your-data-used-for-model-training">Is your data used for model training?</a></li>
+  <li><a href="#can-anthropic-employees-see-your-code" id="toc-can-anthropic-employees-see-your-code" class="nav-link" data-scroll-target="#can-anthropic-employees-see-your-code">Can Anthropic employees see your code?</a></li>
+  <li><a href="#what-about-the-web-version" id="toc-what-about-the-web-version" class="nav-link" data-scroll-target="#what-about-the-web-version">What about the web version?</a></li>
+  <li><a href="#further-reading-on-data-privacy" id="toc-further-reading-on-data-privacy" class="nav-link" data-scroll-target="#further-reading-on-data-privacy">Further reading on data privacy</a></li>
+  </ul></li>
+  <li><a href="#security-fundamentals" id="toc-security-fundamentals" class="nav-link" data-scroll-target="#security-fundamentals">Security fundamentals</a>
+  <ul class="collapse">
+  <li><a href="#scope-your-credentials" id="toc-scope-your-credentials" class="nav-link" data-scroll-target="#scope-your-credentials">Scope your credentials</a></li>
+  <li><a href="#sandbox-when-possible" id="toc-sandbox-when-possible" class="nav-link" data-scroll-target="#sandbox-when-possible">Sandbox when possible</a></li>
+  <li><a href="#watch-for-prompt-injection-and-runaway-agents" id="toc-watch-for-prompt-injection-and-runaway-agents" class="nav-link" data-scroll-target="#watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</a></li>
+  </ul></li>
+  <li><a href="#platform-and-deployment-notes" id="toc-platform-and-deployment-notes" class="nav-link" data-scroll-target="#platform-and-deployment-notes">Platform and deployment notes</a>
+  <ul class="collapse">
+  <li><a href="#cicd-and-remote-deployment" id="toc-cicd-and-remote-deployment" class="nav-link" data-scroll-target="#cicd-and-remote-deployment">CI/CD and remote deployment</a></li>
+  <li><a href="#a-note-for-gitlab-users" id="toc-a-note-for-gitlab-users" class="nav-link" data-scroll-target="#a-note-for-gitlab-users">A note for GitLab users</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#further-reading-and-perspectives" id="toc-further-reading-and-perspectives" class="nav-link" data-scroll-target="#further-reading-and-perspectives">Further reading and perspectives</a>
+  <ul class="collapse">
+  <li><a href="#official-documentation-and-guides" id="toc-official-documentation-and-guides" class="nav-link" data-scroll-target="#official-documentation-and-guides">Official documentation and guides</a></li>
+  <li><a href="#community-voices-and-analysis" id="toc-community-voices-and-analysis" class="nav-link" data-scroll-target="#community-voices-and-analysis">Community voices and analysis</a></li>
+  <li><a href="#tool-comparisons" id="toc-tool-comparisons" class="nav-link" data-scroll-target="#tool-comparisons">Tool comparisons</a></li>
+  <li><a href="#benchmarks-and-leaderboards" id="toc-benchmarks-and-leaderboards" class="nav-link" data-scroll-target="#benchmarks-and-leaderboards">Benchmarks and leaderboards</a></li>
+  <li><a href="#security" id="toc-security" class="nav-link" data-scroll-target="#security">Security</a></li>
+  </ul></li>
+  <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-best-practices.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Claude Code Best Practices</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Guides</div>
+    <div class="quarto-category">GenAI</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">Agentic coding</div>
+    <div class="quarto-category">Software development</div>
+    <div class="quarto-category">Best practices</div>
+    <div class="quarto-category">Security</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 9, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: <a href="https://docs.anthropic.com/en/docs/claude-code/overview">Claude Code</a>, <a href="https://github.com/features/copilot">GitHub Copilot</a>, <a href="https://www.cursor.com/">Cursor</a>, <a href="https://windsurf.com/">Windsurf</a>, <a href="https://www.augmentcode.com/">Augment Code</a>, <a href="https://aws.amazon.com/q/developer/">Amazon Q Developer</a>, <a href="https://cloud.google.com/products/gemini-code-assist">Gemini Code Assist</a>, and <a href="https://about.gitlab.com/gitlab-duo/">GitLab Duo</a> are among the most prominent, with new entrants appearing regularly.</p>
+<p>Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using <strong><a href="https://code.claude.com/">Claude Code</a></strong> as the primary lens. Claude Code is Anthropic’s agentic coding tool — distinct from the <a href="https://claude.ai">Claude.ai</a> chat interface — and it comes in several forms: a <strong>CLI</strong>, a <strong>desktop app</strong>, <strong>IDE extensions</strong> (<a href="https://code.claude.com/docs/en/vs-code">VS Code</a>, <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a>), and a <strong>web IDE</strong> at <a href="https://claude.ai/code">claude.ai/code</a>. All give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We’ll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.</p>
+<p>This is a first pass based on early experience — we expect it to evolve as the ML+X community builds more hands-on knowledge. If you have tips, corrections, or experiences to share, please leave a comment below.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Sources and attribution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Much of the Claude Code-specific guidance in this post draws on Anthropic’s official documentation, including their <a href="https://code.claude.com/docs/en/best-practices">best practices guide</a>, <a href="https://code.claude.com/docs/en/permissions">permissions</a> and <a href="https://code.claude.com/docs/en/sandboxing">sandboxing</a> docs, <a href="https://code.claude.com/docs/en/claude-md">CLAUDE.md reference</a>, <a href="https://code.claude.com/docs/en/data-usage">data usage policy</a>, and <a href="https://code.claude.com/docs/en/costs">cost management guide</a>. GitHub Copilot sections draw on GitHub’s <a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">coding agent docs</a> and <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">changelog</a>. Where we paraphrase official documentation, we’ve linked to the source. Community perspectives and independent analyses are cited inline throughout.</p>
+</div>
+</div>
+</div>
+<section id="what-is-agentic-coding" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-agentic-coding">What is agentic coding?</h2>
+<p>Traditional AI code assistants (like early GitHub Copilot or ChatGPT) work in a simple loop: you ask, they suggest, you accept or reject. <strong>Agentic</strong> coding tools go further. They can:</p>
+<ul>
+<li>Read and navigate your entire codebase</li>
+<li>Execute shell commands and run tests</li>
+<li>Edit multiple files in a single pass</li>
+<li>Iterate on their own output (fix errors, re-run tests, refine)</li>
+<li>Operate semi-autonomously over multi-step tasks</li>
+</ul>
+<p>This is powerful, but it also means these tools have real access to your system — and the potential to do real damage if not managed carefully.</p>
+</section>
+<section id="the-landscape-at-a-glance" class="level2">
+<h2 class="anchored" data-anchor-id="the-landscape-at-a-glance">The landscape at a glance</h2>
+<p>Before diving into Claude Code specifically, here’s a rough map of the major agentic coding tools as of early 2026:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Tool</th>
+<th>Interface</th>
+<th>Agentic?</th>
+<th>Cost model</th>
+<th>Notable strengths</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Claude Code</strong></td>
+<td>CLI, desktop app, IDE extensions, <a href="https://claude.ai/code">web IDE</a></td>
+<td>Yes — full shell access</td>
+<td>Pay-per-token (API) or Max plan</td>
+<td>Deep reasoning, explicit permission model, CLAUDE.md</td>
+</tr>
+<tr class="even">
+<td><strong>GitHub Copilot</strong></td>
+<td>VS Code/IDE, GitHub.com</td>
+<td>Yes — agent mode + async coding agent</td>
+<td>Subscription + usage-based</td>
+<td>Tight GitHub integration, async PR creation, wide model selection</td>
+</tr>
+<tr class="odd">
+<td><strong>Cursor</strong></td>
+<td>Custom IDE (VS Code fork)</td>
+<td>Yes</td>
+<td>Subscription</td>
+<td>Best-in-class IDE UX, fast inline edits, multi-file context</td>
+</tr>
+<tr class="even">
+<td><strong>Windsurf</strong></td>
+<td>Custom IDE</td>
+<td>Yes</td>
+<td>Subscription (free tier available)</td>
+<td>Good value, smooth agentic flow</td>
+</tr>
+<tr class="odd">
+<td><strong>Augment Code</strong></td>
+<td>IDE extension</td>
+<td>Yes</td>
+<td>Subscription</td>
+<td>Large context window, codebase-aware</td>
+</tr>
+<tr class="even">
+<td><strong>Amazon Q Developer</strong></td>
+<td>IDE, CLI, AWS console</td>
+<td>Yes</td>
+<td>Free tier / Pro</td>
+<td>Deep AWS integration</td>
+</tr>
+<tr class="odd">
+<td><strong>Gemini Code Assist</strong></td>
+<td>IDE, Google Cloud</td>
+<td>Yes</td>
+<td>Free tier / Enterprise</td>
+<td>Google Cloud integration</td>
+</tr>
+<tr class="even">
+<td><strong>GitLab Duo</strong></td>
+<td>GitLab IDE, MR workflows</td>
+<td>Yes</td>
+<td>GitLab subscription add-on</td>
+<td>Native GitLab CI/CD integration</td>
+</tr>
+</tbody>
+</table>
+<p>This space is moving fast — capabilities and pricing change frequently. See <a href="https://artificialanalysis.ai/insights/coding-agents-comparison">Coding Agents Comparison</a> for up-to-date benchmarks and pricing.</p>
+<p>In practice, many developers use <strong>multiple tools</strong>: a chat UI for brainstorming and review, an agentic tool for multi-step feature work, and an IDE copilot for inline completions throughout the day.</p>
+<section id="what-the-same-task-looks-like-across-different-tools" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-same-task-looks-like-across-different-tools">What the same task looks like across different tools</h3>
+<p>To make these distinctions concrete, let’s walk through the same scenario — <em>“I have a repo on GitHub and I want Claude to add a utility function, write tests, and open a PR”</em> — across Claude.ai, Claude Code, and GitHub Copilot.</p>
+<section id="claude.ai-chat-not-claude-code" class="level4">
+<h4 class="anchored" data-anchor-id="claude.ai-chat-not-claude-code">Claude.ai (Chat — not Claude Code)</h4>
+<p><a href="https://claude.ai">Claude.ai</a> is Anthropic’s general-purpose chat interface. It’s <em>not</em> an agentic coding tool — it can’t execute code, edit files, or run commands on your system. You provide context by pasting code into the conversation, and you copy the output back into your editor.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The Claude Desktop app has multiple tabs — don’t confuse them
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <a href="https://claude.ai/download">Claude Desktop app</a> includes three tabs: <strong>Chat</strong> (standard conversation, with <a href="https://modelcontextprotocol.io/">MCP</a> support), <strong>Code</strong> (the full Claude Code agentic experience — see below), and <strong>Cowork</strong> (an AI companion that watches your screen and offers suggestions). Only the <strong>Code</strong> tab is an agentic coding tool. The Chat tab provides the same experience as <a href="https://claude.ai">claude.ai</a> in a native app.</p>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>Start a new conversation at <a href="https://claude.ai">claude.ai</a> or in the Claude Desktop app’s Chat tab</li>
+<li>Paste in the relevant code (e.g., the contents of <code>src/utils/</code> and a few example utilities)</li>
+<li>Ask: <em>“Add a <code>slugify</code> function that matches the style of these existing utilities. Also write tests.”</em></li>
+<li>Claude generates the code and tests in the chat</li>
+<li><strong>You</strong> copy the output back into your editor, create a branch, commit, and open the PR yourself</li>
+</ol>
+<p><strong>Friction:</strong> You’re the middleware in both directions — pasting code in and copying code out. But notice what’s <em>not</em> here: permission prompts, approve/deny flows, or any risk of it running a bad command. Claude can’t touch your system, so the conversation feels fast and fluid even though you do all the manual work.</p>
+<p><strong>Best for:</strong> Quick code generation, architecture discussions, explaining unfamiliar code, and brainstorming — any task where you’re happy to provide context manually and apply changes yourself.</p>
+</section>
+<section id="claude-code" class="level4">
+<h4 class="anchored" data-anchor-id="claude-code">Claude Code</h4>
+<p><a href="https://code.claude.com/">Claude Code</a> is Anthropic’s agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project. A built-in permission system prompts you to approve or deny each action, so you stay in the loop while the agent does the heavy lifting.</p>
+<p>Claude Code is available across multiple surfaces — a <a href="https://code.claude.com/docs/en/desktop">desktop app</a>, a <a href="https://code.claude.com/docs/en/cloud">web IDE</a>, a <a href="https://code.claude.com/docs/en/getting-started">terminal CLI</a>, and IDE extensions for <a href="https://code.claude.com/docs/en/vs-code">VS Code</a> and <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a> — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about <em>how you interact</em> and <em>where the work runs</em>, not what the agent can do.</p>
+<p>Here’s what a typical Claude Code session looks like, regardless of surface. You type a request like:</p>
+<blockquote class="blockquote">
+<p><em>Look at src/utils/ and add a slugify function that matches the style of existing utilities. Write tests too. Create a branch, commit, and open a PR when you’re done.</em></p>
+</blockquote>
+<p>Claude Code will:</p>
+<ol type="1">
+<li>Read your existing utils to understand the style</li>
+<li><strong>Ask permission</strong> to create a new file → you approve (or it auto-approves if you’ve configured that)</li>
+<li>Write the function and tests</li>
+<li><strong>Ask permission</strong> to run the tests → you approve (or it auto-approves if you’ve <a href="https://code.claude.com/docs/en/permissions">allowed your test command</a>)</li>
+<li>Run <code>pytest</code> (or whatever your test runner is), see results</li>
+<li>If tests fail, iterate — fix the code, re-run</li>
+<li><strong>Ask permission</strong> to create a branch, commit, push, and open a PR → you approve (this can also be auto-approved via <a href="https://code.claude.com/docs/en/permissions">allow rules</a>, but most users prefer to keep git operations manual for safety)</li>
+</ol>
+<p><strong>Friction:</strong> The permission prompts keep you in the loop but slow things down. You can reduce this by configuring <a href="https://code.claude.com/docs/en/permissions">allow rules</a> in your settings to auto-approve actions you trust. Many experienced users auto-approve <em>most</em> actions — file edits, test runs, even git operations — and instead invest their review time at the PR stage, where they can inspect the full diff before merging. This “let it cook, review the PR” approach works well when you’ve written clear prompts and have CI checks in place. If you’re just getting started, a more conservative sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.</p>
+<section id="claude-code-desktop-web" class="level5">
+<h5 class="anchored" data-anchor-id="claude-code-desktop-web">Desktop &amp; Web</h5>
+<p>The easiest way to get started is through the <a href="https://code.claude.com/docs/en/desktop">Claude Desktop app</a> (Code tab) or <a href="https://code.claude.com/docs/en/cloud">Claude Code on the web</a> at <a href="https://claude.ai/code">claude.ai/code</a>. Both provide the same GUI experience. The main difference is where it runs: the desktop app works with local git repositories on your machine, with each session getting its own isolated <a href="https://git-scm.com/docs/git-worktree">git worktree</a> so parallel tasks don’t collide. The web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile (<a href="https://apps.apple.com/us/app/claude-by-anthropic/id6473753684">iOS</a> / <a href="https://play.google.com/store/apps/details?id=com.anthropic.claude">Android</a>) for kicking off and monitoring tasks on the go. <strong>Note:</strong> the desktop app requires Git — your project must be a git repo with at least one commit.</p>
+<p>Key capabilities:</p>
+<ul>
+<li><strong>Visual diff review</strong> — see exactly what Claude changed, leave inline comments on specific lines, and ask Claude to revise</li>
+<li><strong>Live app preview</strong> — Claude can start a dev server and verify its own changes in an embedded browser, taking screenshots and fixing issues it finds</li>
+<li><strong>Parallel sessions</strong> — run multiple tasks simultaneously in separate tabs, each on its own isolated branch</li>
+<li><strong>GitHub PR monitoring</strong> — watch CI status, auto-fix failing checks, and auto-merge when everything passes</li>
+<li><strong><a href="https://code.claude.com/docs/en/scheduled-tasks">Scheduled tasks</a></strong> — set up recurring tasks using cron expressions (e.g., daily dependency checks, periodic code reviews, deployment monitoring). On desktop, these persist across sessions; on the web, you can <a href="https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-cowork">schedule them in Cowork</a>. In the CLI, use the <code>/loop</code> skill for lightweight in-session polling</li>
+<li><strong>Connectors</strong> — one-click integrations for GitHub, Slack, Linear, Notion, and more</li>
+<li><strong>Async handoff</strong> — start a task on the web and close your laptop; it runs in the cloud and notifies you when done. You can also start a task from the terminal with <code>claude --remote</code>, or pull a web session into your terminal with <code>claude --teleport</code></li>
+</ul>
+<p><strong>Best for:</strong> Users who prefer a GUI, want visual diff review and parallel task management, or want to get started without installing anything. The web version is the fastest way to try Claude Code — just open <a href="https://claude.ai/code">claude.ai/code</a> and point it at a repo.</p>
+</section>
+<section id="terminal-cli" class="level5">
+<h5 class="anchored" data-anchor-id="terminal-cli">Terminal (CLI)</h5>
+<p>Claude Code is also available as a CLI, installed via npm (<code>npm install -g @anthropic-ai/claude-code</code>). It’s the same agentic engine, but the terminal interface offers some distinct advantages:</p>
+<ul>
+<li><strong>IDE extensions</strong> — Claude Code integrates directly into <a href="https://code.claude.com/docs/en/vs-code">VS Code</a> and <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a>, so you can use it without leaving your editor</li>
+<li><strong>Scriptability</strong> — pipe commands, chain with shell tools, and integrate into automated workflows (CI/CD, git hooks)</li>
+<li><strong><code>CLAUDE.md</code> authoring</strong> — the terminal is the natural place to set up and iterate on your project’s <code>CLAUDE.md</code> configuration</li>
+<li><strong>SSH and remote environments</strong> — works anywhere you have a terminal, including remote servers, containers, and cloud dev environments</li>
+<li><strong>Full local control</strong> — no cloud dependency; everything runs on your machine (or wherever your terminal is)</li>
+<li><strong>Flexible auth and billing</strong> — the desktop and web apps require an Anthropic login (Max plan or API credits). The CLI also supports routing requests through <a href="https://code.claude.com/docs/en/cloud-providers#google-cloud-vertex-ai">Google Vertex AI</a> or <a href="https://code.claude.com/docs/en/cloud-providers#amazon-bedrock">AWS Bedrock</a>, so organizations that need to keep API traffic within their own cloud environment (for compliance, billing, or data residency reasons) can do so. See our <a href="../../Learn/Guides/claude-code-vertex-setup.html">Claude Code + Vertex AI Setup Guide</a> for a step-by-step walkthrough using UW-Madison GCP</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and start Claude Code</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> yourrepo <span class="kw">&amp;&amp;</span> <span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Best for:</strong> Developers comfortable with the terminal, CI/CD integration, scripting and automation, working in remote/SSH environments, and organizations that need to route traffic through their own cloud provider.</p>
+</section>
+<section id="security-note" class="level5">
+<h5 class="anchored" data-anchor-id="security-note">A note on security: Claude Code runs with <em>your</em> permissions</h5>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Agentic coding tools can access more than you might expect
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The level of system access depends on which surface you use:</p>
+<ul>
+<li><strong>CLI and desktop app</strong> — Claude Code operates with your full user-level filesystem and shell permissions. It can read your SSH keys, modify files outside your project, run arbitrary shell commands, and access anything your user account can reach.</li>
+<li><strong>IDE extensions</strong> (VS Code, JetBrains) — same access as the CLI, since the extension runs Claude Code as a local process under your user account.</li>
+<li><strong>Web version</strong> (claude.ai/code) — runs in an isolated cloud VM with access only to your cloned GitHub repo. It cannot reach your local filesystem, SSH keys, or other local resources. This is the most restricted surface by default.</li>
+</ul>
+<p>This isn’t unique to Claude Code — any agentic tool with shell access (Cursor, Windsurf, Copilot coding agent) has similar access on your local machine. The difference is in what mitigations each tool provides.</p>
+</div>
+</div>
+<p>Claude Code mitigates this with several layers of protection:</p>
+<ul>
+<li><strong>Permission prompts</strong> — by default, Claude asks before every file write, shell command, and git operation. You can <a href="https://code.claude.com/docs/en/permissions">configure allow/deny rules</a> to auto-approve trusted actions and hard-block sensitive paths like <code>~/.ssh</code>, <code>~/.aws</code>, and <code>.env</code> files.</li>
+<li><strong>Built-in sandboxing</strong> — Claude Code’s <a href="https://code.claude.com/docs/en/sandboxing">OS-level sandbox</a> (Linux bubblewrap / macOS Seatbelt) restricts filesystem access to your project directory and limits outbound network traffic to approved domains. Credentials (git credentials, signing keys) are never placed inside the sandbox. Anthropic reports this <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">reduces permission prompts by 84%</a> while <em>increasing</em> security — and it’s faster than Docker (~3x less overhead). <strong>This is the single most impactful security measure you can enable.</strong></li>
+<li><strong>Desktop app</strong> — adds git worktree isolation on top of the OS-level sandbox. Each session gets its own isolated copy of the repo (stored in <code>.claude/worktrees/</code>), so changes in one session don’t affect others until committed.</li>
+<li><strong>Web version</strong> (claude.ai/code) — the most restricted surface. Each task runs in a fresh, ephemeral VM with <a href="https://gvisor.dev/">Gvisor-based kernel isolation</a>. Claude can only access the cloned repo; storage is wiped when the task completes. Credentials are handled by a proxy service and never exist inside the sandbox. <strong>Enable the built-in sandbox.</strong> It provides strong filesystem and network isolation with minimal setup and near-zero performance overhead — there’s no reason not to use it. See <a href="#security-fundamentals">Security fundamentals</a> later in this guide, or the <a href="../../Learn/Guides/claude-code-vertex-setup.html#understand-risk">Vertex AI setup guide’s security section</a> for a step-by-step walkthrough.</li>
+</ul>
+</section>
+</section>
+<section id="github-copilot" class="level4">
+<h4 class="anchored" data-anchor-id="github-copilot">GitHub Copilot</h4>
+<p><a href="https://github.com/features/copilot">GitHub Copilot</a> is GitHub’s AI coding assistant. It’s a <strong>multi-model platform</strong> — you can choose from Claude, GPT, Gemini, and others as the underlying model. This is fundamentally different from Claude Code, and the distinction matters.</p>
+<section id="claude-in-copilot-vs.-claude-code-whats-actually-different" class="level5">
+<h5 class="anchored" data-anchor-id="claude-in-copilot-vs.-claude-code-whats-actually-different">“Claude” in Copilot vs.&nbsp;Claude Code: what’s actually different?</h5>
+<p>When you select Claude as the model in Copilot (whether in VS Code agent mode or the async coding agent), you’re using Claude’s <em>language model</em> — but <strong>GitHub’s orchestration layer</strong> is driving it. GitHub controls the system prompts, the tool-calling framework, the context management, and how your instructions are delivered to the model. Think of it as Claude’s brain in GitHub’s body.</p>
+<p>Claude Code, by contrast, is Anthropic’s <em>own</em> agentic system built specifically around Claude. Anthropic controls the entire stack: the system prompts are purpose-built for agentic coding, the tool framework is designed for Claude’s strengths, and features like extended thinking, <code>CLAUDE.md</code> project configuration, and the permission model are all tightly integrated.</p>
+<p><strong>Why this matters in practice:</strong></p>
+<ul>
+<li><strong>Context handling</strong> — Copilot primarily derives context from open tabs and (when indexing is enabled) broader repo structure, with a <a href="https://docs.github.com/en/copilot/reference/ai-models/supported-models">platform-level cap of ~128k tokens</a>. Claude Code uses Claude’s full 200k-token context window and maps your entire repository, accumulating context through conversation threading. For multi-file tasks, Claude Code generally <a href="https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/">understands project architecture more holistically</a>.</li>
+<li><strong>Instruction following</strong> — Claude Code reads your <code>CLAUDE.md</code> files natively. Copilot has its own instruction mechanism (<code>copilot-instructions.md</code>), but users have <a href="https://github.com/orgs/community/discussions/176156">reported</a> that Claude models don’t always follow Copilot’s instruction files as reliably — because the model is being orchestrated by a system designed for multiple models, not optimized for any one.</li>
+<li><strong>Extended thinking</strong> — Claude Code uses extended thinking by default with adjustable token budgets. Copilot support for thinking tokens has been <a href="https://github.com/orgs/community/discussions/176156">inconsistent</a>, with some configurations producing errors when extended thinking parameters are passed.</li>
+<li><strong>Tools and sub-agents</strong> — Claude Code ships with 18+ built-in tools (file editing, bash, search, git, sub-agents), plus full <a href="https://modelcontextprotocol.io/">MCP</a> support and hooks. Copilot agent mode uses its own curated tool set, which is capable but less extensive.</li>
+<li><strong>Quality on complex tasks</strong> — In a <a href="https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/">50-session benchmark study</a>, Claude Code produced a higher accept rate (44% vs 38%) and scored significantly better on bug-fixing context fidelity (8.5/10 vs 5.9/10). Copilot was ~15 seconds faster per task on average and excels at inline completions.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Claude as a standalone agent on GitHub (Feb 2026)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>As of <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">February 2026</a>, Claude is also available as a <strong>standalone agent</strong> on GitHub — not just a model choice within Copilot. You can assign issues directly to <code>@claude</code> (or <code>@copilot</code>, or <code>@codex</code>) on GitHub.com, and in <a href="https://code.visualstudio.com/blogs/2026/02/05/multi-agent-development">VS Code 1.109+</a> you can start Claude agent sessions that use Anthropic’s own agent harness rather than Copilot’s orchestration. In these modes, you get the same prompts, tools, and architecture as Claude Code — which should close the quality gap vs.&nbsp;using Claude as a model within Copilot. Initially available for Pro+ and Enterprise plans; <a href="https://github.blog/changelog/2026-02-26-claude-and-codex-now-available-for-copilot-business-pro-users/">expanded to Copilot Business and Pro</a> on Feb 26 at no additional cost.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="agent-mode-in-vs-code" class="level5">
+<h5 class="anchored" data-anchor-id="agent-mode-in-vs-code">Agent mode (in VS Code)</h5>
+<ol type="1">
+<li>Open your repo in VS Code with the Copilot extension installed</li>
+<li>Open the Copilot chat panel (Ctrl/Cmd+Shift+I)</li>
+<li>Select agent mode, choose Claude as the model</li>
+<li>Type: <em>“Add a slugify function to src/utils/ matching the existing style. Write tests.”</em></li>
+</ol>
+<p>Copilot will:</p>
+<ol type="1">
+<li>Read relevant files</li>
+<li>Create/edit files directly — <strong>no permission prompt by default</strong> in many configurations</li>
+<li>May run tests if it decides to (or you can ask it to)</li>
+<li>You review the changes in VS Code’s diff view</li>
+<li><strong>You</strong> handle the git workflow (branch, commit, push, PR) — or use the async coding agent for that</li>
+</ol>
+<p><strong>Friction:</strong> The IDE experience is smooth but you have less visibility into <em>why</em> the agent made certain choices. Agent mode is still evolving — for complex multi-step tasks it may not iterate as effectively as Claude Code’s agentic loop. The upside is zero context-switching: you’re already in your editor.</p>
+</section>
+<section id="coding-agent-async" class="level5">
+<h5 class="anchored" data-anchor-id="coding-agent-async">Coding agent (async)</h5>
+<p>GitHub’s async coding agents let you delegate work directly from issues and PRs — no IDE or terminal needed:</p>
+<ol type="1">
+<li>Go to your repo on GitHub.com</li>
+<li>Create an issue: <em>“Add a slugify utility function to src/utils/ with tests”</em></li>
+<li>Assign the issue to <code>@copilot</code>, <code>@claude</code>, or <code>@codex</code> via the Assignees dropdown</li>
+<li>Walk away — the agent works in a secure cloud environment</li>
+</ol>
+<p>The agent will:</p>
+<ol type="1">
+<li>Create a branch</li>
+<li>Implement the function and tests in an ephemeral environment</li>
+<li>Open a draft PR referencing the issue</li>
+<li>You get a notification when the PR is ready to review</li>
+<li>You can leave review comments mentioning <code>@claude</code> to request changes — the agent iterates like a human collaborator</li>
+</ol>
+<p><strong>What’s running under the hood?</strong> When you assign to <code>@claude</code>, GitHub runs Anthropic’s <a href="https://github.com/anthropics/claude-code-action">Claude Code Action</a> — which uses the same Claude Code engine (agentic loop, tools, extended thinking) that powers the CLI and desktop app. The key difference is that it runs in GitHub’s managed environment rather than your local machine, and its scope is limited to the repo and issue context. Assigning to <code>@copilot</code> uses GitHub’s own orchestration with your selected model, and <code>@codex</code> uses OpenAI’s agent.</p>
+<p>By default, the async coding agent uses Claude Sonnet 4.6 when no model is explicitly selected. You can choose from Claude Opus 4.6, Claude Sonnet 4.5, GPT-5.1-Codex-Max, GPT-5.2-Codex, and others via the model picker.</p>
+<p><strong>Friction:</strong> This is the most hands-off option, but you have the least control during execution. Works best for well-scoped, clearly described issues. If the task is ambiguous or requires judgment calls, you may end up doing multiple rounds of PR review and comments to guide it.</p>
+<p><strong>Best for:</strong> Inline autocomplete, single-file edits, and quick agent tasks within the IDE. Also excellent for async PR generation on well-defined issues. Many developers use Copilot <em>alongside</em> Claude Code — Copilot for inline completions in the editor, Claude Code in the terminal for deep multi-file work.</p>
+</section>
+</section>
+<section id="key-takeaway" class="level4">
+<h4 class="anchored" data-anchor-id="key-takeaway">Key takeaway</h4>
+<p>The same task ranges from fully manual (Claude.ai — you apply every change) to fully hands-off (Copilot coding agent — you just review the PR). But “more autonomous” doesn’t always mean “better results.”</p>
+<p>Counterintuitively, <strong>Claude.ai can feel lower-friction than Claude Code</strong> for many tasks — the chat interface just <em>answers</em>, with no permission prompts or approve/deny flow. You lose the ability to have Claude execute things directly, but you gain a frictionless conversation. Claude Code (in any form) is far more capable — it can run tests, iterate on failures, and push code — but its default guardrails (which exist for good reason) mean more interruptions until you tune them.</p>
+<p>The trade-off is between <strong>autonomy</strong>, <strong>control</strong>, and <strong>optimization</strong>:</p>
+<ul>
+<li><strong>Claude.ai (chat)</strong> — not agentic, but fluid and zero-risk. You do the manual work.</li>
+<li><strong>Claude Code (desktop, web, CLI, or IDE extension)</strong> — fully agentic, with Anthropic’s purpose-built orchestration optimized for Claude. The deepest integration between model and tooling.</li>
+<li><strong>Copilot with Claude model (IDE)</strong> — agentic within the IDE, fewer interruptions, but Claude is running through GitHub’s orchestration layer rather than Anthropic’s. Good for inline work; less optimized for complex multi-step reasoning.</li>
+<li><strong>Claude agent on GitHub (async)</strong> — Anthropic’s own agent harness running on GitHub’s infrastructure. Assign issues to <code>@claude</code> for async PR generation.</li>
+</ul>
+<p>Pick based on the task. Sensitive work or unfamiliar codebase? Claude Code’s guardrails are a feature. Quick question or brainstorming? Claude.ai chat is hard to beat. Already in VS Code and want inline help? Copilot is hard to beat. Need Claude’s full reasoning depth on a complex refactor? Claude Code is the most direct path to the model’s capabilities.</p>
+</section>
+</section>
+</section>
+<section id="working-effectively-with-claude-code" class="level2">
+<h2 class="anchored" data-anchor-id="working-effectively-with-claude-code">Working effectively with Claude Code</h2>
+<p>This is the core of the guide. Whether you’re using the CLI, desktop app, an IDE extension, or the web IDE, these practices apply across all Claude Code surfaces. Anthropic’s own <a href="https://code.claude.com/docs/en/best-practices">best practices guide</a> goes deeper on context management, prompt patterns, and scaling across parallel sessions — we’ll highlight the essentials here and add our own perspective.</p>
+<section id="think-in-features-not-projects" class="level3">
+<h3 class="anchored" data-anchor-id="think-in-features-not-projects">Think in features, not projects</h3>
+<p>One of the biggest lessons from working with agentic coding tools: <strong>use them for feature-level development, not for building entire projects in one shot.</strong></p>
+<p>Why? Because agents work best with clear, well-scoped requests. The less clarity you provide, the more the agent has to guess — and guessing leads to:</p>
+<ul>
+<li>Agentic loops (trying approaches, failing, trying again)</li>
+<li>Drift from your intended architecture</li>
+<li>Wasted tokens and time</li>
+<li>Code that technically works but doesn’t match your vision</li>
+</ul>
+<p><strong>Precise requests get precise results.</strong> Instead of “build me a web app with auth,” try:</p>
+<ul>
+<li>“Add a login form component that submits to <code>/api/auth/login</code> and stores the JWT in a httpOnly cookie”</li>
+<li>“Write a pytest fixture that creates a test database with the schema from <code>models.py</code>”</li>
+<li>“Refactor the <code>process_data</code> function in <code>pipeline.py</code> to handle the case where <code>input_df</code> has missing columns”</li>
+</ul>
+<p>Each of these is a single, well-defined task that an agent can execute without ambiguity.</p>
+</section>
+<section id="use-claude.md-as-your-control-surface" class="level3">
+<h3 class="anchored" data-anchor-id="use-claude.md-as-your-control-surface">Use <code>CLAUDE.md</code> as your control surface</h3>
+<p><a href="https://code.claude.com/docs/en/claude-md"><code>CLAUDE.md</code></a> is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it’s loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:</p>
+<ul>
+<li>How your project is structured (key directories, entry points)</li>
+<li>Coding conventions (naming, formatting, patterns to follow or avoid)</li>
+<li>Testing and build commands</li>
+<li>Safety rules (“never force-push,” “don’t modify migrations/”)</li>
+<li>Links to docs or specs the agent should reference</li>
+</ul>
+<p>Claude Code also supports <code>CLAUDE.md</code> files in subdirectories (loaded when Claude works in that directory) and a global <code>~/.claude/CLAUDE.md</code> for preferences that apply across all projects. The file is advisory — Claude will follow these instructions in good faith, but they’re not enforced at the system level the way <a href="https://code.claude.com/docs/en/hooks">hooks</a> or <a href="https://code.claude.com/docs/en/permissions">deny rules</a> are. For anything safety-critical, back it up with a hook or deny rule.</p>
+<p>This is one of the most underrated features — it’s your main lever for shaping how the agent behaves across sessions.</p>
+<p><strong>Prevent runaway loops:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Testing requirements</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Always run the full test suite (<span class="in">`pytest tests/`</span>) after making changes</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If tests fail, fix the failing tests before moving on</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not push code with failing tests</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This single instruction saves enormous headaches. Without it, the agent might push broken code, you discover test failures in CI, and then you’re spending time fixing things that should have been caught locally.</p>
+<p><strong>Enforce project conventions:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Code style</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Use type hints for all function signatures</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Follow the existing import ordering convention</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not add new dependencies without asking first</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Limit destructive actions:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Safety</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Never run <span class="in">`rm -rf`</span> on any directory</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Never force-push to any branch</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Never modify files in the <span class="in">`config/production/`</span> directory</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Always create a new branch for changes; never commit directly to main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Provide architectural context:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Project structure</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>API routes go in <span class="in">`src/routes/`</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Business logic goes in <span class="in">`src/services/`</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Database models are in <span class="in">`src/models/`</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Tests mirror the source structure under <span class="in">`tests/`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The more context you provide in <code>CLAUDE.md</code>, the fewer agentic loops the agent needs to figure out your project. See the <a href="https://code.claude.com/docs/en/claude-md">official CLAUDE.md reference</a> for the full spec, including file resolution order and advanced features.</p>
+</section>
+<section id="tune-the-permission-dial" class="level3">
+<h3 class="anchored" data-anchor-id="tune-the-permission-dial">Tune the permission dial</h3>
+<p>Claude Code’s permission system is the main thing that distinguishes it from tools that “just go.” By default, it asks before every file write, shell command, and git operation. This is safe but slow.</p>
+<p>The key insight: <strong>permissions aren’t all-or-nothing</strong>. You can configure a spectrum:</p>
+<ul>
+<li><strong>Start conservative</strong> — approve everything manually while you’re learning what the agent does</li>
+<li><strong>Auto-approve low-risk actions</strong> — file reads, grep/search, test execution. These rarely cause harm and the prompts add friction without adding safety.</li>
+<li><strong>Manually approve writes and git operations</strong> — this is where real damage can happen (overwriting files, force-pushing, committing secrets)</li>
+<li><strong>Use <code>CLAUDE.md</code> safety rules</strong> as a second layer — even if you auto-approve shell commands, the agent will respect instructions like “never force-push”</li>
+</ul>
+<p>The sweet spot for most developers: auto-approve reads and test runs, manually approve everything else. As you build trust with specific workflows, you can loosen further. See Anthropic’s <a href="https://code.claude.com/docs/en/permissions">permissions reference</a> for the full rule syntax and available tool names.</p>
+</section>
+<section id="use-branches-and-commit-frequently" class="level3">
+<h3 class="anchored" data-anchor-id="use-branches-and-commit-frequently">Use branches and commit frequently</h3>
+<p>The non-negotiable: <strong>always work on a branch</strong>, never let an agent commit directly to <code>main</code>. Beyond that, there are two common workflows:</p>
+<ul>
+<li><strong>Auto-commit freely, review at the PR stage.</strong> Let the agent commit (and even push) as it works. You review the full diff when you open the PR, just like you would with a human contributor. This keeps momentum high and works well when you have CI checks and a good test suite gating your merges.</li>
+<li><strong>Commit manually after reviewing each change.</strong> Approve each commit yourself so you stay close to every change as it happens. This is safer when you’re learning the tool, working on sensitive code, or don’t yet have strong CI guardrails.</li>
+</ul>
+<p>Either way, frequent commits help — they give you clean revert points if the agent goes off track. A good <code>CLAUDE.md</code> instruction like <em>“commit after each completed task”</em> keeps things granular regardless of which workflow you prefer.</p>
+</section>
+<section id="review-everything-at-the-right-level" class="level3">
+<h3 class="anchored" data-anchor-id="review-everything-at-the-right-level">Review everything (at the right level)</h3>
+<p>Agent-generated code isn’t exempt from review — but <em>when</em> you review is a matter of workflow. Some developers review each diff before committing; others let the agent run and review the full PR diff before merging. Both are valid. What matters is that <em>someone</em> (you, a teammate, or CI) checks the code before it lands on <code>main</code>:</p>
+<ul>
+<li>Read the diffs</li>
+<li>Check for security issues (hardcoded secrets, SQL injection, etc.)</li>
+<li>Verify it matches your architectural patterns</li>
+<li>Make sure it doesn’t introduce unnecessary complexity</li>
+</ul>
+</section>
+<section id="give-the-agent-a-way-to-verify-its-own-work" class="level3">
+<h3 class="anchored" data-anchor-id="give-the-agent-a-way-to-verify-its-own-work">Give the agent a way to verify its own work</h3>
+<p>This is the single highest-leverage thing you can do. Claude performs dramatically better when it can check its own output — running tests, comparing screenshots, validating behavior — rather than relying on you as the only feedback loop.</p>
+<ul>
+<li><strong>Include test cases in your prompt</strong>: <em>“Write a <code>validateEmail</code> function. Test cases: <code>user@example.com</code> → true, <code>invalid</code> → false, <code>user@.com</code> → false. Run the tests after implementing.”</em></li>
+<li><strong>Ask it to verify UI changes visually</strong>: <em>“[paste screenshot] Implement this design. Take a screenshot of the result and compare it to the original.”</em></li>
+<li><strong>Point to the symptom, not just the fix</strong>: <em>“The build fails with this error: [paste error]. Fix it and verify the build succeeds. Address the root cause, don’t suppress the error.”</em></li>
+</ul>
+<p>The more you invest in making your verification rock-solid (a good test suite, a linter, a build check), the more autonomously the agent can work.</p>
+</section>
+<section id="explore-first-then-plan-then-code" class="level3">
+<h3 class="anchored" data-anchor-id="explore-first-then-plan-then-code">Explore first, then plan, then code</h3>
+<p>For complex tasks, resist the urge to let Claude jump straight to implementation. Use <strong><a href="https://code.claude.com/docs/en/common-workflows#use-plan-mode-for-safe-code-analysis">Plan Mode</a></strong> (toggle with <code>Shift+Tab</code>) to separate exploration from execution:</p>
+<ol type="1">
+<li><strong>Explore</strong>: In Plan Mode, Claude reads files and answers questions without making changes. <em>“Read <code>src/auth/</code> and understand how we handle sessions and login.”</em></li>
+<li><strong>Plan</strong>: Ask Claude to create an implementation plan. <em>“I want to add Google OAuth. What files need to change? Create a plan.”</em></li>
+<li><strong>Implement</strong>: Switch back to Normal Mode and let Claude execute the plan, verifying against tests.</li>
+<li><strong>Commit</strong>: Ask Claude to commit with a descriptive message.</li>
+</ol>
+<p>Skip this for small, clear tasks — if you could describe the diff in one sentence, just ask Claude to do it directly. Planning is most useful when you’re uncertain about the approach or the change touches multiple files.</p>
+</section>
+<section id="manage-context-aggressively" class="level3">
+<h3 class="anchored" data-anchor-id="manage-context-aggressively">Manage context aggressively</h3>
+<p>Claude’s context window is your most important resource. As it fills up with conversation history, file contents, and command outputs, performance degrades — Claude may “forget” earlier instructions or make more mistakes. (This section is adapted from Anthropic’s <a href="https://code.claude.com/docs/en/best-practices">official best practices</a>.)</p>
+<ul>
+<li><strong>Use <code>/clear</code> between unrelated tasks</strong> — a clean context dramatically improves quality</li>
+<li><strong>Use <code>/compact</code> to summarize long conversations</strong> — run <code>/compact focus on the API changes</code> to keep what matters and discard the rest</li>
+<li><strong>Delegate exploration to subagents</strong> — when Claude needs to read dozens of files to investigate something, have it use a <a href="https://code.claude.com/docs/en/sub-agents">subagent</a>. The subagent works in its own context and returns a summary, keeping your main conversation lean.</li>
+<li><strong>Run <code>/context</code></strong> to see what’s consuming your context window (MCP servers can be surprisingly expensive)</li>
+<li><strong>Course-correct early</strong> — if Claude is going in the wrong direction, interrupt with <code>Esc</code> rather than letting it generate more output that clutters context. After two failed corrections, <code>/clear</code> and start fresh with a better prompt.</li>
+</ul>
+</section>
+<section id="extend-claude-code-with-skills-hooks-and-mcp" class="level3">
+<h3 class="anchored" data-anchor-id="extend-claude-code-with-skills-hooks-and-mcp">Extend Claude Code with skills, hooks, and MCP</h3>
+<p>Beyond <code>CLAUDE.md</code>, Claude Code has a rich <a href="https://code.claude.com/docs/en/features-overview">extension system</a> for customizing behavior:</p>
+<ul>
+<li><strong><a href="https://code.claude.com/docs/en/skills">Skills</a></strong> — reusable knowledge and workflows. Create a <code>/deploy</code> skill that runs your deployment checklist, or an API conventions skill that Claude loads when working on your endpoints. Skills load on demand, so they don’t bloat every session like <code>CLAUDE.md</code> does.</li>
+<li><strong><a href="https://code.claude.com/docs/en/hooks">Hooks</a></strong> — deterministic scripts that run at specific points in Claude’s workflow. Unlike <code>CLAUDE.md</code> instructions (which are advisory), hooks are guaranteed to fire. Use them for things like running ESLint after every file edit or blocking writes to a <code>migrations/</code> directory.</li>
+<li><strong><a href="https://code.claude.com/docs/en/mcp">MCP</a></strong> — connect Claude to external services. Query your database, post to Slack, control a browser, or pull issues from your project tracker — all from within a Claude Code session.</li>
+<li><strong><a href="https://code.claude.com/docs/en/sub-agents">Subagents</a></strong> — isolated workers with their own context. Useful for research tasks, code review, or any work where you don’t want the intermediate steps cluttering your main conversation.</li>
+</ul>
+<p>Start with <code>CLAUDE.md</code> for your core conventions. Add skills when you find yourself repeating the same workflows. Add hooks when you need guaranteed automation. Add MCP when you need external integrations. For a deeper dive, see Anthropic’s <a href="https://code.claude.com/docs/en/features-overview">extension system overview</a>, which covers when to use each mechanism.</p>
+</section>
+</section>
+<section id="managing-costs" class="level2">
+<h2 class="anchored" data-anchor-id="managing-costs">Managing costs</h2>
+<p>Agentic coding tools that use API tokens (like Claude Code) charge per token, and agentic workflows are token-hungry — the agent reads files, reasons through problems, writes code, runs commands, reads output, and iterates. A single focused task might use 50K–200K tokens. A sprawling, underspecified session can easily burn through 1M+ tokens.</p>
+<section id="what-does-this-actually-cost" class="level3">
+<h3 class="anchored" data-anchor-id="what-does-this-actually-cost">What does this actually cost?</h3>
+<p>There are two ways to pay for Claude Code: <strong>subscription plans</strong> (fixed monthly cost) or <strong>API tokens</strong> (pay-per-use). Most individuals should start with a subscription; API pricing is better for automation and CI/CD pipelines. (Pricing details adapted from <a href="https://www.anthropic.com/pricing">Anthropic’s pricing page</a> and <a href="https://code.claude.com/docs/en/costs">Claude Code cost management docs</a> — verify current prices, as they change frequently.)</p>
+<p><strong>Subscription plans</strong> (as of early 2026):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Plan</th>
+<th>Price</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Pro</strong></td>
+<td>$20/month</td>
+<td>Claude Code access with moderate usage limits</td>
+</tr>
+<tr class="even">
+<td><strong>Max 5x</strong></td>
+<td>$100/month</td>
+<td>5× the Pro usage limit — sweet spot for most active developers</td>
+</tr>
+<tr class="odd">
+<td><strong>Max 20x</strong></td>
+<td>$200/month</td>
+<td>20× the Pro usage limit — for heavy agentic work or parallel sessions</td>
+</tr>
+<tr class="even">
+<td><strong>Team (premium seats)</strong></td>
+<td>$150/user/month (min 5 seats)</td>
+<td>Team management, shared billing, org-level policies</td>
+</tr>
+</tbody>
+</table>
+<p>With subscription plans, you never get a surprise bill — you hit rate limits instead. The <code>/cost</code> command shows your token usage in a session, but on a subscription plan this is informational only; it doesn’t affect your bill.</p>
+<p><strong>API token pricing</strong> (pay-per-use):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Input tokens</th>
+<th>Output tokens</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Haiku 4.5</strong></td>
+<td>$1/MTok</td>
+<td>$5/MTok</td>
+<td>Fast, cheap tasks (linting, simple edits)</td>
+</tr>
+<tr class="even">
+<td><strong>Sonnet 4.6</strong></td>
+<td>$3/MTok</td>
+<td>$15/MTok</td>
+<td>Default for most coding work</td>
+</tr>
+<tr class="odd">
+<td><strong>Opus 4.6</strong></td>
+<td>$5/MTok</td>
+<td>$25/MTok</td>
+<td>Complex reasoning, architecture decisions</td>
+</tr>
+</tbody>
+</table>
+<p>Note that output tokens cost <strong>5× more</strong> than input tokens across all models — and code generation is output-heavy. Also, requests exceeding 200K input tokens are charged at 2× input / 1.5× output rates, which matters for large codebases. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a> can reduce input costs by up to 90% on repeated system prompts, and the <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing">Batch API</a> offers a 50% discount for async processing.</p>
+<p>Anthropic reports that the average Claude Code user on API pricing spends <a href="https://code.claude.com/docs/en/costs">roughly $6/day</a>, with 90% of users under $12/day. That translates to <strong>$100–200/month</strong> for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit <a href="https://jeffry.in/expensive-ai/">$5,000+</a>. One detailed <a href="https://ccusage.com/guide/monthly-reports">usage report</a> showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.</p>
+<p><strong>Rule of thumb:</strong> If your monthly API costs would exceed $60–80, Max 5x is cheaper. If they’d exceed $150, Max 20x is the clear winner.</p>
+<p>For comparison, GitHub Copilot runs $10–$39/month depending on tier, with usage-based pricing for premium models beyond included allowances.</p>
+</section>
+<section id="watch-out-for-runaway-costs" class="level3">
+<h3 class="anchored" data-anchor-id="watch-out-for-runaway-costs">Watch out for runaway costs</h3>
+<p>Agentic workflows can burn through tokens fast, especially when things go wrong:</p>
+<ul>
+<li><strong>Agentic loops</strong>: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens. One developer documented an <a href="https://jeffry.in/expensive-ai/">orchestrator agent flow that hit $150/hour</a>.</li>
+<li><strong>Context accumulation</strong>: As your conversation grows, every new message includes the full context window — so the 50th message in a session costs far more than the 1st. Use <code>/clear</code> between unrelated tasks and <code>/compact</code> to summarize long conversations.</li>
+<li><strong>Parallel sessions</strong>: Running multiple Claude Code sessions simultaneously (especially on the web or with agent teams) multiplies your token consumption proportionally. Five parallel sessions = 5× the cost.</li>
+<li><strong>Extended thinking</strong>: Thinking tokens are billed as output tokens. A complex Opus session with deep reasoning can generate thousands of thinking tokens per turn.</li>
+</ul>
+<p><strong>How to protect yourself:</strong></p>
+<ul>
+<li><strong>On a subscription</strong>: You can’t overspend, but you can hit rate limits mid-task. Monitor with <code>/cost</code> and plan your usage around your limit.</li>
+<li><strong>On API pricing</strong>: Set <a href="https://console.anthropic.com/">spending alerts and hard limits</a> on your Anthropic account. Use separate API keys for different projects so you can track spending.</li>
+<li><strong>In both cases</strong>: Use <code>/cost</code> to monitor token usage mid-session. If a session is getting expensive, <code>/clear</code> and start fresh with a more specific prompt. Break large tasks into focused sessions.</li>
+</ul>
+</section>
+<section id="for-uw-madison-researchers-institutional-cloud-benefits" class="level3">
+<h3 class="anchored" data-anchor-id="for-uw-madison-researchers-institutional-cloud-benefits">For UW-Madison researchers: institutional cloud benefits</h3>
+<p>If you’re at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.</p>
+<p>Contact your department’s IT staff or <a href="https://it.wisc.edu/services/research-computing/">Research Computing</a> to ask about available cloud credits and whether AI API costs are eligible.</p>
+</section>
+<section id="strategies-to-keep-costs-down" class="level3">
+<h3 class="anchored" data-anchor-id="strategies-to-keep-costs-down">Strategies to keep costs down</h3>
+<ul>
+<li><strong>Be specific in your prompts</strong> — vague requests lead to more agentic loops, which means more tokens. “Add a login form” costs more than “Add a React component at <code>src/components/LoginForm.tsx</code> that posts email/password to <code>/api/auth/login</code>”</li>
+<li><strong>Use <code>/clear</code> aggressively</strong> — reset context between unrelated tasks. A clean context means fewer input tokens per message.</li>
+<li><strong>Use <code>/compact</code></strong> — summarize long conversations to free up context space without losing key information</li>
+<li><strong>Use the right model for the task</strong> — Haiku or Sonnet for straightforward tasks, reserve Opus for complex reasoning</li>
+<li><strong>Break large tasks into smaller sessions</strong> — each focused session is cheaper than one sprawling conversation that loses context and re-reads files</li>
+<li><strong>Use <code>CLAUDE.md</code></strong> to provide project context upfront — this reduces the amount of exploration the agent needs to do</li>
+<li><strong>Delegate exploration to subagents</strong> — they run in isolated context and return summaries, keeping your main session lean</li>
+<li><strong>Monitor session costs</strong> — run <code>/cost</code> periodically to see where you stand</li>
+</ul>
+<p>For more detail, see Anthropic’s <a href="https://code.claude.com/docs/en/costs">cost management guide</a>.</p>
+</section>
+<section id="energy-and-environmental-considerations" class="level3">
+<h3 class="anchored" data-anchor-id="energy-and-environmental-considerations">Energy and environmental considerations</h3>
+<p>Agentic coding is more compute-intensive than a simple chat query or web search. A single LLM text query now uses <a href="https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use">roughly 0.3 Wh</a> — about the same as a Google search — thanks to hardware improvements and model optimization. But an agentic coding session chains <strong>hundreds or thousands</strong> of such calls together as the agent reads files, reasons, writes code, runs commands, and iterates.</p>
+<p><strong>How much energy does agentic coding actually use?</strong></p>
+<p>A <a href="https://www.simonpcouch.com/blog/2026-01-20-cc-impact/">detailed analysis by Simon P. Couch</a> estimated Claude Code’s energy footprint at roughly <strong>41 Wh per session</strong> — over 130× a single chat query. A heavy day of usage (multiple sessions, parallel agents) can reach <strong>~1,300 Wh/day</strong>. To put that in perspective:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Activity</th>
+<th>Energy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Google search or single AI chat query</td>
+<td>~0.3 Wh</td>
+</tr>
+<tr class="even">
+<td>LED lightbulb (1 hour)</td>
+<td>~10 Wh</td>
+</tr>
+<tr class="odd">
+<td>One Claude Code session</td>
+<td>~41 Wh</td>
+</tr>
+<tr class="even">
+<td>Streaming 1 hour of video (incl.&nbsp;device)</td>
+<td>~36–80 Wh</td>
+</tr>
+<tr class="odd">
+<td>Heavy Claude Code daily use</td>
+<td>~1,300 Wh</td>
+</tr>
+<tr class="even">
+<td>Running a dishwasher once</td>
+<td>~1,300 Wh</td>
+</tr>
+<tr class="odd">
+<td>Daily refrigerator use</td>
+<td>~1,200–1,500 Wh</td>
+</tr>
+</tbody>
+</table>
+<p>So a heavy day of agentic coding is roughly equivalent to running your dishwasher — modest at the individual level, but significant in aggregate.</p>
+<p><strong>The bigger picture:</strong></p>
+<ul>
+<li>The <a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai">IEA projects</a> that global data center electricity consumption will roughly double from ~415 TWh in 2024 to over 945 TWh by 2030, driven largely by AI workloads. In the US, data centers are projected to consume <a href="https://www.carbonbrief.org/ai-five-charts-that-put-data-centre-energy-use-and-emissions-into-context/">more electricity than all energy-intensive manufacturing combined</a> (aluminum, steel, cement, chemicals) by 2030.</li>
+<li>An estimated <a href="https://aimultiple.com/ai-energy-consumption">60–90% of AI computing energy</a> goes to inference (running models), not training. Training grabs headlines, but inference — every agentic session, every chat query — is where the ongoing energy cost lives.</li>
+<li>Cloud providers are investing in renewable energy, but coverage varies. Anthropic has <a href="https://www.anthropic.com/news/investing-in-energy-to-secure-america-s-ai-future">pledged to offset energy costs</a> and invested in grid optimization research, though the company <a href="https://ditchcarbon.com/organizations/anthropic">lacks formal carbon reduction targets</a> and a significant portion of new capacity is <a href="https://www.fastcompany.com/91336991/openai-anthropic-deepseek-ai-models-environmental-impact">natural gas powered</a>.</li>
+<li>On the efficiency side, a <a href="https://www.fastcompany.com/91336991/openai-anthropic-deepseek-ai-models-environmental-impact">University of Rhode Island study</a> found Claude Sonnet to be among the most energy-efficient frontier models, and energy per token has <a href="https://muxup.com/2026q1/per-query-energy-consumption-of-llms">improved ~120× from GPT-3 to current models</a> due to hardware and architecture advances.</li>
+</ul>
+<p><strong>What this means for you:</strong></p>
+<p>This doesn’t mean you shouldn’t use agentic tools — the productivity gains can be substantial, and the energy per unit of <em>useful output</em> may be better than the alternative (a human developer running builds, searching docs, and context-switching for hours). But it’s a reason to be intentional: don’t let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. <strong>Efficient prompting is both cheaper and greener.</strong></p>
+</section>
+</section>
+<section id="data-privacy" class="level2">
+<h2 class="anchored" data-anchor-id="data-privacy">Data privacy: who sees your code?</h2>
+<p>When you use Claude Code, your code and prompts are sent to Anthropic’s servers for inference. This is a reasonable concern — here’s what actually happens to that data, depending on how you access Claude.</p>
+<section id="is-your-data-used-for-model-training" class="level3">
+<h3 class="anchored" data-anchor-id="is-your-data-used-for-model-training">Is your data used for model training?</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Access method</th>
+<th>Used for training?</th>
+<th>Default retention</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Claude API</strong> (commercial terms)</td>
+<td><strong>No</strong> — prohibited by default</td>
+<td>30 days</td>
+</tr>
+<tr class="even">
+<td><strong>Vertex AI / Bedrock</strong></td>
+<td><strong>No</strong> — prohibited by commercial agreement</td>
+<td>30 days</td>
+</tr>
+<tr class="odd">
+<td><strong>Claude Max / Pro subscription</strong> (claude.ai)</td>
+<td><strong>Yes, unless you opt out</strong> — toggle “Help improve Claude” off in <a href="https://claude.ai/settings">Privacy Settings</a></td>
+<td>5 years (with training) / 30 days (opted out)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>If you’re on a Max or Pro plan: opt out of training
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As of October 2025, Anthropic <a href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training">uses consumer plan data for training by default</a>. You must actively opt out in your Privacy Settings. This applies to Claude Code sessions on consumer plans too.</p>
+</div>
+</div>
+<p><strong>For researchers with sensitive data:</strong> The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate <a href="https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to">zero-data retention (ZDR)</a> agreements where Anthropic stores nothing after the API response. See our <a href="../../Learn/Guides/claude-code-vertex-setup.html">Vertex AI setup guide</a> for how UW-Madison researchers can use institutional cloud accounts for this path.</p>
+</section>
+<section id="can-anthropic-employees-see-your-code" class="level3">
+<h3 class="anchored" data-anchor-id="can-anthropic-employees-see-your-code">Can Anthropic employees see your code?</h3>
+<p>Not by default. Employee access to conversation data requires one of:</p>
+<ul>
+<li><strong>You submit feedback</strong> (thumbs up/down, <code>/bug</code> command) — that specific interaction becomes reviewable</li>
+<li><strong>A trust &amp; safety investigation</strong> — if Anthropic’s automated systems flag a policy violation</li>
+<li><strong>Explicit consent</strong> — you voluntarily share data with Anthropic</li>
+</ul>
+<p>Under commercial terms (API, Vertex AI, Bedrock), access is further restricted by contractual obligations.</p>
+</section>
+<section id="what-about-the-web-version" class="level3">
+<h3 class="anchored" data-anchor-id="what-about-the-web-version">What about the web version?</h3>
+<p>When you use Claude Code on the web (claude.ai/code), your GitHub repo is cloned into an ephemeral VM. The VM is destroyed when the task completes — there’s no persistent repo storage between sessions. The same retention policies above apply to any code Claude reads during the session.</p>
+</section>
+<section id="further-reading-on-data-privacy" class="level3">
+<h3 class="anchored" data-anchor-id="further-reading-on-data-privacy">Further reading on data privacy</h3>
+<ul>
+<li><a href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training">Is my data used for model training?</a> — Anthropic Privacy Center</li>
+<li><a href="https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data">How long do you store my data?</a> — retention periods by account type</li>
+<li><a href="https://code.claude.com/docs/en/data-usage">Data usage — Claude Code docs</a> — what Claude Code specifically transmits and how cloud sessions handle your repo</li>
+<li><a href="https://code.claude.com/docs/en/security">Security — Claude Code docs</a> — prompt injection safeguards, data retention, and web session isolation</li>
+<li><a href="https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings">How do I change my model improvement privacy settings?</a> — step-by-step opt-out instructions</li>
+<li><a href="https://privacy.claude.com/en/articles/10458704-how-does-anthropic-protect-the-personal-data-of-claude-users">How does Anthropic protect personal data?</a> — security practices and encryption</li>
+</ul>
+</section>
+</section>
+<section id="security-fundamentals" class="level2">
+<h2 class="anchored" data-anchor-id="security-fundamentals">Security fundamentals</h2>
+<p>When you give an AI agent access to your terminal, you’re trusting it with everything your shell user can do. Here’s how to limit the blast radius.</p>
+<section id="scope-your-credentials" class="level3">
+<h3 class="anchored" data-anchor-id="scope-your-credentials">Scope your credentials</h3>
+<p>The agent can read environment variables, inspect dotfiles, and run commands like <code>cat ~/.ssh/id_rsa</code> or <code>echo $GITHUB_TOKEN</code>. You need to make credentials <strong>structurally inaccessible</strong>, not just hidden.</p>
+<ul>
+<li><strong>Create dedicated, minimal-scope tokens</strong> — a fine-grained GitHub token scoped to only the repos and permissions the agent needs. If it only needs to push to one repo, don’t give it access to your entire GitHub account.</li>
+<li><strong>Use a bot account</strong> for agent-driven git operations rather than your personal credentials</li>
+<li><strong>Never reuse your daily-driver SSH keys</strong> in an agentic environment — generate dedicated deploy keys</li>
+<li><strong>Don’t pass secrets as environment variables</strong> in containers — use Docker secrets, mount a read-only credential socket, or configure a git credential helper on the host</li>
+<li><strong>Set spending limits</strong> on API keys and use separate keys from your personal/production ones</li>
+<li>Add <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> to <code>.gitignore</code> <strong>before the agent ever runs</strong></li>
+</ul>
+</section>
+<section id="sandbox-when-possible" class="level3">
+<h3 class="anchored" data-anchor-id="sandbox-when-possible">Sandbox when possible</h3>
+<p>Running an agent on your bare metal dev machine means it has access to everything you do. <strong>Any sandboxing is better than none.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Solo dev, familiar with Docker</strong></td>
+<td>Standard container with a mounted project directory — gives you full control</td>
+</tr>
+<tr class="even">
+<td><strong>Team environment, need consistency</strong></td>
+<td>Purpose-built sandbox (Anthropic’s sandboxed containers, E2B) — reduces setup burden</td>
+</tr>
+<tr class="odd">
+<td><strong>CI/CD pipelines</strong></td>
+<td>Ephemeral containers destroyed after each run — the safest option at scale</td>
+</tr>
+<tr class="even">
+<td><strong>Working with sensitive data</strong></td>
+<td>Purpose-built sandbox with network restrictions — limits exfiltration risk</td>
+</tr>
+<tr class="odd">
+<td><strong>Quick local experimentation</strong></td>
+<td>Even a basic container is better than bare metal</td>
+</tr>
+</tbody>
+</table>
+<p>A standard Docker container gets you 80% of the way there — the agent can’t access your host filesystem outside the mounted volume. Purpose-built sandboxes close the remaining gaps around network isolation, filesystem snapshotting, and security hardening. See <a href="https://code.claude.com/docs/en/sandboxing">Anthropic’s sandboxing documentation</a> and their <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">engineering deep-dive</a> for details.</p>
+</section>
+<section id="watch-for-prompt-injection-and-runaway-agents" class="level3">
+<h3 class="anchored" data-anchor-id="watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</h3>
+<ul>
+<li>Be careful with files that contain instructions or prompts — an agent reading a malicious <code>README.md</code> or issue body could be tricked into harmful actions</li>
+<li><strong>Never</strong> give an agent unsupervised access to production systems, databases, or deployment pipelines</li>
+<li>Set up <strong>git hooks</strong> or CI checks as safety nets (e.g., prevent force-pushes to <code>main</code>)</li>
+<li>Keep your work committed frequently so you can recover from mistakes</li>
+<li>Set <strong>spending limits</strong> and don’t hesitate to interrupt (<code>Ctrl+C</code>) and redirect when the agent is looping</li>
+</ul>
+</section>
+</section>
+<section id="platform-and-deployment-notes" class="level2">
+<h2 class="anchored" data-anchor-id="platform-and-deployment-notes">Platform and deployment notes</h2>
+<section id="cicd-and-remote-deployment" class="level3">
+<h3 class="anchored" data-anchor-id="cicd-and-remote-deployment">CI/CD and remote deployment</h3>
+<p>Agentic coding tools can run beyond your local machine:</p>
+<ul>
+<li><strong>Cloud VMs and remote servers</strong> — run Claude Code over SSH. Your local system stays untouched, and you can use more powerful hardware.</li>
+<li><strong>CI/CD pipelines</strong> — GitHub Actions, GitLab CI, and similar systems can invoke Claude Code or Copilot coding agent in <strong>ephemeral environments</strong> that are destroyed after each run. This is the safest way to use agentic tools at scale.</li>
+<li><strong>Sandboxed containers</strong> — Anthropic offers purpose-built sandboxed environments for running Claude Code in isolated contexts. Third-party providers like E2B offer similar capabilities.</li>
+</ul>
+<p>The key insight: <strong>the more system access a tool has, the more carefully you need to manage it</strong>.</p>
+</section>
+<section id="a-note-for-gitlab-users" class="level3">
+<h3 class="anchored" data-anchor-id="a-note-for-gitlab-users">A note for GitLab users</h3>
+<p>Many teams — including many at UW-Madison — use GitLab rather than GitHub. Claude Code works with GitLab, but the integration is <strong>less mature</strong> than the GitHub experience.</p>
+<p><strong>What works well:</strong></p>
+<ul>
+<li><strong>Claude Code CLI with GitLab repos</strong> — the core experience (reading code, editing files, running commands) works identically regardless of your git host. Claude Code operates on your local checkout, so the remote platform doesn’t matter for day-to-day coding.</li>
+<li><strong>GitLab CI/CD integration</strong> — Anthropic provides <a href="https://code.claude.com/docs/en/gitlab-ci-cd">official documentation for running Claude Code in GitLab CI/CD pipelines</a>, including merge request review and test scaffolding.</li>
+<li><strong>Git operations</strong> — push, pull, branching, and committing all work normally since these are standard git operations.</li>
+</ul>
+<p><strong>What’s different or limited compared to GitHub:</strong></p>
+<ul>
+<li><strong>No native GitLab integration in Claude Code’s Slack bot</strong> — the Slack integration currently only supports GitHub repos. GitLab support is <a href="https://github.com/anthropics/claude-code/issues/21527">an open feature request</a>.</li>
+<li><strong>No <code>@claude</code> mention in GitLab issues/MRs</strong> — GitHub Copilot’s coding agent lets you assign issues to Copilot or mention it in PRs. There’s no equivalent native integration for GitLab yet, though <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/557820">GitLab is working on it</a>.</li>
+<li><strong>Community-built CI/CD tooling</strong> — while official docs exist, you may find yourself using <a href="https://github.com/RealMikeChong/claude-code-for-gitlab">community solutions</a> to replicate the smoother GitHub Actions experience.</li>
+<li><strong>Self-hosted GitLab</strong> — if your institution runs a self-hosted GitLab instance, be aware that Claude Code sends code context to Anthropic’s API for processing. This may raise compliance concerns depending on your institution’s data policies.</li>
+</ul>
+<p><strong>Practical advice:</strong> The CLI workflow is essentially identical — focus your setup effort on CI/CD integration. For MR review automation, use Claude Code in your <code>.gitlab-ci.yml</code> with the <code>claude -p</code> (prompt) flag for non-interactive pipeline usage. If your institution has data sensitivity requirements, check with your IT governance team before sending code to external APIs — this applies to <strong>all</strong> cloud-based AI coding tools, not just Claude.</p>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Agentic coding tools are genuinely powerful — they can dramatically accelerate feature development, help you explore unfamiliar codebases, and automate tedious multi-step tasks. But they require a different mindset than traditional code assistants:</p>
+<ol type="1">
+<li><strong>Scope your requests tightly</strong> — features, not projects</li>
+<li><strong>Use <code>CLAUDE.md</code></strong> to encode guardrails and project context</li>
+<li><strong>Tune permissions deliberately</strong> — start conservative, loosen as you build trust</li>
+<li><strong>Protect your credentials</strong> — fine-grained tokens, structural isolation, <code>.gitignore</code></li>
+<li><strong>Sandbox when possible</strong> — containers, VMs, ephemeral CI environments</li>
+<li><strong>Monitor costs</strong> — set limits, be specific, use the right model for the task</li>
+<li><strong>Commit frequently</strong> — keep escape hatches available</li>
+<li><strong>Review everything</strong> — you’re the engineer; the agent is a very fast intern</li>
+</ol>
+<p>The technology is moving fast, and best practices will continue to evolve. The core principle stays the same: <strong>give agents the minimum access they need, provide maximum clarity in your instructions, and always keep a human in the loop for decisions that matter</strong>.</p>
+</section>
+<section id="further-reading-and-perspectives" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading-and-perspectives">Further reading and perspectives</h2>
+<p>Agentic coding is evolving fast. Here are some of the best resources for staying current:</p>
+<section id="official-documentation-and-guides" class="level3">
+<h3 class="anchored" data-anchor-id="official-documentation-and-guides">Official documentation and guides</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/best-practices">Best Practices for Claude Code</a> — Anthropic’s official guide, covering context management, prompt patterns, CLAUDE.md, and scaling across parallel sessions</li>
+<li><a href="https://code.claude.com/docs/en/how-claude-code-works">How Claude Code Works</a> — the agentic loop architecture, built-in tools, and how Claude interacts with your project</li>
+<li><a href="https://code.claude.com/docs/en/features-overview">Extend Claude Code</a> — when to use CLAUDE.md vs skills vs subagents vs hooks vs MCP</li>
+<li><a href="https://code.claude.com/docs/en/common-workflows">Common Workflows</a> — step-by-step guides for debugging, refactoring, testing, creating PRs, and more</li>
+<li><a href="https://code.claude.com/docs/en/cloud">Claude Code on the Web</a> — running Claude Code tasks asynchronously on cloud infrastructure</li>
+<li><a href="https://code.claude.com/docs/en/desktop">Claude Code Desktop</a> — the desktop GUI with visual diffs, parallel sessions, and managed updates</li>
+<li><a href="https://code.claude.com/docs/en/sandboxing">Claude Code Sandboxing Documentation</a> — reference for configuring Claude Code’s built-in sandboxing, including OS-level primitives (Linux bubblewrap, macOS Seatbelt) and deny rules for sensitive files</li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-sandboxing">Making Claude Code More Secure and Autonomous</a> — Anthropic Engineering’s deep-dive into their dual-layer sandboxing architecture (filesystem + network isolation)</li>
+<li><a href="https://www.anthropic.com/research/prompt-injection-defenses">Mitigating the Risk of Prompt Injections</a> — Anthropic Research on defending AI agents against prompt injection, including their use of reinforcement learning to build injection robustness into Claude</li>
+<li><a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">GitHub Copilot: Meet the New Coding Agent</a> — GitHub’s announcement of their enterprise-ready coding agent that spins up secure environments via GitHub Actions</li>
+<li><a href="https://github.blog/ai-and-ml/github-copilot/github-copilot-coding-agent-101-getting-started-with-agentic-workflows-on-github/">GitHub Copilot Coding Agent 101</a> — GitHub’s getting-started guide for agentic workflows, including environment setup and PR creation</li>
+<li><a href="https://github.blog/ai-and-ml/github-copilot/whats-new-with-github-copilot-coding-agent/">What’s New with GitHub Copilot Coding Agent</a> — latest updates including self-review, security scanning, and custom agents</li>
+</ul>
+</section>
+<section id="community-voices-and-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="community-voices-and-analysis">Community voices and analysis</h3>
+<ul>
+<li><a href="https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/">Agentic Engineering Patterns</a> — Simon Willison’s guide to coding practices for getting the best results from agents like Claude Code and Codex. He frames this as “expertise amplification, not expertise replacement”</li>
+<li><a href="https://www.oneusefulthing.org/p/a-guide-to-which-ai-to-use-in-the">A Guide to Which AI to Use in the Agentic Era</a> — Ethan Mollick’s updated guide arguing that “using AI” now means agents with tools, not chatbots, and that users must think in terms of Models, Apps, and Harnesses</li>
+<li><a href="https://www.builder.io/blog/claude-code">How I Use Claude Code (+ My Best Tips)</a> — practical walkthrough from Builder.io on real-world Claude Code workflows</li>
+<li><a href="https://www.teamday.ai/blog/complete-guide-agentic-coding-2026">The Complete Guide to Agentic Coding in 2026</a> — broad overview comparing tools, workflows, and team strategies</li>
+<li><a href="https://cacm.acm.org/opinion/redefining-the-software-engineering-profession-for-ai/">Redefining the Software Engineering Profession for AI</a> — ACM opinion piece on how AI amplifies senior talent but risks leaving junior developers without the chance to develop architectural intuition</li>
+</ul>
+</section>
+<section id="tool-comparisons" class="level3">
+<h3 class="anchored" data-anchor-id="tool-comparisons">Tool comparisons</h3>
+<ul>
+<li><a href="https://dev.to/pockit_tools/cursor-vs-windsurf-vs-claude-code-in-2026-the-honest-comparison-after-using-all-three-3gof">Cursor vs Windsurf vs Claude Code in 2026</a> — hands-on comparison arguing Cursor has the best IDE UX, Claude Code leads on deep reasoning and terminal-first workflows, and Windsurf offers the best value</li>
+</ul>
+</section>
+<section id="benchmarks-and-leaderboards" class="level3">
+<h3 class="anchored" data-anchor-id="benchmarks-and-leaderboards">Benchmarks and leaderboards</h3>
+<p>Agentic coding benchmarks are evolving rapidly. These track how well different models and agent scaffolds perform on real-world software engineering tasks:</p>
+<ul>
+<li><a href="https://www.swebench.com/">SWE-bench Leaderboards</a> — the most widely cited benchmark for agentic coding. Models are evaluated on their ability to resolve real GitHub issues from open-source Python repos. The “Verified” split is the standard comparison point, though <a href="https://scale.com/blog/swe-bench-pro">contamination concerns</a> have motivated harder variants</li>
+<li><a href="https://scale.com/leaderboard/swe_bench_pro_public">SWE-bench Pro</a> — Scale AI’s harder benchmark (1,865 tasks across 41 repos). Top models that score 70%+ on SWE-bench Verified score only ~23% here</li>
+<li><a href="https://openai.com/index/swe-lancer/">SWE-Lancer</a> — OpenAI’s benchmark based on 1,400+ real Upwork freelance tasks valued at $1M in payouts, ranging from $50 bug fixes to $32K feature implementations. Provides a natural difficulty gradient tied to real-world economics</li>
+<li><a href="https://www.tbench.ai/">Terminal-Bench</a> — evaluates agents on multi-step terminal workflows (not just code generation). Tests planning, execution, and recovery in sandboxed command-line environments</li>
+<li><a href="https://artificialanalysis.ai/insights/coding-agents-comparison">Coding Agents Comparison</a> — Artificial Analysis’s ongoing comparison with pricing breakdowns alongside benchmark scores</li>
+<li><a href="https://www.anthropic.com/engineering/infrastructure-noise">Quantifying Infrastructure Noise in Agentic Coding Evals</a> — Anthropic’s analysis showing that a 2-point leaderboard lead may reflect hardware differences rather than genuine capability gaps — important context for interpreting any benchmark</li>
+</ul>
+<p><strong>Caveat:</strong> Benchmarks measure specific capabilities under controlled conditions. Real-world performance depends heavily on your prompt quality, project structure, and <code>CLAUDE.md</code> configuration. Use benchmarks to track the field’s trajectory, not to pick a tool.</p>
+</section>
+<section id="security" class="level3">
+<h3 class="anchored" data-anchor-id="security">Security</h3>
+<ul>
+<li><a href="https://fortune.com/2025/12/15/ai-coding-tools-security-exploit-software/">AI Coding Tools Exploded in 2025. The First Security Exploits Show What Could Go Wrong</a> — Fortune’s reporting on the “IDEsaster” vulnerabilities found across Cursor, Copilot, Windsurf, and other tools</li>
+<li><a href="https://thehackernews.com/2025/12/researchers-uncover-30-flaws-in-ai.html">Researcher Uncovers 30+ Flaws in AI Coding Tools</a> — technical breakdown of the universal attack chains affecting major AI IDEs</li>
+<li><a href="https://devops.com/security-flaws-in-anthropics-claude-code-risk-stolen-data-system-takeover/">Security Flaws in Claude Code Risk Stolen Data, System Takeover</a> — Check Point’s findings on Claude Code-specific CVEs, including hook injection and API key theft</li>
+<li><a href="https://blog.cyberdesserts.com/ai-agent-security-risks/">AI Agent Security Risks in 2026: A Practitioner’s Guide</a> — practical guide to defending against prompt injection, credential theft, and MCP vulnerabilities</li>
+</ul>
+<p>This is an area where best practices are being written in real time. What works today may be outdated in six months. Stay plugged into the communities above, and don’t assume any single tool or configuration is permanently “safe.”</p>
+</section>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/uw-madison-datascience\.github\.io\/ML-X-Nexus");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="preferred-color-scheme">
+<input type="hidden" id="giscus-alt-theme" value="preferred-color-scheme">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "UW-Madison-DataScience/ML-X-Nexus";
+    script.dataset.repoId = "R_kgDOKVN_Vw";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOKVN_V84CgacK";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-best-practices.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
