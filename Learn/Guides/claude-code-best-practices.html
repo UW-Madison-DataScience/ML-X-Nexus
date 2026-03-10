@@ -346,7 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -380,6 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#is-your-data-used-for-model-training" id="toc-is-your-data-used-for-model-training" class="nav-link" data-scroll-target="#is-your-data-used-for-model-training">Is your data used for model training?</a></li>
   <li><a href="#can-anthropic-employees-see-your-code" id="toc-can-anthropic-employees-see-your-code" class="nav-link" data-scroll-target="#can-anthropic-employees-see-your-code">Can Anthropic employees see your code?</a></li>
   <li><a href="#what-about-the-web-version" id="toc-what-about-the-web-version" class="nav-link" data-scroll-target="#what-about-the-web-version">What about the web version?</a></li>
+  <li><a href="#telemetry-and-error-reporting" id="toc-telemetry-and-error-reporting" class="nav-link" data-scroll-target="#telemetry-and-error-reporting">Telemetry and error reporting</a></li>
   <li><a href="#further-reading-on-data-privacy" id="toc-further-reading-on-data-privacy" class="nav-link" data-scroll-target="#further-reading-on-data-privacy">Further reading on data privacy</a></li>
   </ul></li>
   <li><a href="#security-fundamentals" id="toc-security-fundamentals" class="nav-link" data-scroll-target="#security-fundamentals">Security fundamentals</a>
@@ -1091,19 +1092,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Claude API</strong> (commercial terms)</td>
-<td><strong>No</strong> — prohibited by default</td>
+<td><strong>Claude API, Team, Enterprise</strong> (commercial terms)</td>
+<td><strong>No</strong> — prohibited unless you explicitly opt in (e.g., <a href="https://support.claude.com/en/articles/11174108-about-the-development-partner-program">Development Partner Program</a>)</td>
 <td>30 days</td>
 </tr>
 <tr class="even">
-<td><strong>Vertex AI / Bedrock</strong></td>
+<td><strong>Vertex AI / Bedrock / Foundry</strong> (commercial)</td>
 <td><strong>No</strong> — prohibited by commercial agreement</td>
 <td>30 days</td>
 </tr>
 <tr class="odd">
-<td><strong>Claude Max / Pro subscription</strong> (claude.ai)</td>
-<td><strong>Yes, unless you opt out</strong> — toggle “Help improve Claude” off in <a href="https://claude.ai/settings">Privacy Settings</a></td>
-<td>5 years (with training) / 30 days (opted out)</td>
+<td><strong>Free / Pro / Max</strong> (consumer plans)</td>
+<td><strong>Your choice</strong> — controlled via <a href="https://claude.ai/settings/data-privacy-controls">Privacy Settings</a></td>
+<td>5 years (training on) / 30 days (training off)</td>
 </tr>
 </tbody>
 </table>
@@ -1113,21 +1114,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>If you’re on a Max or Pro plan: opt out of training
+<span class="screen-reader-only">Warning</span>If you’re on a Free, Pro, or Max plan: check your training settings
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>As of October 2025, Anthropic <a href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training">uses consumer plan data for training by default</a>. You must actively opt out in your Privacy Settings. This applies to Claude Code sessions on consumer plans too.</p>
+<p>Anthropic gives you the choice to allow training on your data — check your setting at <a href="https://claude.ai/settings/data-privacy-controls">claude.ai/settings/data-privacy-controls</a>. This applies to Claude Code sessions on consumer plans too.</p>
 </div>
 </div>
+<p><strong>Important nuances for consumer plans:</strong></p>
+<ul>
+<li><strong>Safety exception:</strong> Even if you disable training, conversations flagged for <a href="https://www.anthropic.com/legal/aup">safety review</a> may still be used to improve Anthropic’s ability to detect and enforce their Usage Policy (e.g., training safeguard models).</li>
+<li><strong>What’s included:</strong> When training is enabled, Anthropic may use the entire conversation — prompts, outputs, custom styles, and conversation preferences.</li>
+<li><strong>What’s excluded:</strong> Raw content from connectors (Google Drive, MCP servers) is <strong>not</strong> included in training data, unless you directly copy that content into your conversation.</li>
+<li><strong>Feedback (thumbs up/down):</strong> Submitting feedback stores the full related conversation for up to 5 years, de-linked from your user ID. This data may be used for training regardless of your training setting.</li>
+</ul>
 <p><strong>For researchers with sensitive data:</strong> The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate <a href="https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to">zero-data retention (ZDR)</a> agreements where Anthropic stores nothing after the API response. See our <a href="../../Learn/Guides/claude-code-cloud-setup.html">Cloud Setup Guide</a> for how UW-Madison researchers can use institutional cloud accounts (GCP or AWS) for this path.</p>
 </section>
 <section id="can-anthropic-employees-see-your-code" class="level3">
 <h3 class="anchored" data-anchor-id="can-anthropic-employees-see-your-code">Can Anthropic employees see your code?</h3>
 <p>Not by default. Employee access to conversation data requires one of:</p>
 <ul>
-<li><strong>You submit feedback</strong> (thumbs up/down, <code>/bug</code> command) — that specific interaction becomes reviewable</li>
-<li><strong>A trust &amp; safety investigation</strong> — if Anthropic’s automated systems flag a policy violation</li>
+<li><strong>You submit feedback</strong> (thumbs up/down, <code>/bug</code> command) — the full related conversation becomes reviewable, stored for up to 5 years (de-linked from your user ID for thumbs up/down)</li>
+<li><strong>A trust &amp; safety investigation</strong> — if Anthropic’s automated systems flag a policy violation (this data may also be used for training safeguard models)</li>
 <li><strong>Explicit consent</strong> — you voluntarily share data with Anthropic</li>
 </ul>
 <p>Under commercial terms (API, Vertex AI, Bedrock), access is further restricted by contractual obligations.</p>
@@ -1135,6 +1143,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="what-about-the-web-version" class="level3">
 <h3 class="anchored" data-anchor-id="what-about-the-web-version">What about the web version?</h3>
 <p>When you use Claude Code on the web (claude.ai/code), your GitHub repo is cloned into an ephemeral VM. The VM is destroyed when the task completes — there’s no persistent repo storage between sessions. The same retention policies above apply to any code Claude reads during the session.</p>
+</section>
+<section id="telemetry-and-error-reporting" class="level3">
+<h3 class="anchored" data-anchor-id="telemetry-and-error-reporting">Telemetry and error reporting</h3>
+<p>Claude Code sends operational telemetry (latency, reliability metrics — <strong>no code or file paths</strong>) to Statsig, and error reports to Sentry. These are enabled by default on the direct Claude API but <strong>disabled by default on Vertex AI, Bedrock, and Foundry</strong>.</p>
+<p>To opt out individually: <code>DISABLE_TELEMETRY=1</code>, <code>DISABLE_ERROR_REPORTING=1</code>, <code>DISABLE_BUG_COMMAND=1</code>, or <code>CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1</code>. To disable all non-essential traffic at once: <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code>. These can be set in your <a href="https://code.claude.com/docs/en/settings"><code>settings.json</code></a>.</p>
+<p>For a detailed breakdown by provider, see the <a href="../../Learn/Guides/claude-code-cloud-setup.html#data-usage">Cloud Setup Guide — Data Usage &amp; Privacy</a>.</p>
 </section>
 <section id="further-reading-on-data-privacy" class="level3">
 <h3 class="anchored" data-anchor-id="further-reading-on-data-privacy">Further reading on data privacy</h3>
