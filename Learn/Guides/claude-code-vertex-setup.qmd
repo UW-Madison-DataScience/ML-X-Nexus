@@ -203,6 +203,17 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 Type **Y** to confirm.
 
+### Windows (WSL2)
+
+If you're running Claude Code from WSL2, you need `gcloud` installed **inside** your WSL2 environment (the Windows installation is not accessible from WSL2):
+
+```bash
+sudo apt-get install apt-transport-https ca-certificates gnupg curl
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update && sudo apt-get install google-cloud-cli
+```
+
 ### macOS
 
 Option A — Homebrew (easiest):
@@ -280,8 +291,13 @@ Edit (or create) your settings file at `~/.claude/settings.json`.
 
 | Platform | Full path |
 |----------|-----------|
-| Windows | `C:\Users\<your-username>\.claude\settings.json` |
+| Windows (PowerShell) | `C:\Users\<your-username>\.claude\settings.json` |
+| Windows (WSL2) | `/home/<your-username>/.claude/settings.json` |
 | macOS | `/Users/<your-username>/.claude/settings.json` |
+
+::: {.callout-important}
+**WSL2 has its own home directory.** If you set up Claude Code in both Windows PowerShell and WSL2, you need `settings.json` in **both** locations — they are completely separate filesystems. The Windows file at `C:\Users\you\.claude\settings.json` is **not** visible to WSL2. Similarly, `gcloud` must be installed and authenticated separately inside WSL2 (see [Section 3](#install--configure-google-cloud-cli-1)).
+:::
 
 Add the following content:
 
