@@ -108,24 +108,26 @@ claude
 ### Vertex AI
 
 - A **UW-Madison GCP project** with billing enabled (e.g., `doit-rci-sandbox-gcp-baa4`)
-- Your **UW-Madison Google account** with IAM access to the GCP project
 
 ### Amazon Bedrock
 
 - A **UW-Madison AWS account** with billing enabled
-- Your **UW-Madison identity** with IAM access to the AWS account (via IAM user, SSO, or federated identity)
 
 :::
 
-**Windows:**
+::: {.panel-tabset}
+
+### Windows
 
 - Windows 10 (build 1809+) or Windows 11
 - **PowerShell** (use this — not Git Bash, not CMD)
 
-**macOS:**
+### macOS
 
 - macOS 13.0 (Ventura) or later
 - **Terminal** (built-in) or any terminal emulator (iTerm2, Warp, etc.)
+
+:::
 
 > See the official [Claude Code system requirements](https://code.claude.com/docs/en/setup) for the full list (OS versions, RAM, shell, etc.).
 
@@ -770,11 +772,20 @@ You don't *have* to add any allow rules — the default "ask before doing" behav
 
 Run `/permissions` inside a Claude Code session at any time to see what rules are active and which settings file they came from. This is especially helpful to verify your deny rules are loaded correctly.
 
-### Use project-level settings for shared repos
+### Use project-level settings for shared repos {#project-settings}
 
-You can also create a `.claude/settings.json` in your project root and commit it to version control. This ensures all team members inherit the same permission rules. Project-level deny rules apply to everyone, even if their personal settings are more permissive.
+Claude Code reads **two** settings files, and **merges them**:
 
-```jsonc
+| File | Scope | What to put here |
+|------|-------|-----------------|
+| `~/.claude/settings.json` | **User-level** — applies to every project you open | Personal deny rules (SSH keys, cloud creds, `.env`), model choice, sandbox config |
+| `<project-root>/.claude/settings.json` | **Project-level** — applies only when Claude Code is launched inside this repo | Repo-specific deny rules (e.g., don't read `secrets/`), shared team guardrails |
+
+**How merging works:** Claude Code combines both files. If either file denies something, it's denied — project-level deny rules apply to everyone, even if their personal settings are more permissive. You don't have to choose one or the other; most teams use both.
+
+The project-level file lives inside your Git repo, so you can commit it and every collaborator automatically inherits the same rules:
+
+```json
 {
   "permissions": {
     "deny": [
@@ -787,7 +798,9 @@ You can also create a `.claude/settings.json` in your project root and commit it
 }
 ```
 
-> **Path syntax note:** Paths starting with `//` are absolute paths on your machine. Paths without `//` are relative to the settings file location. Use `**` to match recursively. See the [permission rules reference](https://code.claude.com/docs/en/permissions) for full pattern syntax.
+::: {.callout-note}
+**Path syntax:** Paths starting with `//` are absolute (used in user-level settings to protect home-directory files like `~/.ssh/`). Paths starting with `./` are relative to the project root (used in project-level settings). Use `**` to match recursively. See the [permission rules reference](https://code.claude.com/docs/en/permissions) for full pattern syntax.
+:::
 
 ### Interactive safeguards during a session
 
@@ -851,7 +864,17 @@ wsl -l -v
 
 You should see `VERSION 2` next to your distribution. If you're on WSL1, [upgrade to WSL2](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) first. Once confirmed, open your **WSL2 terminal** — all remaining steps run inside WSL.
 
-**Step 2 — Install dependencies:**
+**Step 2 — Install Claude Code inside WSL2:**
+
+WSL2 is a separate Linux environment — your Windows PowerShell installation of Claude Code doesn't carry over. Inside your WSL2 terminal, install it with npm:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+You'll also need to reconfigure your cloud CLI credentials (`gcloud auth login` or `aws configure`) inside WSL2, since it has its own filesystem and config.
+
+**Step 3 — Install sandbox dependencies:**
 
 ```bash
 # Ubuntu/Debian (most common WSL distro)
@@ -861,7 +884,14 @@ sudo apt-get update && sudo apt-get install bubblewrap socat
 sudo dnf install bubblewrap socat
 ```
 
-**Step 3 — Enable sandboxing inside Claude Code:**
+**Step 4 — Launch Claude Code and enable sandboxing:**
+
+```bash
+cd ~/projects/my-project   # navigate to your project first
+claude                      # launch Claude Code
+```
+
+Then inside the Claude Code session, run:
 
 ```
 /sandbox
@@ -869,7 +899,7 @@ sudo dnf install bubblewrap socat
 
 Choose **"Auto-allow mode"** — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.
 
-**Step 4 — Verify it's working:**
+**Step 5 — Verify it's working:**
 
 After enabling, Claude's bash commands should run without permission prompts as long as they stay within your project directory. If a command needs to write outside the project or access a new network domain, you'll still get a prompt.
 
