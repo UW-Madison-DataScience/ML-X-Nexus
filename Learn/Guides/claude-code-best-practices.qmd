@@ -511,14 +511,21 @@ When you use Claude Code, your code and prompts are sent to Anthropic's servers 
 Anthropic gives you the choice to allow training on your data — check your setting at [claude.ai/settings/data-privacy-controls](https://claude.ai/settings/data-privacy-controls). This applies to Claude Code sessions on consumer plans too.
 :::
 
+**Important nuances for consumer plans:**
+
+- **Safety exception:** Even if you disable training, conversations flagged for [safety review](https://www.anthropic.com/legal/aup) may still be used to improve Anthropic's ability to detect and enforce their Usage Policy (e.g., training safeguard models).
+- **What's included:** When training is enabled, Anthropic may use the entire conversation — prompts, outputs, custom styles, and conversation preferences.
+- **What's excluded:** Raw content from connectors (Google Drive, MCP servers) is **not** included in training data, unless you directly copy that content into your conversation.
+- **Feedback (thumbs up/down):** Submitting feedback stores the full related conversation for up to 5 years, de-linked from your user ID. This data may be used for training regardless of your training setting.
+
 **For researchers with sensitive data:** The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate [zero-data retention (ZDR)](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) agreements where Anthropic stores nothing after the API response. See our [Cloud Setup Guide](claude-code-cloud-setup.qmd) for how UW-Madison researchers can use institutional cloud accounts (GCP or AWS) for this path.
 
 ### Can Anthropic employees see your code?
 
 Not by default. Employee access to conversation data requires one of:
 
-- **You submit feedback** (thumbs up/down, `/bug` command) — that specific interaction becomes reviewable
-- **A trust & safety investigation** — if Anthropic's automated systems flag a policy violation
+- **You submit feedback** (thumbs up/down, `/bug` command) — the full related conversation becomes reviewable, stored for up to 5 years (de-linked from your user ID for thumbs up/down)
+- **A trust & safety investigation** — if Anthropic's automated systems flag a policy violation (this data may also be used for training safeguard models)
 - **Explicit consent** — you voluntarily share data with Anthropic
 
 Under commercial terms (API, Vertex AI, Bedrock), access is further restricted by contractual obligations.
