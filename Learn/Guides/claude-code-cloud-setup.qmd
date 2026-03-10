@@ -616,37 +616,33 @@ You can customize this behavior with three types of rules in `settings.json`:
 
 ### Add `deny` rules to protect sensitive areas {#add-deny-rules}
 
-Add a `permissions` block to your **`~/.claude/settings.json`** file (the same file you edited in [Section 5](#configure-claude-code)). Think of `deny` rules as guardrails. Here's what's worth blocking and why:
+Add a `permissions` block to your **`~/.claude/settings.json`** file (the same file you edited in [Section 5](#configure-claude-code)). Think of `deny` rules as guardrails — they block Claude from accessing sensitive paths regardless of what it tries to do.
 
-```jsonc
+These examples block: SSH keys, `.env` files, cloud credentials (`~/.config/gcloud/` and `~/.aws/`), destructive commands (`rm -rf`), and network tools (`curl`, `wget`). **Replace `endemann` with your actual username** before pasting into `settings.json`.
+
+::: {.callout-warning}
+**`settings.json` is plain JSON — no comments allowed.** The blocks below are ready to copy-paste. Do not add `//` comments or Claude Code will report "Invalid or malformed JSON" in `claude doctor`.
+:::
+
+::: {.panel-tabset}
+
+#### macOS
+
+Home directory is `/Users/endemann`. Run `whoami` to check your username.
+
+```json
 {
   "permissions": {
     "deny": [
-      // SSH keys — if Claude reads or modifies these, your remote server
-      // access could be compromised. There's no reason Claude needs these.
-      // Replace <your-home> with your actual home path (see note below).
-      "Read(//<your-home>/.ssh/**)",
-      "Edit(//<your-home>/.ssh/**)",
-
-      // Environment files — these typically contain API keys, database
-      // passwords, and other secrets. Claude could accidentally include
-      // them in its context (and thus send them to the API).
-      "Read(//<your-home>/.env)",
-      "Edit(//<your-home>/.env)",
-
-      // Cloud credentials — same reasoning as .env files. Application
-      // Default Credentials for gcloud and AWS live here.
-      "Read(//<your-home>/.config/gcloud/**)",
-      "Edit(//<your-home>/.config/gcloud/**)",
-      "Read(//<your-home>/.aws/**)",
-      "Edit(//<your-home>/.aws/**)",
-
-      // Broad destructive commands — prevent catastrophic mistakes.
+      "Read(//Users/endemann/.ssh/**)",
+      "Edit(//Users/endemann/.ssh/**)",
+      "Read(//Users/endemann/.env)",
+      "Edit(//Users/endemann/.env)",
+      "Read(//Users/endemann/.config/gcloud/**)",
+      "Edit(//Users/endemann/.config/gcloud/**)",
+      "Read(//Users/endemann/.aws/**)",
+      "Edit(//Users/endemann/.aws/**)",
       "Bash(rm -rf *)",
-
-      // Network tools — prevents Claude from exfiltrating data or
-      // downloading untrusted code. Use WebFetch rules instead if you
-      // need Claude to access specific URLs.
       "Bash(curl:*)",
       "Bash(wget:*)"
     ]
@@ -654,14 +650,58 @@ Add a `permissions` block to your **`~/.claude/settings.json`** file (the same f
 }
 ```
 
-::: {.callout-warning}
-**Replace `<your-home>` with your actual home directory path.** The `//` prefix in permission rules means "absolute path from the filesystem root" — there is no `~/` shorthand. Use the full path:
+#### Windows (PowerShell)
 
-- **macOS:** `//Users/yourname/.ssh/**`
-- **Linux/WSL2:** `//home/yourname/.ssh/**`
-- **Windows (PowerShell):** `//C:/Users/yourname/.ssh/**`
+Home directory is `C:\Users\endemann`. Run `echo $env:USERNAME` to check your username. Note: use forward slashes in permission rules, even on Windows.
 
-Run `echo $HOME` (macOS/Linux) or `echo $env:USERPROFILE` (PowerShell) to find yours.
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(//C:/Users/endemann/.ssh/**)",
+      "Edit(//C:/Users/endemann/.ssh/**)",
+      "Read(//C:/Users/endemann/.env)",
+      "Edit(//C:/Users/endemann/.env)",
+      "Read(//C:/Users/endemann/.config/gcloud/**)",
+      "Edit(//C:/Users/endemann/.config/gcloud/**)",
+      "Read(//C:/Users/endemann/.aws/**)",
+      "Edit(//C:/Users/endemann/.aws/**)",
+      "Bash(rm -rf *)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}
+```
+
+#### Linux / WSL2
+
+Home directory is `/home/endemann`. Run `whoami` to check your username.
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(//home/endemann/.ssh/**)",
+      "Edit(//home/endemann/.ssh/**)",
+      "Read(//home/endemann/.env)",
+      "Edit(//home/endemann/.env)",
+      "Read(//home/endemann/.config/gcloud/**)",
+      "Edit(//home/endemann/.config/gcloud/**)",
+      "Read(//home/endemann/.aws/**)",
+      "Edit(//home/endemann/.aws/**)",
+      "Bash(rm -rf *)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}
+```
+
+:::
+
+::: {.callout-tip}
+The `//` prefix in permission rules means "absolute path from the filesystem root" — there is no `~/` shorthand. That's why you need the full path like `//Users/endemann/` rather than `~/.ssh/`.
 :::
 
 ::: {.callout-note}
