@@ -470,6 +470,46 @@ So a heavy day of agentic coding is roughly equivalent to running your dishwashe
 
 This doesn't mean you shouldn't use agentic tools — the productivity gains can be substantial, and the energy per unit of *useful output* may be better than the alternative (a human developer running builds, searching docs, and context-switching for hours). But it's a reason to be intentional: don't let an agent spin in wasteful loops when a well-scoped prompt would get the job done in one pass. **Efficient prompting is both cheaper and greener.**
 
+## Data privacy: who sees your code? {#data-privacy}
+
+When you use Claude Code, your code and prompts are sent to Anthropic's servers for inference. This is a reasonable concern — here's what actually happens to that data, depending on how you access Claude.
+
+### Is your data used for model training?
+
+| Access method | Used for training? | Default retention |
+|---|---|---|
+| **Claude API** (commercial terms) | **No** — prohibited by default | 30 days |
+| **Vertex AI / Bedrock** | **No** — prohibited by commercial agreement | 30 days |
+| **Claude Max / Pro subscription** (claude.ai) | **Yes, unless you opt out** — toggle "Help improve Claude" off in [Privacy Settings](https://claude.ai/settings) | 5 years (with training) / 30 days (opted out) |
+
+::: {.callout-warning}
+## If you're on a Max or Pro plan: opt out of training
+As of October 2025, Anthropic [uses consumer plan data for training by default](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training). You must actively opt out in your Privacy Settings. This applies to Claude Code sessions on consumer plans too.
+:::
+
+**For researchers with sensitive data:** The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate [zero-data retention (ZDR)](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) agreements where Anthropic stores nothing after the API response. See our [Vertex AI setup guide](claude-code-vertex-setup.qmd) for how UW-Madison researchers can use institutional cloud accounts for this path.
+
+### Can Anthropic employees see your code?
+
+Not by default. Employee access to conversation data requires one of:
+
+- **You submit feedback** (thumbs up/down, `/bug` command) — that specific interaction becomes reviewable
+- **A trust & safety investigation** — if Anthropic's automated systems flag a policy violation
+- **Explicit consent** — you voluntarily share data with Anthropic
+
+Under commercial terms (API, Vertex AI, Bedrock), access is further restricted by contractual obligations.
+
+### What about the web version?
+
+When you use Claude Code on the web (claude.ai/code), your GitHub repo is cloned into an ephemeral VM. The VM is destroyed when the task completes — there's no persistent repo storage between sessions. The same retention policies above apply to any code Claude reads during the session.
+
+### Further reading on data privacy
+
+- [Is my data used for model training?](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training) — Anthropic Privacy Center
+- [How long do you store my data?](https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data) — retention periods by account type
+- [Data usage — Claude Code docs](https://code.claude.com/docs/en/data-usage) — what Claude Code specifically transmits
+- [How does Anthropic protect personal data?](https://privacy.claude.com/en/articles/10458704-how-does-anthropic-protect-the-personal-data-of-claude-users) — security practices and encryption
+
 ## Security fundamentals
 
 When you give an AI agent access to your terminal, you're trusting it with everything your shell user can do. Here's how to limit the blast radius.
