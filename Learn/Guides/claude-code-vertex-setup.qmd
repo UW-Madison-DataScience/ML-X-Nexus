@@ -285,7 +285,7 @@ Edit (or create) your settings file at `~/.claude/settings.json`.
 
 Add the following content:
 
-```jsonc
+```json
 {
   "model": "claude-sonnet-4-6",
   "autoUpdatesChannel": "latest",
@@ -294,13 +294,15 @@ Add the following content:
     "CLOUD_ML_REGION": "global",
     "ANTHROPIC_VERTEX_PROJECT_ID": "YOUR-PROJECT-ID"
   },
-  // Enable OS-level sandboxing (filesystem + network isolation).
-  // See Section 7 for full details and platform prerequisites.
   "sandbox": {
     "enabled": true
   }
 }
 ```
+
+::: {.callout-warning}
+**Do not include `//` comments in `settings.json`.** The examples elsewhere in this guide use `jsonc` syntax for readability, but `settings.json` is parsed as **plain JSON**, which does not support comments. If you copy-paste a block with comments, Claude Code will report "Invalid or malformed JSON" in `claude doctor`.
+:::
 
 Replace `YOUR-PROJECT-ID` with your actual GCP project ID (e.g., `doit-rci-sandbox-gcp-baa4`). The `model` field sets your default model — `claude-sonnet-4-6` is a good balance of cost and capability. Change it to `claude-opus-4-6` if you need maximum reasoning power (at higher cost).
 
