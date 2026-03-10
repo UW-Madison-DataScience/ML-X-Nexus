@@ -6,6 +6,8 @@ author:
 date: 2026-03-09
 date-format: long
 image: "../../../images/claudecode.jpg"
+toc-depth: 3
+toc-expand: true
 categories:
   - Guides
   - GenAI
@@ -511,14 +513,21 @@ When you use Claude Code, your code and prompts are sent to Anthropic's servers 
 
 | Access method | Used for training? | Default retention |
 |---|---|---|
-| **Claude API** (commercial terms) | **No** — prohibited by default | 30 days |
-| **Vertex AI / Bedrock** | **No** — prohibited by commercial agreement | 30 days |
-| **Claude Max / Pro subscription** (claude.ai) | **Yes, unless you opt out** — toggle "Help improve Claude" off in [Privacy Settings](https://claude.ai/settings) | 5 years (with training) / 30 days (opted out) |
+| **Claude API, Team, Enterprise** (commercial terms) | **No** — prohibited unless you explicitly opt in (e.g., [Development Partner Program](https://support.claude.com/en/articles/11174108-about-the-development-partner-program)) | 30 days |
+| **Vertex AI / Bedrock / Foundry** (commercial) | **No** — prohibited by commercial agreement | 30 days |
+| **Free / Pro / Max** (consumer plans) | **Your choice** — controlled via [Privacy Settings](https://claude.ai/settings/data-privacy-controls) | 5 years (training on) / 30 days (training off) |
 
 ::: {.callout-warning}
-## If you're on a Max or Pro plan: opt out of training
-As of October 2025, Anthropic [uses consumer plan data for training by default](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training). You must actively opt out in your Privacy Settings. This applies to Claude Code sessions on consumer plans too.
+## If you're on a Free, Pro, or Max plan: check your training settings
+Anthropic gives you the choice to allow training on your data — check your setting at [claude.ai/settings/data-privacy-controls](https://claude.ai/settings/data-privacy-controls). This applies to Claude Code sessions on consumer plans too.
 :::
+
+**Important nuances for consumer plans:**
+
+- **Safety exception:** Even if you disable training, conversations flagged for [safety review](https://www.anthropic.com/legal/aup) may still be used to improve Anthropic's ability to detect and enforce their Usage Policy (e.g., training safeguard models).
+- **What's included:** When training is enabled, Anthropic may use the entire conversation — prompts, outputs, custom styles, and conversation preferences.
+- **What's excluded:** Raw content from connectors (Google Drive, MCP servers) is **not** included in training data, unless you directly copy that content into your conversation.
+- **Feedback (thumbs up/down):** Submitting feedback stores the full related conversation for up to 5 years, de-linked from your user ID. This data may be used for training regardless of your training setting.
 
 **For researchers with sensitive data:** The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate [zero-data retention (ZDR)](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) agreements where Anthropic stores nothing after the API response. See our [Cloud Setup Guide](claude-code-cloud-setup.qmd) for how UW-Madison researchers can use institutional cloud accounts (GCP or AWS) for this path.
 
@@ -526,8 +535,8 @@ As of October 2025, Anthropic [uses consumer plan data for training by default](
 
 Not by default. Employee access to conversation data requires one of:
 
-- **You submit feedback** (thumbs up/down, `/bug` command) — that specific interaction becomes reviewable
-- **A trust & safety investigation** — if Anthropic's automated systems flag a policy violation
+- **You submit feedback** (thumbs up/down, `/bug` command) — the full related conversation becomes reviewable, stored for up to 5 years (de-linked from your user ID for thumbs up/down)
+- **A trust & safety investigation** — if Anthropic's automated systems flag a policy violation (this data may also be used for training safeguard models)
 - **Explicit consent** — you voluntarily share data with Anthropic
 
 Under commercial terms (API, Vertex AI, Bedrock), access is further restricted by contractual obligations.
@@ -535,6 +544,14 @@ Under commercial terms (API, Vertex AI, Bedrock), access is further restricted b
 ### What about the web version?
 
 When you use Claude Code on the web (claude.ai/code), your GitHub repo is cloned into an ephemeral VM. The VM is destroyed when the task completes — there's no persistent repo storage between sessions. The same retention policies above apply to any code Claude reads during the session.
+
+### Telemetry and error reporting
+
+Claude Code sends operational telemetry (latency, reliability metrics — **no code or file paths**) to Statsig, and error reports to Sentry. These are enabled by default on the direct Claude API but **disabled by default on Vertex AI, Bedrock, and Foundry**.
+
+To opt out individually: `DISABLE_TELEMETRY=1`, `DISABLE_ERROR_REPORTING=1`, `DISABLE_BUG_COMMAND=1`, or `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`. To disable all non-essential traffic at once: `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. These can be set in your [`settings.json`](https://code.claude.com/docs/en/settings).
+
+For a detailed breakdown by provider, see the [Cloud Setup Guide — Data Usage & Privacy](claude-code-cloud-setup.qmd#data-usage).
 
 ### Further reading on data privacy
 
