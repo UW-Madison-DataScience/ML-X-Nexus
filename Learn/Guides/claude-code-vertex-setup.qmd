@@ -4,7 +4,7 @@ author:
   - name: Chris Endemann
     email: endemann@wisc.edu
 date: 2026-02-15
-date-modified: 2026-03-09
+date-modified: 2026-03-10
 date-format: long
 image: "../../../images/Google-Cloud-Logo.png"
 categories:
@@ -359,7 +359,7 @@ Default region: global
 When using Vertex AI, the [`/login` and `/logout` commands are disabled](https://code.claude.com/docs/en/google-vertex-ai) — authentication is handled entirely through your `gcloud` credentials.
 :::
 
-## 7. Filesystem Safety & Permissions
+## 7. Filesystem Safety, Permissions & Sandboxing
 
 > Official permissions docs: [code.claude.com/docs/en/permissions](https://code.claude.com/docs/en/permissions)
 >
@@ -443,19 +443,20 @@ Think of `deny` rules as guardrails. Here's what's worth blocking and why:
     "deny": [
       // SSH keys — if Claude reads or modifies these, your remote server
       // access could be compromised. There's no reason Claude needs these.
-      "Read(//.ssh/**)",
-      "Edit(//.ssh/**)",
+      // Replace <your-home> with your actual home path (see note below).
+      "Read(//<your-home>/.ssh/**)",
+      "Edit(//<your-home>/.ssh/**)",
 
       // Environment files — these typically contain API keys, database
       // passwords, and other secrets. Claude could accidentally include
       // them in its context (and thus send them to the API).
-      "Read(//.env)",
-      "Edit(//.env)",
+      "Read(//<your-home>/.env)",
+      "Edit(//<your-home>/.env)",
 
       // Cloud credentials — same reasoning as .env files. Application
       // Default Credentials for gcloud live here.
-      "Read(//.config/gcloud/**)",
-      "Edit(//.config/gcloud/**)",
+      "Read(//<your-home>/.config/gcloud/**)",
+      "Edit(//<your-home>/.config/gcloud/**)",
 
       // Broad destructive commands — prevent catastrophic mistakes.
       "Bash(rm -rf *)",
@@ -469,6 +470,16 @@ Think of `deny` rules as guardrails. Here's what's worth blocking and why:
   }
 }
 ```
+
+::: {.callout-warning}
+**Replace `<your-home>` with your actual home directory path.** The `//` prefix in permission rules means "absolute path from the filesystem root" — there is no `~/` shorthand. Use the full path:
+
+- **macOS:** `//Users/yourname/.ssh/**`
+- **Linux/WSL2:** `//home/yourname/.ssh/**`
+- **Windows (PowerShell):** `//C:/Users/yourname/.ssh/**`
+
+Run `echo $HOME` (macOS/Linux) or `echo $env:USERPROFILE` (PowerShell) to find yours.
+:::
 
 ::: {.callout-note}
 **Why not just rely on the approval prompt?** Because deny rules are absolute — they work even if you accidentally click "allow" or "always allow" on a prompt. They also protect against [prompt injection attacks](https://www.petefreitag.com/blog/claude-code-permissions/) where malicious content in a file tricks Claude into running something harmful. The approval prompt is your first line of defense; deny rules are the backup that can't be bypassed.
@@ -526,7 +537,7 @@ By default, Claude Code asks "Do you want to proceed?" before *every* file write
 Instead of listing individual allow rules, you can:
 
 - **Switch to `acceptEdits` mode** (`Shift+Tab` inside a session) — auto-approves all file edits while still prompting for bash commands.
-- **Enable sandboxing** (see [Section 7](#enable-sandboxing)) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, which [reduces permission prompts by 84%](https://www.anthropic.com/engineering/claude-code-sandboxing) while actually *increasing* security.
+- **Enable sandboxing** (see [Section 7](#enable-sandboxing)) — this is the best option. Sandboxing auto-approves bash commands that stay within your project directory at the OS level, while actually *increasing* security.
 - **Use the interactive prompt** — when Claude asks "Do you want to proceed?", select **"Yes, and don't ask again for [command pattern]"** to build up your allow list organically during a session.
 :::
 
@@ -607,13 +618,13 @@ Choose **"Auto-allow mode"** (recommended) — sandboxed commands run automatica
 
 WSL2 uses [bubblewrap](https://github.com/containers/bubblewrap) for sandbox isolation — the same mechanism used on native Linux. **WSL1 is not supported** because bubblewrap requires kernel features only available in WSL2.
 
-**Step 1 — Confirm you're on WSL2:**
+**Step 1 — Confirm you're on WSL2 (run this from PowerShell, not inside WSL):**
 
-```bash
+```powershell
 wsl -l -v
 ```
 
-You should see `VERSION 2` next to your distribution. If you're on WSL1, [upgrade to WSL2](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) first.
+You should see `VERSION 2` next to your distribution. If you're on WSL1, [upgrade to WSL2](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) first. The remaining steps below run *inside* your WSL2 terminal.
 
 **Step 2 — Install dependencies:**
 
