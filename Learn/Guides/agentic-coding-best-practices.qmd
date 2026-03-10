@@ -256,7 +256,17 @@ Each of these is a single, well-defined task that an agent can execute without a
 
 ### Use `CLAUDE.md` as your control surface
 
-Claude Code reads a `CLAUDE.md` file in your project root for persistent instructions. This is one of the most underrated features — it's your main lever for shaping how the agent behaves across sessions.
+[`CLAUDE.md`](https://code.claude.com/docs/en/claude-md) is a markdown file you place in your project root that gives Claude Code persistent context about your project. Think of it as a README for the agent — it's loaded automatically at the start of every session and shapes how Claude behaves. You can include things like:
+
+- How your project is structured (key directories, entry points)
+- Coding conventions (naming, formatting, patterns to follow or avoid)
+- Testing and build commands
+- Safety rules ("never force-push," "don't modify migrations/")
+- Links to docs or specs the agent should reference
+
+Claude Code also supports `CLAUDE.md` files in subdirectories (loaded when Claude works in that directory) and a global `~/.claude/CLAUDE.md` for preferences that apply across all projects. The file is advisory — Claude will follow these instructions in good faith, but they're not enforced at the system level the way [hooks](https://code.claude.com/docs/en/hooks) or [deny rules](https://code.claude.com/docs/en/permissions) are. For anything safety-critical, back it up with a hook or deny rule.
+
+This is one of the most underrated features — it's your main lever for shaping how the agent behaves across sessions.
 
 **Prevent runaway loops:**
 ```markdown
