@@ -9,7 +9,7 @@
 <meta name="author" content="Chris Endemann">
 <meta name="dcterms.date" content="2026-02-15">
 
-<title>Claude Code + Vertex AI Setup Guide (UW-Madison GCP) – Nexus: Crowdsourced ML Resources</title>
+<title>Claude Code Cloud Setup Guide (Vertex AI &amp; Bedrock) – Nexus: Crowdsourced ML Resources</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Claude Code + Vertex AI Setup Guide (UW-Madison GCP)</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Claude Code Cloud Setup Guide (Vertex AI &amp; Bedrock)</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -350,24 +350,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-use-vertex-ai-instead-of-a-direct-subscription" id="toc-why-use-vertex-ai-instead-of-a-direct-subscription" class="nav-link active" data-scroll-target="#why-use-vertex-ai-instead-of-a-direct-subscription">Why use Vertex AI instead of a direct subscription?</a></li>
+  <li><a href="#why-use-a-cloud-provider-instead-of-a-direct-subscription" id="toc-why-use-a-cloud-provider-instead-of-a-direct-subscription" class="nav-link active" data-scroll-target="#why-use-a-cloud-provider-instead-of-a-direct-subscription">Why use a cloud provider instead of a direct subscription?</a></li>
   <li><a href="#already-set-up-returning-user-quick-start" id="toc-already-set-up-returning-user-quick-start" class="nav-link" data-scroll-target="#already-set-up-returning-user-quick-start">Already set up? Returning User Quick-Start</a></li>
   <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">1. Prerequisites</a></li>
   <li><a href="#install-claude-code" id="toc-install-claude-code" class="nav-link" data-scroll-target="#install-claude-code">2. Install Claude Code</a></li>
-  <li><a href="#install-configure-google-cloud-cli" id="toc-install-configure-google-cloud-cli" class="nav-link" data-scroll-target="#install-configure-google-cloud-cli">3. Install &amp; Configure Google Cloud CLI</a>
-  <ul class="collapse">
-  <li><a href="#authenticate-both-platforms" id="toc-authenticate-both-platforms" class="nav-link" data-scroll-target="#authenticate-both-platforms">Authenticate (both platforms)</a></li>
-  </ul></li>
-  <li><a href="#enable-vertex-ai" id="toc-enable-vertex-ai" class="nav-link" data-scroll-target="#enable-vertex-ai">4. Enable Vertex AI &amp; Request Model Access</a>
-  <ul class="collapse">
-  <li><a href="#enable-the-api" id="toc-enable-the-api" class="nav-link" data-scroll-target="#enable-the-api">Enable the API</a></li>
-  <li><a href="#request-access-to-claude-models" id="toc-request-access-to-claude-models" class="nav-link" data-scroll-target="#request-access-to-claude-models">Request access to Claude models</a></li>
-  <li><a href="#verify-iam-permissions" id="toc-verify-iam-permissions" class="nav-link" data-scroll-target="#verify-iam-permissions">Verify IAM permissions</a></li>
-  </ul></li>
-  <li><a href="#configure-claude-code-for-vertex-ai" id="toc-configure-claude-code-for-vertex-ai" class="nav-link" data-scroll-target="#configure-claude-code-for-vertex-ai">5. Configure Claude Code for Vertex AI</a>
-  <ul class="collapse">
-  <li><a href="#region-notes" id="toc-region-notes" class="nav-link" data-scroll-target="#region-notes">Region notes</a></li>
-  </ul></li>
+  <li><a href="#install-cloud-cli" id="toc-install-cloud-cli" class="nav-link" data-scroll-target="#install-cloud-cli">3. Install &amp; Configure Your Cloud CLI</a></li>
+  <li><a href="#enable-api" id="toc-enable-api" class="nav-link" data-scroll-target="#enable-api">4. Enable API Access &amp; Request Models</a></li>
+  <li><a href="#configure-claude-code" id="toc-configure-claude-code" class="nav-link" data-scroll-target="#configure-claude-code">5. Configure Claude Code</a></li>
   <li><a href="#verify-the-setup" id="toc-verify-the-setup" class="nav-link" data-scroll-target="#verify-the-setup">6. Verify the Setup</a></li>
   <li><a href="#filesystem-safety-permissions-sandboxing" id="toc-filesystem-safety-permissions-sandboxing" class="nav-link" data-scroll-target="#filesystem-safety-permissions-sandboxing">7. Filesystem Safety, Permissions &amp; Sandboxing</a>
   <ul class="collapse">
@@ -390,36 +379,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#typical-costs-to-expect" id="toc-typical-costs-to-expect" class="nav-link" data-scroll-target="#typical-costs-to-expect">Typical costs to expect</a></li>
   <li><a href="#understand-what-drives-costs" id="toc-understand-what-drives-costs" class="nav-link" data-scroll-target="#understand-what-drives-costs">Understand what drives costs</a></li>
   <li><a href="#agentic-loops" id="toc-agentic-loops" class="nav-link" data-scroll-target="#agentic-loops">Agentic loops — the #1 cost risk</a></li>
-  <li><a href="#budget-alerts" id="toc-budget-alerts" class="nav-link" data-scroll-target="#budget-alerts">Set up GCP budget alerts (do this NOW)</a></li>
+  <li><a href="#budget-alerts" id="toc-budget-alerts" class="nav-link" data-scroll-target="#budget-alerts">Set up budget alerts (do this NOW)</a></li>
   <li><a href="#check-your-billing-console-daily" id="toc-check-your-billing-console-daily" class="nav-link" data-scroll-target="#check-your-billing-console-daily">Check your billing console daily</a></li>
-  <li><a href="#set-quota-limits-as-a-hard-ceiling" id="toc-set-quota-limits-as-a-hard-ceiling" class="nav-link" data-scroll-target="#set-quota-limits-as-a-hard-ceiling">Set quota limits as a hard ceiling</a></li>
   <li><a href="#cost-saving-tips" id="toc-cost-saving-tips" class="nav-link" data-scroll-target="#cost-saving-tips">Cost-saving tips</a></li>
-  <li><a href="#vertex-ai-pricing-reference" id="toc-vertex-ai-pricing-reference" class="nav-link" data-scroll-target="#vertex-ai-pricing-reference">Vertex AI pricing reference</a></li>
+  <li><a href="#pricing-reference" id="toc-pricing-reference" class="nav-link" data-scroll-target="#pricing-reference">Pricing reference</a></li>
   </ul></li>
   <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">9. Troubleshooting</a>
   <ul class="collapse">
-  <li><a href="#model-not-found-404" id="toc-model-not-found-404" class="nav-link" data-scroll-target="#model-not-found-404">“model not found” (404)</a></li>
-  <li><a href="#resource-exhausted" id="toc-resource-exhausted" class="nav-link" data-scroll-target="#resource-exhausted">429 “Resource Exhausted”</a></li>
-  <li><a href="#permission-denied-iam-errors" id="toc-permission-denied-iam-errors" class="nav-link" data-scroll-target="#permission-denied-iam-errors">Permission denied / IAM errors</a></li>
-  <li><a href="#gcloud-command-not-found" id="toc-gcloud-command-not-found" class="nav-link" data-scroll-target="#gcloud-command-not-found"><code>gcloud</code> command not found</a></li>
-  <li><a href="#claude-command-not-found" id="toc-claude-command-not-found" class="nav-link" data-scroll-target="#claude-command-not-found"><code>claude</code> command not found</a></li>
-  <li><a href="#authentication-expired" id="toc-authentication-expired" class="nav-link" data-scroll-target="#authentication-expired">Authentication expired</a></li>
-  <li><a href="#run-diagnostics" id="toc-run-diagnostics" class="nav-link" data-scroll-target="#run-diagnostics">Run diagnostics</a></li>
+  <li><a href="#common-issues-both-providers" id="toc-common-issues-both-providers" class="nav-link" data-scroll-target="#common-issues-both-providers">Common issues (both providers)</a></li>
   </ul></li>
   <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">10. Quick Reference</a>
   <ul class="collapse">
-  <li><a href="#in-session-commands-both-platforms" id="toc-in-session-commands-both-platforms" class="nav-link" data-scroll-target="#in-session-commands-both-platforms">In-session commands (both platforms)</a></li>
+  <li><a href="#in-session-commands-all-providers" id="toc-in-session-commands-all-providers" class="nav-link" data-scroll-target="#in-session-commands-all-providers">In-session commands (all providers)</a></li>
   </ul></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-vertex-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-cloud-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Claude Code + Vertex AI Setup Guide (UW-Madison GCP)</h1>
+<h1 class="title">Claude Code Cloud Setup Guide (Vertex AI &amp; Bedrock)</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Guides</div>
     <div class="quarto-category">GenAI</div>
@@ -427,6 +409,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div class="quarto-category">Agentic coding</div>
     <div class="quarto-category">Cloud computing</div>
     <div class="quarto-category">GCP</div>
+    <div class="quarto-category">AWS</div>
   </div>
   </div>
 
@@ -462,7 +445,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This guide walks UW-Madison researchers and staff through setting up <a href="https://code.claude.com/">Claude Code</a> with <a href="https://cloud.google.com/vertex-ai">Google Vertex AI</a> on a UW-provisioned GCP account. It covers Windows and macOS.</p>
+<p>This guide walks UW-Madison researchers and staff through setting up <a href="https://code.claude.com/">Claude Code</a> with a cloud provider — either <a href="https://cloud.google.com/vertex-ai">Google Vertex AI</a> or <a href="https://aws.amazon.com/bedrock/">Amazon Bedrock</a>. It covers Windows and macOS, with provider-specific steps in tabs so you can follow whichever path matches your institutional account.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -476,21 +459,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>See our companion guide, <a href="../../Learn/Guides/claude-code-best-practices.html">Claude Code Best Practices</a>, for a broader introduction to agentic coding tools and how to use them effectively.</p>
 </div>
 </div>
-<section id="why-use-vertex-ai-instead-of-a-direct-subscription" class="level2">
-<h2 class="anchored" data-anchor-id="why-use-vertex-ai-instead-of-a-direct-subscription">Why use Vertex AI instead of a direct subscription?</h2>
-<p>You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of Vertex AI on a GCP account?</p>
-<p><strong>What Vertex AI gives you:</strong></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>CLI only — cloud providers don’t work with the Desktop app or Web IDE
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Vertex AI and Bedrock routing is only supported in the <strong>Claude Code CLI</strong> (terminal) and <strong>IDE extensions</strong> (VS Code, JetBrains). The <a href="https://code.claude.com/docs/en/desktop">Claude Desktop app</a> (Code tab) and <a href="https://claude.ai/code">Web IDE</a> require a direct Anthropic login (Max plan or API credits) — they cannot be configured to route through a cloud provider. If you need the desktop GUI or web experience, you’ll need a separate Claude Max subscription. This guide covers the CLI path.</p>
+</div>
+</div>
+<section id="why-use-a-cloud-provider-instead-of-a-direct-subscription" class="level2">
+<h2 class="anchored" data-anchor-id="why-use-a-cloud-provider-instead-of-a-direct-subscription">Why use a cloud provider instead of a direct subscription?</h2>
+<p>You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of routing through a cloud provider?</p>
+<p><strong>What cloud providers give you:</strong></p>
 <ul>
-<li><strong>Institutional billing and cost tracking</strong> — charges go to your UW-Madison GCP project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has <a href="../../Toolbox/Compute/UW-Cloud-Services.html">negotiated cloud discounts</a> including reduced overhead on grants (26% vs 55.5% F&amp;A) and NIH STRIDES pricing.</li>
-<li><strong>Enterprise security controls</strong> — GCP lets you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you’d use for any sensitive cloud infrastructure.</li>
-<li><strong>Audit and compliance</strong> — GCP provides audit logs, access transparency, and compliance certifications (HIPAA, FedRAMP, etc.) that institutional review processes often require.</li>
+<li><strong>Institutional billing and cost tracking</strong> — charges go to your UW-Madison cloud project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has <a href="../../Toolbox/Compute/UW-Cloud-Services.html">negotiated cloud discounts</a> with both GCP and AWS, including reduced overhead on grants (26% vs 55.5% F&amp;A) and NIH STRIDES pricing.</li>
+<li><strong>Enterprise security controls</strong> — both GCP and AWS let you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you’d use for any sensitive cloud infrastructure.</li>
+<li><strong>Audit and compliance</strong> — both providers offer audit logs, access transparency, and compliance certifications (HIPAA, FedRAMP, etc.) that institutional review processes often require.</li>
 <li><strong>Pay-as-you-go flexibility</strong> — useful for teams with variable usage, short-term projects, or when you need access to specific models not included in subscription plans.</li>
 </ul>
-<p><strong>What Vertex AI does NOT change:</strong></p>
+<p><strong>What cloud providers do NOT change:</strong></p>
 <ul>
-<li><strong>Model weights stay on Anthropic’s infrastructure</strong> regardless of how you access Claude. Vertex AI doesn’t move the model into your GCP project — Google routes your requests to Anthropic’s serving infrastructure.</li>
-<li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://docs.anthropic.com/en/docs/build-with-claude/data-residency">data residency</a> feature, not a Vertex AI feature.</li>
-<li><strong>Privacy terms</strong> are set by Anthropic’s commercial agreements, not by your GCP configuration. Under Anthropic’s commercial terms (including Vertex AI), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>.</li>
+<li><strong>Model weights stay on Anthropic’s infrastructure</strong> regardless of how you access Claude. Neither Vertex AI nor Bedrock moves the model into your cloud project — your provider routes requests to Anthropic’s serving infrastructure.</li>
+<li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://docs.anthropic.com/en/docs/build-with-claude/data-residency">data residency</a> feature, not a cloud provider feature.</li>
+<li><strong>Privacy terms</strong> are set by Anthropic’s commercial agreements, not by your cloud configuration. Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -502,32 +498,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Bottom line:</strong> If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Vertex AI makes sense when you need institutional billing, enterprise security controls, or compliance features. UW-Madison already <a href="../../Toolbox/Compute/UW-Cloud-Services.html">provisions GCP accounts</a> for research groups for a wide range of cloud computing needs — running Claude Code through Vertex AI is just one of many uses.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Using AWS instead? Claude Code works with Amazon Bedrock too
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>This guide focuses on Vertex AI, but UW-Madison also provisions AWS accounts with the same institutional protections — negotiated pricing, lower F&amp;A overhead on grants, security monitoring, and BAA coverage. See our <a href="../../Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services page</a> for full details on requesting accounts. Claude Code supports <a href="https://code.claude.com/docs/en/amazon-bedrock">Amazon Bedrock</a> as an equally capable alternative. The setup is similar — you configure environment variables in <code>~/.claude/settings.json</code>:</p>
-<pre class="jsonc"><code>{
-  "env": {
-    "CLAUDE_CODE_USE_BEDROCK": "1",
-    "AWS_REGION": "us-east-1",
-    "AWS_PROFILE": "your-profile"  // or use AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY
-  }
-}</code></pre>
-<p>Everything else in this guide — permissions, sandboxing, cost management, safety practices — applies identically regardless of whether you’re using Vertex AI or Bedrock. The only differences are the authentication mechanism (AWS IAM / <code>aws configure</code> instead of <code>gcloud auth</code>) and the billing destination (AWS account instead of GCP project).</p>
-<p>If your institution has AWS agreements rather than GCP, swap the provider config and follow the <a href="https://code.claude.com/docs/en/amazon-bedrock">official Bedrock setup docs</a>.</p>
-</div>
+<p><strong>Bottom line:</strong> If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing, enterprise security controls, or compliance features. UW-Madison <a href="../../Toolbox/Compute/UW-Cloud-Services.html">provisions both GCP and AWS accounts</a> for research groups — running Claude Code through either provider is just one of many uses.</p>
 </div>
 </div>
 </section>
@@ -535,28 +506,31 @@ Note
 <h2 class="anchored" data-anchor-id="already-set-up-returning-user-quick-start">Already set up? Returning User Quick-Start</h2>
 <p>If you’ve already completed the full setup and just need to start a new session:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Windows (PowerShell)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">macOS (Terminal)</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If your credentials have expired (you'll get auth errors):</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gcloud auth application-default login</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to your project and launch</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If your credentials have expired (you'll get auth errors):</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to your project and launch</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project   <span class="co"># macOS/Linux</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># cd C:\Users\you\projects\my-project   # Windows PowerShell</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If your credentials have expired (you'll get auth errors):</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to your project and launch</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If your credentials have expired (you'll get auth errors):</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Or re-export your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to your project and launch</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project   <span class="co"># macOS/Linux</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># cd C:\Users\you\projects\my-project   # Windows PowerShell</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p><strong>Once inside Claude Code:</strong></p>
-<pre class="text"><code>/status       # Confirm Vertex AI is active and your project ID is correct
+<pre class="text"><code>/status       # Confirm your cloud provider is active and project/region are correct
 /sandbox      # Enable sandboxing if not already persistent in settings
 /cost         # Check token usage at any time during your session</code></pre>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -569,7 +543,8 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you get 401/403 errors, re-run <code>gcloud auth application-default login</code>. If you get 404 “model not found” errors, check your region settings in <code>~/.claude/settings.json</code> (see <a href="#configure-claude-code-for-vertex-ai">Section 5</a>). If you get 429 “resource exhausted” errors, you need a quota increase (see <a href="#troubleshooting">Troubleshooting</a>).</p>
+<p><strong>Vertex AI:</strong> If you get 401/403 errors, re-run <code>gcloud auth application-default login</code>. If you get 404 “model not found” errors, check your region settings in <code>~/.claude/settings.json</code> (see <a href="#configure-claude-code">Section 5</a>). If you get 429 “resource exhausted” errors, you need a quota increase (see <a href="#troubleshooting">Troubleshooting</a>).</p>
+<p><strong>Bedrock:</strong> If you get <code>AccessDeniedException</code>, check your IAM permissions and ensure model access is enabled. If you get <code>ValidationException: Model not found</code>, verify your <code>AWS_REGION</code> and model IDs. If credentials expired, re-run <code>aws sso login</code> or refresh your access keys.</p>
 </div>
 </div>
 </section>
@@ -577,10 +552,25 @@ Tip
 <h2 class="anchored" data-anchor-id="prerequisites">1. Prerequisites</h2>
 <p><strong>Both platforms:</strong></p>
 <ul>
-<li>A <strong>UW-Madison GCP project</strong> with billing enabled (e.g., <code>doit-rci-sandbox-gcp-baa4</code>)</li>
-<li>Your <strong>UW-Madison Google account</strong> with IAM access to the GCP project</li>
 <li>Internet connection</li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<ul>
+<li>A <strong>UW-Madison GCP project</strong> with billing enabled (e.g., <code>doit-rci-sandbox-gcp-baa4</code>)</li>
+<li>Your <strong>UW-Madison Google account</strong> with IAM access to the GCP project</li>
+</ul>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<ul>
+<li>A <strong>UW-Madison AWS account</strong> with billing enabled</li>
+<li>Your <strong>UW-Madison identity</strong> with IAM access to the AWS account (via IAM user, SSO, or federated identity)</li>
+</ul>
+</div>
+</div>
+</div>
 <p><strong>Windows:</strong></p>
 <ul>
 <li>Windows 10 (build 1809+) or Windows 11</li>
@@ -601,11 +591,11 @@ Tip
 <p>Official install docs: <a href="https://code.claude.com/docs/en/setup">code.claude.com/docs/en/setup</a></p>
 </blockquote>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <p>Open <strong>PowerShell</strong> and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -629,15 +619,15 @@ Warning
 <li><strong>Close and reopen PowerShell.</strong></li>
 </ol>
 <p>Verify:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>claude <span class="op">--</span>version</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>claude <span class="op">--</span>version</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <p>Open <strong>Terminal</strong> and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Alternatively, if you use Homebrew:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>After installation, restart your terminal (or run <code>source ~/.zshrc</code>), then verify:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <blockquote class="blockquote">
 <p>The native installer places the binary at <code>~/.claude/bin/claude</code> or <code>~/.local/bin/claude</code> and updates your shell profile automatically. If <code>claude</code> isn’t found, ensure one of these paths is in your <code>$PATH</code>.</p>
 </blockquote>
@@ -645,80 +635,179 @@ Warning
 </div>
 </div>
 </section>
-<section id="install-configure-google-cloud-cli" class="level2">
-<h2 class="anchored" data-anchor-id="install-configure-google-cloud-cli">3. Install &amp; Configure Google Cloud CLI</h2>
+<section id="install-cloud-cli" class="level2">
+<h2 class="anchored" data-anchor-id="install-cloud-cli">3. Install &amp; Configure Your Cloud CLI</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">Vertex AI (gcloud)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Amazon Bedrock (AWS CLI)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <blockquote class="blockquote">
 <p>Official gcloud install docs: <a href="https://cloud.google.com/sdk/docs/install">cloud.google.com/sdk/docs/install</a></p>
 </blockquote>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <p>Download and install the <a href="https://cloud.google.com/sdk/docs/install">Google Cloud CLI for Windows</a>. The installer adds <code>gcloud</code> to your PATH automatically.</p>
 <p><strong>Fix PowerShell Execution Policy (if needed):</strong></p>
 <p>If <code>gcloud</code> gives you a “running scripts is disabled” error:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Set-ExecutionPolicy</span> RemoteSigned <span class="op">-</span>Scope CurrentUser</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Set-ExecutionPolicy</span> RemoteSigned <span class="op">-</span>Scope CurrentUser</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Type <strong>Y</strong> to confirm.</p>
 </div>
-<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <p>Option A — Homebrew (easiest):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Option B — Official installer:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://sdk.cloud.google.com <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://sdk.cloud.google.com <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then restart your terminal or run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.zshrc   <span class="co"># or source ~/.bashrc</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.zshrc   <span class="co"># or source ~/.bashrc</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<section id="authenticate-both-platforms" class="level3">
-<h3 class="anchored" data-anchor-id="authenticate-both-platforms">Authenticate (both platforms)</h3>
+<p><strong>Authenticate (both platforms):</strong></p>
 <p>These commands are identical on both Windows and macOS:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Log in with your UW-Madison Google account</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set your GCP project</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> config set project YOUR-PROJECT-ID</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># CRITICAL — this is what Claude Code actually uses to authenticate</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Log in with your UW-Madison Google account</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set your GCP project</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> config set project YOUR-PROJECT-ID</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># CRITICAL — this is what Claude Code actually uses to authenticate</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Both <code>login</code> commands open a browser window. Sign in with your UW-Madison email and grant the requested permissions.</p>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<blockquote class="blockquote">
+<p>Official AWS CLI install docs: <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</a></p>
+</blockquote>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<p>Download and run the <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">AWS CLI MSI installer for Windows</a>. The installer adds <code>aws</code> to your PATH automatically.</p>
+<p>Verify:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>aws <span class="op">--</span>version</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<p>Option A — Homebrew (easiest):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install awscli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Option B — Official installer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="st">"https://awscli.amazonaws.com/AWSCLIV2.pkg"</span> <span class="at">-o</span> <span class="st">"AWSCLIV2.pkg"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> installer <span class="at">-pkg</span> AWSCLIV2.pkg <span class="at">-target</span> /</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Verify:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><strong>Authenticate (both platforms):</strong></p>
+<p>Claude Code uses the standard <a href="https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html">AWS credential chain</a>. Choose one of these methods:</p>
+<p><strong>Option A — AWS SSO (recommended for UW-Madison):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure your SSO profile (one-time setup)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> configure sso</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Follow the prompts: SSO start URL, region, account, role</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Log in (do this whenever credentials expire)</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile-name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Option B — IAM access keys:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> configure</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Enter your AWS Access Key ID, Secret Access Key, and region</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Option C — Environment variables:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">AWS_ACCESS_KEY_ID</span><span class="op">=</span><span class="st">"your-access-key"</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">AWS_SECRET_ACCESS_KEY</span><span class="op">=</span><span class="st">"your-secret-key"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">AWS_REGION</span><span class="op">=</span><span class="st">"us-east-1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If your institution uses AWS SSO or federated identity, Option A is the most secure — no long-lived credentials on disk. Ask your UW-Madison AWS administrator which method your account uses.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
-</section>
-<section id="enable-vertex-ai" class="level2">
-<h2 class="anchored" data-anchor-id="enable-vertex-ai">4. Enable Vertex AI &amp; Request Model Access</h2>
+<section id="enable-api" class="level2">
+<h2 class="anchored" data-anchor-id="enable-api">4. Enable API Access &amp; Request Models</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <blockquote class="blockquote">
 <p>Official Vertex AI setup: <a href="https://code.claude.com/docs/en/google-vertex-ai">code.claude.com/docs/en/google-vertex-ai</a></p>
 <p>Google’s Claude on Vertex docs: <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude">cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude</a></p>
 </blockquote>
-<p>This section is identical on both platforms — all commands run in your terminal/PowerShell.</p>
-<section id="enable-the-api" class="level3">
-<h3 class="anchored" data-anchor-id="enable-the-api">Enable the API</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> services enable aiplatform.googleapis.com <span class="at">--project</span><span class="op">=</span>YOUR-PROJECT-ID</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="request-access-to-claude-models" class="level3">
-<h3 class="anchored" data-anchor-id="request-access-to-claude-models">Request access to Claude models</h3>
+<p><strong>Enable the API:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> services enable aiplatform.googleapis.com <span class="at">--project</span><span class="op">=</span>YOUR-PROJECT-ID</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Request access to Claude models:</strong></p>
 <ol type="1">
 <li>Go to the <a href="https://console.cloud.google.com/vertex-ai/model-garden">Vertex AI Model Garden</a> in the GCP Console.</li>
 <li>Search for the Claude model you want (e.g., <strong>Claude Sonnet 4</strong>).</li>
 <li>Click the model card and <strong>complete the access request form</strong>.</li>
 <li>Approval may take minutes to a couple of days.</li>
 </ol>
-</section>
-<section id="verify-iam-permissions" class="level3">
-<h3 class="anchored" data-anchor-id="verify-iam-permissions">Verify IAM permissions</h3>
+<p><strong>Verify IAM permissions:</strong></p>
 <p>Your GCP account needs the <strong><code>roles/aiplatform.user</code></strong> role (<a href="https://cloud.google.com/vertex-ai/docs/general/access-control">Vertex IAM docs</a>), which includes:</p>
 <ul>
 <li><code>aiplatform.endpoints.predict</code> (model invocation)</li>
 <li><code>aiplatform.endpoints.computeTokens</code> (token counting)</li>
 </ul>
 <p>If you don’t have this, ask your UW-Madison GCP administrator to grant it.</p>
-</section>
-</section>
-<section id="configure-claude-code-for-vertex-ai" class="level2">
-<h2 class="anchored" data-anchor-id="configure-claude-code-for-vertex-ai">5. Configure Claude Code for Vertex AI</h2>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
 <blockquote class="blockquote">
-<p>Full configuration reference: <a href="https://code.claude.com/docs/en/google-vertex-ai">code.claude.com/docs/en/google-vertex-ai</a></p>
+<p>Official Bedrock setup: <a href="https://code.claude.com/docs/en/amazon-bedrock">code.claude.com/docs/en/amazon-bedrock</a></p>
+<p>AWS Bedrock model access docs: <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html">docs.aws.amazon.com/bedrock/latest/userguide/model-access.html</a></p>
 </blockquote>
+<p><strong>Enable model access:</strong></p>
+<ol type="1">
+<li>Open the <a href="https://console.aws.amazon.com/bedrock/">Amazon Bedrock console</a> and select your region (e.g., <strong>us-east-1</strong>).</li>
+<li>Go to <strong>Model catalog</strong> in the left sidebar.</li>
+<li>Find the Claude model you want (e.g., <strong>Claude Sonnet 4.6</strong>) and click <strong>Request model access</strong>.</li>
+<li>AWS will ask for a brief use-case description. A one-sentence explanation is sufficient. For most Claude models, approval is automatic and takes less than a minute.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The first time you request access to Anthropic models on a new AWS account, you’ll need to complete a First Time Use (FTU) form with use-case details. This is a one-time per-account requirement.</p>
+</div>
+</div>
+<p><strong>Verify IAM permissions:</strong></p>
+<p>Your AWS identity needs permissions to invoke Bedrock models. At minimum, create (or ask your admin to attach) an IAM policy with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"Version"</span><span class="fu">:</span> <span class="st">"2012-10-17"</span><span class="fu">,</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"Statement"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Effect"</span><span class="fu">:</span> <span class="st">"Allow"</span><span class="fu">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Action"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"bedrock:InvokeModel"</span><span class="ot">,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"bedrock:InvokeModelWithResponseStream"</span><span class="ot">,</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"bedrock:ListInferenceProfiles"</span><span class="ot">,</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"bedrock:ListFoundationModels"</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Resource"</span><span class="fu">:</span> <span class="st">"*"</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If your account uses AWS Marketplace for model access, you may also need <code>aws-marketplace:Subscribe</code> and <code>aws-marketplace:ViewSubscriptions</code> permissions.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="configure-claude-code" class="level2">
+<h2 class="anchored" data-anchor-id="configure-claude-code">5. Configure Claude Code</h2>
 <p>Edit (or create) your settings file at <code>~/.claude/settings.json</code>.</p>
 <table class="caption-top table">
 <thead>
@@ -738,19 +827,58 @@ Warning
 </tr>
 </tbody>
 </table>
-<p>Add the following content:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"model"</span><span class="fu">:</span> <span class="st">"claude-sonnet-4-6"</span><span class="fu">,</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"autoUpdatesChannel"</span><span class="fu">:</span> <span class="st">"latest"</span><span class="fu">,</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"env"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLAUDE_CODE_USE_VERTEX"</span><span class="fu">:</span> <span class="st">"1"</span><span class="fu">,</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLOUD_ML_REGION"</span><span class="fu">:</span> <span class="st">"global"</span><span class="fu">,</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"ANTHROPIC_VERTEX_PROJECT_ID"</span><span class="fu">:</span> <span class="st">"YOUR-PROJECT-ID"</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"sandbox"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"enabled"</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
+<div class="tab-content">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"model"</span><span class="fu">:</span> <span class="st">"claude-sonnet-4-6"</span><span class="fu">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"autoUpdatesChannel"</span><span class="fu">:</span> <span class="st">"latest"</span><span class="fu">,</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"env"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLAUDE_CODE_USE_VERTEX"</span><span class="fu">:</span> <span class="st">"1"</span><span class="fu">,</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLOUD_ML_REGION"</span><span class="fu">:</span> <span class="st">"global"</span><span class="fu">,</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"ANTHROPIC_VERTEX_PROJECT_ID"</span><span class="fu">:</span> <span class="st">"YOUR-PROJECT-ID"</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"sandbox"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"enabled"</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Replace <code>YOUR-PROJECT-ID</code> with your actual GCP project ID (e.g., <code>doit-rci-sandbox-gcp-baa4</code>).</p>
+<p><strong>Region notes:</strong></p>
+<ul>
+<li><strong><code>global</code></strong> is typically the cheapest and is a good default.</li>
+<li>Not all models are available on the global endpoint. If you get 404 “model not found” errors, add region overrides for specific models by adding more entries to the <code>env</code> block:</li>
+</ul>
+<pre class="jsonc"><code>"VERTEX_REGION_CLAUDE_3_5_HAIKU": "us-east5",
+"VERTEX_REGION_CLAUDE_4_0_SONNET": "us-east5"</code></pre>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"model"</span><span class="fu">:</span> <span class="st">"claude-sonnet-4-6"</span><span class="fu">,</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"autoUpdatesChannel"</span><span class="fu">:</span> <span class="st">"latest"</span><span class="fu">,</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"env"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLAUDE_CODE_USE_BEDROCK"</span><span class="fu">:</span> <span class="st">"1"</span><span class="fu">,</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"AWS_REGION"</span><span class="fu">:</span> <span class="st">"us-east-1"</span><span class="fu">,</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"AWS_PROFILE"</span><span class="fu">:</span> <span class="st">"your-profile-name"</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"sandbox"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"enabled"</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Replace <code>your-profile-name</code> with your AWS CLI profile name (from <code>aws configure sso</code> or <code>aws configure</code>). If you’re using environment variables for credentials instead of a profile, omit <code>AWS_PROFILE</code> and set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> in the <code>env</code> block.</p>
+<p><strong>Region notes:</strong></p>
+<ul>
+<li><strong><code>us-east-1</code></strong> has the broadest model availability and is a good default.</li>
+<li>Not all models are available in all regions. Check the <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html">Bedrock model support by region</a> page if you get “model not found” errors.</li>
+</ul>
+<p><strong>Model pinning (recommended):</strong></p>
+<p>Bedrock model aliases can change when new versions are released. To avoid surprises, pin specific model versions in your <code>env</code> block:</p>
+<pre class="jsonc"><code>"ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
+"ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
+"ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5-20251001"</code></pre>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -764,7 +892,7 @@ Warning
 <p><strong>Do not include <code>//</code> comments in <code>settings.json</code>.</strong> The examples elsewhere in this guide use <code>jsonc</code> syntax for readability, but <code>settings.json</code> is parsed as <strong>plain JSON</strong>, which does not support comments. If you copy-paste a block with comments, Claude Code will report “Invalid or malformed JSON” in <code>claude doctor</code>.</p>
 </div>
 </div>
-<p>Replace <code>YOUR-PROJECT-ID</code> with your actual GCP project ID (e.g., <code>doit-rci-sandbox-gcp-baa4</code>). The <code>model</code> field sets your default model — <code>claude-sonnet-4-6</code> is a good balance of cost and capability. Change it to <code>claude-opus-4-6</code> if you need maximum reasoning power (at higher cost).</p>
+<p>The <code>model</code> field sets your default model — <code>claude-sonnet-4-6</code> is a good balance of cost and capability. Change it to <code>claude-opus-4-6</code> if you need maximum reasoning power (at higher cost).</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -778,39 +906,41 @@ Warning
 <p>The sandbox config above enables OS-level isolation that restricts Claude’s bash commands to your project directory. It works <strong>out of the box on macOS</strong> (uses Apple’s Seatbelt). On <strong>Linux/WSL2</strong>, you must first install <code>bubblewrap</code> and <code>socat</code> — see <a href="#enable-sandboxing">Section 7</a> for step-by-step instructions including how to verify you’re on WSL2 (WSL1 is not supported). <strong>Native Windows (PowerShell)</strong> does not yet support sandboxing — the setting will be ignored, so leave it in place for when support arrives. See <a href="#enable-sandboxing">Section 7</a> for full configuration details.</p>
 </div>
 </div>
-<section id="region-notes" class="level3">
-<h3 class="anchored" data-anchor-id="region-notes">Region notes</h3>
-<ul>
-<li><strong><code>global</code></strong> is typically the cheapest and is a good default.</li>
-<li>Not all models are available on the global endpoint. If you get 404 “model not found” errors, add region overrides for specific models by adding more entries to the <code>env</code> block:</li>
-</ul>
-<pre class="jsonc"><code>"VERTEX_REGION_CLAUDE_3_5_HAIKU": "us-east5",
-"VERTEX_REGION_CLAUDE_4_0_SONNET": "us-east5"</code></pre>
-</section>
 </section>
 <section id="verify-the-setup" class="level2">
 <h2 class="anchored" data-anchor-id="verify-the-setup">6. Verify the Setup</h2>
 <p>Run these in your terminal (PowerShell on Windows, Terminal on macOS):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then launch Claude Code from a project directory:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<p>Once inside Claude Code, run <code>/status</code> to confirm it’s using Vertex AI:</p>
+<p>Once inside Claude Code, run <code>/status</code> to confirm your provider is active:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" role="tab" aria-controls="tabset-10-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-10-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-2" role="tab" aria-controls="tabset-10-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
+<div class="tab-content">
+<div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
 <pre><code>API provider: Google Vertex AI
 GCP project: your-project-id
 Default region: global</code></pre>
+</div>
+<div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
+<pre><code>API provider: Amazon Bedrock
+AWS region: us-east-1</code></pre>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -821,7 +951,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>When using Vertex AI, the <a href="https://code.claude.com/docs/en/google-vertex-ai"><code>/login</code> and <code>/logout</code> commands are disabled</a> — authentication is handled entirely through your <code>gcloud</code> credentials.</p>
+<p>When using either cloud provider, the <a href="https://code.claude.com/docs/en/google-vertex-ai"><code>/login</code> and <code>/logout</code> commands are disabled</a> — authentication is handled entirely through your cloud CLI credentials (<code>gcloud</code> or <code>aws</code>).</p>
 </div>
 </div>
 </section>
@@ -858,15 +988,15 @@ Note
 <section id="always-launch-from-your-project-directory" class="level3">
 <h3 class="anchored" data-anchor-id="always-launch-from-your-project-directory">Always launch from your project directory</h3>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tabset-11-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-11-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\Users\you\projects\my-project</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tabset-11-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/projects/my-project</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -903,38 +1033,8 @@ Note
 </section>
 <section id="add-deny-rules" class="level3">
 <h3 class="anchored" data-anchor-id="add-deny-rules">Add <code>deny</code> rules to protect sensitive areas</h3>
-<p>Add a <code>permissions</code> block to your <strong><code>~/.claude/settings.json</code></strong> file (the same file you edited in <a href="#configure-settings">Section 5</a>). Think of <code>deny</code> rules as guardrails. Here’s what’s worth blocking and why:</p>
-<pre class="jsonc"><code>{
-  "permissions": {
-    "deny": [
-      // SSH keys — if Claude reads or modifies these, your remote server
-      // access could be compromised. There's no reason Claude needs these.
-      // Replace &lt;your-home&gt; with your actual home path (see note below).
-      "Read(//&lt;your-home&gt;/.ssh/**)",
-      "Edit(//&lt;your-home&gt;/.ssh/**)",
-
-      // Environment files — these typically contain API keys, database
-      // passwords, and other secrets. Claude could accidentally include
-      // them in its context (and thus send them to the API).
-      "Read(//&lt;your-home&gt;/.env)",
-      "Edit(//&lt;your-home&gt;/.env)",
-
-      // Cloud credentials — same reasoning as .env files. Application
-      // Default Credentials for gcloud live here.
-      "Read(//&lt;your-home&gt;/.config/gcloud/**)",
-      "Edit(//&lt;your-home&gt;/.config/gcloud/**)",
-
-      // Broad destructive commands — prevent catastrophic mistakes.
-      "Bash(rm -rf *)",
-
-      // Network tools — prevents Claude from exfiltrating data or
-      // downloading untrusted code. Use WebFetch rules instead if you
-      // need Claude to access specific URLs.
-      "Bash(curl:*)",
-      "Bash(wget:*)"
-    ]
-  }
-}</code></pre>
+<p>Add a <code>permissions</code> block to your <strong><code>~/.claude/settings.json</code></strong> file (the same file you edited in <a href="#configure-claude-code">Section 5</a>). Think of <code>deny</code> rules as guardrails — they block Claude from accessing sensitive paths regardless of what it tries to do.</p>
+<p>These examples block: SSH keys, <code>.env</code> files, cloud credentials (<code>~/.config/gcloud/</code> and <code>~/.aws/</code>), destructive commands (<code>rm -rf</code>), and network tools (<code>curl</code>, <code>wget</code>). <strong>Replace <code>endemann</code> with your actual username</strong> before pasting into <code>settings.json</code>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -945,13 +1045,85 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Replace <code>&lt;your-home&gt;</code> with your actual home directory path.</strong> The <code>//</code> prefix in permission rules means “absolute path from the filesystem root” — there is no <code>~/</code> shorthand. Use the full path:</p>
-<ul>
-<li><strong>macOS:</strong> <code>//Users/yourname/.ssh/**</code></li>
-<li><strong>Linux/WSL2:</strong> <code>//home/yourname/.ssh/**</code></li>
-<li><strong>Windows (PowerShell):</strong> <code>//C:/Users/yourname/.ssh/**</code></li>
-</ul>
-<p>Run <code>echo $HOME</code> (macOS/Linux) or <code>echo $env:USERPROFILE</code> (PowerShell) to find yours.</p>
+<p><strong><code>settings.json</code> is plain JSON — no comments allowed.</strong> The blocks below are ready to copy-paste. Do not add <code>//</code> comments or Claude Code will report “Invalid or malformed JSON” in <code>claude doctor</code>.</p>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-12-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-1" role="tab" aria-controls="tabset-12-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-2" role="tab" aria-controls="tabset-12-2" aria-selected="false" href="">Windows (PowerShell)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-3" role="tab" aria-controls="tabset-12-3" aria-selected="false" href="">Linux / WSL2</a></li></ul>
+<div class="tab-content">
+<div id="tabset-12-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-12-1-tab">
+<p>Home directory is <code>/Users/endemann</code>. Run <code>whoami</code> to check your username.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"permissions"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"deny"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//Users/endemann/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//Users/endemann/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//Users/endemann/.env)"</span><span class="ot">,</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//Users/endemann/.env)"</span><span class="ot">,</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//Users/endemann/.config/gcloud/**)"</span><span class="ot">,</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//Users/endemann/.config/gcloud/**)"</span><span class="ot">,</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//Users/endemann/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//Users/endemann/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(rm -rf *)"</span><span class="ot">,</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(curl:*)"</span><span class="ot">,</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(wget:*)"</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-12-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-2-tab">
+<p>Home directory is <code>C:\Users\endemann</code>. Run <code>echo $env:USERNAME</code> to check your username. Note: use forward slashes in permission rules, even on Windows.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"permissions"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"deny"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//C:/Users/endemann/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//C:/Users/endemann/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//C:/Users/endemann/.env)"</span><span class="ot">,</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//C:/Users/endemann/.env)"</span><span class="ot">,</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//C:/Users/endemann/.config/gcloud/**)"</span><span class="ot">,</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//C:/Users/endemann/.config/gcloud/**)"</span><span class="ot">,</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//C:/Users/endemann/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//C:/Users/endemann/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(rm -rf *)"</span><span class="ot">,</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(curl:*)"</span><span class="ot">,</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(wget:*)"</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-12-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-3-tab">
+<p>Home directory is <code>/home/endemann</code>. Run <code>whoami</code> to check your username.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"permissions"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"deny"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//home/endemann/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//home/endemann/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//home/endemann/.env)"</span><span class="ot">,</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//home/endemann/.env)"</span><span class="ot">,</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//home/endemann/.config/gcloud/**)"</span><span class="ot">,</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//home/endemann/.config/gcloud/**)"</span><span class="ot">,</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//home/endemann/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//home/endemann/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(rm -rf *)"</span><span class="ot">,</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(curl:*)"</span><span class="ot">,</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(wget:*)"</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>//</code> prefix in permission rules means “absolute path from the filesystem root” — there is no <code>~/</code> shorthand. That’s why you need the full path like <code>//Users/endemann/</code> rather than <code>~/.ssh/</code>.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1111,7 +1283,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you followed <a href="#configure-claude-code-for-vertex-ai">Section 5</a>, sandboxing is already enabled in your <code>settings.json</code>. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.</p>
+<p>If you followed <a href="#configure-claude-code">Section 5</a>, sandboxing is already enabled in your <code>settings.json</code>. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.</p>
 </div>
 </div>
 <p>Sandboxing is the <strong>strongest protection available</strong> against Claude modifying files outside your project. It uses OS-level enforcement (not just Claude’s own judgment) to restrict what bash commands can access — even if a prompt injection bypasses Claude’s decision-making.</p>
@@ -1124,25 +1296,25 @@ Tip
 <p>Anthropic reports that sandboxing <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">reduces permission prompts by 84%</a> while <em>increasing</em> security — you get fewer interruptions and better protection.</p>
 <p><strong>How to enable it:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false" href="">Windows (native PowerShell)</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-13-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-1" role="tab" aria-controls="tabset-13-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-2" role="tab" aria-controls="tabset-13-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-3" role="tab" aria-controls="tabset-13-3" aria-selected="false" href="">Windows (native PowerShell)</a></li></ul>
 <div class="tab-content">
-<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div id="tabset-13-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-13-1-tab">
 <p>Works <strong>out of the box</strong> using Apple’s Seatbelt framework. Inside a Claude Code session, run:</p>
 <pre><code>/sandbox</code></pre>
 <p>Choose <strong>“Auto-allow mode”</strong> (recommended) — sandboxed commands run automatically without permission prompts, while anything that would exceed the sandbox boundaries falls back to the normal approval flow.</p>
 </div>
-<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div id="tabset-13-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-2-tab">
 <p>WSL2 uses <a href="https://github.com/containers/bubblewrap">bubblewrap</a> for sandbox isolation — the same mechanism used on native Linux. <strong>WSL1 is not supported</strong> because bubblewrap requires kernel features only available in WSL2.</p>
 <p><strong>Step 1 — Confirm you’re on WSL2:</strong></p>
 <p>Open a <strong>Windows PowerShell</strong> window (not your WSL terminal) and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">-</span>l <span class="op">-</span>v</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">-</span>l <span class="op">-</span>v</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You should see <code>VERSION 2</code> next to your distribution. If you’re on WSL1, <a href="https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2">upgrade to WSL2</a> first. Once confirmed, open your <strong>WSL2 terminal</strong> — all remaining steps run inside WSL.</p>
 <p><strong>Step 2 — Install dependencies:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian (most common WSL distro)</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install bubblewrap socat</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install bubblewrap socat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian (most common WSL distro)</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install bubblewrap socat</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install bubblewrap socat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Step 3 — Enable sandboxing inside Claude Code:</strong></p>
 <pre><code>/sandbox</code></pre>
 <p>Choose <strong>“Auto-allow mode”</strong> — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.</p>
@@ -1171,7 +1343,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<div id="tabset-13-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-3-tab">
 <p>Sandboxing is <strong>not yet supported</strong> on native Windows. Use <a href="#add-deny-rules">deny rules</a> and <a href="#allow-rules">allow rules</a> as your primary protection. If you need stronger isolation, consider running Claude Code from WSL2 instead.</p>
 </div>
 </div>
@@ -1234,7 +1406,6 @@ Note
 <h2 class="anchored" data-anchor-id="billing-cost-management-avoiding-runaway-costs">8. Billing, Cost Management &amp; Avoiding Runaway Costs</h2>
 <blockquote class="blockquote">
 <p>Official cost management docs: <a href="https://code.claude.com/docs/en/costs">code.claude.com/docs/en/costs</a></p>
-<p>GCP budget alerts: <a href="https://cloud.google.com/billing/docs/how-to/budgets">cloud.google.com/billing/docs/how-to/budgets</a></p>
 </blockquote>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1242,11 +1413,11 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Claude Code on Vertex AI is pay-as-you-go
+<span class="screen-reader-only">Warning</span>Claude Code on cloud providers is pay-as-you-go
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Every token you send and receive is billed to your GCP project. Unlike a Claude Pro/Max subscription with fixed monthly pricing, there is no spending cap unless you set one up yourself. <strong>You can rack up significant charges quickly if you’re not careful.</strong></p>
+<p>Every token you send and receive is billed to your cloud project. Unlike a Claude Pro/Max subscription with fixed monthly pricing, there is no spending cap unless you set one up yourself. <strong>You can rack up significant charges quickly if you’re not careful.</strong></p>
 </div>
 </div>
 <section id="typical-costs-to-expect" class="level3">
@@ -1297,8 +1468,15 @@ Warning
 </ul>
 </section>
 <section id="budget-alerts" class="level3">
-<h3 class="anchored" data-anchor-id="budget-alerts">Set up GCP budget alerts (do this NOW)</h3>
+<h3 class="anchored" data-anchor-id="budget-alerts">Set up budget alerts (do this NOW)</h3>
 <p>Budget alerts won’t automatically stop spending, but they’ll email you when you’re approaching a threshold. <strong>Set this up before your first Claude Code session.</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" role="tab" aria-controls="tabset-14-1" aria-selected="true" href="">Vertex AI (GCP)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-14-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-2" role="tab" aria-controls="tabset-14-2" aria-selected="false" href="">Amazon Bedrock (AWS)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
+<blockquote class="blockquote">
+<p>GCP budget alerts: <a href="https://cloud.google.com/billing/docs/how-to/budgets">cloud.google.com/billing/docs/how-to/budgets</a></p>
+</blockquote>
 <ol type="1">
 <li>Go to <a href="https://console.cloud.google.com/billing/budgets"><strong>Billing → Budgets &amp; Alerts</strong></a> in the GCP Console.</li>
 <li>Click <strong>Create Budget</strong>.</li>
@@ -1320,19 +1498,47 @@ Important
 <p>Budget alerts are <a href="https://cloud.google.com/billing/docs/how-to/budgets"><strong>notifications only</strong></a> — they do NOT automatically stop your services or disable billing. If you hit 100% of your budget at 2 AM, charges will continue until you manually intervene. Check your billing console daily.</p>
 </div>
 </div>
+<p><strong>Set quota limits as a hard ceiling:</strong></p>
+<p>Unlike budget alerts, <strong>quotas can actually stop usage.</strong> Go to <a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas"><strong>Quotas &amp; System Limits</strong></a> and set reasonable TPM (tokens per minute) quotas for the Claude models you’re using. If you hit your quota, Claude Code will get 429 errors instead of running up your bill.</p>
+</div>
+<div id="tabset-14-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-2-tab">
+<blockquote class="blockquote">
+<p>AWS Budgets docs: <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html">docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html</a></p>
+</blockquote>
+<ol type="1">
+<li>Go to <a href="https://console.aws.amazon.com/billing/home#/budgets"><strong>AWS Budgets</strong></a> in the AWS Console.</li>
+<li>Click <strong>Create budget</strong>.</li>
+<li>Choose <strong>Cost budget</strong> and set a monthly amount (e.g., $50, $100, $200).</li>
+<li>Add alert thresholds at <strong>50%, 80%, and 100%</strong> of your budget.</li>
+<li>Add your email as a notification recipient.</li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Like GCP, AWS budget alerts are <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html"><strong>notifications only</strong></a> by default — they do NOT automatically stop your services. However, AWS does support <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-controls.html">budget actions</a> that can automatically restrict IAM permissions when a threshold is hit. Consider setting up an action to revoke <code>bedrock:InvokeModel</code> at 100% of budget as a hard stop.</p>
+</div>
+</div>
+<p><strong>Bedrock quotas:</strong></p>
+<p>Bedrock enforces per-model quotas on RPM (requests per minute) and TPM (tokens per minute). Default quotas are relatively low (e.g., 25 RPM for Opus). View and request increases at <a href="https://console.aws.amazon.com/servicequotas/home/services/bedrock/quotas"><strong>Service Quotas → Amazon Bedrock</strong></a> in the AWS Console.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="check-your-billing-console-daily" class="level3">
 <h3 class="anchored" data-anchor-id="check-your-billing-console-daily">Check your billing console daily</h3>
-<p>Make it a habit to visit the <a href="https://console.cloud.google.com/billing/reports"><strong>GCP Billing Reports</strong></a> page at least once a day while actively using Claude Code. Look for:</p>
+<p>Make it a habit to check your cloud billing daily while actively using Claude Code. Look for:</p>
 <ul>
-<li>Unexpected spikes in Vertex AI charges</li>
+<li>Unexpected spikes in AI/ML charges</li>
 <li>Daily costs that exceed your expectations</li>
 <li>Any charges from services you didn’t intentionally use</li>
 </ul>
-</section>
-<section id="set-quota-limits-as-a-hard-ceiling" class="level3">
-<h3 class="anchored" data-anchor-id="set-quota-limits-as-a-hard-ceiling">Set quota limits as a hard ceiling</h3>
-<p>Unlike budget alerts, <strong>quotas can actually stop usage.</strong> Go to <a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas"><strong>Quotas &amp; System Limits</strong></a> and set reasonable TPM (tokens per minute) quotas for the Claude models you’re using. If you hit your quota, Claude Code will get 429 errors instead of running up your bill.</p>
 </section>
 <section id="cost-saving-tips" class="level3">
 <h3 class="anchored" data-anchor-id="cost-saving-tips">Cost-saving tips</h3>
@@ -1379,14 +1585,14 @@ Important
 </tbody>
 </table>
 </section>
-<section id="vertex-ai-pricing-reference" class="level3">
-<h3 class="anchored" data-anchor-id="vertex-ai-pricing-reference">Vertex AI pricing reference</h3>
-<p>For the latest Claude model pricing on Vertex AI, see:</p>
+<section id="pricing-reference" class="level3">
+<h3 class="anchored" data-anchor-id="pricing-reference">Pricing reference</h3>
+<p>For the latest Claude model pricing, see:</p>
 <ul>
-<li><a href="https://cloud.google.com/vertex-ai/generative-ai/pricing"><strong>Vertex AI Generative AI Pricing</strong></a> — official Google pricing page with per-token rates for each Claude model</li>
 <li><a href="https://platform.claude.com/docs/en/about-claude/pricing"><strong>Anthropic Pricing</strong></a> — base token rates by model, including cache and batch discounts</li>
 <li><a href="https://code.claude.com/docs/en/costs"><strong>Claude Code Cost Management</strong></a> — Anthropic’s official guide to tracking and reducing Claude Code costs</li>
-<li><a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas"><strong>GCP Quotas for Vertex AI</strong></a> — view and adjust your TPM/RPM quotas</li>
+<li><a href="https://cloud.google.com/vertex-ai/generative-ai/pricing"><strong>Vertex AI Generative AI Pricing</strong></a> — Google’s per-token rates (regional endpoints carry a <a href="https://cloud.google.com/vertex-ai/generative-ai/pricing">10% premium</a> over global)</li>
+<li><a href="https://aws.amazon.com/bedrock/pricing/"><strong>Amazon Bedrock Pricing</strong></a> — AWS per-token rates for Claude models</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1398,109 +1604,173 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The token usage shown on the <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude">GCP Quotas page may be inaccurate</a> for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use <code>/cost</code> inside Claude Code.</p>
-<p>Regional endpoints carry a <a href="https://cloud.google.com/vertex-ai/generative-ai/pricing"><strong>10% premium</strong></a> over global endpoints. If you selected the global endpoint, you’re on the cheaper tier.</p>
+<p>On Vertex AI, the token usage shown on the <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude">GCP Quotas page may be inaccurate</a> for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use <code>/cost</code> inside Claude Code.</p>
 </div>
 </div>
 </section>
 </section>
 <section id="troubleshooting" class="level2">
 <h2 class="anchored" data-anchor-id="troubleshooting">9. Troubleshooting</h2>
-<section id="model-not-found-404" class="level3">
-<h3 class="anchored" data-anchor-id="model-not-found-404">“model not found” (404)</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" role="tab" aria-controls="tabset-17-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" role="tab" aria-controls="tabset-17-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
+<div class="tab-content">
+<div id="tabset-17-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-17-1-tab">
+<p><strong>“model not found” (404):</strong></p>
 <p>The model may not be available on the <code>global</code> endpoint. Try changing your region:</p>
 <pre class="jsonc"><code>"CLOUD_ML_REGION": "us-east5"</code></pre>
-<p>Or add a model-specific override (see <a href="#configure-claude-code-for-vertex-ai">Section 5</a>).</p>
-</section>
-<section id="resource-exhausted" class="level3">
-<h3 class="anchored" data-anchor-id="resource-exhausted">429 “Resource Exhausted”</h3>
+<p>Or add a model-specific override (see <a href="#configure-claude-code">Section 5</a>).</p>
+<p><strong>429 “Resource Exhausted”:</strong></p>
 <p>You need a quota increase. Go to <a href="https://console.cloud.google.com/apis/api/aiplatform.googleapis.com/quotas">Cloud Console → Quotas</a>, filter by the Claude model, and request an increase.</p>
-</section>
-<section id="permission-denied-iam-errors" class="level3">
-<h3 class="anchored" data-anchor-id="permission-denied-iam-errors">Permission denied / IAM errors</h3>
+<p><strong>Permission denied / IAM errors:</strong></p>
 <p>Ask your UW-Madison GCP admin to ensure you have the <code>roles/aiplatform.user</code> role on the project.</p>
-</section>
-<section id="gcloud-command-not-found" class="level3">
-<h3 class="anchored" data-anchor-id="gcloud-command-not-found"><code>gcloud</code> command not found</h3>
+<p><strong><code>gcloud</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-15-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-1" role="tab" aria-controls="tabset-15-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-15-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-2" role="tab" aria-controls="tabset-15-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div id="tabset-15-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-15-1-tab">
 <p>Make sure the Google Cloud SDK is installed and restart PowerShell.</p>
 </div>
-<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div id="tabset-15-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-2-tab">
 <p>If you installed via Homebrew, run <code>source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"</code> or restart your terminal. If you used the curl installer, make sure you ran <code>source ~/.zshrc</code> after install.</p>
 </div>
 </div>
 </div>
-</section>
-<section id="claude-command-not-found" class="level3">
-<h3 class="anchored" data-anchor-id="claude-command-not-found"><code>claude</code> command not found</h3>
+<p><strong>Authentication expired:</strong></p>
+<p>Re-run (both platforms):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-17-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-17-2-tab">
+<p><strong><code>AccessDeniedException</code>:</strong></p>
+<p>Your IAM user/role doesn’t have the required Bedrock permissions. Ensure your policy includes <code>bedrock:InvokeModel</code> and <code>bedrock:InvokeModelWithResponseStream</code>. See <a href="#enable-api">Section 4</a> for the full policy.</p>
+<p><strong><code>ValidationException: Model not found</code>:</strong></p>
+<p>Check that: (1) you’ve enabled model access for the specific Claude model in the Bedrock console, (2) your <code>AWS_REGION</code> is set to a region where the model is available, and (3) your model ID is correct. Try <code>us-east-1</code> if unsure.</p>
+<p><strong><code>ResourceNotFoundException</code>:</strong></p>
+<p>You haven’t completed model access approval. Go to the <a href="https://console.aws.amazon.com/bedrock/">Bedrock Model catalog</a> and request access.</p>
+<p><strong>429 “ThrottlingException”:</strong></p>
+<p>You’ve hit your Bedrock quota. Request an increase at <a href="https://console.aws.amazon.com/servicequotas/home/services/bedrock/quotas">Service Quotas → Amazon Bedrock</a>. Default quotas are low (e.g., 25 RPM for Opus).</p>
+<p><strong><code>aws</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-16-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-1" role="tab" aria-controls="tabset-16-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-16-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-2" role="tab" aria-controls="tabset-16-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
+<p>Make sure the AWS CLI is installed and restart PowerShell.</p>
+</div>
+<div id="tabset-16-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-16-2-tab">
+<p>If you installed via Homebrew, restart your terminal. If you used the pkg installer, ensure <code>/usr/local/bin</code> is in your <code>$PATH</code>.</p>
+</div>
+</div>
+</div>
+<p><strong>Credentials expired (SSO):</strong></p>
+<p>Re-run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile-name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Claude Code supports <a href="https://code.claude.com/docs/en/amazon-bedrock">automatic credential refresh</a> for AWS SSO. Configure <code>awsAuthRefresh</code> in your settings so Claude Code automatically re-authenticates when credentials expire mid-session, instead of failing with auth errors.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="common-issues-both-providers" class="level3">
+<h3 class="anchored" data-anchor-id="common-issues-both-providers">Common issues (both providers)</h3>
+<p><strong><code>claude</code> command not found:</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" role="tab" aria-controls="tabset-18-1" aria-selected="true" href="">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" role="tab" aria-controls="tabset-18-2" aria-selected="false" href="">macOS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
 <p>Ensure <code>C:\Users\&lt;you&gt;\.local\bin</code> is in your user PATH (see <a href="#install-claude-code">Section 2</a>). Restart PowerShell after editing PATH.</p>
 </div>
-<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<div id="tabset-18-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-18-2-tab">
 <p>Ensure <code>~/.claude/bin</code> or <code>~/.local/bin</code> is in your <code>$PATH</code>. Restart your terminal or run <code>source ~/.zshrc</code>.</p>
 </div>
 </div>
 </div>
-</section>
-<section id="authentication-expired" class="level3">
-<h3 class="anchored" data-anchor-id="authentication-expired">Authentication expired</h3>
-<p>Re-run (both platforms):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="run-diagnostics" class="level3">
-<h3 class="anchored" data-anchor-id="run-diagnostics">Run diagnostics</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Run diagnostics:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> doctor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This checks your installation, authentication, and configuration for common issues.</p>
 </section>
 </section>
 <section id="quick-reference" class="level2">
 <h2 class="anchored" data-anchor-id="quick-reference">10. Quick Reference</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true" href="">Windows (PowerShell)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false" href="">macOS (Terminal)</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true" href="">Vertex AI + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false" href="">Vertex AI + macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-3" role="tab" aria-controls="tabset-19-3" aria-selected="false" href="">Bedrock + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-4" role="tab" aria-controls="tabset-19-4" aria-selected="false" href="">Bedrock + macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://cloud.google.com/sdk/docs/install</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>gcloud auth login</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>gcloud auth application-default login</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\your\project</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://cloud.google.com/sdk/docs/install</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>gcloud auth login</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>gcloud auth application-default login</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\your\project</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or: brew install --cask claude-code</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or: curl https://sdk.cloud.google.com | bash</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or: brew install --cask claude-code</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install gcloud (if needed)</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> google-cloud-sdk</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or: curl https://sdk.cloud.google.com | bash</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with GCP</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth application-default login</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-19-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install AWS CLI (if needed)</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download from https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with AWS</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>aws sso login <span class="op">--</span>profile your-profile</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="co"># or: aws configure</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\your\project</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>claude</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-19-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-4-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Claude Code</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or: brew install --cask claude-code</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install AWS CLI (if needed)</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install awscli</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with AWS</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> sso login <span class="at">--profile</span> your-profile</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="co"># or: aws configure</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch Claude Code</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/your/project</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<section id="in-session-commands-both-platforms" class="level3">
-<h3 class="anchored" data-anchor-id="in-session-commands-both-platforms">In-session commands (both platforms)</h3>
-<pre class="text"><code>/status        # Confirm Vertex AI is the active provider
+<section id="in-session-commands-all-providers" class="level3">
+<h3 class="anchored" data-anchor-id="in-session-commands-all-providers">In-session commands (all providers)</h3>
+<pre class="text"><code>/status        # Confirm your cloud provider is active
 /cost          # Check current session token usage and cost
 /compact       # Compress conversation context to save tokens
 /clear         # Wipe context when switching tasks
@@ -1515,11 +1785,15 @@ Shift+Tab      # Cycle through permission modes</code></pre>
 <ul>
 <li><a href="https://code.claude.com/docs/en/setup">Claude Code Setup Docs</a></li>
 <li><a href="https://code.claude.com/docs/en/google-vertex-ai">Claude Code on Vertex AI</a></li>
+<li><a href="https://code.claude.com/docs/en/amazon-bedrock">Claude Code on Amazon Bedrock</a></li>
 <li><a href="https://code.claude.com/docs/en/permissions">Claude Code Permissions</a></li>
 <li><a href="https://code.claude.com/docs/en/sandboxing">Claude Code Sandboxing</a></li>
 <li><a href="https://code.claude.com/docs/en/costs">Claude Code Cost Management</a></li>
 <li><a href="https://console.cloud.google.com/vertex-ai/model-garden">Vertex AI Model Garden</a></li>
+<li><a href="https://console.aws.amazon.com/bedrock/">Amazon Bedrock Model Catalog</a></li>
 <li><a href="https://cloud.google.com/billing/docs/how-to/budgets">GCP Budget Alerts</a></li>
+<li><a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html">AWS Budgets</a></li>
+<li><a href="../../Toolbox/Compute/UW-Cloud-Services.html">UW-Madison Cloud Services</a></li>
 </ul>
 
 
@@ -1960,4 +2234,4 @@ Shift+Tab      # Cycle through permission modes</code></pre>
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-vertex-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-cloud-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
