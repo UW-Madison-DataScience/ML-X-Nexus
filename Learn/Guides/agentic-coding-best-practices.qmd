@@ -329,21 +329,20 @@ The key insight: **permissions aren't all-or-nothing**. You can configure a spec
 
 The sweet spot for most developers: auto-approve reads and test runs, manually approve everything else. As you build trust with specific workflows, you can loosen further. See Anthropic's [permissions reference](https://code.claude.com/docs/en/permissions) for the full rule syntax and available tool names.
 
-### Commit early, commit often
+### Use branches and commit frequently
 
-When working with an agentic tool:
+The non-negotiable: **always work on a branch**, never let an agent commit directly to `main`. Beyond that, there are two common workflows:
 
-1. **Commit before starting** — create a clean baseline you can revert to
-2. **Commit after each successful change** — don't let the agent build up a massive diff
-3. **Use branches** — never let an agent work directly on `main`
-4. **Review diffs before pushing** — the agent writes the code, but you own it
+- **Auto-commit freely, review at the PR stage.** Let the agent commit (and even push) as it works. You review the full diff when you open the PR, just like you would with a human contributor. This keeps momentum high and works well when you have CI checks and a good test suite gating your merges.
+- **Commit manually after reviewing each change.** Approve each commit yourself so you stay close to every change as it happens. This is safer when you're learning the tool, working on sensitive code, or don't yet have strong CI guardrails.
 
-### Review everything
+Either way, frequent commits help — they give you clean revert points if the agent goes off track. A good `CLAUDE.md` instruction like *"commit after each completed task"* keeps things granular regardless of which workflow you prefer.
 
-Just because an agent wrote the code doesn't mean it's correct, secure, or maintainable. Treat agent-generated code with the same scrutiny you'd apply to any pull request:
+### Review everything (at the right level)
+
+Agent-generated code isn't exempt from review — but *when* you review is a matter of workflow. Some developers review each diff before committing; others let the agent run and review the full PR diff before merging. Both are valid. What matters is that *someone* (you, a teammate, or CI) checks the code before it lands on `main`:
 
 - Read the diffs
-- Run the tests
 - Check for security issues (hardcoded secrets, SQL injection, etc.)
 - Verify it matches your architectural patterns
 - Make sure it doesn't introduce unnecessary complexity
