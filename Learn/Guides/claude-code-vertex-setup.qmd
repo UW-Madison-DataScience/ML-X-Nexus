@@ -438,7 +438,7 @@ You can customize this behavior with three types of rules in `settings.json`:
 
 ### Add `deny` rules to protect sensitive areas {#add-deny-rules}
 
-Think of `deny` rules as guardrails. Here's what's worth blocking and why:
+Add a `permissions` block to your **`~/.claude/settings.json`** file (the same file you edited in [Section 5](#configure-settings)). Think of `deny` rules as guardrails. Here's what's worth blocking and why:
 
 ```jsonc
 {
@@ -492,7 +492,7 @@ Run `echo $HOME` (macOS/Linux) or `echo $env:USERPROFILE` (PowerShell) to find y
 
 ### Add `allow` rules to reduce prompt fatigue {#allow-rules}
 
-By default, Claude Code asks "Do you want to proceed?" before *every* file write, shell command, and git operation. This gets old fast — in a typical session you might approve the same `git add`, `git commit`, and `git push` sequence a dozen times. You can add `allow` rules so Claude runs trusted commands without asking:
+These also go in **`~/.claude/settings.json`**, inside the same `permissions` block as your deny rules. By default, Claude Code asks "Do you want to proceed?" before *every* file write, shell command, and git operation. This gets old fast — in a typical session you might approve the same `git add`, `git commit`, and `git push` sequence a dozen times. You can add `allow` rules so Claude runs trusted commands without asking:
 
 **Minimal — just stop the git and test prompts:**
 
