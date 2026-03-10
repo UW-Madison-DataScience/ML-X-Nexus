@@ -772,11 +772,20 @@ You don't *have* to add any allow rules — the default "ask before doing" behav
 
 Run `/permissions` inside a Claude Code session at any time to see what rules are active and which settings file they came from. This is especially helpful to verify your deny rules are loaded correctly.
 
-### Use project-level settings for shared repos
+### Use project-level settings for shared repos {#project-settings}
 
-You can also create a `.claude/settings.json` in your project root and commit it to version control. This ensures all team members inherit the same permission rules. Project-level deny rules apply to everyone, even if their personal settings are more permissive.
+Claude Code reads **two** settings files, and **merges them**:
 
-```jsonc
+| File | Scope | What to put here |
+|------|-------|-----------------|
+| `~/.claude/settings.json` | **User-level** — applies to every project you open | Personal deny rules (SSH keys, cloud creds, `.env`), model choice, sandbox config |
+| `<project-root>/.claude/settings.json` | **Project-level** — applies only when Claude Code is launched inside this repo | Repo-specific deny rules (e.g., don't read `secrets/`), shared team guardrails |
+
+**How merging works:** Claude Code combines both files. If either file denies something, it's denied — project-level deny rules apply to everyone, even if their personal settings are more permissive. You don't have to choose one or the other; most teams use both.
+
+The project-level file lives inside your Git repo, so you can commit it and every collaborator automatically inherits the same rules:
+
+```json
 {
   "permissions": {
     "deny": [
@@ -789,7 +798,9 @@ You can also create a `.claude/settings.json` in your project root and commit it
 }
 ```
 
-> **Path syntax note:** Paths starting with `//` are absolute paths on your machine. Paths without `//` are relative to the settings file location. Use `**` to match recursively. See the [permission rules reference](https://code.claude.com/docs/en/permissions) for full pattern syntax.
+::: {.callout-note}
+**Path syntax:** Paths starting with `//` are absolute (used in user-level settings to protect home-directory files like `~/.ssh/`). Paths starting with `./` are relative to the project root (used in project-level settings). Use `**` to match recursively. See the [permission rules reference](https://code.claude.com/docs/en/permissions) for full pattern syntax.
+:::
 
 ### Interactive safeguards during a session
 
