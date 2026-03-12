@@ -26,7 +26,7 @@ This is a first pass based on early experience — we expect it to evolve as the
 
 ::: {.callout-tip}
 ## UW-Madison cloud users: Get started with Claude Code + Vertex AI or Bedrock
-If you're at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our **[Claude Code Cloud Setup Guide](../Guides/claude-code-cloud-setup.qmd)** for a step-by-step walkthrough — from cloud project setup to running your first session.
+If you're at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our **[Claude Code Cloud Setup Guide](../Guides/claude-code-cloud-setup.qmd)** for a step-by-step walkthrough — from cloud project setup to running your first session. Note: UW does not yet have a direct data agreement with Anthropic, so **avoid using Claude Code with restricted or sensitive data** for now. Cloud routing is suitable for general, non-sensitive research code. See [Data Privacy](#data-privacy) for details.
 :::
 
 ::: {.callout-note collapse="true"}
@@ -457,7 +457,7 @@ Agentic workflows can burn through tokens fast, especially when things go wrong:
 
 ### For UW-Madison researchers: institutional cloud benefits
 
-If you're at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.
+If you're at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail. Note, however, that institutional cloud agreements cover the cloud provider's services — they do **not** extend to Anthropic's data handling (see [Data Privacy](#data-privacy) below).
 
 Contact your department's IT staff or [Research Computing](https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/) to ask about available cloud credits and whether AI API costs are eligible.
 
@@ -528,7 +528,7 @@ Anthropic gives you the choice to allow training on your data — check your set
 - **What's excluded:** Raw content from connectors (Google Drive, MCP servers) is **not** included in training data, unless you directly copy that content into your conversation.
 - **Feedback (thumbs up/down):** Submitting feedback stores the full related conversation for up to 5 years, de-linked from your user ID. This data may be used for training regardless of your training setting.
 
-**For researchers with sensitive data:** The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate [zero-data retention (ZDR)](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) agreements where Anthropic stores nothing after the API response. See our [Cloud Setup Guide](../Guides/claude-code-cloud-setup.qmd) for how UW-Madison researchers can use institutional cloud accounts (GCP or AWS) for this path.
+**For researchers with sensitive or restricted data:** Routing through a cloud provider (Vertex AI, Bedrock) ensures your data is not used for training and limits retention to 30 days — but **your prompts still reach Anthropic's infrastructure** for inference. UW-Madison has agreements with Google, AWS, and Microsoft for their cloud services, but does **not** yet have a direct data-use agreement with Anthropic. This means cloud routing alone does not provide UW-sanctioned data protections for restricted data (HIPAA/PHI, FERPA, CUI, export-controlled, or data under a DUA that prohibits third-party processing). **Avoid using Claude Code with restricted data until a formal UW-Anthropic agreement is in place.** For general, non-sensitive research code, cloud-routed Claude Code is fine to use today. UW is actively exploring institutional Anthropic licenses and data agreements. Enterprise customers can negotiate [zero-data retention (ZDR)](https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to) agreements where Anthropic stores nothing after the API response. See our [Cloud Setup Guide](../Guides/claude-code-cloud-setup.qmd) for how UW-Madison researchers can use institutional cloud accounts (GCP or AWS) and for more details on [data sensitivity considerations](../Guides/claude-code-cloud-setup.qmd#use-caution-with-restricted-or-sensitive-data).
 
 ### Can Anthropic employees see your code?
 
