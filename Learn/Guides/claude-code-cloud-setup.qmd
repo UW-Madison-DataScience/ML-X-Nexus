@@ -38,7 +38,8 @@ UW-Madison does **not** currently have a direct data-use or privacy agreement wi
 **What this means in practice:**
 
 - **Do not use Claude Code with restricted data** (HIPAA/PHI, FERPA, CUI, export-controlled, or data under a DUA that prohibits third-party processing) until a formal UW-Anthropic agreement is in place.
-- **Enable sandboxing** ([Section 8](#enable-sandboxing)) on any machine where sensitive files are stored — this is your strongest local protection against unintended file access.
+- **Avoid running Claude Code on machines where restricted data is stored.** Even with sandboxing enabled, Claude can still **read** files outside your project directory — sandboxing only restricts *writes*. Anything Claude reads can be sent to Anthropic's servers as part of a prompt. If you must run Claude Code on a machine with sensitive files, configure **deny rules** to block read access to sensitive paths (see [Section 7](#add-deny-rules)) — but note that `Read` deny rules are best-effort and can be bypassed by allowed Bash commands like `cat`. The safest approach is to keep restricted data off machines where Claude Code runs.
+- **Always enable sandboxing** ([Section 8](#enable-sandboxing)) — it prevents unintended *writes* outside your project and adds network isolation. These are valuable protections even though read access isn't fully restricted.
 - **For general/non-sensitive research code**, cloud-routed Claude Code is fine to use today — your code is not used for model training under commercial terms, and telemetry is disabled by default for third-party providers.
 
 UW-Madison is actively exploring institutional Anthropic licenses, credits, and data agreements to make this easier. We'll update this guide as the situation evolves.
@@ -61,7 +62,7 @@ You can use Claude Code with a personal Claude Max subscription ($100–$200/mon
 - **Training exclusion still applies.** Under Anthropic's commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are [not used for model training](https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data). This is a positive, but it is distinct from having a comprehensive data-use agreement. See [Data Usage & Privacy](#data-usage) for full details on retention, telemetry, and opt-outs.
 
 ::: {.callout-note}
-**Bottom line:** If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing or enterprise security controls. However, neither approach currently provides UW-sanctioned data protections for restricted or sensitive data — UW is actively working toward an institutional Anthropic agreement. For now, **avoid using Claude Code with restricted data** regardless of how you access it, and **always enable sandboxing** on machines where sensitive files are stored. UW-Madison [provisions both GCP and AWS accounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) for research groups — running Claude Code through either provider is just one of many uses.
+**Bottom line:** If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing or enterprise security controls. However, neither approach currently provides UW-sanctioned data protections for restricted or sensitive data — UW is actively working toward an institutional Anthropic agreement. For now, **avoid running Claude Code on machines that contain restricted data**, since even sandboxing doesn't prevent reads — and **always enable sandboxing** to at least restrict writes and network access. UW-Madison [provisions both GCP and AWS accounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) for research groups — running Claude Code through either provider is just one of many uses.
 :::
 
 ## Already set up? Returning User Quick-Start
@@ -605,10 +606,10 @@ This means a poorly worded prompt, an agentic loop, or a [prompt injection attac
 
 **Practical recommendations:**
 
-- **Do not run Claude Code on machines with restricted or sensitive data** unless sandboxing is enabled and you are confident the data is protected. Remember: UW does not yet have a data-use agreement with Anthropic (see [warning above](#use-caution-with-restricted-or-sensitive-data)), so even cloud-routed usage sends your prompts to Anthropic's infrastructure.
+- **Avoid running Claude Code on machines where restricted or sensitive data is stored.** Sandboxing restricts *writes* but not *reads* — Claude can still read files anywhere on the machine and send their contents to Anthropic's servers as part of a prompt. UW does not yet have a data-use agreement with Anthropic (see [warning above](#use-caution-with-restricted-or-sensitive-data)), so even cloud-routed usage sends your prompts to Anthropic's infrastructure.
+- **If you must run on a machine with sensitive files**, add **deny rules** (see [below](#add-deny-rules)) to block read access to sensitive paths. But note that `Read` deny rules are best-effort — allowed Bash commands like `cat` can still read denied files. Denying both `Read` and the relevant `Bash` patterns together provides stronger protection (see [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details).
 - **Test only within isolated Git repositories**, with no sensitive data present in the local repo.
-- **Enable sandboxing** ([Section 8](#enable-sandboxing)) — this is your strongest local protection. It uses OS-level enforcement to restrict bash commands to the working directory, regardless of what Claude tries to do. It's available on macOS (built-in) and Linux/WSL2 (requires `bubblewrap`). Native Windows does not yet support it.
-- **Until you've enabled sandboxing, it's safest to only run Claude Code on machines without sensitive data stored anywhere** — or at minimum, add deny rules (see [below](#add-deny-rules)) to protect your most critical files.
+- **Always enable sandboxing** ([Section 8](#enable-sandboxing)) — it restricts *writes* to your project directory and adds network isolation at the OS level. It's available on macOS (built-in) and Linux/WSL2 (requires `bubblewrap`). Native Windows does not yet support it.
 
 ### Always launch from your project directory
 
@@ -874,7 +875,7 @@ Sandboxing is the **strongest protection available** against Claude modifying fi
 
 **What sandboxing does ([official docs](https://code.claude.com/docs/en/sandboxing)):**
 
-- **Filesystem isolation:** Write access is restricted to the current working directory and its subdirectories. Claude can still *read* files elsewhere (unless denied), but it **cannot modify, create, or delete files outside your project directory**. This is enforced at the OS kernel level.
+- **Filesystem isolation:** *Write* access is restricted to the current working directory and its subdirectories — Claude **cannot modify, create, or delete files outside your project directory**. This is enforced at the OS kernel level. **However, Claude can still *read* files anywhere on the machine** (unless blocked by deny rules), and anything it reads can be included in prompts sent to Anthropic's servers. This is an important limitation — sandboxing alone is not sufficient to protect sensitive data that exists elsewhere on the same machine.
 - **Network isolation:** Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.
 
 **Without sandboxing**, these protections do not exist — Claude operates with your full user permissions, and [can create/modify files in parent directories](https://zenn.dev/tomioka/articles/0496a427f8bcd0?locale=en) without any special prompt.
