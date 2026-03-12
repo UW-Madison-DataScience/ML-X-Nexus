@@ -32,7 +32,7 @@ AI tools, pricing, features, and contractual terms change frequently. This post 
 
 ::: {.callout-tip}
 ## UW-Madison cloud users: Get started with Claude Code + Vertex AI or Bedrock
-If you're at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our **[Claude Code Cloud Setup Guide](../Guides/claude-code-cloud-setup.qmd)** for a step-by-step walkthrough — from cloud project setup to running your first session. Note: UW does not yet have a direct data agreement with Anthropic, so **avoid using Claude Code with restricted or sensitive data** for now. Cloud routing is suitable for general, non-sensitive research code. See [Data Privacy](#data-privacy) for details.
+If you're at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our **[Claude Code Cloud Setup Guide](../Guides/claude-code-cloud-setup.qmd)** for a step-by-step walkthrough — from cloud project setup to running your first session. Note: UW does not yet have a direct data agreement with Anthropic, so **avoid using Claude Code with restricted or sensitive data**. Cloud routing is suitable for general, non-sensitive research code. See [Data Privacy](#data-privacy) for details.
 :::
 
 ::: {.callout-note collapse="true"}
@@ -113,7 +113,7 @@ Claude Code will:
 4. If tests fail, iterate — fix the code, re-run
 5. Create a branch, commit, push, and open a PR
 
-**How much you're involved depends on the surface.** On the **web and desktop** versions, Claude runs in a sandboxed environment and handles most of these steps autonomously — you review the results (a PR, a diff, test output) rather than approving each individual action. On the **CLI**, Claude asks for your approval before file writes, shell commands, and git operations by default. You can reduce this friction by configuring [allow rules](https://code.claude.com/docs/en/permissions) or enabling [sandboxing](https://code.claude.com/docs/en/sandboxing) to auto-approve actions that stay within your project directory. Many experienced CLI users auto-approve most actions and invest their review time at the PR stage instead. If you're just getting started with the CLI, a good sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.
+**How much you're involved depends on the surface.** On the **[web version](https://claude.ai/code)**, Claude runs in an isolated cloud VM and auto-accepts edits — you review the results (a PR, a diff, test output) rather than approving each individual action. The **desktop app** and **CLI** both default to "ask permissions" mode, where Claude proposes changes and waits for your approval before applying them. The desktop app shows visual diffs with accept/reject buttons; the CLI prompts in the terminal. You can reduce this friction on either surface by switching to "auto accept edits" mode, configuring [allow rules](https://code.claude.com/docs/en/permissions), or enabling [sandboxing](https://code.claude.com/docs/en/sandboxing) to auto-approve actions that stay within your project directory. Many experienced users auto-approve most actions and invest their review time at the PR stage instead. If you're just getting started, a good sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.
 
 ##### Desktop & Web {#claude-code-desktop-web}
 
