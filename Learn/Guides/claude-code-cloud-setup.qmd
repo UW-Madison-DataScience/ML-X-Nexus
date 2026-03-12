@@ -7,14 +7,14 @@ date: 2026-02-15
 date-modified: 2026-03-10
 date-format: long
 image: "../../../images/claudecode.jpg"
-toc-depth: 3
+toc-depth: 2
 toc-expand: true
 categories:
   - Guides
   - GenAI
   - LLM
   - Agentic coding
-  - Cloud computing
+  - Cloud
   - GCP
   - AWS
 ---
@@ -23,7 +23,7 @@ This guide walks UW-Madison researchers and staff through setting up [Claude Cod
 
 ::: {.callout-tip}
 ## New to agentic coding?
-See our companion guide, [Claude Code Best Practices](claude-code-best-practices.qmd), for a broader introduction to agentic coding tools and how to use them effectively.
+See our companion guide, [Claude Code Best Practices](../Blogs/claude-code-best-practices.qmd), for a broader introduction to agentic coding tools and how to use them effectively.
 :::
 
 ::: {.callout-important}
@@ -51,9 +51,7 @@ You can use Claude Code with a personal Claude Max subscription ($100–$200/mon
 **What cloud providers give you:**
 
 - **Institutional billing and cost tracking** — charges go to your UW-Madison cloud project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has [negotiated cloud discounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) with both GCP and AWS, including reduced overhead on grants (26% vs 55.5% F&A) and NIH STRIDES pricing.
-- **Enterprise security controls** — both GCP and AWS let you manage IAM permissions, control network traffic, and audit API usage within *your* cloud project. Note that these controls govern access to *your cloud resources* — they do not change how Anthropic handles your data once it reaches their infrastructure.
-- **Audit and compliance** — both providers offer audit logs and access transparency for activity within your cloud project. However, cloud-provider compliance certifications (HIPAA, FedRAMP, etc.) apply to the provider's own services, not to Anthropic's data processing.
-- **Pay-as-you-go flexibility** — useful for teams with variable usage, short-term projects, or when you need access to specific models not included in subscription plans.
+- **Enterprise security controls** — both GCP and AWS let you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you'd use for any sensitive cloud infrastructure.
 
 **What cloud providers do NOT change:**
 
@@ -79,8 +77,8 @@ If you've already completed the full setup and just need to start a new session:
 gcloud auth application-default login
 
 # Navigate to your project and launch
-cd ~/projects/my-project   # macOS/Linux
-# cd C:\Users\you\projects\my-project   # Windows PowerShell
+cd ~/projects/my-project   # macOS / Linux / WSL2 (recommended for Windows)
+# cd C:\Users\you\projects\my-project   # Windows PowerShell (no sandbox support)
 claude
 ```
 
@@ -92,11 +90,15 @@ aws sso login --profile your-profile
 # Or re-export your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
 
 # Navigate to your project and launch
-cd ~/projects/my-project   # macOS/Linux
-# cd C:\Users\you\projects\my-project   # Windows PowerShell
+cd ~/projects/my-project   # macOS / Linux / WSL2 (recommended for Windows)
+# cd C:\Users\you\projects\my-project   # Windows PowerShell (no sandbox support)
 claude
 ```
 
+:::
+
+::: {.callout-note}
+**Windows users:** For the best experience — including OS-level sandboxing — run Claude Code from **WSL2** instead of PowerShell. Native Windows does not support sandboxing. If you haven't set up WSL2 yet, see [Section 8 — Sandboxing (Windows/WSL2)](#enable-sandboxing) for a full walkthrough.
 :::
 
 **Once inside Claude Code:**
@@ -936,7 +938,33 @@ aws configure
 
 :::
 
-**Step 3 — Install sandbox dependencies:**
+Verify both are working:
+
+```bash
+claude --version
+```
+
+**Step 3 — Copy your settings into WSL2:**
+
+WSL2 has its own home directory (`/home/<you>/`), completely separate from Windows (`C:\Users\<you>\`). Claude Code won't see your Windows `settings.json` — you need a copy inside WSL2:
+
+```bash
+# Create the config directory if it doesn't exist
+mkdir -p ~/.claude
+
+# Copy your Windows settings into WSL2
+cp /mnt/c/Users/$(cmd.exe /C "echo %USERNAME%" 2>/dev/null | tr -d '\r')/.claude/settings.json ~/.claude/settings.json
+```
+
+Or if you prefer, create `~/.claude/settings.json` manually with the same content you used in [Section 5](#configure-claude-code) (use `nano ~/.claude/settings.json`).
+
+Verify the settings look correct:
+
+```bash
+cat ~/.claude/settings.json
+```
+
+**Step 4 — Install sandbox dependencies:**
 
 ```bash
 # Ubuntu/Debian (most common WSL distro)
@@ -946,7 +974,7 @@ sudo apt-get update && sudo apt-get install bubblewrap socat
 sudo dnf install bubblewrap socat
 ```
 
-**Step 4 — Launch Claude Code and enable sandboxing:**
+**Step 5 — Launch Claude Code and enable sandboxing:**
 
 ```bash
 cd ~/projects/my-project   # navigate to your project first
