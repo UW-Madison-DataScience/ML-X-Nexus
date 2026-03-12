@@ -878,6 +878,30 @@ Sandboxing is the **strongest protection available** against Claude modifying fi
 - **Filesystem isolation:** *Write* access is restricted to the current working directory and its subdirectories — Claude **cannot modify, create, or delete files outside your project directory**. This is enforced at the OS kernel level. **However, Claude can still *read* files anywhere on the machine** (unless blocked by deny rules), and anything it reads can be included in prompts sent to Anthropic's servers. This is an important limitation — sandboxing alone is not sufficient to protect sensitive data that exists elsewhere on the same machine.
 - **Network isolation:** Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.
 
+::: {.callout-tip collapse="true"}
+## How to block reads outside your project directory
+
+Add these deny rules to your `~/.claude/settings.json` to prevent Claude from reading files outside your project:
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(//**)",
+      "Read(~/**)",
+      "Bash(cat:*)"
+    ]
+  }
+}
+```
+
+- `Read(//**)` — blocks the Read tool from accessing any file via an absolute path (files inside your project use relative paths and are unaffected)
+- `Read(~/**)` — blocks reads via home directory paths
+- `Bash(cat:*)` — blocks the most common Bash bypass for Read deny rules
+
+**Caveats:** `Read` deny rules are best-effort for built-in tools like Grep and Glob. Other Bash commands beyond `cat` (e.g., `head`, `tail`, `less`) could also read files — add deny rules for those too if needed. For more granular deny rules targeting specific sensitive paths (SSH keys, cloud credentials, `.env` files), see [Section 7](#add-deny-rules).
+:::
+
 **Without sandboxing**, these protections do not exist — Claude operates with your full user permissions, and [can create/modify files in parent directories](https://zenn.dev/tomioka/articles/0496a427f8bcd0?locale=en) without any special prompt.
 
 Anthropic reports that sandboxing [reduces permission prompts by 84%](https://www.anthropic.com/engineering/claude-code-sandboxing) while *increasing* security — you get fewer interruptions and better protection.
