@@ -97,25 +97,23 @@ The [Claude Desktop app](https://claude.ai/download) includes three tabs: **Chat
 
 #### Claude Code
 
-[Claude Code](https://code.claude.com/) is Anthropic's agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project. A built-in permission system prompts you to approve or deny each action, so you stay in the loop while the agent does the heavy lifting.
+[Claude Code](https://code.claude.com/) is Anthropic's agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project.
 
-Claude Code is available across multiple surfaces — a [desktop app](https://code.claude.com/docs/en/desktop), a [web IDE](https://code.claude.com/docs/en/claude-code-on-the-web), a [terminal CLI](https://code.claude.com/docs/en/getting-started), and IDE extensions for [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains) — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about *how you interact* and *where the work runs*, not what the agent can do.
+Claude Code is available across multiple surfaces — a [desktop app](https://code.claude.com/docs/en/desktop), a [web IDE](https://code.claude.com/docs/en/claude-code-on-the-web), a [terminal CLI](https://code.claude.com/docs/en/getting-started), and IDE extensions for [VS Code](https://code.claude.com/docs/en/vs-code) and [JetBrains](https://code.claude.com/docs/en/jetbrains) — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about *how you interact*, *where the work runs*, and *how much the agent can do autonomously*.
 
-Here's what a typical Claude Code session looks like, regardless of surface. You type a request like:
+Here's what a typical Claude Code session looks like. You type a request like:
 
 > *Look at src/utils/ and add a slugify function that matches the style of existing utilities. Write tests too. Create a branch, commit, and open a PR when you're done.*
 
 Claude Code will:
 
 1. Read your existing utils to understand the style
-2. **Ask permission** to create a new file → you approve (or it auto-approves if you've configured that)
-3. Write the function and tests
-4. **Ask permission** to run the tests → you approve (or it auto-approves if you've [allowed your test command](https://code.claude.com/docs/en/permissions))
-5. Run `pytest` (or whatever your test runner is), see results
-6. If tests fail, iterate — fix the code, re-run
-7. **Ask permission** to create a branch, commit, push, and open a PR → you approve (this can also be auto-approved via [allow rules](https://code.claude.com/docs/en/permissions), but most users prefer to keep git operations manual for safety)
+2. Write the function and tests
+3. Run `pytest` (or whatever your test runner is), see results
+4. If tests fail, iterate — fix the code, re-run
+5. Create a branch, commit, push, and open a PR
 
-**Friction:** The permission prompts keep you in the loop but slow things down. You can reduce this by configuring [allow rules](https://code.claude.com/docs/en/permissions) in your settings to auto-approve actions you trust. Many experienced users auto-approve *most* actions — file edits, test runs, even git operations — and instead invest their review time at the PR stage, where they can inspect the full diff before merging. This "let it cook, review the PR" approach works well when you've written clear prompts and have CI checks in place. If you're just getting started, a more conservative sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.
+**How much you're involved depends on the surface.** On the **web and desktop** versions, Claude runs in a sandboxed environment and handles most of these steps autonomously — you review the results (a PR, a diff, test output) rather than approving each individual action. On the **CLI**, Claude asks for your approval before file writes, shell commands, and git operations by default. You can reduce this friction by configuring [allow rules](https://code.claude.com/docs/en/permissions) or enabling [sandboxing](https://code.claude.com/docs/en/sandboxing) to auto-approve actions that stay within your project directory. Many experienced CLI users auto-approve most actions and invest their review time at the PR stage instead. If you're just getting started with the CLI, a good sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.
 
 ##### Desktop & Web {#claude-code-desktop-web}
 
