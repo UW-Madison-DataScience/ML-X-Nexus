@@ -444,19 +444,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Vertex AI and Bedrock routing is only supported in the <strong>Claude Code CLI</strong> (terminal) and <strong>IDE extensions</strong> (VS Code, JetBrains). The <a href="https://code.claude.com/docs/en/desktop">Claude Desktop app</a> (Code tab) and <a href="https://claude.ai/code">Web IDE</a> require a direct Anthropic login (Max plan or API credits) — they cannot be configured to route through a cloud provider at this time. If you need the desktop GUI or web experience, you’ll need a separate Claude Max subscription. This guide covers the CLI path.</p>
 </div>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Use caution with restricted or sensitive data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>UW-Madison does <strong>not</strong> currently have a direct data-use or privacy agreement with Anthropic. While UW has agreements with cloud providers (Google, AWS, Microsoft) for their respective services, those agreements <strong>do not extend to Anthropic’s data handling</strong> — your prompts still reach Anthropic’s infrastructure for inference regardless of which cloud provider routes the request.</p>
+<p><strong>What this means in practice:</strong></p>
+<ul>
+<li><strong>Do not use Claude Code with restricted data</strong> (HIPAA/PHI, FERPA, CUI, export-controlled, or data under a DUA that prohibits third-party processing) until a formal UW-Anthropic agreement is in place.</li>
+<li><strong>Enable sandboxing</strong> (<a href="#enable-sandboxing">Section 8</a>) on any machine where sensitive files are stored — this is your strongest local protection against unintended file access.</li>
+<li><strong>For general/non-sensitive research code</strong>, cloud-routed Claude Code is fine to use today — your code is not used for model training under commercial terms, and telemetry is disabled by default for third-party providers.</li>
+</ul>
+<p>UW-Madison is actively exploring institutional Anthropic licenses, credits, and data agreements to make this easier. We’ll update this guide as the situation evolves.</p>
+</div>
+</div>
 <section id="why-use-a-cloud-provider-instead-of-a-direct-subscription" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-a-cloud-provider-instead-of-a-direct-subscription">Why use a cloud provider instead of a direct subscription?</h2>
 <p>You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of routing through a cloud provider?</p>
 <p><strong>What cloud providers give you:</strong></p>
 <ul>
 <li><strong>Institutional billing and cost tracking</strong> — charges go to your UW-Madison cloud project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has <a href="../../Toolbox/Compute/UW-Cloud-Services.html">negotiated cloud discounts</a> with both GCP and AWS, including reduced overhead on grants (26% vs 55.5% F&amp;A) and NIH STRIDES pricing.</li>
-<li><strong>Enterprise security controls</strong> — both GCP and AWS let you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you’d use for any sensitive cloud infrastructure.</li>
+<li><strong>Enterprise security controls</strong> — both GCP and AWS let you manage IAM permissions, control network traffic, and audit API usage within <em>your</em> cloud project. Note that these controls govern access to <em>your cloud resources</em> — they do not change how Anthropic handles your data once it reaches their infrastructure.</li>
 </ul>
 <p><strong>What cloud providers do NOT change:</strong></p>
 <ul>
-<li><strong>Model weights stay on Anthropic’s infrastructure</strong> regardless of how you access Claude. Neither Vertex AI nor Bedrock moves the model into your cloud project — your provider routes requests to Anthropic’s serving infrastructure.</li>
+<li><strong>Your prompts still reach Anthropic’s infrastructure.</strong> Neither Vertex AI nor Bedrock runs the model inside your cloud project — your provider routes requests to Anthropic’s serving infrastructure. This means your data is processed by Anthropic regardless of which cloud provider you use.</li>
+<li><strong>UW’s cloud agreements don’t cover Anthropic’s data handling.</strong> UW-Madison has agreements with Google, AWS, and Microsoft for their respective services, but those agreements <strong>do not extend to Anthropic</strong>. There is no UW-Anthropic data-use agreement in place yet, so routing through a cloud provider does not give your data the same protections it would have for a native cloud service. See the <a href="#use-caution-with-restricted-or-sensitive-data">warning above</a> for practical guidance.</li>
 <li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://docs.anthropic.com/en/docs/build-with-claude/data-residency">data residency</a> feature, not a cloud provider feature.</li>
-<li><strong>Privacy terms</strong> are set by Anthropic’s commercial agreements, not by your cloud configuration. Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>. See <a href="#data-usage">Data Usage &amp; Privacy</a> for full details on retention, telemetry, and opt-outs.</li>
+<li><strong>Training exclusion still applies.</strong> Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>. This is a positive, but it is distinct from having a comprehensive data-use agreement. See <a href="#data-usage">Data Usage &amp; Privacy</a> for full details on retention, telemetry, and opt-outs.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -468,7 +489,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Bottom line:</strong> If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing, enterprise security controls, or compliance features. UW-Madison <a href="../../Toolbox/Compute/UW-Cloud-Services.html">provisions both GCP and AWS accounts</a> for research groups — running Claude Code through either provider is just one of many uses.</p>
+<p><strong>Bottom line:</strong> If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing or enterprise security controls. However, neither approach currently provides UW-sanctioned data protections for restricted or sensitive data — UW is actively working toward an institutional Anthropic agreement. For now, <strong>avoid using Claude Code with restricted data</strong> regardless of how you access it, and <strong>always enable sandboxing</strong> on machines where sensitive files are stored. UW-Madison <a href="../../Toolbox/Compute/UW-Cloud-Services.html">provisions both GCP and AWS accounts</a> for research groups — running Claude Code through either provider is just one of many uses.</p>
 </div>
 </div>
 </section>
@@ -1000,9 +1021,10 @@ Note
 <p>This means a poorly worded prompt, an agentic loop, or a <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attack</a> embedded in a file Claude reads could cause changes in places you didn’t intend.</p>
 <p><strong>Practical recommendations:</strong></p>
 <ul>
+<li><strong>Do not run Claude Code on machines with restricted or sensitive data</strong> unless sandboxing is enabled and you are confident the data is protected. Remember: UW does not yet have a data-use agreement with Anthropic (see <a href="#use-caution-with-restricted-or-sensitive-data">warning above</a>), so even cloud-routed usage sends your prompts to Anthropic’s infrastructure.</li>
 <li><strong>Test only within isolated Git repositories</strong>, with no sensitive data present in the local repo.</li>
-<li><strong>Until you’ve enabled sandboxing (see <a href="#enable-sandboxing">below</a>), it’s safest to only run Claude Code on machines without sensitive data stored anywhere</strong> — or at minimum, add deny rules (see <a href="#add-deny-rules">below</a>) to protect your most critical files.</li>
-<li><strong>Sandboxing is the real solution</strong> to this problem. It uses OS-level enforcement to restrict bash commands to the working directory, regardless of what Claude tries to do. It’s available on macOS (built-in) and Linux/WSL2 (requires <code>bubblewrap</code>). Native Windows does not yet support it.</li>
+<li><strong>Enable sandboxing</strong> (<a href="#enable-sandboxing">Section 8</a>) — this is your strongest local protection. It uses OS-level enforcement to restrict bash commands to the working directory, regardless of what Claude tries to do. It’s available on macOS (built-in) and Linux/WSL2 (requires <code>bubblewrap</code>). Native Windows does not yet support it.</li>
+<li><strong>Until you’ve enabled sandboxing, it’s safest to only run Claude Code on machines without sensitive data stored anywhere</strong> — or at minimum, add deny rules (see <a href="#add-deny-rules">below</a>) to protect your most critical files.</li>
 </ul>
 </section>
 <section id="always-launch-from-your-project-directory" class="level3">
@@ -1730,7 +1752,7 @@ Note
 </tr>
 </tbody>
 </table>
-<p>If you’re accessing Claude Code through a UW-Madison cloud account (Vertex AI or Bedrock), your usage falls under commercial terms — <strong>your code is not used for training</strong>.</p>
+<p>If you’re accessing Claude Code through a UW-Madison cloud account (Vertex AI or Bedrock), your usage falls under Anthropic’s commercial terms — <strong>your code is not used for training</strong>. However, note that UW-Madison does not yet have a direct data-use agreement with Anthropic. The no-training guarantee comes from Anthropic’s standard commercial terms, not from a UW-negotiated agreement. This distinction matters for restricted or regulated data — see the <a href="#use-caution-with-restricted-or-sensitive-data">data sensitivity warning</a> at the top of this guide.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

@@ -33,7 +33,7 @@
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you’re at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our <strong><a href="../../Learn/Guides/claude-code-cloud-setup.html">Claude Code Cloud Setup Guide</a></strong> for a step-by-step walkthrough — from cloud project setup to running your first session.</p>
+<p>If you’re at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our <strong><a href="../../Learn/Guides/claude-code-cloud-setup.html">Claude Code Cloud Setup Guide</a></strong> for a step-by-step walkthrough — from cloud project setup to running your first session. Note: UW does not yet have a direct data agreement with Anthropic, so <strong>avoid using Claude Code with restricted or sensitive data</strong> for now. Cloud routing is suitable for general, non-sensitive research code. See Data Privacy for details.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -655,7 +655,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="for-uw-madison-researchers-institutional-cloud-benefits" class="level3">
 <h3 class="anchored" data-anchor-id="for-uw-madison-researchers-institutional-cloud-benefits">For UW-Madison researchers: institutional cloud benefits</h3>
-<p>If you’re at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail — and may also help with data governance compliance.</p>
+<p>If you’re at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail. Note, however, that institutional cloud agreements cover the cloud provider’s services — they do <strong>not</strong> extend to Anthropic’s data handling (see Data Privacy below).</p>
 <p>Contact your department’s IT staff or <a href="https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/">Research Computing</a> to ask about available cloud credits and whether AI API costs are eligible.</p>
 </section>
 <section id="strategies-to-keep-costs-down" class="level3">
@@ -773,7 +773,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 <li><strong>What’s excluded:</strong> Raw content from connectors (Google Drive, MCP servers) is <strong>not</strong> included in training data, unless you directly copy that content into your conversation.</li>
 <li><strong>Feedback (thumbs up/down):</strong> Submitting feedback stores the full related conversation for up to 5 years, de-linked from your user ID. This data may be used for training regardless of your training setting.</li>
 </ul>
-<p><strong>For researchers with sensitive data:</strong> The API and cloud provider paths (Vertex AI, Bedrock) offer the strongest guarantees — your data is never used for training, and retention is limited. Enterprise customers can negotiate <a href="https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to">zero-data retention (ZDR)</a> agreements where Anthropic stores nothing after the API response. See our <a href="../../Learn/Guides/claude-code-cloud-setup.html">Cloud Setup Guide</a> for how UW-Madison researchers can use institutional cloud accounts (GCP or AWS) for this path.</p>
+<p><strong>For researchers with sensitive or restricted data:</strong> Routing through a cloud provider (Vertex AI, Bedrock) ensures your data is not used for training and limits retention to 30 days — but <strong>your prompts still reach Anthropic’s infrastructure</strong> for inference. UW-Madison has agreements with Google, AWS, and Microsoft for their cloud services, but does <strong>not</strong> yet have a direct data-use agreement with Anthropic. This means cloud routing alone does not provide UW-sanctioned data protections for restricted data (HIPAA/PHI, FERPA, CUI, export-controlled, or data under a DUA that prohibits third-party processing). <strong>Avoid using Claude Code with restricted data until a formal UW-Anthropic agreement is in place.</strong> For general, non-sensitive research code, cloud-routed Claude Code is fine to use today. UW is actively exploring institutional Anthropic licenses and data agreements. Enterprise customers can negotiate <a href="https://privacy.claude.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to">zero-data retention (ZDR)</a> agreements where Anthropic stores nothing after the API response. See our <a href="../../Learn/Guides/claude-code-cloud-setup.html">Cloud Setup Guide</a> for how UW-Madison researchers can use institutional cloud accounts (GCP or AWS) and for more details on <a href="../../Learn/Guides/claude-code-cloud-setup.html#use-caution-with-restricted-or-sensitive-data">data sensitivity considerations</a>.</p>
 </section>
 <section id="can-anthropic-employees-see-your-code" class="level3">
 <h3 class="anchored" data-anchor-id="can-anthropic-employees-see-your-code">Can Anthropic employees see your code?</h3>
@@ -1024,14 +1024,14 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="7c0462b8" class="cell" data-execution_count="1">
+<div id="c87146f4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="4d0888c9" class="cell" data-execution_count="2">
+<div id="3430756a" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1144,7 +1144,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="4dfee7ca" class="cell" data-execution_count="3">
+<div id="477c724d" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1381,7 +1381,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="8d476145" class="cell" data-execution_count="4">
+<div id="0c1a4d00" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1409,7 +1409,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="ef9912af" class="cell" data-execution_count="5">
+<div id="c8b4baab" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1432,7 +1432,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="cf9927d0" class="cell" data-execution_count="6">
+<div id="b39c3530" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1454,7 +1454,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="bad0be04" class="cell" data-execution_count="7">
+<div id="336c38db" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1577,7 +1577,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="c2ba1e40" class="cell" data-execution_count="8">
+<div id="4abaa559" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1607,7 +1607,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="37da0363" class="cell" data-execution_count="9">
+<div id="cf5ad225" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1652,7 +1652,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="d9bd47e6" class="cell" data-execution_count="10">
+<div id="13559fed" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1888,7 +1888,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="0df8f523" class="cell" data-execution_count="11">
+<div id="11e015b2" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -1964,7 +1964,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="e2051547" class="cell" data-execution_count="12">
+<div id="d1190819" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2080,7 +2080,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="5484b28f" class="cell" data-execution_count="13">
+<div id="99c373bc" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2326,7 +2326,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="d9c616cf" class="cell" data-execution_count="14">
+<div id="e878ce11" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3362,19 +3362,40 @@ Tip
 <p>Vertex AI and Bedrock routing is only supported in the <strong>Claude Code CLI</strong> (terminal) and <strong>IDE extensions</strong> (VS Code, JetBrains). The <a href="https://code.claude.com/docs/en/desktop">Claude Desktop app</a> (Code tab) and <a href="https://claude.ai/code">Web IDE</a> require a direct Anthropic login (Max plan or API credits) — they cannot be configured to route through a cloud provider at this time. If you need the desktop GUI or web experience, you’ll need a separate Claude Max subscription. This guide covers the CLI path.</p>
 </div>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Use caution with restricted or sensitive data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>UW-Madison does <strong>not</strong> currently have a direct data-use or privacy agreement with Anthropic. While UW has agreements with cloud providers (Google, AWS, Microsoft) for their respective services, those agreements <strong>do not extend to Anthropic’s data handling</strong> — your prompts still reach Anthropic’s infrastructure for inference regardless of which cloud provider routes the request.</p>
+<p><strong>What this means in practice:</strong></p>
+<ul>
+<li><strong>Do not use Claude Code with restricted data</strong> (HIPAA/PHI, FERPA, CUI, export-controlled, or data under a DUA that prohibits third-party processing) until a formal UW-Anthropic agreement is in place.</li>
+<li><strong>Enable sandboxing</strong> (Section 8) on any machine where sensitive files are stored — this is your strongest local protection against unintended file access.</li>
+<li><strong>For general/non-sensitive research code</strong>, cloud-routed Claude Code is fine to use today — your code is not used for model training under commercial terms, and telemetry is disabled by default for third-party providers.</li>
+</ul>
+<p>UW-Madison is actively exploring institutional Anthropic licenses, credits, and data agreements to make this easier. We’ll update this guide as the situation evolves.</p>
+</div>
+</div>
 <section id="why-use-a-cloud-provider-instead-of-a-direct-subscription" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-a-cloud-provider-instead-of-a-direct-subscription">Why use a cloud provider instead of a direct subscription?</h2>
 <p>You can use Claude Code with a personal Claude Max subscription ($100–$200/month, unlimited usage) — no cloud setup required. So why go through the extra complexity of routing through a cloud provider?</p>
 <p><strong>What cloud providers give you:</strong></p>
 <ul>
 <li><strong>Institutional billing and cost tracking</strong> — charges go to your UW-Madison cloud project, not your personal credit card. This matters for grant-funded research, shared lab budgets, and institutional procurement. UW-Madison has <a href="../../Toolbox/Compute/UW-Cloud-Services.html">negotiated cloud discounts</a> with both GCP and AWS, including reduced overhead on grants (26% vs 55.5% F&amp;A) and NIH STRIDES pricing.</li>
-<li><strong>Enterprise security controls</strong> — both GCP and AWS let you run workloads in private subnets, control network traffic with firewall rules, enforce minimal IAM permissions, and route agent traffic through managed proxies. These are the same controls you’d use for any sensitive cloud infrastructure.</li>
+<li><strong>Enterprise security controls</strong> — both GCP and AWS let you manage IAM permissions, control network traffic, and audit API usage within <em>your</em> cloud project. Note that these controls govern access to <em>your cloud resources</em> — they do not change how Anthropic handles your data once it reaches their infrastructure.</li>
 </ul>
 <p><strong>What cloud providers do NOT change:</strong></p>
 <ul>
-<li><strong>Model weights stay on Anthropic’s infrastructure</strong> regardless of how you access Claude. Neither Vertex AI nor Bedrock moves the model into your cloud project — your provider routes requests to Anthropic’s serving infrastructure.</li>
+<li><strong>Your prompts still reach Anthropic’s infrastructure.</strong> Neither Vertex AI nor Bedrock runs the model inside your cloud project — your provider routes requests to Anthropic’s serving infrastructure. This means your data is processed by Anthropic regardless of which cloud provider you use.</li>
+<li><strong>UW’s cloud agreements don’t cover Anthropic’s data handling.</strong> UW-Madison has agreements with Google, AWS, and Microsoft for their respective services, but those agreements <strong>do not extend to Anthropic</strong>. There is no UW-Anthropic data-use agreement in place yet, so routing through a cloud provider does not give your data the same protections it would have for a native cloud service. See the warning above for practical guidance.</li>
 <li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://docs.anthropic.com/en/docs/build-with-claude/data-residency">data residency</a> feature, not a cloud provider feature.</li>
-<li><strong>Privacy terms</strong> are set by Anthropic’s commercial agreements, not by your cloud configuration. Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>. See Data Usage &amp; Privacy for full details on retention, telemetry, and opt-outs.</li>
+<li><strong>Training exclusion still applies.</strong> Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>. This is a positive, but it is distinct from having a comprehensive data-use agreement. See Data Usage &amp; Privacy for full details on retention, telemetry, and opt-outs.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -3386,7 +3407,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Bottom line:</strong> If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing, enterprise security controls, or compliance features. UW-Madison <a href="../../Toolbox/Compute/UW-Cloud-Services.html">provisions both GCP and AWS accounts</a> for research groups — running Claude Code through either provider is just one of many uses.</p>
+<p><strong>Bottom line:</strong> If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing or enterprise security controls. However, neither approach currently provides UW-sanctioned data protections for restricted or sensitive data — UW is actively working toward an institutional Anthropic agreement. For now, <strong>avoid using Claude Code with restricted data</strong> regardless of how you access it, and <strong>always enable sandboxing</strong> on machines where sensitive files are stored. UW-Madison <a href="../../Toolbox/Compute/UW-Cloud-Services.html">provisions both GCP and AWS accounts</a> for research groups — running Claude Code through either provider is just one of many uses.</p>
 </div>
 </div>
 </section>
@@ -4323,9 +4344,10 @@ Note
 <p>This means a poorly worded prompt, an agentic loop, or a <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attack</a> embedded in a file Claude reads could cause changes in places you didn’t intend.</p>
 <p><strong>Practical recommendations:</strong></p>
 <ul>
+<li><strong>Do not run Claude Code on machines with restricted or sensitive data</strong> unless sandboxing is enabled and you are confident the data is protected. Remember: UW does not yet have a data-use agreement with Anthropic (see warning above), so even cloud-routed usage sends your prompts to Anthropic’s infrastructure.</li>
 <li><strong>Test only within isolated Git repositories</strong>, with no sensitive data present in the local repo.</li>
-<li><strong>Until you’ve enabled sandboxing (see below), it’s safest to only run Claude Code on machines without sensitive data stored anywhere</strong> — or at minimum, add deny rules (see below) to protect your most critical files.</li>
-<li><strong>Sandboxing is the real solution</strong> to this problem. It uses OS-level enforcement to restrict bash commands to the working directory, regardless of what Claude tries to do. It’s available on macOS (built-in) and Linux/WSL2 (requires <code>bubblewrap</code>). Native Windows does not yet support it.</li>
+<li><strong>Enable sandboxing</strong> (Section 8) — this is your strongest local protection. It uses OS-level enforcement to restrict bash commands to the working directory, regardless of what Claude tries to do. It’s available on macOS (built-in) and Linux/WSL2 (requires <code>bubblewrap</code>). Native Windows does not yet support it.</li>
+<li><strong>Until you’ve enabled sandboxing, it’s safest to only run Claude Code on machines without sensitive data stored anywhere</strong> — or at minimum, add deny rules (see below) to protect your most critical files.</li>
 </ul>
 </section>
 <section id="always-launch-from-your-project-directory" class="level3">
@@ -5357,7 +5379,7 @@ Note
 </tr>
 </tbody>
 </table>
-<p>If you’re accessing Claude Code through a UW-Madison cloud account (Vertex AI or Bedrock), your usage falls under commercial terms — <strong>your code is not used for training</strong>.</p>
+<p>If you’re accessing Claude Code through a UW-Madison cloud account (Vertex AI or Bedrock), your usage falls under Anthropic’s commercial terms — <strong>your code is not used for training</strong>. However, note that UW-Madison does not yet have a direct data-use agreement with Anthropic. The no-training guarantee comes from Anthropic’s standard commercial terms, not from a UW-negotiated agreement. This distinction matters for restricted or regulated data — see the data sensitivity warning at the top of this guide.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
