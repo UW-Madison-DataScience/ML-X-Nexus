@@ -46,7 +46,7 @@
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you’re at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our <strong><a href="../../Learn/Guides/claude-code-cloud-setup.html">Claude Code Cloud Setup Guide</a></strong> for a step-by-step walkthrough — from cloud project setup to running your first session. Note: UW does not yet have a direct data agreement with Anthropic, so <strong>avoid using Claude Code with restricted or sensitive data</strong> for now. Cloud routing is suitable for general, non-sensitive research code. See Data Privacy for details.</p>
+<p>If you’re at UW-Madison and want to use Claude Code through your institutional cloud account (GCP or AWS), check out our <strong><a href="../../Learn/Guides/claude-code-cloud-setup.html">Claude Code Cloud Setup Guide</a></strong> for a step-by-step walkthrough — from cloud project setup to running your first session. Note: UW does not yet have a direct data agreement with Anthropic, so <strong>avoid using Claude Code with restricted or sensitive data</strong>. Cloud routing is suitable for general, non-sensitive research code. See Data Privacy for details.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -176,23 +176,21 @@
 </section>
 <section id="claude-code" class="level4">
 <h4 class="anchored" data-anchor-id="claude-code">Claude Code</h4>
-<p><a href="https://code.claude.com/">Claude Code</a> is Anthropic’s agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project. A built-in permission system prompts you to approve or deny each action, so you stay in the loop while the agent does the heavy lifting.</p>
-<p>Claude Code is available across multiple surfaces — a <a href="https://code.claude.com/docs/en/desktop">desktop app</a>, a <a href="https://code.claude.com/docs/en/claude-code-on-the-web">web IDE</a>, a <a href="https://code.claude.com/docs/en/getting-started">terminal CLI</a>, and IDE extensions for <a href="https://code.claude.com/docs/en/vs-code">VS Code</a> and <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a> — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about <em>how you interact</em> and <em>where the work runs</em>, not what the agent can do.</p>
-<p>Here’s what a typical Claude Code session looks like, regardless of surface. You type a request like:</p>
+<p><a href="https://code.claude.com/">Claude Code</a> is Anthropic’s agentic coding tool — completely different from the Claude.ai chat interface. You point it at a repository (by attaching a GitHub repo on the web or desktop, or launching it from a project directory in the terminal), and it can read your code, edit files, run shell commands, execute tests, and iterate on its own output — all within the scope of that project.</p>
+<p>Claude Code is available across multiple surfaces — a <a href="https://code.claude.com/docs/en/desktop">desktop app</a>, a <a href="https://code.claude.com/docs/en/claude-code-on-the-web">web IDE</a>, a <a href="https://code.claude.com/docs/en/getting-started">terminal CLI</a>, and IDE extensions for <a href="https://code.claude.com/docs/en/vs-code">VS Code</a> and <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a> — but the core agentic engine is the same everywhere. You describe what you want, it reads your code, makes changes, runs tests, and iterates until the task is done. The differences between surfaces are mostly about <em>how you interact</em>, <em>where the work runs</em>, and <em>how much the agent can do autonomously</em>.</p>
+<p>Here’s what a typical Claude Code session looks like. You type a request like:</p>
 <blockquote class="blockquote">
 <p><em>Look at src/utils/ and add a slugify function that matches the style of existing utilities. Write tests too. Create a branch, commit, and open a PR when you’re done.</em></p>
 </blockquote>
 <p>Claude Code will:</p>
 <ol type="1">
 <li>Read your existing utils to understand the style</li>
-<li><strong>Ask permission</strong> to create a new file → you approve (or it auto-approves if you’ve configured that)</li>
 <li>Write the function and tests</li>
-<li><strong>Ask permission</strong> to run the tests → you approve (or it auto-approves if you’ve <a href="https://code.claude.com/docs/en/permissions">allowed your test command</a>)</li>
 <li>Run <code>pytest</code> (or whatever your test runner is), see results</li>
 <li>If tests fail, iterate — fix the code, re-run</li>
-<li><strong>Ask permission</strong> to create a branch, commit, push, and open a PR → you approve (this can also be auto-approved via <a href="https://code.claude.com/docs/en/permissions">allow rules</a>, but most users prefer to keep git operations manual for safety)</li>
+<li>Create a branch, commit, push, and open a PR</li>
 </ol>
-<p><strong>Friction:</strong> The permission prompts keep you in the loop but slow things down. You can reduce this by configuring <a href="https://code.claude.com/docs/en/permissions">allow rules</a> in your settings to auto-approve actions you trust. Many experienced users auto-approve <em>most</em> actions — file edits, test runs, even git operations — and instead invest their review time at the PR stage, where they can inspect the full diff before merging. This “let it cook, review the PR” approach works well when you’ve written clear prompts and have CI checks in place. If you’re just getting started, a more conservative sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.</p>
+<p><strong>How much you’re involved depends on the surface.</strong> On the <strong><a href="https://claude.ai/code">web version</a></strong>, Claude runs in an isolated cloud VM and auto-accepts edits — you review the results (a PR, a diff, test output) rather than approving each individual action. The <strong>desktop app</strong> and <strong>CLI</strong> both default to “ask permissions” mode, where Claude proposes changes and waits for your approval before applying them. The desktop app shows visual diffs with accept/reject buttons; the CLI prompts in the terminal. You can reduce this friction on either surface by switching to “auto accept edits” mode, configuring <a href="https://code.claude.com/docs/en/permissions">allow rules</a>, or enabling <a href="https://code.claude.com/docs/en/sandboxing">sandboxing</a> to auto-approve actions that stay within your project directory. Many experienced users auto-approve most actions and invest their review time at the PR stage instead. If you’re just getting started, a good sweet spot is: auto-approve reads and test execution, manually approve writes and git operations.</p>
 <section id="claude-code-desktop-web" class="level5">
 <h5 class="anchored" data-anchor-id="claude-code-desktop-web">Desktop &amp; Web</h5>
 <p>The easiest way to get started is through the <a href="https://code.claude.com/docs/en/desktop">Claude Desktop app</a> (Code tab) or <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web</a> at <a href="https://claude.ai/code">claude.ai/code</a>. Both provide the same GUI experience. The main difference is where it runs: the desktop app works with local git repositories on your machine, with each session getting its own isolated <a href="https://git-scm.com/docs/git-worktree">git worktree</a> so parallel tasks don’t collide. The web version clones your GitHub repo into an isolated cloud VM — no local setup needed. The web version is also available on mobile (<a href="https://apps.apple.com/us/app/claude-by-anthropic/id6473753684">iOS</a> / <a href="https://play.google.com/store/apps/details?id=com.anthropic.claude">Android</a>) for kicking off and monitoring tasks on the go. <strong>Note:</strong> the desktop app requires Git — your project must be a git repo with at least one commit.</p>
@@ -668,7 +666,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="for-uw-madison-researchers-institutional-cloud-benefits" class="level3">
 <h3 class="anchored" data-anchor-id="for-uw-madison-researchers-institutional-cloud-benefits">For UW-Madison researchers: institutional cloud benefits</h3>
-<p>If you’re at UW-Madison (or a similar research institution), check whether your institution has negotiated cloud computing discounts that could offset AI API costs. Many universities have agreements with AWS, Google Cloud, or Azure that provide credits or reduced pricing for research workloads. Running API-based AI tools through institutional cloud accounts may be significantly cheaper than paying retail. Note, however, that institutional cloud agreements cover the cloud provider’s services — they do <strong>not</strong> extend to Anthropic’s data handling (see Data Privacy below).</p>
+<p>If you’re at UW-Madison (or a similar research institution), routing AI API costs through a UW-provisioned cloud account offers two main benefits: <strong>institutional billing</strong> (charges go to your cloud project, not your personal card — important for grants and shared budgets) and <strong>lower overhead on grants</strong> (UW’s <a href="https://rsp.wisc.edu/proposalprep/cloudComputeInfo.cfm">Cloud Computing Pilot</a> cuts F&amp;A from 55.5% to 26%, saving ~$2,950 per $10,000 in cloud spending). NIH-funded researchers may get additional discounts through <a href="https://kb.wisc.edu/109813">STRIDES</a>. Note that these savings are on the <em>overhead and billing side</em> — Anthropic’s per-token pricing is the same whether you route through Vertex AI, Bedrock, or the direct API. Also note that institutional cloud agreements cover the cloud provider’s services — they do <strong>not</strong> extend to Anthropic’s data handling (see Data Privacy below).</p>
 <p>Contact your department’s IT staff or <a href="https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/">Research Computing</a> to ask about available cloud credits and whether AI API costs are eligible.</p>
 </section>
 <section id="strategies-to-keep-costs-down" class="level3">
@@ -1037,14 +1035,14 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="f6e95edc" class="cell" data-execution_count="1">
+<div id="b27e9d54" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="9bb10e5d" class="cell" data-execution_count="2">
+<div id="de736a36" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1157,7 +1155,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="a7ce873b" class="cell" data-execution_count="3">
+<div id="9d84a11f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1394,7 +1392,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="14a9833f" class="cell" data-execution_count="4">
+<div id="c2272b74" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1422,7 +1420,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="43c53a94" class="cell" data-execution_count="5">
+<div id="d1ea6b0d" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1445,7 +1443,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="99faaf19" class="cell" data-execution_count="6">
+<div id="f8359144" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1467,7 +1465,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="b49d2d0e" class="cell" data-execution_count="7">
+<div id="ce66ab6f" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1590,7 +1588,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="3969486a" class="cell" data-execution_count="8">
+<div id="b66d0446" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1620,7 +1618,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="760768f8" class="cell" data-execution_count="9">
+<div id="0779daaf" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1665,7 +1663,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="dcdeb415" class="cell" data-execution_count="10">
+<div id="627edb05" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1901,7 +1899,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="7009ca8c" class="cell" data-execution_count="11">
+<div id="25aa6116" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -1977,7 +1975,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="240776dd" class="cell" data-execution_count="12">
+<div id="e3b4c9c8" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2093,7 +2091,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="76983e8f" class="cell" data-execution_count="13">
+<div id="a3346f7b" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2339,7 +2337,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="e7540caa" class="cell" data-execution_count="14">
+<div id="07122adb" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -6748,7 +6746,7 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="ae597909" class="cell" data-execution_count="1">
+<div id="5582a37c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -6757,7 +6755,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="e4c0ddb9" class="cell" data-execution_count="2">
+<div id="0c7db579" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -6791,7 +6789,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="a5bb4dc1" class="cell" data-execution_count="3">
+<div id="3eafe3fe" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -7063,7 +7061,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="78bd83db" class="cell" data-execution_count="4">
+<div id="1b8e8df1" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -7243,7 +7241,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="5db0ae78" class="cell" data-execution_count="5">
+<div id="7cda1056" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>
