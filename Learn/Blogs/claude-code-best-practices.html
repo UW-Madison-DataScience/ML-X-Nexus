@@ -459,6 +459,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>AI coding agents — tools that can autonomously write, edit, run, and test code on your behalf — are rapidly changing how software gets built. The space is crowded and evolving fast: <a href="https://docs.anthropic.com/en/docs/claude-code/overview">Claude Code</a>, <a href="https://github.com/features/copilot">GitHub Copilot</a>, <a href="https://www.cursor.com/">Cursor</a>, <a href="https://windsurf.com/">Windsurf</a>, <a href="https://www.augmentcode.com/">Augment Code</a>, <a href="https://aws.amazon.com/q/developer/">Amazon Q Developer</a>, <a href="https://cloud.google.com/products/gemini/code-assist">Gemini Code Assist</a>, and <a href="https://about.gitlab.com/gitlab-duo/">GitLab Duo</a> are among the most prominent, with new entrants appearing regularly.</p>
 <p>Best practices in this space are still being discovered — by the ML+X community and the broader developer ecosystem alike. This guide is our attempt to start mapping what works, using <strong><a href="https://code.claude.com/">Claude Code</a></strong> as the primary lens. Claude Code is Anthropic’s agentic coding tool — distinct from the <a href="https://claude.ai">Claude.ai</a> chat interface — and it comes in several forms: a <strong>CLI</strong>, a <strong>desktop app</strong>, <strong>IDE extensions</strong> (<a href="https://code.claude.com/docs/en/vs-code">VS Code</a>, <a href="https://code.claude.com/docs/en/jetbrains">JetBrains</a>), and a <strong>web IDE</strong> at <a href="https://claude.ai/code">claude.ai/code</a>. All give the agent real shell access to read, write, and execute code, which makes it a great lens for exploring the trade-offs of agentic coding: permissions, context management, and cost. We’ll reference Claude.ai, GitHub Copilot, and other tools for comparison where useful.</p>
 <p>This is a first pass based on early experience — we expect it to evolve as the ML+X community builds more hands-on knowledge. If you have tips, corrections, or experiences to share, please leave a comment below.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>This guide reflects the author’s understanding as of the publish date
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>AI tools, pricing, features, and contractual terms change frequently. This post is <strong>community guidance, not official UW-Madison policy</strong>. For the latest institutional policies, data-use agreements, or questions about what data types are permitted with specific tools, consult <a href="https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/">UW-Madison Research Cyberinfrastructure</a> or your department’s IT office.</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -473,7 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -482,7 +495,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Much of the Claude Code-specific guidance in this post draws on Anthropic’s official documentation, including their <a href="https://code.claude.com/docs/en/best-practices">best practices guide</a>, <a href="https://code.claude.com/docs/en/permissions">permissions</a> and <a href="https://code.claude.com/docs/en/sandboxing">sandboxing</a> docs, <a href="https://code.claude.com/docs/en/memory">CLAUDE.md reference</a>, <a href="https://code.claude.com/docs/en/data-usage">data usage policy</a>, and <a href="https://code.claude.com/docs/en/costs">cost management guide</a>. GitHub Copilot sections draw on GitHub’s <a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">coding agent docs</a> and <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">changelog</a>. Where we paraphrase official documentation, we’ve linked to the source. Community perspectives and independent analyses are cited inline throughout.</p>
 </div>
@@ -572,7 +585,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="claude.ai-chat-not-claude-code">Claude.ai (Chat — not Claude Code)</h4>
 <p><a href="https://claude.ai">Claude.ai</a> is Anthropic’s general-purpose chat interface. It’s <em>not</em> an agentic coding tool — it can’t execute code, edit files, or run commands on your system. You provide context by pasting code into the conversation, and you copy the output back into your editor.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -581,7 +594,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The <a href="https://claude.ai/download">Claude Desktop app</a> includes three tabs: <strong>Chat</strong> (standard conversation, with <a href="https://modelcontextprotocol.io/">MCP</a> support), <strong>Code</strong> (the full Claude Code agentic experience — see below), and <strong>Cowork</strong> (an AI companion that watches your screen and offers suggestions). Only the <strong>Code</strong> tab is an agentic coding tool. The Chat tab provides the same experience as <a href="https://claude.ai">claude.ai</a> in a native app.</p>
 </div>
@@ -702,7 +715,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Quality on complex tasks</strong> — In a <a href="https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/">50-session benchmark study</a>, Claude Code produced a higher accept rate (44% vs 38%) and scored significantly better on bug-fixing context fidelity (8.5/10 vs 5.9/10). Copilot was ~15 seconds faster per task on average and excels at inline completions.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -711,7 +724,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>As of <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">February 2026</a>, Claude is also available as a <strong>standalone agent</strong> on GitHub — not just a model choice within Copilot. You can assign issues directly to <code>@claude</code> (or <code>@copilot</code>, or <code>@codex</code>) on GitHub.com, and in <a href="https://code.visualstudio.com/blogs/2026/02/05/multi-agent-development">VS Code 1.109+</a> you can start Claude agent sessions that use Anthropic’s own agent harness rather than Copilot’s orchestration. In these modes, you get the same prompts, tools, and architecture as Claude Code — which should close the quality gap vs.&nbsp;using Claude as a model within Copilot. Initially available for Pro+ and Enterprise plans; <a href="https://github.blog/changelog/2026-02-26-claude-and-codex-now-available-for-copilot-business-pro-users/">expanded to Copilot Business and Pro</a> on Feb 26 at no additional cost.</p>
 </div>
