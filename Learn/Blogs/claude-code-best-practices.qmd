@@ -567,25 +567,55 @@ For a detailed breakdown by provider, see the [Cloud Setup Guide — Data Usage 
 
 ## Security fundamentals
 
-When you give an AI agent access to your terminal, you're trusting it with everything your shell user can do. Here's how to limit the blast radius.
+When you launch Claude Code from the CLI, it has access to your current working directory — but it's **not confined to it**. Without sandboxing, Claude can read, modify, or delete files anywhere your user account can reach. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn't intend. Here's how to limit the blast radius, from most important to least.
+
+### Use permissions and deny rules
+
+Claude Code has a [built-in permissions system](https://code.claude.com/docs/en/permissions) that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in `settings.json`:
+
+- **`deny`** — hard block. Claude can't use the tool, period. Deny rules always win, even if you accidentally click "always allow" on a prompt.
+- **`allow`** — auto-approve. Skips the approval prompt for things you trust (e.g., `git add`, `pytest`).
+
+**Deny rules are your most important security layer.** They protect sensitive paths — SSH keys, cloud credentials, `.env` files — regardless of what the agent tries to do. The approval prompt is your first line of defense; deny rules are the backup that can't be bypassed.
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(//home/youruser/.ssh/**)",
+      "Edit(//home/youruser/.ssh/**)",
+      "Read(//home/youruser/.aws/**)",
+      "Edit(//home/youruser/.aws/**)",
+      "Read(./.env)",
+      "Edit(./.env)",
+      "Bash(rm -rf *)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(cat:*)"
+    ]
+  }
+}
+```
+
+See the [Cloud Setup Guide's security section](../Guides/claude-code-cloud-setup.qmd#understand-risk) for a full walkthrough with platform-specific examples, or the [official permissions docs](https://code.claude.com/docs/en/permissions) for the complete rule syntax.
 
 ### Enable Claude Code's built-in sandbox
 
-Claude Code has a [built-in sandbox](https://code.claude.com/docs/en/sandboxing) that uses OS-level isolation (Linux namespaces / macOS Seatbelt) to restrict what shell commands can do — limiting filesystem access to your project directory and blocking most network requests. This is separate from running inside a container (covered below). It's lightweight, adds negligible overhead, and [Anthropic's internal testing](https://www.anthropic.com/engineering/claude-code-sandboxing) found it reduced permission prompts by 84%. There's no reason not to turn it on.
+Claude Code's [built-in sandbox](https://code.claude.com/docs/en/sandboxing) uses OS-level isolation (Linux namespaces / macOS Seatbelt) to restrict what shell commands can do — limiting filesystem writes to your project directory and blocking unauthorized network requests. This is separate from running inside a container (covered below). It's lightweight, adds negligible overhead, and [Anthropic's internal testing](https://www.anthropic.com/engineering/claude-code-sandboxing) found it reduced permission prompts by 84% while *increasing* security. Use it alongside deny rules for the strongest protection — Anthropic calls this ["defense in depth"](https://code.claude.com/docs/en/sandboxing).
 
 ### Scope your credentials
 
-The agent can read environment variables, inspect dotfiles, and run commands like `cat ~/.ssh/id_rsa`. The goal is to make credentials **structurally inaccessible**, not just hidden.
+Even with deny rules and sandboxing, it's good practice to limit what credentials the agent has access to in the first place.
 
-**Tokens and keys.** Create fine-grained tokens scoped to only the repos and permissions the agent needs — if it only pushes to one repo, don't give it your entire GitHub account. Use a bot account for agent-driven git operations, and generate dedicated deploy keys rather than reusing your personal SSH keys.
+**Use minimal-scope tokens.** Create fine-grained GitHub tokens scoped to only the repos and permissions the agent needs. If it only pushes to one repo, don't give it access to your entire account. Use a bot account for agent-driven git operations, and generate dedicated deploy keys rather than reusing your personal SSH keys.
 
-**Secrets management.** Don't pass secrets as environment variables in containers — use Docker secrets or a mounted credential socket instead. Set spending limits on API keys, and use separate keys from your personal or production ones.
+**Set spending limits** on API keys and use separate keys from your personal or production ones.
 
-**Gitignore first.** Add `.env`, `credentials.json`, `*.pem`, `*.key`, and `.netrc` to `.gitignore` *before* the agent ever runs — once a secret is committed, it's in the history.
+**Add secrets to `.gitignore`** — `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc` — before the agent ever runs. Once a secret is committed, it's in the history. (But note: `.gitignore` prevents *committing* secrets, not *reading* them. Deny rules are what actually block the agent from accessing sensitive files.)
 
 ### Isolate with containers when you can
 
-Running an agent on your bare metal dev machine means it can access anything you can. Running it inside a container limits the blast radius. **Any isolation is better than none.**
+Running an agent on your bare metal dev machine means it can access anything you can. Running it inside a container adds another layer of isolation. **Any isolation is better than none.**
 
 | Scenario | Recommendation |
 |---|---|
@@ -593,13 +623,12 @@ Running an agent on your bare metal dev machine means it can access anything you
 | **Team environment, need consistency** | Purpose-built container (Anthropic's [sandboxed containers](https://code.claude.com/docs/en/sandboxing), [E2B](https://e2b.dev/)) — reduces setup burden |
 | **CI/CD pipelines** | Ephemeral containers destroyed after each run — the safest option at scale |
 | **Working with sensitive data** | Container with network restrictions — limits exfiltration risk |
-| **Quick local experimentation** | Even a basic `docker run` is better than bare metal |
 
 A standard Docker container gets you most of the way there — the agent can't access your host filesystem outside the mounted volume. Purpose-built containers close the remaining gaps around network isolation, filesystem snapshotting, and security hardening.
 
 ### Watch for prompt injection and runaway agents
 
-**Prompt injection** is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious `README.md`, issue body, or `.docx` attachment could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content.
+**Prompt injection** is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious `README.md`, issue body, or [`.docx` attachment](https://www.anthropic.com/research/claude-code-security) could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it's been tricked.
 
 **Runaway agents** burn tokens and make unwanted changes when they get stuck in loops. Commit your work frequently so you can recover from mistakes, set spending limits on your API keys, and don't hesitate to interrupt (`Ctrl+C`) and redirect. Set up git hooks or CI checks as safety nets — for example, preventing force-pushes to `main`.
 
@@ -643,8 +672,8 @@ Agentic coding tools are genuinely powerful — they can dramatically accelerate
 1. **Scope your requests tightly** — features, not projects
 2. **Use `CLAUDE.md`** to encode guardrails and project context
 3. **Tune permissions deliberately** — start conservative, loosen as you build trust
-4. **Protect your credentials** — fine-grained tokens, structural isolation, `.gitignore`
-5. **Enable the built-in sandbox and isolate with containers** when possible
+4. **Set deny rules and enable the sandbox** — your two strongest security layers
+5. **Scope your credentials** — fine-grained tokens, dedicated keys, containers when possible
 6. **Monitor costs** — set limits, be specific, use the right model for the task
 7. **Commit frequently** — keep escape hatches available
 8. **Review everything** — you're the engineer; the agent is a very fast intern
