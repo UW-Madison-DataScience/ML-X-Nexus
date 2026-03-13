@@ -569,38 +569,41 @@ For a detailed breakdown by provider, see the [Cloud Setup Guide — Data Usage 
 
 When you give an AI agent access to your terminal, you're trusting it with everything your shell user can do. Here's how to limit the blast radius.
 
+### Enable Claude Code's built-in sandbox
+
+Claude Code has a [built-in sandbox](https://code.claude.com/docs/en/sandboxing) that uses OS-level isolation (Linux namespaces / macOS Seatbelt) to restrict what shell commands can do — limiting filesystem access to your project directory and blocking most network requests. This is separate from running inside a container (covered below). It's lightweight, adds negligible overhead, and [Anthropic's internal testing](https://www.anthropic.com/engineering/claude-code-sandboxing) found it reduced permission prompts by 84%. There's no reason not to turn it on.
+
 ### Scope your credentials
 
-The agent can read environment variables, inspect dotfiles, and run commands like `cat ~/.ssh/id_rsa` or `echo $GITHUB_TOKEN`. You need to make credentials **structurally inaccessible**, not just hidden.
+The agent can read environment variables, inspect dotfiles, and run commands like `cat ~/.ssh/id_rsa`. The goal is to make credentials **structurally inaccessible**, not just hidden.
 
-- **Create dedicated, minimal-scope tokens** — a fine-grained GitHub token scoped to only the repos and permissions the agent needs. If it only needs to push to one repo, don't give it access to your entire GitHub account.
-- **Use a bot account** for agent-driven git operations rather than your personal credentials
-- **Never reuse your daily-driver SSH keys** in an agentic environment — generate dedicated deploy keys
-- **Don't pass secrets as environment variables** in containers — use Docker secrets, mount a read-only credential socket, or configure a git credential helper on the host
-- **Set spending limits** on API keys and use separate keys from your personal/production ones
-- Add `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc` to `.gitignore` **before the agent ever runs**
+**Tokens and keys.** Create fine-grained tokens scoped to only the repos and permissions the agent needs — if it only pushes to one repo, don't give it your entire GitHub account. Use a bot account for agent-driven git operations, and generate dedicated deploy keys rather than reusing your personal SSH keys.
 
-### Sandbox when possible
+**Secrets management.** Don't pass secrets as environment variables in containers — use Docker secrets or a mounted credential socket instead. Set spending limits on API keys, and use separate keys from your personal or production ones.
 
-Running an agent on your bare metal dev machine means it has access to everything you do. **Any sandboxing is better than none.**
+**Gitignore first.** Add `.env`, `credentials.json`, `*.pem`, `*.key`, and `.netrc` to `.gitignore` *before* the agent ever runs — once a secret is committed, it's in the history.
+
+### Isolate with containers when you can
+
+Running an agent on your bare metal dev machine means it can access anything you can. Running it inside a container limits the blast radius. **Any isolation is better than none.**
 
 | Scenario | Recommendation |
 |---|---|
 | **Solo dev, familiar with Docker** | Standard container with a mounted project directory — gives you full control |
-| **Team environment, need consistency** | Purpose-built sandbox (Anthropic's sandboxed containers, E2B) — reduces setup burden |
+| **Team environment, need consistency** | Purpose-built container (Anthropic's [sandboxed containers](https://code.claude.com/docs/en/sandboxing), [E2B](https://e2b.dev/)) — reduces setup burden |
 | **CI/CD pipelines** | Ephemeral containers destroyed after each run — the safest option at scale |
-| **Working with sensitive data** | Purpose-built sandbox with network restrictions — limits exfiltration risk |
-| **Quick local experimentation** | Even a basic container is better than bare metal |
+| **Working with sensitive data** | Container with network restrictions — limits exfiltration risk |
+| **Quick local experimentation** | Even a basic `docker run` is better than bare metal |
 
-A standard Docker container gets you 80% of the way there — the agent can't access your host filesystem outside the mounted volume. Purpose-built sandboxes close the remaining gaps around network isolation, filesystem snapshotting, and security hardening. See [Anthropic's sandboxing documentation](https://code.claude.com/docs/en/sandboxing) and their [engineering deep-dive](https://www.anthropic.com/engineering/claude-code-sandboxing) for details.
+A standard Docker container gets you most of the way there — the agent can't access your host filesystem outside the mounted volume. Purpose-built containers close the remaining gaps around network isolation, filesystem snapshotting, and security hardening.
 
 ### Watch for prompt injection and runaway agents
 
-- Be careful with files that contain instructions or prompts — an agent reading a malicious `README.md` or issue body could be tricked into harmful actions
-- **Never** give an agent unsupervised access to production systems, databases, or deployment pipelines
-- Set up **git hooks** or CI checks as safety nets (e.g., prevent force-pushes to `main`)
-- Keep your work committed frequently so you can recover from mistakes
-- Set **spending limits** and don't hesitate to interrupt (`Ctrl+C`) and redirect when the agent is looping
+**Prompt injection** is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious `README.md`, issue body, or `.docx` attachment could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content.
+
+**Runaway agents** burn tokens and make unwanted changes when they get stuck in loops. Commit your work frequently so you can recover from mistakes, set spending limits on your API keys, and don't hesitate to interrupt (`Ctrl+C`) and redirect. Set up git hooks or CI checks as safety nets — for example, preventing force-pushes to `main`.
+
+**Never** give an agent unsupervised access to production systems, databases, or deployment pipelines.
 
 ## Platform and deployment notes
 
@@ -641,7 +644,7 @@ Agentic coding tools are genuinely powerful — they can dramatically accelerate
 2. **Use `CLAUDE.md`** to encode guardrails and project context
 3. **Tune permissions deliberately** — start conservative, loosen as you build trust
 4. **Protect your credentials** — fine-grained tokens, structural isolation, `.gitignore`
-5. **Sandbox when possible** — containers, VMs, ephemeral CI environments
+5. **Enable the built-in sandbox and isolate with containers** when possible
 6. **Monitor costs** — set limits, be specific, use the right model for the task
 7. **Commit frequently** — keep escape hatches available
 8. **Review everything** — you're the engineer; the agent is a very fast intern
