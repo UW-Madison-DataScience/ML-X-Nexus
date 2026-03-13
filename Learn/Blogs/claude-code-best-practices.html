@@ -388,12 +388,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#use-permissions-and-deny-rules" id="toc-use-permissions-and-deny-rules" class="nav-link" data-scroll-target="#use-permissions-and-deny-rules">Use permissions and deny rules</a></li>
   <li><a href="#enable-claude-codes-built-in-sandbox" id="toc-enable-claude-codes-built-in-sandbox" class="nav-link" data-scroll-target="#enable-claude-codes-built-in-sandbox">Enable Claude Code’s built-in sandbox</a></li>
   <li><a href="#scope-your-credentials" id="toc-scope-your-credentials" class="nav-link" data-scroll-target="#scope-your-credentials">Scope your credentials</a></li>
-  <li><a href="#isolate-with-containers-when-you-can" id="toc-isolate-with-containers-when-you-can" class="nav-link" data-scroll-target="#isolate-with-containers-when-you-can">Isolate with containers when you can</a></li>
+  <li><a href="#use-containers-for-cicd-and-headless-environments" id="toc-use-containers-for-cicd-and-headless-environments" class="nav-link" data-scroll-target="#use-containers-for-cicd-and-headless-environments">Use containers for CI/CD and headless environments</a></li>
   <li><a href="#watch-for-prompt-injection-and-runaway-agents" id="toc-watch-for-prompt-injection-and-runaway-agents" class="nav-link" data-scroll-target="#watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</a></li>
   </ul></li>
   <li><a href="#platform-and-deployment-notes" id="toc-platform-and-deployment-notes" class="nav-link" data-scroll-target="#platform-and-deployment-notes">Platform and deployment notes</a>
   <ul class="collapse">
-  <li><a href="#cicd-and-remote-deployment" id="toc-cicd-and-remote-deployment" class="nav-link" data-scroll-target="#cicd-and-remote-deployment">CI/CD and remote deployment</a></li>
+  <li><a href="#running-claude-code-remotely" id="toc-running-claude-code-remotely" class="nav-link" data-scroll-target="#running-claude-code-remotely">Running Claude Code remotely</a></li>
   <li><a href="#a-note-for-gitlab-users" id="toc-a-note-for-gitlab-users" class="nav-link" data-scroll-target="#a-note-for-gitlab-users">A note for GitLab users</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
@@ -1178,7 +1178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="security-fundamentals" class="level2">
 <h2 class="anchored" data-anchor-id="security-fundamentals">Security fundamentals</h2>
-<p>When you launch Claude Code from the CLI, it has access to your current working directory — but it’s <strong>not confined to it</strong>. Without sandboxing, Claude can read, modify, or delete files anywhere your user account can reach. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
+<p>When you launch Claude Code from the CLI, it runs with your user’s full filesystem permissions. It can read, modify, or delete files anywhere your account can reach — not just your project directory. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
 <section id="use-permissions-and-deny-rules" class="level3">
 <h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules">Use permissions and deny rules</h3>
 <p>Claude Code has a <a href="https://code.claude.com/docs/en/permissions">built-in permissions system</a> that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in <code>settings.json</code>:</p>
@@ -1216,36 +1216,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
 <p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
 </section>
-<section id="isolate-with-containers-when-you-can" class="level3">
-<h3 class="anchored" data-anchor-id="isolate-with-containers-when-you-can">Isolate with containers when you can</h3>
-<p>Running an agent on your bare metal dev machine means it can access anything you can. Running it inside a container adds another layer of isolation. <strong>Any isolation is better than none.</strong></p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Scenario</th>
-<th>Recommendation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Solo dev, familiar with Docker</strong></td>
-<td>Standard container with a mounted project directory — gives you full control</td>
-</tr>
-<tr class="even">
-<td><strong>Team environment, need consistency</strong></td>
-<td>Purpose-built container (Anthropic’s <a href="https://code.claude.com/docs/en/sandboxing">sandboxed containers</a>, <a href="https://e2b.dev/">E2B</a>) — reduces setup burden</td>
-</tr>
-<tr class="odd">
-<td><strong>CI/CD pipelines</strong></td>
-<td>Ephemeral containers destroyed after each run — the safest option at scale</td>
-</tr>
-<tr class="even">
-<td><strong>Working with sensitive data</strong></td>
-<td>Container with network restrictions — limits exfiltration risk</td>
-</tr>
-</tbody>
-</table>
-<p>A standard Docker container gets you most of the way there — the agent can’t access your host filesystem outside the mounted volume. Purpose-built containers close the remaining gaps around network isolation, filesystem snapshotting, and security hardening.</p>
+<section id="use-containers-for-cicd-and-headless-environments" class="level3">
+<h3 class="anchored" data-anchor-id="use-containers-for-cicd-and-headless-environments">Use containers for CI/CD and headless environments</h3>
+<p>For local development, deny rules + the built-in sandbox (above) are the right approach. But for <strong>CI/CD pipelines, team environments, and headless automation</strong>, running Claude Code inside a container is often simpler — the container itself is the isolation boundary, so you can use <code>--dangerously-skip-permissions</code> safely since there’s nothing outside the container to damage.</p>
+<p>Options include a plain <a href="https://docs.docker.com/ai/sandboxes/agents/claude-code/">Docker container</a> with your project mounted as a volume, <a href="https://www.docker.com/blog/docker-sandboxes-run-claude-code-and-other-coding-agents-unsupervised-but-safely/">Docker sandboxes</a> (microVM-based isolation), or cloud sandbox platforms like <a href="https://e2b.dev/">E2B</a>. For CI pipelines, ephemeral containers that are destroyed after each run are the safest option — nothing persists between runs.</p>
+<p>Note: the built-in sandbox and Docker containers are <strong>alternative</strong> isolation strategies, not layers to stack. Running bubblewrap inside Docker introduces <a href="https://code.claude.com/docs/en/sandboxing">nested sandbox complexity</a> without meaningful security benefit.</p>
 </section>
 <section id="watch-for-prompt-injection-and-runaway-agents" class="level3">
 <h3 class="anchored" data-anchor-id="watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</h3>
@@ -1256,15 +1231,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="platform-and-deployment-notes" class="level2">
 <h2 class="anchored" data-anchor-id="platform-and-deployment-notes">Platform and deployment notes</h2>
-<section id="cicd-and-remote-deployment" class="level3">
-<h3 class="anchored" data-anchor-id="cicd-and-remote-deployment">CI/CD and remote deployment</h3>
-<p>Agentic coding tools can run beyond your local machine:</p>
-<ul>
-<li><strong>Cloud VMs and remote servers</strong> — run Claude Code over SSH. Your local system stays untouched, and you can use more powerful hardware.</li>
-<li><strong>CI/CD pipelines</strong> — GitHub Actions, GitLab CI, and similar systems can invoke Claude Code or Copilot coding agent in <strong>ephemeral environments</strong> that are destroyed after each run. This is the safest way to use agentic tools at scale.</li>
-<li><strong>Sandboxed containers</strong> — Anthropic offers purpose-built sandboxed environments for running Claude Code in isolated contexts. Third-party providers like E2B offer similar capabilities.</li>
-</ul>
-<p>The key insight: <strong>the more system access a tool has, the more carefully you need to manage it</strong>.</p>
+<section id="running-claude-code-remotely" class="level3">
+<h3 class="anchored" data-anchor-id="running-claude-code-remotely">Running Claude Code remotely</h3>
+<p>You don’t have to run Claude Code on your local machine. Running it over <strong>SSH on a cloud VM or remote server</strong> keeps your local system untouched and gives you access to more powerful hardware. For CI/CD integration — running Claude Code in GitHub Actions, GitLab CI, or similar systems — see the container discussion in <a href="#use-containers-for-cicd-and-headless-environments">Security fundamentals</a> above, plus the official docs for <a href="https://code.claude.com/docs/en/github-actions">GitHub Actions</a> and <a href="https://code.claude.com/docs/en/gitlab-ci-cd">GitLab CI/CD</a>.</p>
 </section>
 <section id="a-note-for-gitlab-users" class="level3">
 <h3 class="anchored" data-anchor-id="a-note-for-gitlab-users">A note for GitLab users</h3>
@@ -1293,7 +1262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Use <code>CLAUDE.md</code></strong> to encode guardrails and project context</li>
 <li><strong>Tune permissions deliberately</strong> — start conservative, loosen as you build trust</li>
 <li><strong>Set deny rules and enable the sandbox</strong> — your two strongest security layers</li>
-<li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, containers when possible</li>
+<li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, <code>.gitignore</code> for secrets</li>
 <li><strong>Monitor costs</strong> — set limits, be specific, use the right model for the task</li>
 <li><strong>Commit frequently</strong> — keep escape hatches available</li>
 <li><strong>Review everything</strong> — you’re the engineer; the agent is a very fast intern</li>

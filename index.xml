@@ -820,7 +820,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="security-fundamentals" class="level2">
 <h2 class="anchored" data-anchor-id="security-fundamentals">Security fundamentals</h2>
-<p>When you launch Claude Code from the CLI, it has access to your current working directory — but it’s <strong>not confined to it</strong>. Without sandboxing, Claude can read, modify, or delete files anywhere your user account can reach. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
+<p>When you launch Claude Code from the CLI, it runs with your user’s full filesystem permissions. It can read, modify, or delete files anywhere your account can reach — not just your project directory. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
 <section id="use-permissions-and-deny-rules" class="level3">
 <h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules">Use permissions and deny rules</h3>
 <p>Claude Code has a <a href="https://code.claude.com/docs/en/permissions">built-in permissions system</a> that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in <code>settings.json</code>:</p>
@@ -916,36 +916,11 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 <p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
 <p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
 </section>
-<section id="isolate-with-containers-when-you-can" class="level3">
-<h3 class="anchored" data-anchor-id="isolate-with-containers-when-you-can">Isolate with containers when you can</h3>
-<p>Running an agent on your bare metal dev machine means it can access anything you can. Running it inside a container adds another layer of isolation. <strong>Any isolation is better than none.</strong></p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Scenario</th>
-<th>Recommendation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Solo dev, familiar with Docker</strong></td>
-<td>Standard container with a mounted project directory — gives you full control</td>
-</tr>
-<tr class="even">
-<td><strong>Team environment, need consistency</strong></td>
-<td>Purpose-built container (Anthropic’s <a href="https://code.claude.com/docs/en/sandboxing">sandboxed containers</a>, <a href="https://e2b.dev/">E2B</a>) — reduces setup burden</td>
-</tr>
-<tr class="odd">
-<td><strong>CI/CD pipelines</strong></td>
-<td>Ephemeral containers destroyed after each run — the safest option at scale</td>
-</tr>
-<tr class="even">
-<td><strong>Working with sensitive data</strong></td>
-<td>Container with network restrictions — limits exfiltration risk</td>
-</tr>
-</tbody>
-</table>
-<p>A standard Docker container gets you most of the way there — the agent can’t access your host filesystem outside the mounted volume. Purpose-built containers close the remaining gaps around network isolation, filesystem snapshotting, and security hardening.</p>
+<section id="use-containers-for-cicd-and-headless-environments" class="level3">
+<h3 class="anchored" data-anchor-id="use-containers-for-cicd-and-headless-environments">Use containers for CI/CD and headless environments</h3>
+<p>For local development, deny rules + the built-in sandbox (above) are the right approach. But for <strong>CI/CD pipelines, team environments, and headless automation</strong>, running Claude Code inside a container is often simpler — the container itself is the isolation boundary, so you can use <code>--dangerously-skip-permissions</code> safely since there’s nothing outside the container to damage.</p>
+<p>Options include a plain <a href="https://docs.docker.com/ai/sandboxes/agents/claude-code/">Docker container</a> with your project mounted as a volume, <a href="https://www.docker.com/blog/docker-sandboxes-run-claude-code-and-other-coding-agents-unsupervised-but-safely/">Docker sandboxes</a> (microVM-based isolation), or cloud sandbox platforms like <a href="https://e2b.dev/">E2B</a>. For CI pipelines, ephemeral containers that are destroyed after each run are the safest option — nothing persists between runs.</p>
+<p>Note: the built-in sandbox and Docker containers are <strong>alternative</strong> isolation strategies, not layers to stack. Running bubblewrap inside Docker introduces <a href="https://code.claude.com/docs/en/sandboxing">nested sandbox complexity</a> without meaningful security benefit.</p>
 </section>
 <section id="watch-for-prompt-injection-and-runaway-agents" class="level3">
 <h3 class="anchored" data-anchor-id="watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</h3>
@@ -956,15 +931,9 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="platform-and-deployment-notes" class="level2">
 <h2 class="anchored" data-anchor-id="platform-and-deployment-notes">Platform and deployment notes</h2>
-<section id="cicd-and-remote-deployment" class="level3">
-<h3 class="anchored" data-anchor-id="cicd-and-remote-deployment">CI/CD and remote deployment</h3>
-<p>Agentic coding tools can run beyond your local machine:</p>
-<ul>
-<li><strong>Cloud VMs and remote servers</strong> — run Claude Code over SSH. Your local system stays untouched, and you can use more powerful hardware.</li>
-<li><strong>CI/CD pipelines</strong> — GitHub Actions, GitLab CI, and similar systems can invoke Claude Code or Copilot coding agent in <strong>ephemeral environments</strong> that are destroyed after each run. This is the safest way to use agentic tools at scale.</li>
-<li><strong>Sandboxed containers</strong> — Anthropic offers purpose-built sandboxed environments for running Claude Code in isolated contexts. Third-party providers like E2B offer similar capabilities.</li>
-</ul>
-<p>The key insight: <strong>the more system access a tool has, the more carefully you need to manage it</strong>.</p>
+<section id="running-claude-code-remotely" class="level3">
+<h3 class="anchored" data-anchor-id="running-claude-code-remotely">Running Claude Code remotely</h3>
+<p>You don’t have to run Claude Code on your local machine. Running it over <strong>SSH on a cloud VM or remote server</strong> keeps your local system untouched and gives you access to more powerful hardware. For CI/CD integration — running Claude Code in GitHub Actions, GitLab CI, or similar systems — see the container discussion in Security fundamentals above, plus the official docs for <a href="https://code.claude.com/docs/en/github-actions">GitHub Actions</a> and <a href="https://code.claude.com/docs/en/gitlab-ci-cd">GitLab CI/CD</a>.</p>
 </section>
 <section id="a-note-for-gitlab-users" class="level3">
 <h3 class="anchored" data-anchor-id="a-note-for-gitlab-users">A note for GitLab users</h3>
@@ -993,7 +962,7 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 <li><strong>Use <code>CLAUDE.md</code></strong> to encode guardrails and project context</li>
 <li><strong>Tune permissions deliberately</strong> — start conservative, loosen as you build trust</li>
 <li><strong>Set deny rules and enable the sandbox</strong> — your two strongest security layers</li>
-<li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, containers when possible</li>
+<li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, <code>.gitignore</code> for secrets</li>
 <li><strong>Monitor costs</strong> — set limits, be specific, use the right model for the task</li>
 <li><strong>Commit frequently</strong> — keep escape hatches available</li>
 <li><strong>Review everything</strong> — you’re the engineer; the agent is a very fast intern</li>
@@ -1106,14 +1075,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="1369b92a" class="cell" data-execution_count="1">
+<div id="1745e39b" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="7ec8ad3b" class="cell" data-execution_count="2">
+<div id="38cf47cc" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1226,7 +1195,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="512302de" class="cell" data-execution_count="3">
+<div id="d29b4d00" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1463,7 +1432,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="da3bb40b" class="cell" data-execution_count="4">
+<div id="5983676f" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1491,7 +1460,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="1dda52e0" class="cell" data-execution_count="5">
+<div id="c3ace404" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1514,7 +1483,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="7107ce19" class="cell" data-execution_count="6">
+<div id="9646b208" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1536,7 +1505,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="2db71af6" class="cell" data-execution_count="7">
+<div id="ea0eed60" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1659,7 +1628,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="77816492" class="cell" data-execution_count="8">
+<div id="a8ff1699" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1689,7 +1658,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="39681e17" class="cell" data-execution_count="9">
+<div id="73ce79b7" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1734,7 +1703,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="a7f7bc22" class="cell" data-execution_count="10">
+<div id="946bbc96" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1970,7 +1939,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="3e2e3d00" class="cell" data-execution_count="11">
+<div id="1fd26d99" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2046,7 +2015,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="60dba0be" class="cell" data-execution_count="12">
+<div id="b238a6da" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2162,7 +2131,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="719e1b57" class="cell" data-execution_count="13">
+<div id="6204b95f" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2408,7 +2377,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="58d82139" class="cell" data-execution_count="14">
+<div id="7ec6d37c" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3177,6 +3146,7 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>Resource</strong>: UW Generative AI Services &amp; Policies</a>: Overview of vetted GenAI tools at UW-Madison, including AWS Bedrock access.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html"><strong>GenAI</strong>: OpenScholar</a>: A fully open, retrieval-augmented language model for searching and synthesizing scientific literature — relevant as an alternative RAG architecture for citation-grounded answers.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: The local deployment in this talk uses Hugging Face models — learn more about the platform and how to find and run open-source models.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Understanding Quantization and Precision</a>: Learn how quantization and floating-point precision (FP32, FP16, INT8, 4-bit) affect GPU memory and inference speed — directly relevant to running models locally on constrained hardware.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -6817,7 +6787,7 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="46085b5b" class="cell" data-execution_count="1">
+<div id="9f29f240" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -6826,7 +6796,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="df8afca5" class="cell" data-execution_count="2">
+<div id="bdc8ce06" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -6860,7 +6830,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="65eb4b93" class="cell" data-execution_count="3">
+<div id="bbc302bb" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -7132,7 +7102,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="9acfcd15" class="cell" data-execution_count="4">
+<div id="a888c76c" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -7312,7 +7282,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="ea811b42" class="cell" data-execution_count="5">
+<div id="0b59a2ba" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>
