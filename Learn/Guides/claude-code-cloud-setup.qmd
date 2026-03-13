@@ -64,8 +64,8 @@ You can use Claude Code with a personal Claude Max subscription ($100–$200/mon
 
 - **Your prompts still reach Anthropic's infrastructure.** Neither Vertex AI nor Bedrock runs the model inside your cloud project — your provider routes requests to Anthropic's serving infrastructure. This means your data is processed by Anthropic regardless of which cloud provider you use.
 - **UW's cloud agreements don't cover Anthropic's data handling.** UW-Madison has agreements with Google, AWS, and Microsoft for their respective services, but those agreements **do not extend to Anthropic**. There is no UW-Anthropic data-use agreement in place yet, so routing through a cloud provider does not give your data the same protections it would have for a native cloud service. See the [warning above](#use-caution-with-restricted-or-sensitive-data) for practical guidance.
-- **Data storage location** is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where *inference* runs, that's a separate [data residency](https://docs.anthropic.com/en/docs/build-with-claude/data-residency) feature, not a cloud provider feature.
-- **Training exclusion still applies.** Under Anthropic's commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are [not used for model training](https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data). This is a positive, but it is distinct from having a comprehensive data-use agreement. See [Data Usage & Privacy](#data-usage) for full details on retention, telemetry, and opt-outs.
+- **Data storage location** is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where *inference* runs, that's a separate [data residency](https://platform.claude.com/docs/en/build-with-claude/data-residency) feature, not a cloud provider feature.
+- **Training exclusion still applies.** Under Anthropic's commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are [not used for model training](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training). This is a positive, but it is distinct from having a comprehensive data-use agreement. See [Data Usage & Privacy](#data-usage) for full details on retention, telemetry, and opt-outs.
 
 ::: {.callout-note}
 **Bottom line:** If you just want to try Claude Code personally, a Claude Max subscription is simpler and often cheaper for heavy individual use. Cloud providers make sense when you need institutional billing or enterprise security controls. However, neither approach currently provides UW-sanctioned data protections for restricted or sensitive data — UW is actively working toward an institutional Anthropic agreement. For now, **avoid running Claude Code on machines that contain restricted data**, since even sandboxing doesn't prevent reads — and **always enable sandboxing** to at least restrict writes and network access. UW-Madison [provisions both GCP and AWS accounts](../../Toolbox/Compute/UW-Cloud-Services.qmd) for research groups — running Claude Code through either provider is just one of many uses.
@@ -1020,7 +1020,7 @@ Then inside the Claude Code session, run:
 
 Choose **"Auto-allow mode"** — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.
 
-**Step 5 — Verify it's working:**
+**Step 6 — Verify it's working:**
 
 After enabling, Claude's bash commands should run without permission prompts as long as they stay within your project directory. If a command needs to write outside the project or access a new network domain, you'll still get a prompt.
 
@@ -1197,7 +1197,7 @@ For the latest Claude model pricing, see:
 On Vertex AI, the token usage shown on the [GCP Quotas page may be inaccurate](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/use-claude) for Claude models due to estimation and refund logic. For accurate billing, check the GCP Billing Reports page or use `/cost` inside Claude Code.
 :::
 
-## 9. Data Usage & Privacy {#data-usage}
+## 10. Data Usage & Privacy {#data-usage}
 
 > Official data usage docs: [code.claude.com/docs/en/data-usage](https://code.claude.com/docs/en/data-usage)
 
@@ -1251,7 +1251,7 @@ To disable everything at once regardless of provider, set `CLAUDE_CODE_DISABLE_N
 :::
 
 
-## 10. Troubleshooting {#troubleshooting}
+## 11. Troubleshooting {#troubleshooting}
 
 ::: {.panel-tabset}
 
@@ -1361,7 +1361,7 @@ claude doctor
 
 This checks your installation, authentication, and configuration for common issues.
 
-## 11. Quick Reference
+## 12. Quick Reference
 
 ::: {.panel-tabset}
 
