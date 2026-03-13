@@ -385,8 +385,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#security-fundamentals" id="toc-security-fundamentals" class="nav-link" data-scroll-target="#security-fundamentals">Security fundamentals</a>
   <ul class="collapse">
+  <li><a href="#use-permissions-and-deny-rules" id="toc-use-permissions-and-deny-rules" class="nav-link" data-scroll-target="#use-permissions-and-deny-rules">Use permissions and deny rules</a></li>
+  <li><a href="#enable-claude-codes-built-in-sandbox" id="toc-enable-claude-codes-built-in-sandbox" class="nav-link" data-scroll-target="#enable-claude-codes-built-in-sandbox">Enable Claude Code’s built-in sandbox</a></li>
   <li><a href="#scope-your-credentials" id="toc-scope-your-credentials" class="nav-link" data-scroll-target="#scope-your-credentials">Scope your credentials</a></li>
-  <li><a href="#sandbox-when-possible" id="toc-sandbox-when-possible" class="nav-link" data-scroll-target="#sandbox-when-possible">Sandbox when possible</a></li>
+  <li><a href="#isolate-with-containers-when-you-can" id="toc-isolate-with-containers-when-you-can" class="nav-link" data-scroll-target="#isolate-with-containers-when-you-can">Isolate with containers when you can</a></li>
   <li><a href="#watch-for-prompt-injection-and-runaway-agents" id="toc-watch-for-prompt-injection-and-runaway-agents" class="nav-link" data-scroll-target="#watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</a></li>
   </ul></li>
   <li><a href="#platform-and-deployment-notes" id="toc-platform-and-deployment-notes" class="nav-link" data-scroll-target="#platform-and-deployment-notes">Platform and deployment notes</a>
@@ -1176,27 +1178,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="security-fundamentals" class="level2">
 <h2 class="anchored" data-anchor-id="security-fundamentals">Security fundamentals</h2>
-<p>When you give an AI agent access to your terminal, you’re trusting it with everything your shell user can do. Here’s how to limit the blast radius.</p>
+<p>When you launch Claude Code from the CLI, it has access to your current working directory — but it’s <strong>not confined to it</strong>. Without sandboxing, Claude can read, modify, or delete files anywhere your user account can reach. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
+<section id="use-permissions-and-deny-rules" class="level3">
+<h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules">Use permissions and deny rules</h3>
+<p>Claude Code has a <a href="https://code.claude.com/docs/en/permissions">built-in permissions system</a> that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in <code>settings.json</code>:</p>
+<ul>
+<li><strong><code>deny</code></strong> — hard block. Claude can’t use the tool, period. Deny rules always win, even if you accidentally click “always allow” on a prompt.</li>
+<li><strong><code>allow</code></strong> — auto-approve. Skips the approval prompt for things you trust (e.g., <code>git add</code>, <code>pytest</code>).</li>
+</ul>
+<p><strong>Deny rules are your most important security layer.</strong> They protect sensitive paths — SSH keys, cloud credentials, <code>.env</code> files — regardless of what the agent tries to do. The approval prompt is your first line of defense; deny rules are the backup that can’t be bypassed.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"permissions"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"deny"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//home/youruser/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//home/youruser/.ssh/**)"</span><span class="ot">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(//home/youruser/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(//home/youruser/.aws/**)"</span><span class="ot">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Read(./.env)"</span><span class="ot">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Edit(./.env)"</span><span class="ot">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(rm -rf *)"</span><span class="ot">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(curl:*)"</span><span class="ot">,</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(wget:*)"</span><span class="ot">,</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bash(cat:*)"</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>See the <a href="../../Learn/Guides/claude-code-cloud-setup.html#understand-risk">Cloud Setup Guide’s security section</a> for a full walkthrough with platform-specific examples, or the <a href="https://code.claude.com/docs/en/permissions">official permissions docs</a> for the complete rule syntax.</p>
+</section>
+<section id="enable-claude-codes-built-in-sandbox" class="level3">
+<h3 class="anchored" data-anchor-id="enable-claude-codes-built-in-sandbox">Enable Claude Code’s built-in sandbox</h3>
+<p>Claude Code’s <a href="https://code.claude.com/docs/en/sandboxing">built-in sandbox</a> uses OS-level isolation (Linux namespaces / macOS Seatbelt) to restrict what shell commands can do — limiting filesystem writes to your project directory and blocking unauthorized network requests. This is separate from running inside a container (covered below). It’s lightweight, adds negligible overhead, and <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">Anthropic’s internal testing</a> found it reduced permission prompts by 84% while <em>increasing</em> security. Use it alongside deny rules for the strongest protection — Anthropic calls this <a href="https://code.claude.com/docs/en/sandboxing">“defense in depth”</a>.</p>
+</section>
 <section id="scope-your-credentials" class="level3">
 <h3 class="anchored" data-anchor-id="scope-your-credentials">Scope your credentials</h3>
-<p>The agent can read environment variables, inspect dotfiles, and run commands like <code>cat ~/.ssh/id_rsa</code> or <code>echo $GITHUB_TOKEN</code>. You need to make credentials <strong>structurally inaccessible</strong>, not just hidden.</p>
-<ul>
-<li><strong>Create dedicated, minimal-scope tokens</strong> — a fine-grained GitHub token scoped to only the repos and permissions the agent needs. If it only needs to push to one repo, don’t give it access to your entire GitHub account.</li>
-<li><strong>Use a bot account</strong> for agent-driven git operations rather than your personal credentials</li>
-<li><strong>Never reuse your daily-driver SSH keys</strong> in an agentic environment — generate dedicated deploy keys</li>
-<li><strong>Don’t pass secrets as environment variables</strong> in containers — use Docker secrets, mount a read-only credential socket, or configure a git credential helper on the host</li>
-<li><strong>Set spending limits</strong> on API keys and use separate keys from your personal/production ones</li>
-<li>Add <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> to <code>.gitignore</code> <strong>before the agent ever runs</strong></li>
-</ul>
+<p>Even with deny rules and sandboxing, it’s good practice to limit what credentials the agent has access to in the first place.</p>
+<p><strong>Use minimal-scope tokens.</strong> Create fine-grained GitHub tokens scoped to only the repos and permissions the agent needs. If it only pushes to one repo, don’t give it access to your entire account. Use a bot account for agent-driven git operations, and generate dedicated deploy keys rather than reusing your personal SSH keys.</p>
+<p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
+<p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
 </section>
-<section id="sandbox-when-possible" class="level3">
-<h3 class="anchored" data-anchor-id="sandbox-when-possible">Sandbox when possible</h3>
-<p>Running an agent on your bare metal dev machine means it has access to everything you do. <strong>Any sandboxing is better than none.</strong></p>
+<section id="isolate-with-containers-when-you-can" class="level3">
+<h3 class="anchored" data-anchor-id="isolate-with-containers-when-you-can">Isolate with containers when you can</h3>
+<p>Running an agent on your bare metal dev machine means it can access anything you can. Running it inside a container adds another layer of isolation. <strong>Any isolation is better than none.</strong></p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Scenario</th>
@@ -1210,7 +1233,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td><strong>Team environment, need consistency</strong></td>
-<td>Purpose-built sandbox (Anthropic’s sandboxed containers, E2B) — reduces setup burden</td>
+<td>Purpose-built container (Anthropic’s <a href="https://code.claude.com/docs/en/sandboxing">sandboxed containers</a>, <a href="https://e2b.dev/">E2B</a>) — reduces setup burden</td>
 </tr>
 <tr class="odd">
 <td><strong>CI/CD pipelines</strong></td>
@@ -1218,25 +1241,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td><strong>Working with sensitive data</strong></td>
-<td>Purpose-built sandbox with network restrictions — limits exfiltration risk</td>
-</tr>
-<tr class="odd">
-<td><strong>Quick local experimentation</strong></td>
-<td>Even a basic container is better than bare metal</td>
+<td>Container with network restrictions — limits exfiltration risk</td>
 </tr>
 </tbody>
 </table>
-<p>A standard Docker container gets you 80% of the way there — the agent can’t access your host filesystem outside the mounted volume. Purpose-built sandboxes close the remaining gaps around network isolation, filesystem snapshotting, and security hardening. See <a href="https://code.claude.com/docs/en/sandboxing">Anthropic’s sandboxing documentation</a> and their <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">engineering deep-dive</a> for details.</p>
+<p>A standard Docker container gets you most of the way there — the agent can’t access your host filesystem outside the mounted volume. Purpose-built containers close the remaining gaps around network isolation, filesystem snapshotting, and security hardening.</p>
 </section>
 <section id="watch-for-prompt-injection-and-runaway-agents" class="level3">
 <h3 class="anchored" data-anchor-id="watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</h3>
-<ul>
-<li>Be careful with files that contain instructions or prompts — an agent reading a malicious <code>README.md</code> or issue body could be tricked into harmful actions</li>
-<li><strong>Never</strong> give an agent unsupervised access to production systems, databases, or deployment pipelines</li>
-<li>Set up <strong>git hooks</strong> or CI checks as safety nets (e.g., prevent force-pushes to <code>main</code>)</li>
-<li>Keep your work committed frequently so you can recover from mistakes</li>
-<li>Set <strong>spending limits</strong> and don’t hesitate to interrupt (<code>Ctrl+C</code>) and redirect when the agent is looping</li>
-</ul>
+<p><strong>Prompt injection</strong> is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious <code>README.md</code>, issue body, or <a href="https://www.anthropic.com/research/claude-code-security"><code>.docx</code> attachment</a> could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it’s been tricked.</p>
+<p><strong>Runaway agents</strong> burn tokens and make unwanted changes when they get stuck in loops. Commit your work frequently so you can recover from mistakes, set spending limits on your API keys, and don’t hesitate to interrupt (<code>Ctrl+C</code>) and redirect. Set up git hooks or CI checks as safety nets — for example, preventing force-pushes to <code>main</code>.</p>
+<p><strong>Never</strong> give an agent unsupervised access to production systems, databases, or deployment pipelines.</p>
 </section>
 </section>
 <section id="platform-and-deployment-notes" class="level2">
@@ -1277,8 +1292,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Scope your requests tightly</strong> — features, not projects</li>
 <li><strong>Use <code>CLAUDE.md</code></strong> to encode guardrails and project context</li>
 <li><strong>Tune permissions deliberately</strong> — start conservative, loosen as you build trust</li>
-<li><strong>Protect your credentials</strong> — fine-grained tokens, structural isolation, <code>.gitignore</code></li>
-<li><strong>Sandbox when possible</strong> — containers, VMs, ephemeral CI environments</li>
+<li><strong>Set deny rules and enable the sandbox</strong> — your two strongest security layers</li>
+<li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, containers when possible</li>
 <li><strong>Monitor costs</strong> — set limits, be specific, use the right model for the task</li>
 <li><strong>Commit frequently</strong> — keep escape hatches available</li>
 <li><strong>Review everything</strong> — you’re the engineer; the agent is a very fast intern</li>

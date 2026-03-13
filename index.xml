@@ -820,27 +820,106 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="security-fundamentals" class="level2">
 <h2 class="anchored" data-anchor-id="security-fundamentals">Security fundamentals</h2>
-<p>When you give an AI agent access to your terminal, you’re trusting it with everything your shell user can do. Here’s how to limit the blast radius.</p>
+<p>When you launch Claude Code from the CLI, it has access to your current working directory — but it’s <strong>not confined to it</strong>. Without sandboxing, Claude can read, modify, or delete files anywhere your user account can reach. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
+<section id="use-permissions-and-deny-rules" class="level3">
+<h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules">Use permissions and deny rules</h3>
+<p>Claude Code has a <a href="https://code.claude.com/docs/en/permissions">built-in permissions system</a> that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in <code>settings.json</code>:</p>
+<ul>
+<li><strong><code>deny</code></strong> — hard block. Claude can’t use the tool, period. Deny rules always win, even if you accidentally click “always allow” on a prompt.</li>
+<li><strong><code>allow</code></strong> — auto-approve. Skips the approval prompt for things you trust (e.g., <code>git add</code>, <code>pytest</code>).</li>
+</ul>
+<p><strong>Deny rules are your most important security layer.</strong> They protect sensitive paths — SSH keys, cloud credentials, <code>.env</code> files — regardless of what the agent tries to do. The approval prompt is your first line of defense; deny rules are the backup that can’t be bypassed.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb6-2">  <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"permissions"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb6-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"deny"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb6-4">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Read(//home/youruser/.ssh/**)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-5">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Edit(//home/youruser/.ssh/**)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-6">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Read(//home/youruser/.aws/**)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-7">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Edit(//home/youruser/.aws/**)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-8">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Read(./.env)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-9">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Edit(./.env)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-10">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bash(rm -rf *)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-11">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bash(curl:*)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-12">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bash(wget:*)"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb6-13">      <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bash(cat:*)"</span></span>
+<span id="cb6-14">    <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb6-15">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb6-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div></div>
+<p>See the <a href="../../Learn/Guides/claude-code-cloud-setup.html#understand-risk">Cloud Setup Guide’s security section</a> for a full walkthrough with platform-specific examples, or the <a href="https://code.claude.com/docs/en/permissions">official permissions docs</a> for the complete rule syntax.</p>
+</section>
+<section id="enable-claude-codes-built-in-sandbox" class="level3">
+<h3 class="anchored" data-anchor-id="enable-claude-codes-built-in-sandbox">Enable Claude Code’s built-in sandbox</h3>
+<p>Claude Code’s <a href="https://code.claude.com/docs/en/sandboxing">built-in sandbox</a> uses OS-level isolation (Linux namespaces / macOS Seatbelt) to restrict what shell commands can do — limiting filesystem writes to your project directory and blocking unauthorized network requests. This is separate from running inside a container (covered below). It’s lightweight, adds negligible overhead, and <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">Anthropic’s internal testing</a> found it reduced permission prompts by 84% while <em>increasing</em> security. Use it alongside deny rules for the strongest protection — Anthropic calls this <a href="https://code.claude.com/docs/en/sandboxing">“defense in depth”</a>.</p>
+</section>
 <section id="scope-your-credentials" class="level3">
 <h3 class="anchored" data-anchor-id="scope-your-credentials">Scope your credentials</h3>
-<p>The agent can read environment variables, inspect dotfiles, and run commands like <code>cat ~/.ssh/id_rsa</code> or <code>echo $GITHUB_TOKEN</code>. You need to make credentials <strong>structurally inaccessible</strong>, not just hidden.</p>
-<ul>
-<li><strong>Create dedicated, minimal-scope tokens</strong> — a fine-grained GitHub token scoped to only the repos and permissions the agent needs. If it only needs to push to one repo, don’t give it access to your entire GitHub account.</li>
-<li><strong>Use a bot account</strong> for agent-driven git operations rather than your personal credentials</li>
-<li><strong>Never reuse your daily-driver SSH keys</strong> in an agentic environment — generate dedicated deploy keys</li>
-<li><strong>Don’t pass secrets as environment variables</strong> in containers — use Docker secrets, mount a read-only credential socket, or configure a git credential helper on the host</li>
-<li><strong>Set spending limits</strong> on API keys and use separate keys from your personal/production ones</li>
-<li>Add <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> to <code>.gitignore</code> <strong>before the agent ever runs</strong></li>
-</ul>
+<p>Even with deny rules and sandboxing, it’s good practice to limit what credentials the agent has access to in the first place.</p>
+<p><strong>Use minimal-scope tokens.</strong> Create fine-grained GitHub tokens scoped to only the repos and permissions the agent needs. If it only pushes to one repo, don’t give it access to your entire account. Use a bot account for agent-driven git operations, and generate dedicated deploy keys rather than reusing your personal SSH keys.</p>
+<p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
+<p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
 </section>
-<section id="sandbox-when-possible" class="level3">
-<h3 class="anchored" data-anchor-id="sandbox-when-possible">Sandbox when possible</h3>
-<p>Running an agent on your bare metal dev machine means it has access to everything you do. <strong>Any sandboxing is better than none.</strong></p>
+<section id="isolate-with-containers-when-you-can" class="level3">
+<h3 class="anchored" data-anchor-id="isolate-with-containers-when-you-can">Isolate with containers when you can</h3>
+<p>Running an agent on your bare metal dev machine means it can access anything you can. Running it inside a container adds another layer of isolation. <strong>Any isolation is better than none.</strong></p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Scenario</th>
@@ -854,7 +933,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </tr>
 <tr class="even">
 <td><strong>Team environment, need consistency</strong></td>
-<td>Purpose-built sandbox (Anthropic’s sandboxed containers, E2B) — reduces setup burden</td>
+<td>Purpose-built container (Anthropic’s <a href="https://code.claude.com/docs/en/sandboxing">sandboxed containers</a>, <a href="https://e2b.dev/">E2B</a>) — reduces setup burden</td>
 </tr>
 <tr class="odd">
 <td><strong>CI/CD pipelines</strong></td>
@@ -862,25 +941,17 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </tr>
 <tr class="even">
 <td><strong>Working with sensitive data</strong></td>
-<td>Purpose-built sandbox with network restrictions — limits exfiltration risk</td>
-</tr>
-<tr class="odd">
-<td><strong>Quick local experimentation</strong></td>
-<td>Even a basic container is better than bare metal</td>
+<td>Container with network restrictions — limits exfiltration risk</td>
 </tr>
 </tbody>
 </table>
-<p>A standard Docker container gets you 80% of the way there — the agent can’t access your host filesystem outside the mounted volume. Purpose-built sandboxes close the remaining gaps around network isolation, filesystem snapshotting, and security hardening. See <a href="https://code.claude.com/docs/en/sandboxing">Anthropic’s sandboxing documentation</a> and their <a href="https://www.anthropic.com/engineering/claude-code-sandboxing">engineering deep-dive</a> for details.</p>
+<p>A standard Docker container gets you most of the way there — the agent can’t access your host filesystem outside the mounted volume. Purpose-built containers close the remaining gaps around network isolation, filesystem snapshotting, and security hardening.</p>
 </section>
 <section id="watch-for-prompt-injection-and-runaway-agents" class="level3">
 <h3 class="anchored" data-anchor-id="watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</h3>
-<ul>
-<li>Be careful with files that contain instructions or prompts — an agent reading a malicious <code>README.md</code> or issue body could be tricked into harmful actions</li>
-<li><strong>Never</strong> give an agent unsupervised access to production systems, databases, or deployment pipelines</li>
-<li>Set up <strong>git hooks</strong> or CI checks as safety nets (e.g., prevent force-pushes to <code>main</code>)</li>
-<li>Keep your work committed frequently so you can recover from mistakes</li>
-<li>Set <strong>spending limits</strong> and don’t hesitate to interrupt (<code>Ctrl+C</code>) and redirect when the agent is looping</li>
-</ul>
+<p><strong>Prompt injection</strong> is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious <code>README.md</code>, issue body, or <a href="https://www.anthropic.com/research/claude-code-security"><code>.docx</code> attachment</a> could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it’s been tricked.</p>
+<p><strong>Runaway agents</strong> burn tokens and make unwanted changes when they get stuck in loops. Commit your work frequently so you can recover from mistakes, set spending limits on your API keys, and don’t hesitate to interrupt (<code>Ctrl+C</code>) and redirect. Set up git hooks or CI checks as safety nets — for example, preventing force-pushes to <code>main</code>.</p>
+<p><strong>Never</strong> give an agent unsupervised access to production systems, databases, or deployment pipelines.</p>
 </section>
 </section>
 <section id="platform-and-deployment-notes" class="level2">
@@ -921,8 +992,8 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 <li><strong>Scope your requests tightly</strong> — features, not projects</li>
 <li><strong>Use <code>CLAUDE.md</code></strong> to encode guardrails and project context</li>
 <li><strong>Tune permissions deliberately</strong> — start conservative, loosen as you build trust</li>
-<li><strong>Protect your credentials</strong> — fine-grained tokens, structural isolation, <code>.gitignore</code></li>
-<li><strong>Sandbox when possible</strong> — containers, VMs, ephemeral CI environments</li>
+<li><strong>Set deny rules and enable the sandbox</strong> — your two strongest security layers</li>
+<li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, containers when possible</li>
 <li><strong>Monitor costs</strong> — set limits, be specific, use the right model for the task</li>
 <li><strong>Commit frequently</strong> — keep escape hatches available</li>
 <li><strong>Review everything</strong> — you’re the engineer; the agent is a very fast intern</li>
@@ -1035,14 +1106,14 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="b27e9d54" class="cell" data-execution_count="1">
+<div id="1369b92a" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="de736a36" class="cell" data-execution_count="2">
+<div id="7ec8ad3b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1155,7 +1226,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="9d84a11f" class="cell" data-execution_count="3">
+<div id="512302de" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1392,7 +1463,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="c2272b74" class="cell" data-execution_count="4">
+<div id="da3bb40b" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1420,7 +1491,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="d1ea6b0d" class="cell" data-execution_count="5">
+<div id="1dda52e0" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1443,7 +1514,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="f8359144" class="cell" data-execution_count="6">
+<div id="7107ce19" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1465,7 +1536,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="ce66ab6f" class="cell" data-execution_count="7">
+<div id="2db71af6" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1588,7 +1659,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="b66d0446" class="cell" data-execution_count="8">
+<div id="77816492" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1618,7 +1689,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="0779daaf" class="cell" data-execution_count="9">
+<div id="39681e17" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1663,7 +1734,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="627edb05" class="cell" data-execution_count="10">
+<div id="a7f7bc22" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1899,7 +1970,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="25aa6116" class="cell" data-execution_count="11">
+<div id="3e2e3d00" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -1975,7 +2046,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="e3b4c9c8" class="cell" data-execution_count="12">
+<div id="60dba0be" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2091,7 +2162,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="a3346f7b" class="cell" data-execution_count="13">
+<div id="719e1b57" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2337,7 +2408,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="07122adb" class="cell" data-execution_count="14">
+<div id="58d82139" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -6746,7 +6817,7 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="5582a37c" class="cell" data-execution_count="1">
+<div id="46085b5b" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -6755,7 +6826,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="0c7db579" class="cell" data-execution_count="2">
+<div id="df8afca5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -6789,7 +6860,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="3eafe3fe" class="cell" data-execution_count="3">
+<div id="65eb4b93" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -7061,7 +7132,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="1b8e8df1" class="cell" data-execution_count="4">
+<div id="9acfcd15" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -7241,7 +7312,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="7cda1056" class="cell" data-execution_count="5">
+<div id="ea811b42" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>
