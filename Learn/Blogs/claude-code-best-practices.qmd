@@ -613,13 +613,15 @@ Even with deny rules and sandboxing, it's good practice to limit what credential
 
 **Add secrets to `.gitignore`** — `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc` — before the agent ever runs. Once a secret is committed, it's in the history. (But note: `.gitignore` prevents *committing* secrets, not *reading* them. Deny rules are what actually block the agent from accessing sensitive files.)
 
-### Use containers for CI/CD and headless environments
+### Consider containers for CI/CD and headless environments
 
-For local development, deny rules + the built-in sandbox (above) are the right approach. But for **CI/CD pipelines, team environments, and headless automation**, running Claude Code inside a container is often simpler — the container itself is the isolation boundary, so you can use `--dangerously-skip-permissions` safely since there's nothing outside the container to damage.
+**For interactive development, the built-in sandbox is the right choice** — it's what Anthropic recommends, it's lightweight, and combined with deny rules it provides strong isolation without any setup overhead. You don't need Docker for local coding sessions.
+
+Containers solve a different problem: **unattended, non-interactive execution** where there's no human to approve permission prompts. In CI/CD pipelines, GitHub Actions, and headless automation, running Claude Code inside a container lets you use `--dangerously-skip-permissions` safely — the container itself is the isolation boundary, so there's nothing outside it to damage. This is also the pattern Anthropic's own [GitHub Actions](https://code.claude.com/docs/en/github-actions) and [GitLab CI/CD](https://code.claude.com/docs/en/gitlab-ci-cd) integrations use.
 
 Options include a plain [Docker container](https://docs.docker.com/ai/sandboxes/agents/claude-code/) with your project mounted as a volume, [Docker sandboxes](https://www.docker.com/blog/docker-sandboxes-run-claude-code-and-other-coding-agents-unsupervised-but-safely/) (microVM-based isolation), or cloud sandbox platforms like [E2B](https://e2b.dev/). For CI pipelines, ephemeral containers that are destroyed after each run are the safest option — nothing persists between runs.
 
-Note: the built-in sandbox and Docker containers are **alternative** isolation strategies, not layers to stack. Running bubblewrap inside Docker introduces [nested sandbox complexity](https://code.claude.com/docs/en/sandboxing) without meaningful security benefit.
+**Don't stack them.** The built-in sandbox and Docker containers are alternative isolation strategies. Running bubblewrap inside Docker introduces [nested sandbox complexity](https://code.claude.com/docs/en/sandboxing) without meaningful security benefit. Pick one: sandbox for interactive work, containers for headless automation.
 
 ### Watch for prompt injection and runaway agents
 
