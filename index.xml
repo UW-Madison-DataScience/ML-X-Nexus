@@ -160,7 +160,7 @@
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>The <a href="https://claude.ai/download">Claude Desktop app</a> includes three tabs: <strong>Chat</strong> (standard conversation, with <a href="https://modelcontextprotocol.io/">MCP</a> support), <strong>Code</strong> (the full Claude Code agentic experience — see below), and <strong>Cowork</strong> (an AI companion that watches your screen and offers suggestions). Only the <strong>Code</strong> tab is an agentic coding tool. The Chat tab provides the same experience as <a href="https://claude.ai">claude.ai</a> in a native app.</p>
+<p>The <a href="https://claude.ai/download">Claude Desktop app</a> includes three tabs: <strong>Chat</strong> (standard conversation, with <a href="https://modelcontextprotocol.io/">MCP</a> support), <strong>Code</strong> (the full Claude Code agentic experience — see below), and <strong>Cowork</strong> (an autonomous agent for knowledge work — it can execute multi-step tasks on your desktop, like research, file organization, and document creation). Only the <strong>Code</strong> tab is an agentic coding tool. The Chat tab provides the same experience as <a href="https://claude.ai">claude.ai</a> in a native app.</p>
 </div>
 </div>
 </div>
@@ -644,7 +644,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 </tbody>
 </table>
 <p>Note that output tokens cost <strong>5× more</strong> than input tokens across all models — and code generation is output-heavy. Also, requests exceeding 200K input tokens are charged at 2× input / 1.5× output rates, which matters for large codebases. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a> can reduce input costs by up to 90% on repeated system prompts, and the <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing">Batch API</a> offers a 50% discount for async processing.</p>
-<p>Anthropic reports that the average Claude Code user on API pricing spends <a href="https://code.claude.com/docs/en/costs">roughly $6/day</a>, with 90% of users under $12/day. That translates to <strong>$100–200/month</strong> for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit <a href="https://jeffry.in/expensive-ai/">$5,000+</a>. One detailed <a href="https://ccusage.com/guide/monthly-reports">usage report</a> showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.</p>
+<p>Anthropic reports that the average Claude Code user on API pricing spends <a href="https://code.claude.com/docs/en/costs">roughly $6/day</a>, with 90% of users under $12/day. That translates to <strong>$100–200/month</strong> for active development with Sonnet. But averages hide a lot of variance — one developer documented a single session that <a href="https://jeffry.in/expensive-ai/">hit ~$150/hour</a> running multiple parallel agents. One detailed <a href="https://ccusage.com/guide/monthly-reports">usage report</a> showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.</p>
 <p><strong>Rule of thumb:</strong> If your monthly API costs would exceed $60–80, Max 5x is cheaper. If they’d exceed $150, Max 20x is the clear winner.</p>
 <p>For comparison, GitHub Copilot runs $10–$39/month depending on tier, with usage-based pricing for premium models beyond included allowances.</p>
 </section>
@@ -652,7 +652,7 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 <h3 class="anchored" data-anchor-id="watch-out-for-runaway-costs">Watch out for runaway costs</h3>
 <p>Agentic workflows can burn through tokens fast, especially when things go wrong:</p>
 <ul>
-<li><strong>Agentic loops</strong>: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens. One developer documented an <a href="https://jeffry.in/expensive-ai/">orchestrator agent flow that hit $150/hour</a>.</li>
+<li><strong>Agentic loops</strong>: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens.</li>
 <li><strong>Context accumulation</strong>: As your conversation grows, every new message includes the full context window — so the 50th message in a session costs far more than the 1st. Use <code>/clear</code> between unrelated tasks and <code>/compact</code> to summarize long conversations.</li>
 <li><strong>Parallel sessions</strong>: Running multiple Claude Code sessions simultaneously (especially on the web or with agent teams) multiplies your token consumption proportionally. Five parallel sessions = 5× the cost.</li>
 <li><strong>Extended thinking</strong>: Thinking tokens are billed as output tokens. A complex Opus session with deep reasoning can generate thousands of thinking tokens per turn.</li>
@@ -916,15 +916,16 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 <p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
 <p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
 </section>
-<section id="use-containers-for-cicd-and-headless-environments" class="level3">
-<h3 class="anchored" data-anchor-id="use-containers-for-cicd-and-headless-environments">Use containers for CI/CD and headless environments</h3>
-<p>For local development, deny rules + the built-in sandbox (above) are the right approach. But for <strong>CI/CD pipelines, team environments, and headless automation</strong>, running Claude Code inside a container is often simpler — the container itself is the isolation boundary, so you can use <code>--dangerously-skip-permissions</code> safely since there’s nothing outside the container to damage.</p>
+<section id="consider-containers-for-cicd-and-headless-environments" class="level3">
+<h3 class="anchored" data-anchor-id="consider-containers-for-cicd-and-headless-environments">Consider containers for CI/CD and headless environments</h3>
+<p><strong>For interactive development, the built-in sandbox is the right choice</strong> — it’s what Anthropic recommends, it’s lightweight, and combined with deny rules it provides strong isolation without any setup overhead. You don’t need Docker for local coding sessions.</p>
+<p>Containers solve a different problem: <strong>unattended, non-interactive execution</strong> where there’s no human to approve permission prompts. In CI/CD pipelines, GitHub Actions, and headless automation, running Claude Code inside a container lets you use <code>--dangerously-skip-permissions</code> safely — the container itself is the isolation boundary, so there’s nothing outside it to damage. This is also the pattern Anthropic’s own <a href="https://code.claude.com/docs/en/github-actions">GitHub Actions</a> and <a href="https://code.claude.com/docs/en/gitlab-ci-cd">GitLab CI/CD</a> integrations use.</p>
 <p>Options include a plain <a href="https://docs.docker.com/ai/sandboxes/agents/claude-code/">Docker container</a> with your project mounted as a volume, <a href="https://www.docker.com/blog/docker-sandboxes-run-claude-code-and-other-coding-agents-unsupervised-but-safely/">Docker sandboxes</a> (microVM-based isolation), or cloud sandbox platforms like <a href="https://e2b.dev/">E2B</a>. For CI pipelines, ephemeral containers that are destroyed after each run are the safest option — nothing persists between runs.</p>
-<p>Note: the built-in sandbox and Docker containers are <strong>alternative</strong> isolation strategies, not layers to stack. Running bubblewrap inside Docker introduces <a href="https://code.claude.com/docs/en/sandboxing">nested sandbox complexity</a> without meaningful security benefit.</p>
+<p><strong>Don’t stack them.</strong> The built-in sandbox and Docker containers are alternative isolation strategies. Running bubblewrap inside Docker introduces <a href="https://code.claude.com/docs/en/sandboxing">nested sandbox complexity</a> without meaningful security benefit. Pick one: sandbox for interactive work, containers for headless automation.</p>
 </section>
 <section id="watch-for-prompt-injection-and-runaway-agents" class="level3">
 <h3 class="anchored" data-anchor-id="watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</h3>
-<p><strong>Prompt injection</strong> is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious <code>README.md</code>, issue body, or <a href="https://www.anthropic.com/research/claude-code-security"><code>.docx</code> attachment</a> could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it’s been tricked.</p>
+<p><strong>Prompt injection</strong> is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious <code>README.md</code>, issue body, or <a href="https://www.promptarmor.com/resources/claude-cowork-exfiltrates-files"><code>.docx</code> attachment</a> could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it’s been tricked.</p>
 <p><strong>Runaway agents</strong> burn tokens and make unwanted changes when they get stuck in loops. Commit your work frequently so you can recover from mistakes, set spending limits on your API keys, and don’t hesitate to interrupt (<code>Ctrl+C</code>) and redirect. Set up git hooks or CI checks as safety nets — for example, preventing force-pushes to <code>main</code>.</p>
 <p><strong>Never</strong> give an agent unsupervised access to production systems, databases, or deployment pipelines.</p>
 </section>
@@ -1075,14 +1076,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="1745e39b" class="cell" data-execution_count="1">
+<div id="052af4a9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="38cf47cc" class="cell" data-execution_count="2">
+<div id="a4253a42" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1195,7 +1196,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="d29b4d00" class="cell" data-execution_count="3">
+<div id="c4b62931" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1432,7 +1433,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="5983676f" class="cell" data-execution_count="4">
+<div id="c5e0cfb7" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1460,7 +1461,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="c3ace404" class="cell" data-execution_count="5">
+<div id="364b66ad" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1483,7 +1484,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="9646b208" class="cell" data-execution_count="6">
+<div id="558d3ba2" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1505,7 +1506,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="ea0eed60" class="cell" data-execution_count="7">
+<div id="5c476ad8" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1628,7 +1629,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="a8ff1699" class="cell" data-execution_count="8">
+<div id="1b83a5c8" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1658,7 +1659,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="73ce79b7" class="cell" data-execution_count="9">
+<div id="2cec6c59" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1703,7 +1704,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="946bbc96" class="cell" data-execution_count="10">
+<div id="b39ce6db" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1939,7 +1940,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="1fd26d99" class="cell" data-execution_count="11">
+<div id="52a135a7" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2015,7 +2016,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="b238a6da" class="cell" data-execution_count="12">
+<div id="9d08c394" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2131,7 +2132,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="6204b95f" class="cell" data-execution_count="13">
+<div id="80ba8c84" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2377,7 +2378,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="7ec6d37c" class="cell" data-execution_count="14">
+<div id="6676b851" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3260,8 +3261,8 @@ Tip
 <ul>
 <li><strong>Your prompts still reach Anthropic’s infrastructure.</strong> Neither Vertex AI nor Bedrock runs the model inside your cloud project — your provider routes requests to Anthropic’s serving infrastructure. This means your data is processed by Anthropic regardless of which cloud provider you use.</li>
 <li><strong>UW’s cloud agreements don’t cover Anthropic’s data handling.</strong> UW-Madison has agreements with Google, AWS, and Microsoft for their respective services, but those agreements <strong>do not extend to Anthropic</strong>. There is no UW-Anthropic data-use agreement in place yet, so routing through a cloud provider does not give your data the same protections it would have for a native cloud service. See the warning above for practical guidance.</li>
-<li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://docs.anthropic.com/en/docs/build-with-claude/data-residency">data residency</a> feature, not a cloud provider feature.</li>
-<li><strong>Training exclusion still applies.</strong> Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>. This is a positive, but it is distinct from having a comprehensive data-use agreement. See Data Usage &amp; Privacy for full details on retention, telemetry, and opt-outs.</li>
+<li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://platform.claude.com/docs/en/build-with-claude/data-residency">data residency</a> feature, not a cloud provider feature.</li>
+<li><strong>Training exclusion still applies.</strong> Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training">not used for model training</a>. This is a positive, but it is distinct from having a comprehensive data-use agreement. See Data Usage &amp; Privacy for full details on retention, telemetry, and opt-outs.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -4986,7 +4987,7 @@ font-style: inherit;"># launch Claude Code</span></span></code></pre></div></div
 <p>Then inside the Claude Code session, run:</p>
 <pre><code>/sandbox</code></pre>
 <p>Choose <strong>“Auto-allow mode”</strong> — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.</p>
-<p><strong>Step 5 — Verify it’s working:</strong></p>
+<p><strong>Step 6 — Verify it’s working:</strong></p>
 <p>After enabling, Claude’s bash commands should run without permission prompts as long as they stay within your project directory. If a command needs to write outside the project or access a new network domain, you’ll still get a prompt.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -5277,7 +5278,7 @@ Note
 </section>
 </section>
 <section id="data-usage" class="level2">
-<h2 class="anchored" data-anchor-id="data-usage">9. Data Usage &amp; Privacy</h2>
+<h2 class="anchored" data-anchor-id="data-usage">10. Data Usage &amp; Privacy</h2>
 <blockquote class="blockquote">
 <p>Official data usage docs: <a href="https://code.claude.com/docs/en/data-usage">code.claude.com/docs/en/data-usage</a></p>
 </blockquote>
@@ -5417,7 +5418,7 @@ Tip
 </section>
 </section>
 <section id="troubleshooting" class="level2">
-<h2 class="anchored" data-anchor-id="troubleshooting">10. Troubleshooting</h2>
+<h2 class="anchored" data-anchor-id="troubleshooting">11. Troubleshooting</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" aria-controls="tabset-19-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" aria-controls="tabset-19-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
 <div class="tab-content">
@@ -5514,7 +5515,7 @@ font-style: inherit;">claude</span> doctor</span></code></pre></div></div>
 </section>
 </section>
 <section id="quick-reference" class="level2">
-<h2 class="anchored" data-anchor-id="quick-reference">11. Quick Reference</h2>
+<h2 class="anchored" data-anchor-id="quick-reference">12. Quick Reference</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" aria-controls="tabset-21-1" aria-selected="true" href="">Vertex AI + Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" aria-controls="tabset-21-2" aria-selected="false" href="">Vertex AI + macOS</a></li><li class="nav-item"><a class="nav-link" id="tabset-21-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-3" aria-controls="tabset-21-3" aria-selected="false" href="">Bedrock + Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-21-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-4" aria-controls="tabset-21-4" aria-selected="false" href="">Bedrock + macOS</a></li></ul>
 <div class="tab-content">
@@ -6787,7 +6788,7 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="9f29f240" class="cell" data-execution_count="1">
+<div id="9645269e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -6796,7 +6797,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="bdc8ce06" class="cell" data-execution_count="2">
+<div id="2e8e58d1" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -6830,7 +6831,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="bbc302bb" class="cell" data-execution_count="3">
+<div id="0ffd44d8" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -7102,7 +7103,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="a888c76c" class="cell" data-execution_count="4">
+<div id="e96ad6b1" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -7282,7 +7283,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="0b59a2ba" class="cell" data-execution_count="5">
+<div id="384d3e81" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>

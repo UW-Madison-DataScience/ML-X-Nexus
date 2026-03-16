@@ -361,9 +361,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#filesystem-safety-permissions" id="toc-filesystem-safety-permissions" class="nav-link" data-scroll-target="#filesystem-safety-permissions">7. Filesystem Safety &amp; Permissions</a></li>
   <li><a href="#enable-sandboxing" id="toc-enable-sandboxing" class="nav-link" data-scroll-target="#enable-sandboxing">8. Sandboxing (Strongly Recommended)</a></li>
   <li><a href="#billing-cost-management-avoiding-runaway-costs" id="toc-billing-cost-management-avoiding-runaway-costs" class="nav-link" data-scroll-target="#billing-cost-management-avoiding-runaway-costs">9. Billing, Cost Management &amp; Avoiding Runaway Costs</a></li>
-  <li><a href="#data-usage" id="toc-data-usage" class="nav-link" data-scroll-target="#data-usage">9. Data Usage &amp; Privacy</a></li>
-  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">10. Troubleshooting</a></li>
-  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">11. Quick Reference</a></li>
+  <li><a href="#data-usage" id="toc-data-usage" class="nav-link" data-scroll-target="#data-usage">10. Data Usage &amp; Privacy</a></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">11. Troubleshooting</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">12. Quick Reference</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-cloud-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
@@ -491,8 +491,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><strong>Your prompts still reach Anthropic’s infrastructure.</strong> Neither Vertex AI nor Bedrock runs the model inside your cloud project — your provider routes requests to Anthropic’s serving infrastructure. This means your data is processed by Anthropic regardless of which cloud provider you use.</li>
 <li><strong>UW’s cloud agreements don’t cover Anthropic’s data handling.</strong> UW-Madison has agreements with Google, AWS, and Microsoft for their respective services, but those agreements <strong>do not extend to Anthropic</strong>. There is no UW-Anthropic data-use agreement in place yet, so routing through a cloud provider does not give your data the same protections it would have for a native cloud service. See the <a href="#use-caution-with-restricted-or-sensitive-data">warning above</a> for practical guidance.</li>
-<li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://docs.anthropic.com/en/docs/build-with-claude/data-residency">data residency</a> feature, not a cloud provider feature.</li>
-<li><strong>Training exclusion still applies.</strong> Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://docs.anthropic.com/en/docs/about-claude/faq#how-long-do-you-store-personal-data">not used for model training</a>. This is a positive, but it is distinct from having a comprehensive data-use agreement. See <a href="#data-usage">Data Usage &amp; Privacy</a> for full details on retention, telemetry, and opt-outs.</li>
+<li><strong>Data storage location</strong> is not controlled by your deployment choice. Anthropic stores data in the US, with processing distributed across multiple regions for reliability. If you need geographic control over where <em>inference</em> runs, that’s a separate <a href="https://platform.claude.com/docs/en/build-with-claude/data-residency">data residency</a> feature, not a cloud provider feature.</li>
+<li><strong>Training exclusion still applies.</strong> Under Anthropic’s commercial terms (including both Vertex AI and Bedrock), your prompts and outputs are <a href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training">not used for model training</a>. This is a positive, but it is distinct from having a comprehensive data-use agreement. See <a href="#data-usage">Data Usage &amp; Privacy</a> for full details on retention, telemetry, and opt-outs.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1478,7 +1478,7 @@ Tip
 <p>Then inside the Claude Code session, run:</p>
 <pre><code>/sandbox</code></pre>
 <p>Choose <strong>“Auto-allow mode”</strong> — sandboxed commands run automatically, while anything outside sandbox boundaries falls back to the normal approval flow.</p>
-<p><strong>Step 5 — Verify it’s working:</strong></p>
+<p><strong>Step 6 — Verify it’s working:</strong></p>
 <p>After enabling, Claude’s bash commands should run without permission prompts as long as they stay within your project directory. If a command needs to write outside the project or access a new network domain, you’ll still get a prompt.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1769,7 +1769,7 @@ Note
 </section>
 </section>
 <section id="data-usage" class="level2">
-<h2 class="anchored" data-anchor-id="data-usage">9. Data Usage &amp; Privacy</h2>
+<h2 class="anchored" data-anchor-id="data-usage">10. Data Usage &amp; Privacy</h2>
 <blockquote class="blockquote">
 <p>Official data usage docs: <a href="https://code.claude.com/docs/en/data-usage">code.claude.com/docs/en/data-usage</a></p>
 </blockquote>
@@ -1909,7 +1909,7 @@ Tip
 </section>
 </section>
 <section id="troubleshooting" class="level2">
-<h2 class="anchored" data-anchor-id="troubleshooting">10. Troubleshooting</h2>
+<h2 class="anchored" data-anchor-id="troubleshooting">11. Troubleshooting</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
 <div class="tab-content">
@@ -1998,7 +1998,7 @@ Tip
 </section>
 </section>
 <section id="quick-reference" class="level2">
-<h2 class="anchored" data-anchor-id="quick-reference">11. Quick Reference</h2>
+<h2 class="anchored" data-anchor-id="quick-reference">12. Quick Reference</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" role="tab" aria-controls="tabset-21-1" aria-selected="true" href="">Vertex AI + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" role="tab" aria-controls="tabset-21-2" aria-selected="false" href="">Vertex AI + macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-3" role="tab" aria-controls="tabset-21-3" aria-selected="false" href="">Bedrock + Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-4" role="tab" aria-controls="tabset-21-4" aria-selected="false" href="">Bedrock + macOS</a></li></ul>
 <div class="tab-content">

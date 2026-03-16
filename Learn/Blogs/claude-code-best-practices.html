@@ -388,7 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#use-permissions-and-deny-rules" id="toc-use-permissions-and-deny-rules" class="nav-link" data-scroll-target="#use-permissions-and-deny-rules">Use permissions and deny rules</a></li>
   <li><a href="#enable-claude-codes-built-in-sandbox" id="toc-enable-claude-codes-built-in-sandbox" class="nav-link" data-scroll-target="#enable-claude-codes-built-in-sandbox">Enable Claude Code’s built-in sandbox</a></li>
   <li><a href="#scope-your-credentials" id="toc-scope-your-credentials" class="nav-link" data-scroll-target="#scope-your-credentials">Scope your credentials</a></li>
-  <li><a href="#use-containers-for-cicd-and-headless-environments" id="toc-use-containers-for-cicd-and-headless-environments" class="nav-link" data-scroll-target="#use-containers-for-cicd-and-headless-environments">Use containers for CI/CD and headless environments</a></li>
+  <li><a href="#consider-containers-for-cicd-and-headless-environments" id="toc-consider-containers-for-cicd-and-headless-environments" class="nav-link" data-scroll-target="#consider-containers-for-cicd-and-headless-environments">Consider containers for CI/CD and headless environments</a></li>
   <li><a href="#watch-for-prompt-injection-and-runaway-agents" id="toc-watch-for-prompt-injection-and-runaway-agents" class="nav-link" data-scroll-target="#watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</a></li>
   </ul></li>
   <li><a href="#platform-and-deployment-notes" id="toc-platform-and-deployment-notes" class="nav-link" data-scroll-target="#platform-and-deployment-notes">Platform and deployment notes</a>
@@ -447,7 +447,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 12, 2026</p>
+      <p class="date-modified">March 16, 2026</p>
     </div>
   </div>
     
@@ -598,7 +598,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>The <a href="https://claude.ai/download">Claude Desktop app</a> includes three tabs: <strong>Chat</strong> (standard conversation, with <a href="https://modelcontextprotocol.io/">MCP</a> support), <strong>Code</strong> (the full Claude Code agentic experience — see below), and <strong>Cowork</strong> (an AI companion that watches your screen and offers suggestions). Only the <strong>Code</strong> tab is an agentic coding tool. The Chat tab provides the same experience as <a href="https://claude.ai">claude.ai</a> in a native app.</p>
+<p>The <a href="https://claude.ai/download">Claude Desktop app</a> includes three tabs: <strong>Chat</strong> (standard conversation, with <a href="https://modelcontextprotocol.io/">MCP</a> support), <strong>Code</strong> (the full Claude Code agentic experience — see below), and <strong>Cowork</strong> (an autonomous agent for knowledge work — it can execute multi-step tasks on your desktop, like research, file organization, and document creation). Only the <strong>Code</strong> tab is an agentic coding tool. The Chat tab provides the same experience as <a href="https://claude.ai">claude.ai</a> in a native app.</p>
 </div>
 </div>
 </div>
@@ -1002,7 +1002,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Note that output tokens cost <strong>5× more</strong> than input tokens across all models — and code generation is output-heavy. Also, requests exceeding 200K input tokens are charged at 2× input / 1.5× output rates, which matters for large codebases. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a> can reduce input costs by up to 90% on repeated system prompts, and the <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing">Batch API</a> offers a 50% discount for async processing.</p>
-<p>Anthropic reports that the average Claude Code user on API pricing spends <a href="https://code.claude.com/docs/en/costs">roughly $6/day</a>, with 90% of users under $12/day. That translates to <strong>$100–200/month</strong> for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit <a href="https://jeffry.in/expensive-ai/">$5,000+</a>. One detailed <a href="https://ccusage.com/guide/monthly-reports">usage report</a> showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.</p>
+<p>Anthropic reports that the average Claude Code user on API pricing spends <a href="https://code.claude.com/docs/en/costs">roughly $6/day</a>, with 90% of users under $12/day. That translates to <strong>$100–200/month</strong> for active development with Sonnet. But averages hide a lot of variance — one developer documented a single session that <a href="https://jeffry.in/expensive-ai/">hit ~$150/hour</a> running multiple parallel agents. One detailed <a href="https://ccusage.com/guide/monthly-reports">usage report</a> showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.</p>
 <p><strong>Rule of thumb:</strong> If your monthly API costs would exceed $60–80, Max 5x is cheaper. If they’d exceed $150, Max 20x is the clear winner.</p>
 <p>For comparison, GitHub Copilot runs $10–$39/month depending on tier, with usage-based pricing for premium models beyond included allowances.</p>
 </section>
@@ -1010,7 +1010,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="watch-out-for-runaway-costs">Watch out for runaway costs</h3>
 <p>Agentic workflows can burn through tokens fast, especially when things go wrong:</p>
 <ul>
-<li><strong>Agentic loops</strong>: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens. One developer documented an <a href="https://jeffry.in/expensive-ai/">orchestrator agent flow that hit $150/hour</a>.</li>
+<li><strong>Agentic loops</strong>: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens.</li>
 <li><strong>Context accumulation</strong>: As your conversation grows, every new message includes the full context window — so the 50th message in a session costs far more than the 1st. Use <code>/clear</code> between unrelated tasks and <code>/compact</code> to summarize long conversations.</li>
 <li><strong>Parallel sessions</strong>: Running multiple Claude Code sessions simultaneously (especially on the web or with agent teams) multiplies your token consumption proportionally. Five parallel sessions = 5× the cost.</li>
 <li><strong>Extended thinking</strong>: Thinking tokens are billed as output tokens. A complex Opus session with deep reasoning can generate thousands of thinking tokens per turn.</li>
@@ -1216,15 +1216,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
 <p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
 </section>
-<section id="use-containers-for-cicd-and-headless-environments" class="level3">
-<h3 class="anchored" data-anchor-id="use-containers-for-cicd-and-headless-environments">Use containers for CI/CD and headless environments</h3>
-<p>For local development, deny rules + the built-in sandbox (above) are the right approach. But for <strong>CI/CD pipelines, team environments, and headless automation</strong>, running Claude Code inside a container is often simpler — the container itself is the isolation boundary, so you can use <code>--dangerously-skip-permissions</code> safely since there’s nothing outside the container to damage.</p>
+<section id="consider-containers-for-cicd-and-headless-environments" class="level3">
+<h3 class="anchored" data-anchor-id="consider-containers-for-cicd-and-headless-environments">Consider containers for CI/CD and headless environments</h3>
+<p><strong>For interactive development, the built-in sandbox is the right choice</strong> — it’s what Anthropic recommends, it’s lightweight, and combined with deny rules it provides strong isolation without any setup overhead. You don’t need Docker for local coding sessions.</p>
+<p>Containers solve a different problem: <strong>unattended, non-interactive execution</strong> where there’s no human to approve permission prompts. In CI/CD pipelines, GitHub Actions, and headless automation, running Claude Code inside a container lets you use <code>--dangerously-skip-permissions</code> safely — the container itself is the isolation boundary, so there’s nothing outside it to damage. This is also the pattern Anthropic’s own <a href="https://code.claude.com/docs/en/github-actions">GitHub Actions</a> and <a href="https://code.claude.com/docs/en/gitlab-ci-cd">GitLab CI/CD</a> integrations use.</p>
 <p>Options include a plain <a href="https://docs.docker.com/ai/sandboxes/agents/claude-code/">Docker container</a> with your project mounted as a volume, <a href="https://www.docker.com/blog/docker-sandboxes-run-claude-code-and-other-coding-agents-unsupervised-but-safely/">Docker sandboxes</a> (microVM-based isolation), or cloud sandbox platforms like <a href="https://e2b.dev/">E2B</a>. For CI pipelines, ephemeral containers that are destroyed after each run are the safest option — nothing persists between runs.</p>
-<p>Note: the built-in sandbox and Docker containers are <strong>alternative</strong> isolation strategies, not layers to stack. Running bubblewrap inside Docker introduces <a href="https://code.claude.com/docs/en/sandboxing">nested sandbox complexity</a> without meaningful security benefit.</p>
+<p><strong>Don’t stack them.</strong> The built-in sandbox and Docker containers are alternative isolation strategies. Running bubblewrap inside Docker introduces <a href="https://code.claude.com/docs/en/sandboxing">nested sandbox complexity</a> without meaningful security benefit. Pick one: sandbox for interactive work, containers for headless automation.</p>
 </section>
 <section id="watch-for-prompt-injection-and-runaway-agents" class="level3">
 <h3 class="anchored" data-anchor-id="watch-for-prompt-injection-and-runaway-agents">Watch for prompt injection and runaway agents</h3>
-<p><strong>Prompt injection</strong> is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious <code>README.md</code>, issue body, or <a href="https://www.anthropic.com/research/claude-code-security"><code>.docx</code> attachment</a> could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it’s been tricked.</p>
+<p><strong>Prompt injection</strong> is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious <code>README.md</code>, issue body, or <a href="https://www.promptarmor.com/resources/claude-cowork-exfiltrates-files"><code>.docx</code> attachment</a> could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it’s been tricked.</p>
 <p><strong>Runaway agents</strong> burn tokens and make unwanted changes when they get stuck in loops. Commit your work frequently so you can recover from mistakes, set spending limits on your API keys, and don’t hesitate to interrupt (<code>Ctrl+C</code>) and redirect. Set up git hooks or CI checks as safety nets — for example, preventing force-pushes to <code>main</code>.</p>
 <p><strong>Never</strong> give an agent unsupervised access to production systems, databases, or deployment pipelines.</p>
 </section>
