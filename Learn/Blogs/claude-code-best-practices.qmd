@@ -82,7 +82,7 @@ To make these distinctions concrete, let's walk through the same scenario — *"
 ::: {.callout-note collapse="true"}
 ## The Claude Desktop app has multiple tabs — don't confuse them
 
-The [Claude Desktop app](https://claude.ai/download) includes three tabs: **Chat** (standard conversation, with [MCP](https://modelcontextprotocol.io/) support), **Code** (the full Claude Code agentic experience — see below), and **Cowork** (an AI companion that watches your screen and offers suggestions). Only the **Code** tab is an agentic coding tool. The Chat tab provides the same experience as [claude.ai](https://claude.ai) in a native app.
+The [Claude Desktop app](https://claude.ai/download) includes three tabs: **Chat** (standard conversation, with [MCP](https://modelcontextprotocol.io/) support), **Code** (the full Claude Code agentic experience — see below), and **Cowork** (an autonomous agent for knowledge work — it can execute multi-step tasks on your desktop, like research, file organization, and document creation). Only the **Code** tab is an agentic coding tool. The Chat tab provides the same experience as [claude.ai](https://claude.ai) in a native app.
 :::
 
 1. Start a new conversation at [claude.ai](https://claude.ai) or in the Claude Desktop app's Chat tab
@@ -438,7 +438,7 @@ With subscription plans, you never get a surprise bill — you hit rate limits i
 
 Note that output tokens cost **5× more** than input tokens across all models — and code generation is output-heavy. Also, requests exceeding 200K input tokens are charged at 2× input / 1.5× output rates, which matters for large codebases. [Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) can reduce input costs by up to 90% on repeated system prompts, and the [Batch API](https://platform.claude.com/docs/en/build-with-claude/batch-processing) offers a 50% discount for async processing.
 
-Anthropic reports that the average Claude Code user on API pricing spends [roughly $6/day](https://code.claude.com/docs/en/costs), with 90% of users under $12/day. That translates to **$100–200/month** for active development with Sonnet. But averages hide a lot of variance — a heavy month with Opus and parallel sessions can hit [$5,000+](https://jeffry.in/expensive-ai/). One detailed [usage report](https://ccusage.com/guide/monthly-reports) showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.
+Anthropic reports that the average Claude Code user on API pricing spends [roughly $6/day](https://code.claude.com/docs/en/costs), with 90% of users under $12/day. That translates to **$100–200/month** for active development with Sonnet. But averages hide a lot of variance — one developer documented a single session that [hit ~$150/hour](https://jeffry.in/expensive-ai/) running multiple parallel agents. One detailed [usage report](https://ccusage.com/guide/monthly-reports) showed ~892K output tokens vs ~45K input tokens in a single month on a mix of Opus and Sonnet, costing ~$1,248.
 
 **Rule of thumb:** If your monthly API costs would exceed $60–80, Max 5x is cheaper. If they'd exceed $150, Max 20x is the clear winner.
 
@@ -448,7 +448,7 @@ For comparison, GitHub Copilot runs $10–$39/month depending on tier, with usag
 
 Agentic workflows can burn through tokens fast, especially when things go wrong:
 
-- **Agentic loops**: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens. One developer documented an [orchestrator agent flow that hit $150/hour](https://jeffry.in/expensive-ai/).
+- **Agentic loops**: A vague prompt can send the agent into cycles of trying approaches, failing, reading more files, and trying again — each loop consuming thousands of tokens.
 - **Context accumulation**: As your conversation grows, every new message includes the full context window — so the 50th message in a session costs far more than the 1st. Use `/clear` between unrelated tasks and `/compact` to summarize long conversations.
 - **Parallel sessions**: Running multiple Claude Code sessions simultaneously (especially on the web or with agent teams) multiplies your token consumption proportionally. Five parallel sessions = 5× the cost.
 - **Extended thinking**: Thinking tokens are billed as output tokens. A complex Opus session with deep reasoning can generate thousands of thinking tokens per turn.
@@ -613,17 +613,19 @@ Even with deny rules and sandboxing, it's good practice to limit what credential
 
 **Add secrets to `.gitignore`** — `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc` — before the agent ever runs. Once a secret is committed, it's in the history. (But note: `.gitignore` prevents *committing* secrets, not *reading* them. Deny rules are what actually block the agent from accessing sensitive files.)
 
-### Use containers for CI/CD and headless environments
+### Consider containers for CI/CD and headless environments
 
-For local development, deny rules + the built-in sandbox (above) are the right approach. But for **CI/CD pipelines, team environments, and headless automation**, running Claude Code inside a container is often simpler — the container itself is the isolation boundary, so you can use `--dangerously-skip-permissions` safely since there's nothing outside the container to damage.
+**For interactive development, the built-in sandbox is the right choice** — it's what Anthropic recommends, it's lightweight, and combined with deny rules it provides strong isolation without any setup overhead. You don't need Docker for local coding sessions.
+
+Containers solve a different problem: **unattended, non-interactive execution** where there's no human to approve permission prompts. In CI/CD pipelines, GitHub Actions, and headless automation, running Claude Code inside a container lets you use `--dangerously-skip-permissions` safely — the container itself is the isolation boundary, so there's nothing outside it to damage. This is also the pattern Anthropic's own [GitHub Actions](https://code.claude.com/docs/en/github-actions) and [GitLab CI/CD](https://code.claude.com/docs/en/gitlab-ci-cd) integrations use.
 
 Options include a plain [Docker container](https://docs.docker.com/ai/sandboxes/agents/claude-code/) with your project mounted as a volume, [Docker sandboxes](https://www.docker.com/blog/docker-sandboxes-run-claude-code-and-other-coding-agents-unsupervised-but-safely/) (microVM-based isolation), or cloud sandbox platforms like [E2B](https://e2b.dev/). For CI pipelines, ephemeral containers that are destroyed after each run are the safest option — nothing persists between runs.
 
-Note: the built-in sandbox and Docker containers are **alternative** isolation strategies, not layers to stack. Running bubblewrap inside Docker introduces [nested sandbox complexity](https://code.claude.com/docs/en/sandboxing) without meaningful security benefit.
+**Don't stack them.** The built-in sandbox and Docker containers are alternative isolation strategies. Running bubblewrap inside Docker introduces [nested sandbox complexity](https://code.claude.com/docs/en/sandboxing) without meaningful security benefit. Pick one: sandbox for interactive work, containers for headless automation.
 
 ### Watch for prompt injection and runaway agents
 
-**Prompt injection** is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious `README.md`, issue body, or [`.docx` attachment](https://www.anthropic.com/research/claude-code-security) could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it's been tricked.
+**Prompt injection** is when an agent reads a file or message that contains hidden instructions designed to hijack its behavior. A malicious `README.md`, issue body, or [`.docx` attachment](https://www.promptarmor.com/resources/claude-cowork-exfiltrates-files) could trick the agent into exfiltrating files or running harmful commands. Be especially cautious when pointing an agent at untrusted repositories or external content. Deny rules and sandboxing are your main defenses here — they limit what the agent can do even if it's been tricked.
 
 **Runaway agents** burn tokens and make unwanted changes when they get stuck in loops. Commit your work frequently so you can recover from mistakes, set spending limits on your API keys, and don't hesitate to interrupt (`Ctrl+C`) and redirect. Set up git hooks or CI checks as safety nets — for example, preventing force-pushes to `main`.
 
