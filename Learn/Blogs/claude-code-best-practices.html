@@ -844,7 +844,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Business logic goes in <span class="in">`src/services/`</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Database models are in <span class="in">`src/models/`</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Tests mirror the source structure under <span class="in">`tests/`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The more context you provide in <code>CLAUDE.md</code>, the fewer agentic loops the agent needs to figure out your project. See the <a href="https://code.claude.com/docs/en/memory">official CLAUDE.md reference</a> for the full spec, including file resolution order and advanced features.</p>
+<p>Good <code>CLAUDE.md</code> context reduces agentic loops — the agent spends less time exploring your project and more time doing useful work. But there’s a tradeoff: <strong><code>CLAUDE.md</code> loads into every session</strong>, and a bloated file can hurt more than it helps.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Don’t overload <code>CLAUDE.md</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>LLMs perform best when their context window is full of <em>focused, relevant</em> content. Since <code>CLAUDE.md</code> is injected into every conversation, everything in it competes for attention with the actual task at hand. A few things to keep in mind:</p>
+<ul>
+<li><strong>Aim for under 300 lines.</strong> Some teams keep theirs <a href="https://www.humanlayer.dev/blog/writing-a-good-claude-md">under 60</a>. There’s no hard limit, but shorter files mean less context pollution.</li>
+<li><strong>Frontier models can track ~150–200 instructions consistently.</strong> Beyond that, the model starts selectively ignoring rules it considers irrelevant to the current task — which means your most important instructions may get lost in the noise.</li>
+<li><strong>Use linters, not <code>CLAUDE.md</code>, for code style.</strong> If a tool can enforce a rule deterministically, don’t spend context budget asking an LLM to follow it.</li>
+<li><strong>Prefer progressive disclosure.</strong> Rather than documenting everything upfront, tell Claude <em>where to find</em> information (e.g., “see <code>docs/api-spec.md</code> for endpoint details”) so it can load context on demand.</li>
+<li><strong>Move specialized knowledge into <a href="https://code.claude.com/docs/en/skills">skills</a>.</strong> Skills load on demand — a <code>/deploy</code> skill or a <code>migration-conventions</code> skill only enters context when relevant, keeping your base <code>CLAUDE.md</code> lean.</li>
+</ul>
+<p>The bottom line: write <code>CLAUDE.md</code> for the <em>model</em>, not for humans. Keep it concise, universally applicable, and structured. As <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">Anthropic has noted</a>, larger context windows won’t solve this — “context pollution and information relevance concerns” apply at any window size.</p>
+</div>
+</div>
+<p>See the <a href="https://code.claude.com/docs/en/memory">official <code>CLAUDE.md</code> reference</a> for the full spec, including file resolution order and advanced features.</p>
 </section>
 <section id="tune-the-permission-dial" class="level3">
 <h3 class="anchored" data-anchor-id="tune-the-permission-dial">Tune the permission dial</h3>
