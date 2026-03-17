@@ -335,7 +335,23 @@ This single instruction saves enormous headaches. Without it, the agent might pu
 - Tests mirror the source structure under `tests/`
 ```
 
-The more context you provide in `CLAUDE.md`, the fewer agentic loops the agent needs to figure out your project. See the [official CLAUDE.md reference](https://code.claude.com/docs/en/memory) for the full spec, including file resolution order and advanced features.
+Good `CLAUDE.md` context reduces agentic loops — the agent spends less time exploring your project and more time doing useful work. But there's a tradeoff: **`CLAUDE.md` loads into every session**, and a bloated file can hurt more than it helps.
+
+::: {.callout-warning}
+## Don't overload `CLAUDE.md`
+
+LLMs perform best when their context window is full of *focused, relevant* content. Since `CLAUDE.md` is injected into every conversation, everything in it competes for attention with the actual task at hand. A few things to keep in mind:
+
+- **Aim for under 300 lines.** Some teams keep theirs [under 60](https://www.humanlayer.dev/blog/writing-a-good-claude-md). There's no hard limit, but shorter files mean less context pollution.
+- **Frontier models can track ~150–200 instructions consistently.** Beyond that, the model starts selectively ignoring rules it considers irrelevant to the current task — which means your most important instructions may get lost in the noise.
+- **Use linters, not `CLAUDE.md`, for code style.** If a tool can enforce a rule deterministically, don't spend context budget asking an LLM to follow it.
+- **Prefer progressive disclosure.** Rather than documenting everything upfront, tell Claude *where to find* information (e.g., "see `docs/api-spec.md` for endpoint details") so it can load context on demand.
+- **Move specialized knowledge into [skills](https://code.claude.com/docs/en/skills).** Skills load on demand — a `/deploy` skill or a `migration-conventions` skill only enters context when relevant, keeping your base `CLAUDE.md` lean.
+
+The bottom line: write `CLAUDE.md` for the *model*, not for humans. Keep it concise, universally applicable, and structured. As [Anthropic has noted](https://platform.claude.com/docs/en/build-with-claude/context-windows), larger context windows won't solve this — "context pollution and information relevance concerns" apply at any window size.
+:::
+
+See the [official `CLAUDE.md` reference](https://code.claude.com/docs/en/memory) for the full spec, including file resolution order and advanced features.
 
 ### Tune the permission dial
 
