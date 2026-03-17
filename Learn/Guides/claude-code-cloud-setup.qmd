@@ -4,7 +4,7 @@ author:
   - name: Chris Endemann
     email: endemann@wisc.edu
 date: 2026-02-15
-date-modified: 2026-03-12
+date-modified: 2026-03-17
 date-format: long
 image: "../../../images/claudecode.jpg"
 toc-depth: 2
@@ -1180,7 +1180,7 @@ Make it a habit to check your cloud billing daily while actively using Claude Co
 | Run **`/clear`** between unrelated tasks | Avoids paying to re-process old context |
 | Run **`/compact`** during long sessions | Compresses context, reduces per-message cost |
 | Lower extended thinking budget (`MAX_THINKING_TOKENS=8000`) | Reduces output token costs on simple tasks |
-| Keep your `CLAUDE.md` files lean (<500 lines) | Less context loaded on every message |
+| Keep your `CLAUDE.md` files lean (<200 lines recommended) | Less context loaded on every message — see [below](#set-up-your-claudemd) |
 | Use **plan mode** before big refactors | Catches wrong approaches before expensive execution |
 | Disable non-essential model calls | `DISABLE_NON_ESSENTIAL_MODEL_CALLS=1` in env |
 
@@ -1454,6 +1454,47 @@ claude
 Esc            # Interrupt Claude mid-operation
 Shift+Tab      # Cycle through permission modes
 ```
+
+## 13. Next Steps — Your First Session {#next-steps}
+
+You're set up. Here's what to do the first time you launch Claude Code in a real project.
+
+### Set up your `CLAUDE.md` {#set-up-your-claudemd}
+
+[`CLAUDE.md`](https://code.claude.com/docs/en/memory) is a markdown file in your project root that gives Claude persistent context — build commands, test commands, architectural conventions, anything Claude can't infer from the code alone. It loads automatically at the start of every session.
+
+Run `/init` inside Claude Code to generate a starter file, but **treat the output as a draft, not a finished product**. Manually curate it down to only what Claude actually needs. Research from ETH Zurich ([Banerjee et al., 2025](https://arxiv.org/abs/2602.11988)) found that LLM-generated context files can actually *decrease* agent performance compared to no context file at all — the auto-generated content adds noise that dilutes the instructions that matter.
+
+::: {.callout-tip}
+## Less is more for `CLAUDE.md`
+Anthropic's own guidance is blunt: *"For each line, ask: 'Would removing this cause Claude to make mistakes?' If not, cut it."* Claude Code triggers a [performance warning](https://github.com/anthropics/claude-code/issues/2766) when `CLAUDE.md` exceeds ~40,000 characters. Community consensus recommends **under 200 lines**. Key principles:
+
+- **Don't send an LLM to do a linter's job.** Code style rules belong in your linter/formatter config, not in `CLAUDE.md`.
+- **Use [skills](https://code.claude.com/docs/en/skills) for specialized knowledge.** Skills load on demand — a `/deploy` skill only enters context when relevant, keeping `CLAUDE.md` lean.
+- **Use [`.claude/rules/`](https://code.claude.com/docs/en/memory) for scoped rules.** Rules that only apply to certain file types (e.g., `.tsx` conventions) can live in context-specific rule files instead of the global `CLAUDE.md`.
+- **Periodically prune.** As your project evolves, remove instructions that Claude follows correctly without being told.
+
+For more detail on `CLAUDE.md` authoring, prompt techniques, and workflow patterns, see our companion guide: [Claude Code Best Practices](../Blogs/claude-code-best-practices.qmd).
+:::
+
+### Pick the right model for the task
+
+Your `settings.json` sets a default model, but you can switch mid-session with `/model`. A general rule of thumb:
+
+| Model | Best for | Cost |
+|-------|----------|------|
+| **Sonnet** | Day-to-day coding, refactoring, test writing, most tasks | Lowest |
+| **Opus** | Complex multi-step reasoning, architecture decisions, subtle bugs | Highest |
+| **Haiku** | Quick lookups, simple edits, boilerplate generation | Very low |
+
+Start with **Sonnet** — it handles the vast majority of tasks well. Escalate to Opus only when you notice Sonnet struggling with complex reasoning. Use Haiku for high-volume, low-complexity work where cost matters.
+
+### Build good habits early
+
+- **Commit before you start.** A clean Git state means you can always `git diff` to see what Claude changed, or `git checkout .` to revert.
+- **Be specific.** "Add input validation to the `login()` function in `auth.py`" is cheaper and more reliable than "improve the auth module."
+- **Use `/compact` and `/clear`** to manage context. Long sessions get expensive and Claude's attention degrades as context grows ([Liu et al., 2024](https://arxiv.org/abs/2307.03172)).
+- **Press `Esc`** the moment something looks wrong. Don't let an agentic loop run up your bill — see [Section 9](#agentic-loops).
 
 ## Further Reading
 
