@@ -1099,14 +1099,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="e1d41226" class="cell" data-execution_count="1">
+<div id="931c3de3" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="7a2375af" class="cell" data-execution_count="2">
+<div id="dd1e333a" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1219,7 +1219,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="f4fff374" class="cell" data-execution_count="3">
+<div id="4ac69098" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1456,7 +1456,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="ddde6ad2" class="cell" data-execution_count="4">
+<div id="96fe639b" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1484,7 +1484,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="6c65e231" class="cell" data-execution_count="5">
+<div id="8090a4a2" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1507,7 +1507,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="942a0ab9" class="cell" data-execution_count="6">
+<div id="93d71d26" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1529,7 +1529,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="1553b41e" class="cell" data-execution_count="7">
+<div id="ea203de4" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1652,7 +1652,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="fbc4af0a" class="cell" data-execution_count="8">
+<div id="34bf9ee2" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1682,7 +1682,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="2da50870" class="cell" data-execution_count="9">
+<div id="c6226b2f" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1727,7 +1727,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="5156a860" class="cell" data-execution_count="10">
+<div id="ce1f6f37" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1963,7 +1963,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="e4db1a1d" class="cell" data-execution_count="11">
+<div id="d3909e17" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2039,7 +2039,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="45d85d32" class="cell" data-execution_count="12">
+<div id="353b8e01" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2155,7 +2155,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="1a863182" class="cell" data-execution_count="13">
+<div id="1f2bd0af" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2401,7 +2401,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="30d4bf42" class="cell" data-execution_count="14">
+<div id="96ba2c4f" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -5234,10 +5234,6 @@ Important
 <section id="cost-saving-tips" class="level3">
 <h3 class="anchored" data-anchor-id="cost-saving-tips">Cost-saving tips</h3>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 52%">
-<col style="width: 47%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Strategy</th>
@@ -5262,8 +5258,8 @@ Important
 <td>Reduces output token costs on simple tasks</td>
 </tr>
 <tr class="odd">
-<td>Keep your <code>CLAUDE.md</code> files lean (&lt;500 lines)</td>
-<td>Less context loaded on every message</td>
+<td>Keep your <code>CLAUDE.md</code> files lean (&lt;200 lines recommended)</td>
+<td>Less context loaded on every message — see below</td>
 </tr>
 <tr class="even">
 <td>Use <strong>plan mode</strong> before big refactors</td>
@@ -5749,6 +5745,80 @@ font-style: inherit;">claude</span></span></code></pre></div></div>
 /sandbox       # Check or enable OS-level sandboxing
 Esc            # Interrupt Claude mid-operation
 Shift+Tab      # Cycle through permission modes</code></pre>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">13. Next Steps — Your First Session</h2>
+<p>You’re set up. Here’s what to do the first time you launch Claude Code in a real project.</p>
+<section id="set-up-your-claudemd" class="level3">
+<h3 class="anchored" data-anchor-id="set-up-your-claudemd">Set up your <code>CLAUDE.md</code></h3>
+<p><a href="https://code.claude.com/docs/en/memory"><code>CLAUDE.md</code></a> is a markdown file in your project root that gives Claude persistent context — build commands, test commands, architectural conventions, anything Claude can’t infer from the code alone. It loads automatically at the start of every session.</p>
+<p>Run <code>/init</code> inside Claude Code to generate a starter file, but <strong>treat the output as a draft, not a finished product</strong>. Manually curate it down to only what Claude actually needs. Research from ETH Zurich (<a href="https://arxiv.org/abs/2602.11988">Banerjee et al., 2025</a>) found that LLM-generated context files can actually <em>decrease</em> agent performance compared to no context file at all — the auto-generated content adds noise that dilutes the instructions that matter.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Less is more for <code>CLAUDE.md</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Anthropic’s own guidance is blunt: <em>“For each line, ask: ‘Would removing this cause Claude to make mistakes?’ If not, cut it.”</em> Claude Code triggers a <a href="https://github.com/anthropics/claude-code/issues/2766">performance warning</a> when <code>CLAUDE.md</code> exceeds ~40,000 characters. Community consensus recommends <strong>under 200 lines</strong>. Key principles:</p>
+<ul>
+<li><strong>Don’t send an LLM to do a linter’s job.</strong> Code style rules belong in your linter/formatter config, not in <code>CLAUDE.md</code>.</li>
+<li><strong>Use <a href="https://code.claude.com/docs/en/skills">skills</a> for specialized knowledge.</strong> Skills load on demand — a <code>/deploy</code> skill only enters context when relevant, keeping <code>CLAUDE.md</code> lean.</li>
+<li><strong>Use <a href="https://code.claude.com/docs/en/memory"><code>.claude/rules/</code></a> for scoped rules.</strong> Rules that only apply to certain file types (e.g., <code>.tsx</code> conventions) can live in context-specific rule files instead of the global <code>CLAUDE.md</code>.</li>
+<li><strong>Periodically prune.</strong> As your project evolves, remove instructions that Claude follows correctly without being told.</li>
+</ul>
+<p>For more detail on <code>CLAUDE.md</code> authoring, prompt techniques, and workflow patterns, see our companion guide: <a href="../../Learn/Blogs/claude-code-best-practices.html">Claude Code Best Practices</a>.</p>
+</div>
+</div>
+</section>
+<section id="pick-the-right-model-for-the-task" class="level3">
+<h3 class="anchored" data-anchor-id="pick-the-right-model-for-the-task">Pick the right model for the task</h3>
+<p>Your <code>settings.json</code> sets a default model, but you can switch mid-session with <code>/model</code>. A general rule of thumb:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 43%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Best for</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Sonnet</strong></td>
+<td>Day-to-day coding, refactoring, test writing, most tasks</td>
+<td>Lowest</td>
+</tr>
+<tr class="even">
+<td><strong>Opus</strong></td>
+<td>Complex multi-step reasoning, architecture decisions, subtle bugs</td>
+<td>Highest</td>
+</tr>
+<tr class="odd">
+<td><strong>Haiku</strong></td>
+<td>Quick lookups, simple edits, boilerplate generation</td>
+<td>Very low</td>
+</tr>
+</tbody>
+</table>
+<p>Start with <strong>Sonnet</strong> — it handles the vast majority of tasks well. Escalate to Opus only when you notice Sonnet struggling with complex reasoning. Use Haiku for high-volume, low-complexity work where cost matters.</p>
+</section>
+<section id="build-good-habits-early" class="level3">
+<h3 class="anchored" data-anchor-id="build-good-habits-early">Build good habits early</h3>
+<ul>
+<li><strong>Commit before you start.</strong> A clean Git state means you can always <code>git diff</code> to see what Claude changed, or <code>git checkout .</code> to revert.</li>
+<li><strong>Be specific.</strong> “Add input validation to the <code>login()</code> function in <code>auth.py</code>” is cheaper and more reliable than “improve the auth module.”</li>
+<li><strong>Use <code>/compact</code> and <code>/clear</code></strong> to manage context. Long sessions get expensive and Claude’s attention degrades as context grows (<a href="https://arxiv.org/abs/2307.03172">Liu et al., 2024</a>).</li>
+<li><strong>Press <code>Esc</code></strong> the moment something looks wrong. Don’t let an agentic loop run up your bill — see Section 9.</li>
+</ul>
 </section>
 </section>
 <section id="further-reading" class="level2">
@@ -6811,7 +6881,7 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="67bba506" class="cell" data-execution_count="1">
+<div id="7396e05d" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -6820,7 +6890,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="5c79b87b" class="cell" data-execution_count="2">
+<div id="6c3b9012" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -6854,7 +6924,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="d2b12a13" class="cell" data-execution_count="3">
+<div id="c6135b16" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -7126,7 +7196,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="bbaa58ca" class="cell" data-execution_count="4">
+<div id="4e7605bb" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -7306,7 +7376,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="2fc3b085" class="cell" data-execution_count="5">
+<div id="faa3e655" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>

@@ -364,6 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-usage" id="toc-data-usage" class="nav-link" data-scroll-target="#data-usage">10. Data Usage &amp; Privacy</a></li>
   <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">11. Troubleshooting</a></li>
   <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">12. Quick Reference</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">13. Next Steps — Your First Session</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-cloud-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
@@ -406,7 +407,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 12, 2026</p>
+      <p class="date-modified">March 17, 2026</p>
     </div>
   </div>
     
@@ -1702,10 +1703,6 @@ Important
 <section id="cost-saving-tips" class="level3">
 <h3 class="anchored" data-anchor-id="cost-saving-tips">Cost-saving tips</h3>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 52%">
-<col style="width: 47%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Strategy</th>
@@ -1730,8 +1727,8 @@ Important
 <td>Reduces output token costs on simple tasks</td>
 </tr>
 <tr class="odd">
-<td>Keep your <code>CLAUDE.md</code> files lean (&lt;500 lines)</td>
-<td>Less context loaded on every message</td>
+<td>Keep your <code>CLAUDE.md</code> files lean (&lt;200 lines recommended)</td>
+<td>Less context loaded on every message — see <a href="#set-up-your-claudemd">below</a></td>
 </tr>
 <tr class="even">
 <td>Use <strong>plan mode</strong> before big refactors</td>
@@ -2077,6 +2074,80 @@ Tip
 /sandbox       # Check or enable OS-level sandboxing
 Esc            # Interrupt Claude mid-operation
 Shift+Tab      # Cycle through permission modes</code></pre>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">13. Next Steps — Your First Session</h2>
+<p>You’re set up. Here’s what to do the first time you launch Claude Code in a real project.</p>
+<section id="set-up-your-claudemd" class="level3">
+<h3 class="anchored" data-anchor-id="set-up-your-claudemd">Set up your <code>CLAUDE.md</code></h3>
+<p><a href="https://code.claude.com/docs/en/memory"><code>CLAUDE.md</code></a> is a markdown file in your project root that gives Claude persistent context — build commands, test commands, architectural conventions, anything Claude can’t infer from the code alone. It loads automatically at the start of every session.</p>
+<p>Run <code>/init</code> inside Claude Code to generate a starter file, but <strong>treat the output as a draft, not a finished product</strong>. Manually curate it down to only what Claude actually needs. Research from ETH Zurich (<a href="https://arxiv.org/abs/2602.11988">Banerjee et al., 2025</a>) found that LLM-generated context files can actually <em>decrease</em> agent performance compared to no context file at all — the auto-generated content adds noise that dilutes the instructions that matter.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Less is more for <code>CLAUDE.md</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Anthropic’s own guidance is blunt: <em>“For each line, ask: ‘Would removing this cause Claude to make mistakes?’ If not, cut it.”</em> Claude Code triggers a <a href="https://github.com/anthropics/claude-code/issues/2766">performance warning</a> when <code>CLAUDE.md</code> exceeds ~40,000 characters. Community consensus recommends <strong>under 200 lines</strong>. Key principles:</p>
+<ul>
+<li><strong>Don’t send an LLM to do a linter’s job.</strong> Code style rules belong in your linter/formatter config, not in <code>CLAUDE.md</code>.</li>
+<li><strong>Use <a href="https://code.claude.com/docs/en/skills">skills</a> for specialized knowledge.</strong> Skills load on demand — a <code>/deploy</code> skill only enters context when relevant, keeping <code>CLAUDE.md</code> lean.</li>
+<li><strong>Use <a href="https://code.claude.com/docs/en/memory"><code>.claude/rules/</code></a> for scoped rules.</strong> Rules that only apply to certain file types (e.g., <code>.tsx</code> conventions) can live in context-specific rule files instead of the global <code>CLAUDE.md</code>.</li>
+<li><strong>Periodically prune.</strong> As your project evolves, remove instructions that Claude follows correctly without being told.</li>
+</ul>
+<p>For more detail on <code>CLAUDE.md</code> authoring, prompt techniques, and workflow patterns, see our companion guide: <a href="../../Learn/Blogs/claude-code-best-practices.html">Claude Code Best Practices</a>.</p>
+</div>
+</div>
+</section>
+<section id="pick-the-right-model-for-the-task" class="level3">
+<h3 class="anchored" data-anchor-id="pick-the-right-model-for-the-task">Pick the right model for the task</h3>
+<p>Your <code>settings.json</code> sets a default model, but you can switch mid-session with <code>/model</code>. A general rule of thumb:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 43%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Best for</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Sonnet</strong></td>
+<td>Day-to-day coding, refactoring, test writing, most tasks</td>
+<td>Lowest</td>
+</tr>
+<tr class="even">
+<td><strong>Opus</strong></td>
+<td>Complex multi-step reasoning, architecture decisions, subtle bugs</td>
+<td>Highest</td>
+</tr>
+<tr class="odd">
+<td><strong>Haiku</strong></td>
+<td>Quick lookups, simple edits, boilerplate generation</td>
+<td>Very low</td>
+</tr>
+</tbody>
+</table>
+<p>Start with <strong>Sonnet</strong> — it handles the vast majority of tasks well. Escalate to Opus only when you notice Sonnet struggling with complex reasoning. Use Haiku for high-volume, low-complexity work where cost matters.</p>
+</section>
+<section id="build-good-habits-early" class="level3">
+<h3 class="anchored" data-anchor-id="build-good-habits-early">Build good habits early</h3>
+<ul>
+<li><strong>Commit before you start.</strong> A clean Git state means you can always <code>git diff</code> to see what Claude changed, or <code>git checkout .</code> to revert.</li>
+<li><strong>Be specific.</strong> “Add input validation to the <code>login()</code> function in <code>auth.py</code>” is cheaper and more reliable than “improve the auth module.”</li>
+<li><strong>Use <code>/compact</code> and <code>/clear</code></strong> to manage context. Long sessions get expensive and Claude’s attention degrades as context grows (<a href="https://arxiv.org/abs/2307.03172">Liu et al., 2024</a>).</li>
+<li><strong>Press <code>Esc</code></strong> the moment something looks wrong. Don’t let an agentic loop run up your bill — see <a href="#agentic-loops">Section 9</a>.</li>
+</ul>
 </section>
 </section>
 <section id="further-reading" class="level2">
