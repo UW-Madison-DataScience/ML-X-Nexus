@@ -40,13 +40,103 @@ Qwen fits into the rapidly evolving landscape of open-weight large language mode
 - **[QwQ (2024)](https://qwenlm.github.io/blog/qwq-32b-preview/)**: A reasoning-focused model leveraging chain-of-thought for complex problem solving.
 - **[DeepSeek-R1 (2025)](https://arxiv.org/abs/2501.12948)**: Open-weight reasoning model advancing chain-of-thought capabilities.
 
-## Qwen variants
-- **Qwen2.5 (Dense)**: Available in 0.5B, 1.5B, 3B, 7B, 14B, 32B, and 72B parameter sizes. General-purpose language models strong in instruction following, reasoning, and multilingual tasks.
-- **Qwen2.5-Coder**: Specialized for code generation, completion, and debugging. Trained on large-scale code corpora and competitive with dedicated coding models.
-- **Qwen2.5-Math**: Fine-tuned for mathematical reasoning, supporting both chain-of-thought and tool-integrated reasoning with calculators and symbolic engines.
-- **Qwen2.5-VL (Vision-Language)**: Processes images and videos alongside text, enabling visual question answering, document understanding, and image captioning.
-- **Qwen2.5-Omni**: A unified multimodal model that can process text, images, audio, and video inputs and generate both text and speech outputs.
-- **QwQ-32B**: A 32B-parameter reasoning model that uses extended chain-of-thought to solve complex math, coding, and scientific problems.
+## Qwen model families — what to use and when
+
+The Qwen ecosystem covers a broad set of modalities and tasks. The table below summarizes the main model families and their intended use cases.
+
+| Model Family | Modality | Sizes | Best For | Example Use Cases |
+|---|---|---|---|---|
+| **Qwen2.5** | Text | 0.5B – 72B | General-purpose language tasks | Chatbots, summarization, translation, Q&A |
+| **Qwen2.5-Coder** | Text (code) | 1.5B – 32B | Code generation & understanding | Autocomplete, debugging, code review, docstrings |
+| **Qwen2.5-Math** | Text (math) | 1.5B – 72B | Mathematical reasoning | Proofs, word problems, symbolic computation |
+| **Qwen2.5-VL** | Text + Image/Video | 3B – 72B | Visual understanding | Document OCR, chart reading, visual Q&A |
+| **Qwen2.5-Omni** | Text + Image + Audio + Video | 3B – 7B | Unified multimodal I/O | Voice assistants, video understanding, accessibility |
+| **QwQ-32B** | Text (reasoning) | 32B | Complex multi-step reasoning | Research problems, math olympiad, agentic tasks |
+
+### Choosing the right size
+- **0.5B – 3B**: Edge devices, mobile, or latency-critical applications. Good for simple classification, extraction, and reformatting tasks.
+- **7B – 14B**: The best balance of quality and cost for most research and production workloads. Strong general reasoning at manageable memory requirements.
+- **32B – 72B**: When you need top-tier reasoning, nuanced instruction following, or state-of-the-art benchmark performance. Requires multi-GPU setups at full precision.
+
+## How parameter count impacts GPU memory
+
+Understanding memory requirements is critical when selecting a model size. The rule of thumb: **each billion parameters requires ~2 GB of VRAM in float16** (and ~1 GB in 8-bit quantization). The table below shows approximate VRAM needed to *load* Qwen2.5 models (inference only — training requires 2–3x more).
+
+| Model | Parameters | float16 (FP16/BF16) | 8-bit (INT8) | 4-bit (GPTQ/AWQ) |
+|---|---|---|---|---|
+| Qwen2.5-0.5B | 0.5B | ~1 GB | ~0.5 GB | ~0.3 GB |
+| Qwen2.5-1.5B | 1.5B | ~3 GB | ~1.5 GB | ~1 GB |
+| Qwen2.5-3B | 3B | ~6 GB | ~3 GB | ~2 GB |
+| Qwen2.5-7B | 7B | ~14 GB | ~7 GB | ~4 GB |
+| Qwen2.5-14B | 14B | ~28 GB | ~14 GB | ~8 GB |
+| Qwen2.5-32B | 32B | ~64 GB | ~32 GB | ~18 GB |
+| Qwen2.5-72B | 72B | ~144 GB | ~72 GB | ~40 GB |
+
+> **Note**: These are estimates for model weights only. Actual VRAM usage increases with context length (KV cache), batch size, and framework overhead. Long contexts (32K–128K tokens) can add several GB.
+
+### Hands-on: Measure memory yourself
+
+You can profile the actual GPU memory footprint of any Qwen model with the following snippet. Try swapping model sizes to see how parameter count directly impacts VRAM.
+
+```python
+# Requires: pip install transformers torch accelerate
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_name = "Qwen/Qwen2.5-0.5B-Instruct"  # Try: 0.5B, 1.5B, 3B, 7B, ...
+
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    torch_dtype=torch.float16,  # Change to torch.float32 to compare
+    device_map="auto",          # Automatically uses GPU if available
+)
+
+# --- Check memory usage ---
+if torch.cuda.is_available():
+    mem_gb = torch.cuda.memory_allocated() / 1e9
+    print(f"Model: {model_name}")
+    print(f"GPU memory used: {mem_gb:.2f} GB")
+    print(f"Parameters: {sum(p.numel() for p in model.parameters()) / 1e9:.2f}B")
+else:
+    print("No GPU detected — model loaded on CPU.")
+    print(f"Parameters: {sum(p.numel() for p in model.parameters()) / 1e9:.2f}B")
+
+# --- Run a quick generation to see peak memory ---
+prompt = "Explain gradient descent in one paragraph."
+inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+with torch.no_grad():
+    output = model.generate(**inputs, max_new_tokens=100)
+
+if torch.cuda.is_available():
+    peak_gb = torch.cuda.max_memory_allocated() / 1e9
+    print(f"Peak GPU memory during generation: {peak_gb:.2f} GB")
+
+print("\nResponse:", tokenizer.decode(output[0], skip_special_tokens=True))
+```
+
+**Try these experiments:**
+
+1. **Compare sizes**: Change `model_name` to `"Qwen/Qwen2.5-1.5B-Instruct"` or `"Qwen/Qwen2.5-7B-Instruct"` and compare the memory usage.
+2. **Compare precisions**: Switch `torch_dtype` between `torch.float16` and `torch.float32` to see how precision halves/doubles memory.
+3. **Try quantization**: Load a 4-bit quantized model to see drastic memory savings:
+
+```python
+# Requires: pip install transformers torch accelerate bitsandbytes
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+
+quantization_config = BitsAndBytesConfig(load_in_4bit=True)
+model_4bit = AutoModelForCausalLM.from_pretrained(
+    "Qwen/Qwen2.5-7B-Instruct",
+    quantization_config=quantization_config,
+    device_map="auto",
+)
+
+import torch
+mem_gb = torch.cuda.memory_allocated() / 1e9
+print(f"7B model in 4-bit: {mem_gb:.2f} GB")  # Expect ~4 GB vs ~14 GB in FP16
+```
 
 ## Model playground
 #### Tutorials and Getting Started
