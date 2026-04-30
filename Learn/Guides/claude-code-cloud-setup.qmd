@@ -1268,7 +1268,7 @@ Budget alerts won't automatically stop spending, but they'll email you when you'
 
 1. Go to [**Billing → Budgets & Alerts**](https://console.cloud.google.com/billing/budgets) in the GCP Console.
 2. Click **Create Budget**.
-3. Scope it to your project (e.g., `doit-rci-sandbox-gcp-baa4`).
+3. Scope it to your project (e.g., `doit-gcp-PROJET_ID`).
 4. Set a monthly budget amount you're comfortable with (e.g., $50, $100, $200).
 5. Set alert thresholds at **50%, 80%, and 100%** of your budget.
 6. Add your email as a notification recipient.
@@ -1308,6 +1308,18 @@ Make it a habit to check your cloud billing daily while actively using Claude Co
 - Unexpected spikes in AI/ML charges
 - Daily costs that exceed your expectations
 - Any charges from services you didn't intentionally use
+
+::: {.panel-tabset}
+
+### Vertex AI (GCP)
+Go to [**Billing → Reports**](https://console.cloud.google.com/billing/reports) in the GCP Console. Filter by your project and look at costs for the `aiplatform.googleapis.com` service, which includes Claude models. You can also break down costs by SKU to see specific model usage.
+
+![GCP Billing Reports showing Claude usage costs](../../images/GCP-cost.png)
+
+### Amazon Bedrock (AWS)
+
+Go to [**Cost Explorer**](https://console.aws.amazon.com/cost-management/home?#/cost-explorer) in the AWS Console. Filter by service (`Amazon Bedrock`) and look at your daily costs. You can also break down costs by usage type to see specific model usage.
+:::
 
 ### Cost-saving tips
 
