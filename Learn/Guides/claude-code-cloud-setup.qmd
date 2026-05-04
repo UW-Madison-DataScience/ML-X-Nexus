@@ -133,7 +133,7 @@ claude
 
 ### Vertex AI
 
-- A **UW-Madison GCP project** with billing enabled (e.g., `doit-rci-sandbox-gcp-baa4`)
+- A **UW-Madison GCP project** with billing enabled (e.g., `doit-gcp-PROJECT-ID`)
 
 ### Amazon Bedrock
 
@@ -212,6 +212,38 @@ claude --version
 
 > The native installer places the binary at `~/.claude/bin/claude` or `~/.local/bin/claude` and updates your shell profile automatically. If `claude` isn't found, ensure one of these paths is in your `$PATH`.
 
+### VS Code with Devcontainer
+
+A VS Code devcontainer gives you a reproducible, isolated environment for using Claude Code with Vertex AI or Bedrock — useful if you want the cloud CLIs and Claude CLI pre-installed without touching your host system, or if you're collaborating with others on a shared setup.
+
+**Prerequisites:**
+
+- VS Code
+- Docker Desktop
+- Dev Containers extension for VS Code
+
+**Set up a devcontainer in your project:**
+
+1. Open your project folder in VS Code (or create a new one with `mkdir my-project && code my-project`).
+
+2. Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run **Dev Containers: Add Dev Container Configuration Files…**. Choose **Ubuntu → latest**. VS Code creates `.devcontainer/devcontainer.json`:
+
+    ```json
+    {
+        "name": "claude-code",
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/node:1": {
+                "version": "latest"
+            }
+        }
+    }
+    ```
+
+3. Run **Dev Containers: Reopen in Container** to build and launch.
+
+See [Section 3](#install-cloud-cli) for a fuller `devcontainer.json` that also installs `gcloud`, Python, Claude Code, R, and Quarto via devcontainer features.
+
 :::
 
 ## 3. Install & Configure Your Cloud CLI {#install-cloud-cli}
@@ -267,6 +299,87 @@ Then restart your terminal or run:
 
 ```bash
 source ~/.zshrc   # or source ~/.bashrc
+```
+
+
+#### VS Code with Devcontainer
+
+If you set up the devcontainer in [Section 2](#install-claude-code), use this `devcontainer.json` to get `gcloud`, Python, Claude Code, R, and Quarto pre-installed:
+
+```json
+{
+    "name": "claude-code",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {},
+        "ghcr.io/devcontainers/features/python:1": {},
+        "ghcr.io/dhoeric/features/google-cloud-cli:1": {
+            "version": "latest"
+        },
+        "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+        "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
+            "version": "release"
+        },
+        "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {}
+    }
+}
+```
+
+Once the container is running, open a VS Code terminal and authenticate with GCP:
+
+1. Log in with your UW-Madison Google account:
+
+    ```bash
+    gcloud auth login --no-launch-browser
+    ```
+
+2. Set application default credentials (this is what Claude Code actually uses):
+
+    ```bash
+    gcloud auth application-default login --no-launch-browser
+    ```
+
+3. Set your project:
+
+    ```bash
+    gcloud config set project YOUR-PROJECT-ID
+    ```
+
+4. Export the credentials path:
+
+    ```bash
+    export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_credentials.json
+    ```
+
+5. Verify everything is working:
+
+    ```bash
+    gcloud auth list
+    gcloud auth print-access-token | head -c 20
+    echo $GOOGLE_APPLICATION_CREDENTIALS
+    ```
+
+6. Enable the Vertex AI platform:
+
+    ```bash
+    gcloud services enable aiplatform.googleapis.com
+    ```
+
+**Start Claude Code in VS Code:**
+
+- In the terminal, run `claude` to launch the Claude Code CLI.
+- When prompted, select option 3 (3rd party platform) → **Google Vertex AI**.
+- Choose a model (e.g., `claude-opus`) and save the configuration.
+- Select **I trust this folder**. You're set!
+
+![VSCode Claude](../../images/vscode-claude.png)
+
+**When you're done, disable the AI platform to avoid unintended costs:**
+
+Quit the Claude Code CLI, then run:
+
+```bash
+gcloud services disable aiplatform.googleapis.com
 ```
 
 :::
@@ -1132,7 +1245,7 @@ Budget alerts won't automatically stop spending, but they'll email you when you'
 
 1. Go to [**Billing → Budgets & Alerts**](https://console.cloud.google.com/billing/budgets) in the GCP Console.
 2. Click **Create Budget**.
-3. Scope it to your project (e.g., `doit-rci-sandbox-gcp-baa4`).
+3. Scope it to your project (e.g., `doit-gcp-PROJECT-ID`).
 4. Set a monthly budget amount you're comfortable with (e.g., $50, $100, $200).
 5. Set alert thresholds at **50%, 80%, and 100%** of your budget.
 6. Add your email as a notification recipient.
@@ -1172,6 +1285,18 @@ Make it a habit to check your cloud billing daily while actively using Claude Co
 - Unexpected spikes in AI/ML charges
 - Daily costs that exceed your expectations
 - Any charges from services you didn't intentionally use
+
+::: {.panel-tabset}
+
+### Vertex AI (GCP)
+Go to [**Billing → Reports**](https://console.cloud.google.com/billing/reports) in the GCP Console. Filter by your project and look at costs for the `aiplatform.googleapis.com` service, which includes Claude models. You can also break down costs by SKU to see specific model usage.
+
+![GCP Billing Reports showing Claude usage costs](../../images/GCP-cost.png)
+
+### Amazon Bedrock (AWS)
+
+Go to [**Cost Explorer**](https://console.aws.amazon.com/cost-management/home?#/cost-explorer) in the AWS Console. Filter by service (`Amazon Bedrock`) and look at your daily costs. You can also break down costs by usage type to see specific model usage.
+:::
 
 ### Cost-saving tips
 
