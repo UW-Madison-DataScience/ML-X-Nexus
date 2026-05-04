@@ -1001,6 +1001,12 @@ The project-level file lives inside your Git repo, so you can commit it and ever
 If you followed [Section 5](#configure-claude-code), sandboxing is already enabled in your `settings.json`. This section covers platform prerequisites, how to choose a sandbox mode, and what sandboxing actually does.
 :::
 
+::: {.callout-note}
+## Using a devcontainer? Skip this section.
+
+`/sandbox` (bubblewrap) won't work out of the box inside a VS Code devcontainer — Docker's default seccomp/AppArmor profile blocks the user namespaces it relies on. Treat the container itself as the isolation boundary instead. See the [devcontainer vs. `/sandbox` callout in Section 2](#install-claude-code) for the full explanation.
+:::
+
 Sandboxing is the **strongest protection available** against Claude modifying files outside your project. It uses OS-level enforcement (not just Claude's own judgment) to restrict what bash commands can access — even if a prompt injection bypasses Claude's decision-making.
 
 **What sandboxing does ([official docs](https://code.claude.com/docs/en/sandboxing)):**
