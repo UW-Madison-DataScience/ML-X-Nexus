@@ -214,44 +214,35 @@ claude --version
 
 ### VS Code with Devcontainer
 
-This repository supports developing against GCP Vertex AI or AWS Bedrock from a reproducible VS Code devcontainer. The devcontainer pre-installs the tools you need (gcloud or aws CLI, Python, Node, and the Claude CLI) and provides a recommended pattern for mounting credentials.
+A VS Code devcontainer gives you a reproducible, isolated environment for using Claude Code with Vertex AI or Bedrock — useful if you want the cloud CLIs and Claude CLI pre-installed without touching your host system, or if you're collaborating with others on a shared setup.
 
 **Prerequisites:**
 
 - VS Code
 - Docker Desktop
-- Git client
 - Dev Containers extension for VS Code
 
-**Set up the workspace:**
+**Set up a devcontainer in your project:**
 
-1. Clone the repository:
+1. Open your project folder in VS Code (or create a new one with `mkdir my-project && code my-project`).
 
-    ```bash
-    mkdir -p ~/projects
-    cd ~/projects
-    git clone https://github.com/UW-Madison-DataScience/ML-X-Nexus.git
-    ```
+2. Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run **Dev Containers: Add Dev Container Configuration Files…**. Choose **Ubuntu → latest**. VS Code creates `.devcontainer/devcontainer.json`:
 
-2. Open the repository in VS Code (`code ML-X-Nexus` from the terminal, or **File → Open Folder…**).
-
-3. When VS Code prompts you to **Reopen in Container**, click it to build and launch the devcontainer.
-
-If the prompt doesn't appear, open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run **Dev Containers: Reopen in Container**. If no `.devcontainer/` folder exists yet, run **Dev Containers: Add Dev Container Configuration Files…**, choose **Ubuntu → latest**, and VS Code will create a `.devcontainer/devcontainer.json` like:
-
-```json
-{
-    "name": "ML-X_Nexus",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-    "features": {
-        "ghcr.io/devcontainers/features/node:1": {
-            "version": "latest"
+    ```json
+    {
+        "name": "claude-code",
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/node:1": {
+                "version": "latest"
+            }
         }
     }
-}
-```
+    ```
 
-See [Section 3](#install-cloud-cli) for the full devcontainer configuration that adds `gcloud`, Python, Claude Code, R, and Quarto.
+3. Run **Dev Containers: Reopen in Container** to build and launch.
+
+See [Section 3](#install-cloud-cli) for a fuller `devcontainer.json` that also installs `gcloud`, Python, Claude Code, R, and Quarto via devcontainer features.
 
 :::
 
@@ -317,7 +308,7 @@ If you set up the devcontainer in [Section 2](#install-claude-code), use this `d
 
 ```json
 {
-    "name": "ML-X_Nexus",
+    "name": "claude-code",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "features": {
         "ghcr.io/devcontainers/features/node:1": {},
