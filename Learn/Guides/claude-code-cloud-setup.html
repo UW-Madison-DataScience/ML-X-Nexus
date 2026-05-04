@@ -684,6 +684,21 @@ Warning
 <li><p>Run <strong>Dev Containers: Reopen in Container</strong> to build and launch.</p></li>
 </ol>
 <p>See <a href="#install-cloud-cli">Section 3</a> for a fuller <code>devcontainer.json</code> that also installs <code>gcloud</code>, Python, Claude Code, R, and Quarto via devcontainer features.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Devcontainer vs.&nbsp;<code>/sandbox</code> — the container <em>is</em> your sandbox
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t try to run Claude Code’s <a href="#enable-sandboxing"><code>/sandbox</code></a> (bubblewrap) inside a devcontainer. It won’t work out of the box on the standard Ubuntu image — Docker’s default seccomp/AppArmor profile strips the user-namespace capabilities bubblewrap needs, and Ubuntu 24.04+ adds a further <code>kernel.apparmor_restrict_unprivileged_userns</code> block. Making it work requires loosening container security (<code>--security-opt apparmor=unconfined</code>, setuid <code>bwrap</code>) and enabling Anthropic’s <code>enableWeakerNestedSandbox</code> flag, which the <a href="https://code.claude.com/docs/en/sandboxing">official docs</a> warn “considerably weakens security.”</p>
+<p>Instead, treat the container itself as the isolation boundary — this is the model <a href="https://github.com/anthropics/claude-code/tree/main/.devcontainer">Anthropic’s own reference devcontainer</a> uses (Docker isolation plus a firewall init script for restricted egress). One practical upside: because the container is the boundary, running Claude Code with <code>--dangerously-skip-permissions</code> (“YOLO mode”) inside is much more defensible than on your host machine.</p>
+<p>If you want OS-level sandboxing, run Claude Code natively (macOS or WSL2) and follow <a href="#enable-sandboxing">Section 8</a>. If you want container isolation, use the devcontainer and skip <code>/sandbox</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1470,7 +1485,7 @@ Tip
 <li><strong>Network isolation:</strong> Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1479,7 +1494,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Add these deny rules to your <code>~/.claude/settings.json</code> to prevent Claude from reading files outside your project:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
