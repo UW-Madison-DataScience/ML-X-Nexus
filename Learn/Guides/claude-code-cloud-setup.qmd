@@ -212,43 +212,33 @@ claude --version
 
 > The native installer places the binary at `~/.claude/bin/claude` or `~/.local/bin/claude` and updates your shell profile automatically. If `claude` isn't found, ensure one of these paths is in your `$PATH`.
 
-### VSCode with Devcontainer
+### VS Code with Devcontainer
+
 This repository supports developing against GCP Vertex AI or AWS Bedrock from a reproducible VS Code devcontainer. The devcontainer pre-installs the tools you need (gcloud or aws CLI, Python, Node, and the Claude CLI) and provides a recommended pattern for mounting credentials.
 
-Install:
+**Prerequisites:**
 
 - VS Code
 - Docker Desktop
 - Git client
-- Remote - Containers extension for VS Code
+- Dev Containers extension for VS Code
 
-**Setup the workspace in VsCode**
+**Set up the workspace:**
 
-1. Open the in the terminal window, run: 
-```bash
-mkdir -p ~/projects
-cd ~/projects
-git clone https://github.com/UW-Madison-DataScience/ML-X-Nexus.git
-```
-2. Then open this repository in code "using code ." from the terminal or open VS Code and select "Open Folder" and navigate to the cloned repository.
+1. Clone the repository:
 
-3. After opening the repository in VS Code, you should see a prompt to "Reopen in Container". Click this to start the devcontainer build and launch process. This will set up the container with all necessary tools and configurations for working with Claude Code and your chosen cloud provider.
+    ```bash
+    mkdir -p ~/projects
+    cd ~/projects
+    git clone https://github.com/UW-Madison-DataScience/ML-X-Nexus.git
+    ```
 
-other option to open the repository in a container
-**Keyboard Shortcut** \
-Press <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> → to open the command palette.
+2. Open the repository in VS Code (`code ML-X-Nexus` from the terminal, or **File → Open Folder…**).
 
+3. When VS Code prompts you to **Reopen in Container**, click it to build and launch the devcontainer.
 
-**Show and Run Commands**
-Dev Containers: Rebuild and Reopen Container
-It will add configuration file
-Add Configuration to workspace
+If the prompt doesn't appear, open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run **Dev Containers: Reopen in Container**. If no `.devcontainer/` folder exists yet, run **Dev Containers: Add Dev Container Configuration Files…**, choose **Ubuntu → latest**, and VS Code will create a `.devcontainer/devcontainer.json` like:
 
-Select ubuntu
-Latest
-
-At the end; it will create **devcontainer.json** file in .devcontainer folder
- like this:
 ```json
 {
     "name": "ML-X_Nexus",
@@ -261,8 +251,7 @@ At the end; it will create **devcontainer.json** file in .devcontainer folder
 }
 ```
 
-
-Then open this repository in a container.
+See [Section 3](#install-cloud-cli) for the full devcontainer configuration that adds `gcloud`, Python, Claude Code, R, and Quarto.
 
 :::
 
@@ -322,89 +311,86 @@ source ~/.zshrc   # or source ~/.bashrc
 ```
 
 
-#### VSCode with Devcontainer
-This repository supports developing against GCP Vertex AI.
+#### VS Code with Devcontainer
 
-Make sure Claude Code is installed in the devcontainer (see [Section 2](#install-claude-code)) and follow the instructions in the devcontainer's README to authenticate with GCP using `gcloud auth login` and `gcloud auth application-default login`. The devcontainer mounts your GCP credentials securely so that Claude Code can access them for authentication.
-
-
-Claude Code enabled for GCP account authentication and API access through gcloud CLI. You can now use Claude Code to interact with Vertex AI models directly from your VS Code devcontainer environment.
-
-Example of devcontainer.json configuration for GCP authentication:
+If you set up the devcontainer in [Section 2](#install-claude-code), use this `devcontainer.json` to get `gcloud`, Python, Claude Code, R, and Quarto pre-installed:
 
 ```json
 {
     "name": "ML-X_Nexus",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-          "features": {
-          "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/devcontainers/features/python:1": {},
-    "ghcr.io/dhoeric/features/google-cloud-cli:1": {
-      "version": "latest"
-    },
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
-    "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
-      "version": "release"
-    },
-    "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {}
-        }
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {},
+        "ghcr.io/devcontainers/features/python:1": {},
+        "ghcr.io/dhoeric/features/google-cloud-cli:1": {
+            "version": "latest"
+        },
+        "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+        "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
+            "version": "release"
+        },
+        "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {}
+    }
 }
-
-```
-In the terminal window:
-
-\
-1. Login gcloud from command line your account and enable ai services
-Terminal window in vscode
-```bash
-gcloud auth login --no-launch-browser
-```
-This will allow you login and give you credential for your login
-
-2. Set Application default credentials 
-```bash
-gcloud auth application-default login --no-launch-browser
-```
-This will allow you login and give you credential for your login
-
-3. Set your project
-```bash
-gcloud config set project YOUR-PROJECT-ID
-```
-4. Set the environment variables
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_credentials.json
 ```
 
-5. Verify everything is working
-```bash
-gcloud auth list
-	 gcloud auth print-access-token | head -c 20
-	 echo $GOOGLE_APPLICATION_CREDENTIALS
-```
-6. Enable ai platform
- ```bash
-gcloud services enable aiplatform.googleapis.com
-```
+Once the container is running, open a VS Code terminal and authenticate with GCP:
 
-***Claude in vscode***
-* In terminal type `claude` to start the claude code cli
-* Then select option 3 for 3rd party platform and then select google vertex ai
-Select models claude-opus
+1. Log in with your UW-Madison Google account:
 
+    ```bash
+    gcloud auth login --no-launch-browser
+    ```
 
-Save them into the configuration file
+2. Set application default credentials (this is what Claude Code actually uses):
 
-Select I trust this folder. You are set!
+    ```bash
+    gcloud auth application-default login --no-launch-browser
+    ```
+
+3. Set your project:
+
+    ```bash
+    gcloud config set project YOUR-PROJECT-ID
+    ```
+
+4. Export the credentials path:
+
+    ```bash
+    export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_credentials.json
+    ```
+
+5. Verify everything is working:
+
+    ```bash
+    gcloud auth list
+    gcloud auth print-access-token | head -c 20
+    echo $GOOGLE_APPLICATION_CREDENTIALS
+    ```
+
+6. Enable the Vertex AI platform:
+
+    ```bash
+    gcloud services enable aiplatform.googleapis.com
+    ```
+
+**Start Claude Code in VS Code:**
+
+- In the terminal, run `claude` to launch the Claude Code CLI.
+- When prompted, select option 3 (3rd party platform) → **Google Vertex AI**.
+- Choose a model (e.g., `claude-opus`) and save the configuration.
+- Select **I trust this folder**. You're set!
+
 ![VSCode Claude](../../images/vscode-claude.png)
 
-***When you are done disable the ai platform to avoid unintentional cost***
+**When you're done, disable the AI platform to avoid unintended costs:**
 
-7. Quit from claude code cli and then run the following command in terminal
+Quit the Claude Code CLI, then run:
 
 ```bash
 gcloud services disable aiplatform.googleapis.com
 ```
+
 :::
 
 **Authenticate (both platforms):**
@@ -1268,7 +1254,7 @@ Budget alerts won't automatically stop spending, but they'll email you when you'
 
 1. Go to [**Billing → Budgets & Alerts**](https://console.cloud.google.com/billing/budgets) in the GCP Console.
 2. Click **Create Budget**.
-3. Scope it to your project (e.g., `doit-gcp-PROJET_ID`).
+3. Scope it to your project (e.g., `doit-gcp-PROJECT-ID`).
 4. Set a monthly budget amount you're comfortable with (e.g., $50, $100, $200).
 5. Set alert thresholds at **50%, 80%, and 100%** of your budget.
 6. Add your email as a notification recipient.
