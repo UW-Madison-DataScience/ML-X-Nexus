@@ -1097,14 +1097,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="ca3f3df9" class="cell" data-execution_count="1">
+<div id="063b24d2" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="b726bed4" class="cell" data-execution_count="2">
+<div id="90c41a74" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1217,7 +1217,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="02992aa2" class="cell" data-execution_count="3">
+<div id="2256e035" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1454,7 +1454,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="2a52f250" class="cell" data-execution_count="4">
+<div id="1614540f" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1482,7 +1482,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="9fc176d1" class="cell" data-execution_count="5">
+<div id="c41d6e8b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1505,7 +1505,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="c790754d" class="cell" data-execution_count="6">
+<div id="6c3f6c4c" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1527,7 +1527,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="93470eb2" class="cell" data-execution_count="7">
+<div id="6481c7e7" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1650,7 +1650,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="53b61305" class="cell" data-execution_count="8">
+<div id="e20fbecd" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1680,7 +1680,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="29a13a41" class="cell" data-execution_count="9">
+<div id="8f949b5c" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1725,7 +1725,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="427ed7ea" class="cell" data-execution_count="10">
+<div id="42947aa8" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1961,7 +1961,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="a9833e93" class="cell" data-execution_count="11">
+<div id="056f022b" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2037,7 +2037,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="f837dd9d" class="cell" data-execution_count="12">
+<div id="2405aba9" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2153,7 +2153,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="9bd53a1c" class="cell" data-execution_count="13">
+<div id="f5972ac1" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2399,7 +2399,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="0c246fe3" class="cell" data-execution_count="14">
+<div id="ead663bf" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2717,7 +2717,7 @@ Tip
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" aria-labelledby="tabset-2-1-tab">
 <ul>
-<li>A <strong>UW-Madison GCP project</strong> with billing enabled (e.g., <code>doit-rci-sandbox-gcp-baa4</code>)</li>
+<li>A <strong>UW-Madison GCP project</strong> with billing enabled (e.g., <code>doit-gcp-PROJECT-ID</code>)</li>
 </ul>
 </div>
 <div id="tabset-2-2" class="tab-pane" aria-labelledby="tabset-2-2-tab">
@@ -2754,7 +2754,7 @@ Tip
 <p>Official install docs: <a href="https://code.claude.com/docs/en/setup">code.claude.com/docs/en/setup</a></p>
 </blockquote>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" aria-controls="tabset-4-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" aria-controls="tabset-4-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" aria-controls="tabset-4-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" aria-controls="tabset-4-2" aria-selected="false" href="">macOS</a></li><li class="nav-item"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" aria-controls="tabset-4-3" aria-selected="false" href="">VS Code with Devcontainer</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" aria-labelledby="tabset-4-1-tab">
 <p>Open <strong>PowerShell</strong> and run:</p>
@@ -2832,6 +2832,73 @@ font-style: inherit;">--version</span></span></code></pre></div></div>
 <p>The native installer places the binary at <code>~/.claude/bin/claude</code> or <code>~/.local/bin/claude</code> and updates your shell profile automatically. If <code>claude</code> isn’t found, ensure one of these paths is in your <code>$PATH</code>.</p>
 </blockquote>
 </div>
+<div id="tabset-4-3" class="tab-pane" aria-labelledby="tabset-4-3-tab">
+<p>A VS Code devcontainer gives you a reproducible, isolated environment for using Claude Code with Vertex AI or Bedrock — useful if you want the cloud CLIs and Claude CLI pre-installed without touching your host system, or if you’re collaborating with others on a shared setup.</p>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>VS Code</li>
+<li>Docker Desktop</li>
+<li>Dev Containers extension for VS Code</li>
+</ul>
+<p><strong>Set up a devcontainer in your project:</strong></p>
+<ol type="1">
+<li><p>Open your project folder in VS Code (or create a new one with <code>mkdir my-project &amp;&amp; code my-project</code>).</p></li>
+<li><p>Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run <strong>Dev Containers: Add Dev Container Configuration Files…</strong>. Choose <strong>Ubuntu → latest</strong>. VS Code creates <code>.devcontainer/devcontainer.json</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb9-2">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"name"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"claude-code"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb9-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"image"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mcr.microsoft.com/devcontainers/base:ubuntu"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb9-4">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"features"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb9-5">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ghcr.io/devcontainers/features/node:1"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb9-6">            <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"latest"</span></span>
+<span id="cb9-7">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb9-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb9-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div></div></li>
+<li><p>Run <strong>Dev Containers: Reopen in Container</strong> to build and launch.</p></li>
+</ol>
+<p>See Section 3 for a fuller <code>devcontainer.json</code> that also installs <code>gcloud</code>, Python, Claude Code, R, and Quarto via devcontainer features.</p>
+</div>
 </div>
 </div>
 </section>
@@ -2845,13 +2912,13 @@ font-style: inherit;">--version</span></span></code></pre></div></div>
 <p>Official gcloud install docs: <a href="https://cloud.google.com/sdk/docs/install">cloud.google.com/sdk/docs/install</a></p>
 </blockquote>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" aria-controls="tabset-5-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" aria-controls="tabset-5-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" aria-controls="tabset-5-3" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" aria-controls="tabset-5-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" aria-controls="tabset-5-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" aria-controls="tabset-5-3" aria-selected="false" href="">macOS</a></li><li class="nav-item"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" aria-controls="tabset-5-4" aria-selected="false" href="">VS Code with Devcontainer</a></li></ul>
 <div class="tab-content">
 <div id="tabset-5-1" class="tab-pane active" aria-labelledby="tabset-5-1-tab">
 <p>Download and install the <a href="https://cloud.google.com/sdk/docs/install">Google Cloud CLI for Windows</a>. The installer adds <code>gcloud</code> to your PATH automatically.</p>
 <p><strong>Fix PowerShell Execution Policy (if needed):</strong></p>
 <p>If <code>gcloud</code> gives you a “running scripts is disabled” error:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb10-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">Set-ExecutionPolicy</span> RemoteSigned <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -2860,10 +2927,10 @@ font-style: inherit;">-</span>Scope CurrentUser</span></code></pre></div></div>
 </div>
 <div id="tabset-5-2" class="tab-pane" aria-labelledby="tabset-5-2-tab">
 <p>If you’re running Claude Code from WSL2, you need <code>gcloud</code> installed <strong>inside</strong> your WSL2 environment (the Windows installation is not accessible from WSL2):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sudo</span> apt-get install apt-transport-https ca-certificates gnupg curl</span>
-<span id="cb10-2"><span class="ex" style="color: null;
+<span id="cb11-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">curl</span> https://packages.cloud.google.com/apt/doc/apt-key.gpg <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -2875,7 +2942,7 @@ background-color: null;
 font-style: inherit;">--dearmor</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">-o</span> /usr/share/keyrings/cloud.google.gpg</span>
-<span id="cb10-3"><span class="bu" style="color: null;
+<span id="cb11-3"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -2885,7 +2952,7 @@ font-weight: bold;
 font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sudo</span> tee /etc/apt/sources.list.d/google-cloud-sdk.list</span>
-<span id="cb10-4"><span class="fu" style="color: #4758AB;
+<span id="cb11-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sudo</span> apt-get update <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -2896,13 +2963,13 @@ font-style: inherit;">sudo</span> apt-get install google-cloud-cli</span></code>
 </div>
 <div id="tabset-5-3" class="tab-pane" aria-labelledby="tabset-5-3-tab">
 <p>Option A — Homebrew (easiest):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">brew</span> install <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--cask</span> google-cloud-sdk</span></code></pre></div></div>
 <p>Option B — Official installer:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">curl</span> https://sdk.cloud.google.com <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -2911,39 +2978,206 @@ font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">bash</span></span></code></pre></div></div>
 <p>Then restart your terminal or run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="bu" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">source</span> ~/.zshrc   <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or source ~/.bashrc</span></span></code></pre></div></div>
 </div>
+<div id="tabset-5-4" class="tab-pane" aria-labelledby="tabset-5-4-tab">
+<p>If you set up the devcontainer in Section 2, use this <code>devcontainer.json</code> to get <code>gcloud</code>, Python, Claude Code, R, and Quarto pre-installed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb15-2">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"name"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"claude-code"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb15-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"image"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mcr.microsoft.com/devcontainers/base:ubuntu"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb15-4">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"features"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb15-5">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ghcr.io/devcontainers/features/node:1"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{},</span></span>
+<span id="cb15-6">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ghcr.io/devcontainers/features/python:1"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{},</span></span>
+<span id="cb15-7">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ghcr.io/dhoeric/features/google-cloud-cli:1"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb15-8">            <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"latest"</span></span>
+<span id="cb15-9">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">},</span></span>
+<span id="cb15-10">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ghcr.io/anthropics/devcontainer-features/claude-code:1.0"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{},</span></span>
+<span id="cb15-11">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ghcr.io/rocker-org/devcontainer-features/r-rig:1"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb15-12">            <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"release"</span></span>
+<span id="cb15-13">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">},</span></span>
+<span id="cb15-14">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{}</span></span>
+<span id="cb15-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb15-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div></div>
+<p>Once the container is running, open a VS Code terminal and authenticate with GCP:</p>
+<ol type="1">
+<li><p>Log in with your UW-Madison Google account:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gcloud</span> auth login <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-launch-browser</span></span></code></pre></div></div></li>
+<li><p>Set application default credentials (this is what Claude Code actually uses):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gcloud</span> auth application-default login <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-launch-browser</span></span></code></pre></div></div></li>
+<li><p>Set your project:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gcloud</span> config set project YOUR-PROJECT-ID</span></code></pre></div></div></li>
+<li><p>Export the credentials path:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">GOOGLE_APPLICATION_CREDENTIALS</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>~/.config/gcloud/application_default_credentials.json</span></code></pre></div></div></li>
+<li><p>Verify everything is working:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gcloud</span> auth list</span>
+<span id="cb20-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gcloud</span> auth print-access-token <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> 20</span>
+<span id="cb20-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$GOOGLE_APPLICATION_CREDENTIALS</span></span></code></pre></div></div></li>
+<li><p>Enable the Vertex AI platform:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gcloud</span> services enable aiplatform.googleapis.com</span></code></pre></div></div></li>
+</ol>
+<p><strong>Start Claude Code in VS Code:</strong></p>
+<ul>
+<li>In the terminal, run <code>claude</code> to launch the Claude Code CLI.</li>
+<li>When prompted, select option 3 (3rd party platform) → <strong>Google Vertex AI</strong>.</li>
+<li>Choose a model (e.g., <code>claude-opus</code>) and save the configuration.</li>
+<li>Select <strong>I trust this folder</strong>. You’re set!</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://uw-madison-datascience.github.io/ML-X-Nexus/images/vscode-claude.png" class="img-fluid figure-img"></p>
+<figcaption>VSCode Claude</figcaption>
+</figure>
+</div>
+<p><strong>When you’re done, disable the AI platform to avoid unintended costs:</strong></p>
+<p>Quit the Claude Code CLI, then run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gcloud</span> services disable aiplatform.googleapis.com</span></code></pre></div></div>
+</div>
 </div>
 </div>
 <p><strong>Authenticate (both platforms):</strong></p>
 <p>These commands are identical on both Windows and macOS:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Log in with your UW-Madison Google account</span></span>
-<span id="cb14-2"><span class="ex" style="color: null;
+<span id="cb23-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> auth login</span>
-<span id="cb14-3"></span>
-<span id="cb14-4"><span class="co" style="color: #5E5E5E;
+<span id="cb23-3"></span>
+<span id="cb23-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Set your GCP project</span></span>
-<span id="cb14-5"><span class="ex" style="color: null;
+<span id="cb23-5"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> config set project YOUR-PROJECT-ID</span>
-<span id="cb14-6"></span>
-<span id="cb14-7"><span class="co" style="color: #5E5E5E;
+<span id="cb23-6"></span>
+<span id="cb23-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># CRITICAL — this is what Claude Code actually uses to authenticate</span></span>
-<span id="cb14-8"><span class="ex" style="color: null;
+<span id="cb23-8"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> auth application-default login</span></code></pre></div></div>
 <p>Both <code>login</code> commands open a browser window. Sign in with your UW-Madison email and grant the requested permissions.</p>
 <p>Verify everything is configured correctly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> config list</span></code></pre></div></div>
 <p>You should see your UW-Madison email under <code>[core] account</code> and your project ID under <code>[core] project</code>.</p>
@@ -2958,17 +3192,17 @@ font-style: inherit;">gcloud</span> config list</span></code></pre></div></div>
 <div id="tabset-6-1" class="tab-pane active" aria-labelledby="tabset-6-1-tab">
 <p>Download and run the <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">AWS CLI MSI installer for Windows</a>. The installer adds <code>aws</code> to your PATH automatically.</p>
 <p>Verify:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb16-1">aws <span class="op" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb25-1">aws <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">--</span>version</span></code></pre></div></div>
 </div>
 <div id="tabset-6-2" class="tab-pane" aria-labelledby="tabset-6-2-tab">
 <p>Option A — Homebrew (easiest):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">brew</span> install awscli</span></code></pre></div></div>
 <p>Option B — Official installer:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">curl</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -2977,7 +3211,7 @@ background-color: null;
 font-style: inherit;">-o</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"AWSCLIV2.pkg"</span></span>
-<span id="cb18-2"><span class="fu" style="color: #4758AB;
+<span id="cb27-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sudo</span> installer <span class="at" style="color: #657422;
 background-color: null;
@@ -2985,7 +3219,7 @@ font-style: inherit;">-pkg</span> AWSCLIV2.pkg <span class="at" style="color: #6
 background-color: null;
 font-style: inherit;">-target</span> /</span></code></pre></div></div>
 <p>Verify:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">aws</span> <span class="at" style="color: #657422;
 background-color: null;
@@ -2996,33 +3230,33 @@ font-style: inherit;">--version</span></span></code></pre></div></div>
 <p><strong>Authenticate (both platforms):</strong></p>
 <p>Claude Code uses the standard <a href="https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html">AWS credential chain</a>. Choose one of these methods:</p>
 <p><strong>Option A — AWS SSO (recommended for UW-Madison):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Configure your SSO profile (one-time setup)</span></span>
-<span id="cb20-2"><span class="ex" style="color: null;
+<span id="cb29-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">aws</span> configure sso</span>
-<span id="cb20-3"><span class="co" style="color: #5E5E5E;
+<span id="cb29-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Follow the prompts: SSO start URL, region, account, role</span></span>
-<span id="cb20-4"></span>
-<span id="cb20-5"><span class="co" style="color: #5E5E5E;
+<span id="cb29-4"></span>
+<span id="cb29-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Log in (do this whenever credentials expire)</span></span>
-<span id="cb20-6"><span class="ex" style="color: null;
+<span id="cb29-6"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">aws</span> sso login <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--profile</span> your-profile-name</span></code></pre></div></div>
 <p><strong>Option B — IAM access keys:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">aws</span> configure</span>
-<span id="cb21-2"><span class="co" style="color: #5E5E5E;
+<span id="cb30-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Enter your AWS Access Key ID, Secret Access Key, and region</span></span></code></pre></div></div>
 <p><strong>Option C — Environment variables:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="bu" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">export</span> <span class="va" style="color: #111111;
 background-color: null;
@@ -3031,7 +3265,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"your-access-key"</span></span>
-<span id="cb22-2"><span class="bu" style="color: null;
+<span id="cb31-2"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">export</span> <span class="va" style="color: #111111;
 background-color: null;
@@ -3040,7 +3274,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"your-secret-key"</span></span>
-<span id="cb22-3"><span class="bu" style="color: null;
+<span id="cb31-3"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">export</span> <span class="va" style="color: #111111;
 background-color: null;
@@ -3077,7 +3311,7 @@ Tip
 <p>Google’s Claude on Vertex docs: <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude">cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude</a></p>
 </blockquote>
 <p><strong>Enable the API:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> services enable aiplatform.googleapis.com <span class="at" style="color: #657422;
 background-color: null;
@@ -3126,10 +3360,10 @@ Note
 </div>
 <p><strong>Verify IAM permissions:</strong></p>
 <p>Your AWS identity needs permissions to invoke Bedrock models. At minimum, create (or ask your admin to attach) an IAM policy with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb24-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb33-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb24-2">  <span class="dt" style="color: #AD0000;
+<span id="cb33-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"Version"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3138,17 +3372,17 @@ background-color: null;
 font-style: inherit;">"2012-10-17"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb24-3">  <span class="dt" style="color: #AD0000;
+<span id="cb33-3">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"Statement"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">[</span></span>
-<span id="cb24-4">    <span class="fu" style="color: #4758AB;
+<span id="cb33-4">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb24-5">      <span class="dt" style="color: #AD0000;
+<span id="cb33-5">      <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"Effect"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3157,50 +3391,50 @@ background-color: null;
 font-style: inherit;">"Allow"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb24-6">      <span class="dt" style="color: #AD0000;
+<span id="cb33-6">      <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"Action"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">[</span></span>
-<span id="cb24-7">        <span class="st" style="color: #20794D;
+<span id="cb33-7">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bedrock:InvokeModel"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb24-8">        <span class="st" style="color: #20794D;
+<span id="cb33-8">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bedrock:InvokeModelWithResponseStream"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb24-9">        <span class="st" style="color: #20794D;
+<span id="cb33-9">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bedrock:ListInferenceProfiles"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb24-10">        <span class="st" style="color: #20794D;
+<span id="cb33-10">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bedrock:ListFoundationModels"</span></span>
-<span id="cb24-11">      <span class="ot" style="color: #003B4F;
+<span id="cb33-11">      <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">]</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb24-12">      <span class="dt" style="color: #AD0000;
+<span id="cb33-12">      <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"Resource"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"*"</span></span>
-<span id="cb24-13">    <span class="fu" style="color: #4758AB;
+<span id="cb33-13">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb24-14">  <span class="ot" style="color: #003B4F;
+<span id="cb33-14">  <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">]</span></span>
-<span id="cb24-15"><span class="fu" style="color: #4758AB;
+<span id="cb33-15"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 <p>If your account uses AWS Marketplace for model access, you may also need <code>aws-marketplace:Subscribe</code> and <code>aws-marketplace:ViewSubscriptions</code> permissions.</p>
@@ -3254,10 +3488,10 @@ Important
 <ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" aria-controls="tabset-9-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" aria-controls="tabset-9-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
 <div class="tab-content">
 <div id="tabset-9-1" class="tab-pane active" aria-labelledby="tabset-9-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb25-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb34-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb25-2">  <span class="dt" style="color: #AD0000;
+<span id="cb34-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"model"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3266,7 +3500,7 @@ background-color: null;
 font-style: inherit;">"claude-sonnet-4-6"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb25-3">  <span class="dt" style="color: #AD0000;
+<span id="cb34-3">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"autoUpdatesChannel"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3275,14 +3509,14 @@ background-color: null;
 font-style: inherit;">"latest"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb25-4">  <span class="dt" style="color: #AD0000;
+<span id="cb34-4">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"env"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb25-5">    <span class="dt" style="color: #AD0000;
+<span id="cb34-5">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"CLAUDE_CODE_USE_VERTEX"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3291,7 +3525,7 @@ background-color: null;
 font-style: inherit;">"1"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb25-6">    <span class="dt" style="color: #AD0000;
+<span id="cb34-6">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"CLOUD_ML_REGION"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3300,24 +3534,24 @@ background-color: null;
 font-style: inherit;">"global"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb25-7">    <span class="dt" style="color: #AD0000;
+<span id="cb34-7">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"ANTHROPIC_VERTEX_PROJECT_ID"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"YOUR-PROJECT-ID"</span></span>
-<span id="cb25-8">  <span class="fu" style="color: #4758AB;
+<span id="cb34-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">},</span></span>
-<span id="cb25-9">  <span class="dt" style="color: #AD0000;
+<span id="cb34-9">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"sandbox"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb25-10">    <span class="dt" style="color: #AD0000;
+<span id="cb34-10">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"enabled"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3325,10 +3559,10 @@ font-style: inherit;">:</span> <span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">true</span></span>
-<span id="cb25-11">  <span class="fu" style="color: #4758AB;
+<span id="cb34-11">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb25-12"><span class="fu" style="color: #4758AB;
+<span id="cb34-12"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 <p>Replace <code>YOUR-PROJECT-ID</code> with your actual GCP project ID (e.g., <code>doit-rci-sandbox-gcp-baa4</code>).</p>
@@ -3341,10 +3575,10 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 "VERTEX_REGION_CLAUDE_4_0_SONNET": "us-east5"</code></pre>
 </div>
 <div id="tabset-9-2" class="tab-pane" aria-labelledby="tabset-9-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb27-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb36-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb27-2">  <span class="dt" style="color: #AD0000;
+<span id="cb36-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"model"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3353,7 +3587,7 @@ background-color: null;
 font-style: inherit;">"claude-sonnet-4-6"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb27-3">  <span class="dt" style="color: #AD0000;
+<span id="cb36-3">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"autoUpdatesChannel"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3362,14 +3596,14 @@ background-color: null;
 font-style: inherit;">"latest"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb27-4">  <span class="dt" style="color: #AD0000;
+<span id="cb36-4">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"env"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb27-5">    <span class="dt" style="color: #AD0000;
+<span id="cb36-5">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"CLAUDE_CODE_USE_BEDROCK"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3378,7 +3612,7 @@ background-color: null;
 font-style: inherit;">"1"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb27-6">    <span class="dt" style="color: #AD0000;
+<span id="cb36-6">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"AWS_REGION"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3387,24 +3621,24 @@ background-color: null;
 font-style: inherit;">"us-east-1"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb27-7">    <span class="dt" style="color: #AD0000;
+<span id="cb36-7">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"AWS_PROFILE"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"your-profile-name"</span></span>
-<span id="cb27-8">  <span class="fu" style="color: #4758AB;
+<span id="cb36-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">},</span></span>
-<span id="cb27-9">  <span class="dt" style="color: #AD0000;
+<span id="cb36-9">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"sandbox"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb27-10">    <span class="dt" style="color: #AD0000;
+<span id="cb36-10">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"enabled"</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3412,10 +3646,10 @@ font-style: inherit;">:</span> <span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">true</span></span>
-<span id="cb27-11">  <span class="fu" style="color: #4758AB;
+<span id="cb36-11">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb27-12"><span class="fu" style="color: #4758AB;
+<span id="cb36-12"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 <p>Replace <code>your-profile-name</code> with your AWS CLI profile name (from <code>aws configure sso</code> or <code>aws configure</code>). If you’re using environment variables for credentials instead of a profile, omit <code>AWS_PROFILE</code> and set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> in the <code>env</code> block.</p>
@@ -3463,12 +3697,12 @@ Warning
 <section id="verify-the-setup" class="level2">
 <h2 class="anchored" data-anchor-id="verify-the-setup">6. Verify the Setup</h2>
 <p>Run these in your terminal (PowerShell on Windows, Terminal on macOS):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--version</span></span>
-<span id="cb29-2"><span class="ex" style="color: null;
+<span id="cb38-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span> doctor</span></code></pre></div></div>
 <p>Then launch Claude Code from a project directory:</p>
@@ -3476,18 +3710,18 @@ font-style: inherit;">claude</span> doctor</span></code></pre></div></div>
 <ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" aria-controls="tabset-10-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-10-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-2" aria-controls="tabset-10-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
 <div id="tabset-10-1" class="tab-pane active" aria-labelledby="tabset-10-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb39-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cd</span> C<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span>\Users\you\projects\my-project</span>
-<span id="cb30-2">claude</span></code></pre></div></div>
+<span id="cb39-2">claude</span></code></pre></div></div>
 </div>
 <div id="tabset-10-2" class="tab-pane" aria-labelledby="tabset-10-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><span class="bu" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">cd</span> ~/projects/my-project</span>
-<span id="cb31-2"><span class="ex" style="color: null;
+<span id="cb40-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span></span></code></pre></div></div>
 </div>
@@ -3560,18 +3794,18 @@ Note
 <ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-12-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-1" aria-controls="tabset-12-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-12-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-2" aria-controls="tabset-12-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
 <div id="tabset-12-1" class="tab-pane active" aria-labelledby="tabset-12-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb34-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb43-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cd</span> C<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span>\Users\you\projects\my-project</span>
-<span id="cb34-2">claude</span></code></pre></div></div>
+<span id="cb43-2">claude</span></code></pre></div></div>
 </div>
 <div id="tabset-12-2" class="tab-pane" aria-labelledby="tabset-12-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><span class="bu" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">cd</span> ~/projects/my-project</span>
-<span id="cb35-2"><span class="ex" style="color: null;
+<span id="cb44-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span></span></code></pre></div></div>
 </div>
@@ -3630,247 +3864,247 @@ Warning
 <div class="tab-content">
 <div id="tabset-13-1" class="tab-pane active" aria-labelledby="tabset-13-1-tab">
 <p>Home directory is <code>/Users/endemann</code>. Run <code>whoami</code> to check your username.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb36-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb45-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb36-2">  <span class="dt" style="color: #AD0000;
+<span id="cb45-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"permissions"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb36-3">    <span class="dt" style="color: #AD0000;
+<span id="cb45-3">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"deny"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">[</span></span>
-<span id="cb36-4">      <span class="st" style="color: #20794D;
+<span id="cb45-4">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//Users/endemann/.ssh/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-5">      <span class="st" style="color: #20794D;
+<span id="cb45-5">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//Users/endemann/.ssh/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-6">      <span class="st" style="color: #20794D;
+<span id="cb45-6">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//Users/endemann/.env)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-7">      <span class="st" style="color: #20794D;
+<span id="cb45-7">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//Users/endemann/.env)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-8">      <span class="st" style="color: #20794D;
+<span id="cb45-8">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//Users/endemann/.config/gcloud/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-9">      <span class="st" style="color: #20794D;
+<span id="cb45-9">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//Users/endemann/.config/gcloud/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-10">      <span class="st" style="color: #20794D;
+<span id="cb45-10">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//Users/endemann/.aws/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-11">      <span class="st" style="color: #20794D;
+<span id="cb45-11">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//Users/endemann/.aws/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-12">      <span class="st" style="color: #20794D;
+<span id="cb45-12">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(rm -rf *)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-13">      <span class="st" style="color: #20794D;
+<span id="cb45-13">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(curl:*)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb36-14">      <span class="st" style="color: #20794D;
+<span id="cb45-14">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(wget:*)"</span></span>
-<span id="cb36-15">    <span class="ot" style="color: #003B4F;
+<span id="cb45-15">    <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">]</span></span>
-<span id="cb36-16">  <span class="fu" style="color: #4758AB;
+<span id="cb45-16">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb36-17"><span class="fu" style="color: #4758AB;
+<span id="cb45-17"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 </div>
 <div id="tabset-13-2" class="tab-pane" aria-labelledby="tabset-13-2-tab">
 <p>Home directory is <code>C:\Users\endemann</code>. Run <code>echo $env:USERNAME</code> to check your username. Note: use forward slashes in permission rules, even on Windows.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb37-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb46-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb37-2">  <span class="dt" style="color: #AD0000;
+<span id="cb46-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"permissions"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb37-3">    <span class="dt" style="color: #AD0000;
+<span id="cb46-3">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"deny"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">[</span></span>
-<span id="cb37-4">      <span class="st" style="color: #20794D;
+<span id="cb46-4">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//C:/Users/endemann/.ssh/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-5">      <span class="st" style="color: #20794D;
+<span id="cb46-5">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//C:/Users/endemann/.ssh/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-6">      <span class="st" style="color: #20794D;
+<span id="cb46-6">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//C:/Users/endemann/.env)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-7">      <span class="st" style="color: #20794D;
+<span id="cb46-7">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//C:/Users/endemann/.env)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-8">      <span class="st" style="color: #20794D;
+<span id="cb46-8">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//C:/Users/endemann/.config/gcloud/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-9">      <span class="st" style="color: #20794D;
+<span id="cb46-9">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//C:/Users/endemann/.config/gcloud/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-10">      <span class="st" style="color: #20794D;
+<span id="cb46-10">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//C:/Users/endemann/.aws/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-11">      <span class="st" style="color: #20794D;
+<span id="cb46-11">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//C:/Users/endemann/.aws/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-12">      <span class="st" style="color: #20794D;
+<span id="cb46-12">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(rm -rf *)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-13">      <span class="st" style="color: #20794D;
+<span id="cb46-13">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(curl:*)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb37-14">      <span class="st" style="color: #20794D;
+<span id="cb46-14">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(wget:*)"</span></span>
-<span id="cb37-15">    <span class="ot" style="color: #003B4F;
+<span id="cb46-15">    <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">]</span></span>
-<span id="cb37-16">  <span class="fu" style="color: #4758AB;
+<span id="cb46-16">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb37-17"><span class="fu" style="color: #4758AB;
+<span id="cb46-17"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 </div>
 <div id="tabset-13-3" class="tab-pane" aria-labelledby="tabset-13-3-tab">
 <p>Home directory is <code>/home/endemann</code>. Run <code>whoami</code> to check your username.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb47-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb38-2">  <span class="dt" style="color: #AD0000;
+<span id="cb47-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"permissions"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb38-3">    <span class="dt" style="color: #AD0000;
+<span id="cb47-3">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"deny"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">[</span></span>
-<span id="cb38-4">      <span class="st" style="color: #20794D;
+<span id="cb47-4">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//home/endemann/.ssh/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-5">      <span class="st" style="color: #20794D;
+<span id="cb47-5">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//home/endemann/.ssh/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-6">      <span class="st" style="color: #20794D;
+<span id="cb47-6">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//home/endemann/.env)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-7">      <span class="st" style="color: #20794D;
+<span id="cb47-7">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//home/endemann/.env)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-8">      <span class="st" style="color: #20794D;
+<span id="cb47-8">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//home/endemann/.config/gcloud/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-9">      <span class="st" style="color: #20794D;
+<span id="cb47-9">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//home/endemann/.config/gcloud/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-10">      <span class="st" style="color: #20794D;
+<span id="cb47-10">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//home/endemann/.aws/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-11">      <span class="st" style="color: #20794D;
+<span id="cb47-11">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Edit(//home/endemann/.aws/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-12">      <span class="st" style="color: #20794D;
+<span id="cb47-12">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(rm -rf *)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-13">      <span class="st" style="color: #20794D;
+<span id="cb47-13">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(curl:*)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb38-14">      <span class="st" style="color: #20794D;
+<span id="cb47-14">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(wget:*)"</span></span>
-<span id="cb38-15">    <span class="ot" style="color: #003B4F;
+<span id="cb47-15">    <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">]</span></span>
-<span id="cb38-16">  <span class="fu" style="color: #4758AB;
+<span id="cb47-16">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb38-17"><span class="fu" style="color: #4758AB;
+<span id="cb47-17"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 </div>
@@ -3995,48 +4229,48 @@ Note
 </table>
 <p><strong>How merging works:</strong> Claude Code combines both files. If either file denies something, it’s denied — project-level deny rules apply to everyone, even if their personal settings are more permissive. You don’t have to choose one or the other; most teams use both.</p>
 <p>The project-level file lives inside your Git repo, so you can commit it and every collaborator automatically inherits the same rules:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb41-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb50-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb41-2">  <span class="dt" style="color: #AD0000;
+<span id="cb50-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"permissions"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb41-3">    <span class="dt" style="color: #AD0000;
+<span id="cb50-3">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"deny"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">[</span></span>
-<span id="cb41-4">      <span class="st" style="color: #20794D;
+<span id="cb50-4">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(./.env)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb41-5">      <span class="st" style="color: #20794D;
+<span id="cb50-5">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(./secrets/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb41-6">      <span class="st" style="color: #20794D;
+<span id="cb50-6">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(curl:*)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb41-7">      <span class="st" style="color: #20794D;
+<span id="cb50-7">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(wget:*)"</span></span>
-<span id="cb41-8">    <span class="ot" style="color: #003B4F;
+<span id="cb50-8">    <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">]</span></span>
-<span id="cb41-9">  <span class="fu" style="color: #4758AB;
+<span id="cb50-9">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb41-10"><span class="fu" style="color: #4758AB;
+<span id="cb50-10"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -4141,43 +4375,43 @@ Tip
 <div id="callout-22" class="callout-22-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Add these deny rules to your <code>~/.claude/settings.json</code> to prevent Claude from reading files outside your project:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb42-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb51-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb42-2">  <span class="dt" style="color: #AD0000;
+<span id="cb51-2">  <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"permissions"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb42-3">    <span class="dt" style="color: #AD0000;
+<span id="cb51-3">    <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"deny"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">[</span></span>
-<span id="cb42-4">      <span class="st" style="color: #20794D;
+<span id="cb51-4">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(//**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb42-5">      <span class="st" style="color: #20794D;
+<span id="cb51-5">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Read(~/**)"</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">,</span></span>
-<span id="cb42-6">      <span class="st" style="color: #20794D;
+<span id="cb51-6">      <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bash(cat:*)"</span></span>
-<span id="cb42-7">    <span class="ot" style="color: #003B4F;
+<span id="cb51-7">    <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">]</span></span>
-<span id="cb42-8">  <span class="fu" style="color: #4758AB;
+<span id="cb51-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb42-9"><span class="fu" style="color: #4758AB;
+<span id="cb51-9"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 <ul>
@@ -4204,7 +4438,7 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 <p>WSL2 uses <a href="https://github.com/containers/bubblewrap">bubblewrap</a> for sandbox isolation — the same mechanism used on native Linux. <strong>WSL1 is not supported</strong> because bubblewrap requires kernel features only available in WSL2.</p>
 <p><strong>Step 1 — Confirm you’re on WSL2:</strong></p>
 <p>Open a <strong>Windows PowerShell</strong> window (not your WSL terminal) and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb44-1">wsl <span class="op" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb53-1">wsl <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>l <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -4212,7 +4446,7 @@ font-style: inherit;">-</span>v</span></code></pre></div></div>
 <p>You should see <code>VERSION 2</code> next to your distribution. If you’re on WSL1, <a href="https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2">upgrade to WSL2</a> first. Once confirmed, open your <strong>WSL2 terminal</strong> — all remaining steps run inside WSL.</p>
 <p><strong>Step 2 — Install Claude Code inside WSL2:</strong></p>
 <p>WSL2 is a separate Linux environment — your Windows PowerShell installation of Claude Code doesn’t carry over. Inside your WSL2 terminal, install it with npm:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">npm</span> install <span class="at" style="color: #657422;
 background-color: null;
@@ -4222,47 +4456,47 @@ font-style: inherit;">-g</span> @anthropic-ai/claude-code</span></code></pre></d
 <ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" aria-controls="tabset-14-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item"><a class="nav-link" id="tabset-14-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-2" aria-controls="tabset-14-2" aria-selected="false" href="">Bedrock</a></li></ul>
 <div class="tab-content">
 <div id="tabset-14-1" class="tab-pane active" aria-labelledby="tabset-14-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb55-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> auth login</span>
-<span id="cb46-2"><span class="ex" style="color: null;
+<span id="cb55-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> auth application-default login</span>
-<span id="cb46-3"><span class="ex" style="color: null;
+<span id="cb55-3"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> config set project YOUR_PROJECT_ID</span></code></pre></div></div>
 </div>
 <div id="tabset-14-2" class="tab-pane" aria-labelledby="tabset-14-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">aws</span> configure</span>
-<span id="cb47-2"><span class="co" style="color: #5E5E5E;
+<span id="cb56-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Enter your Access Key ID, Secret Access Key, and default region when prompted</span></span></code></pre></div></div>
 </div>
 </div>
 </div>
 <p>Verify both are working:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--version</span></span></code></pre></div></div>
 <p><strong>Step 3 — Copy your settings into WSL2:</strong></p>
 <p>WSL2 has its own home directory (<code>/home/&lt;you&gt;/</code>), completely separate from Windows (<code>C:\Users\&lt;you&gt;\</code>). Claude Code won’t see your Windows <code>settings.json</code> — you need a copy inside WSL2:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Create the config directory if it doesn't exist</span></span>
-<span id="cb49-2"><span class="fu" style="color: #4758AB;
+<span id="cb58-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mkdir</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">-p</span> ~/.claude</span>
-<span id="cb49-3"></span>
-<span id="cb49-4"><span class="co" style="color: #5E5E5E;
+<span id="cb58-3"></span>
+<span id="cb58-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Copy your Windows settings into WSL2</span></span>
-<span id="cb49-5"><span class="fu" style="color: #4758AB;
+<span id="cb58-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cp</span> /mnt/c/Users/<span class="va" style="color: #111111;
 background-color: null;
@@ -4288,14 +4522,14 @@ background-color: null;
 font-style: inherit;">)</span>/.claude/settings.json ~/.claude/settings.json</span></code></pre></div></div>
 <p>Or if you prefer, create <code>~/.claude/settings.json</code> manually with the same content you used in Section 5 (use <code>nano ~/.claude/settings.json</code>).</p>
 <p>Verify the settings look correct:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb50-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cat</span> ~/.claude/settings.json</span></code></pre></div></div>
 <p><strong>Step 4 — Install sandbox dependencies:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Ubuntu/Debian (most common WSL distro)</span></span>
-<span id="cb51-2"><span class="fu" style="color: #4758AB;
+<span id="cb60-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sudo</span> apt-get update <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -4303,20 +4537,20 @@ font-weight: bold;
 font-style: inherit;">&amp;&amp;</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sudo</span> apt-get install bubblewrap socat</span>
-<span id="cb51-3"></span>
-<span id="cb51-4"><span class="co" style="color: #5E5E5E;
+<span id="cb60-3"></span>
+<span id="cb60-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Fedora</span></span>
-<span id="cb51-5"><span class="fu" style="color: #4758AB;
+<span id="cb60-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sudo</span> dnf install bubblewrap socat</span></code></pre></div></div>
 <p><strong>Step 5 — Launch Claude Code and enable sandboxing:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><span class="bu" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb61-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">cd</span> ~/projects/my-project   <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># navigate to your project first</span></span>
-<span id="cb52-2"><span class="ex" style="color: null;
+<span id="cb61-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span>                      <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -4485,7 +4719,7 @@ Warning
 <ol type="1">
 <li>Go to <a href="https://console.cloud.google.com/billing/budgets"><strong>Billing → Budgets &amp; Alerts</strong></a> in the GCP Console.</li>
 <li>Click <strong>Create Budget</strong>.</li>
-<li>Scope it to your project (e.g., <code>doit-rci-sandbox-gcp-baa4</code>).</li>
+<li>Scope it to your project (e.g., <code>doit-gcp-PROJECT-ID</code>).</li>
 <li>Set a monthly budget amount you’re comfortable with (e.g., $50, $100, $200).</li>
 <li>Set alert thresholds at <strong>50%, 80%, and 100%</strong> of your budget.</li>
 <li>Add your email as a notification recipient.</li>
@@ -4544,6 +4778,23 @@ Important
 <li>Daily costs that exceed your expectations</li>
 <li>Any charges from services you didn’t intentionally use</li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" aria-controls="tabset-17-1" aria-selected="true" href="">Vertex AI (GCP)</a></li><li class="nav-item"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" aria-controls="tabset-17-2" aria-selected="false" href="">Amazon Bedrock (AWS)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-17-1" class="tab-pane active" aria-labelledby="tabset-17-1-tab">
+<p>Go to <a href="https://console.cloud.google.com/billing/reports"><strong>Billing → Reports</strong></a> in the GCP Console. Filter by your project and look at costs for the <code>aiplatform.googleapis.com</code> service, which includes Claude models. You can also break down costs by SKU to see specific model usage.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://uw-madison-datascience.github.io/ML-X-Nexus/images/GCP-cost.png" class="img-fluid figure-img"></p>
+<figcaption>GCP Billing Reports showing Claude usage costs</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-17-2" class="tab-pane" aria-labelledby="tabset-17-2-tab">
+<p>Go to <a href="https://console.aws.amazon.com/cost-management/home?#/cost-explorer"><strong>Cost Explorer</strong></a> in the AWS Console. Filter by service (<code>Amazon Bedrock</code>) and look at your daily costs. You can also break down costs by usage type to see specific model usage.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="cost-saving-tips" class="level3">
 <h3 class="anchored" data-anchor-id="cost-saving-tips">Cost-saving tips</h3>
@@ -4753,9 +5004,9 @@ Tip
 <section id="troubleshooting" class="level2">
 <h2 class="anchored" data-anchor-id="troubleshooting">11. Troubleshooting</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" aria-controls="tabset-19-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" aria-controls="tabset-19-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" aria-controls="tabset-20-1" aria-selected="true" href="">Vertex AI</a></li><li class="nav-item"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" aria-controls="tabset-20-2" aria-selected="false" href="">Amazon Bedrock</a></li></ul>
 <div class="tab-content">
-<div id="tabset-19-1" class="tab-pane active" aria-labelledby="tabset-19-1-tab">
+<div id="tabset-20-1" class="tab-pane active" aria-labelledby="tabset-20-1-tab">
 <p><strong>“model not found” (404):</strong></p>
 <p>The model may not be available on the <code>global</code> endpoint. Try changing your region:</p>
 <pre class="jsonc"><code>"CLOUD_ML_REGION": "us-east5"</code></pre>
@@ -4766,23 +5017,23 @@ Tip
 <p>Ask your UW-Madison GCP admin to ensure you have the <code>roles/aiplatform.user</code> role on the project.</p>
 <p><strong><code>gcloud</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" aria-controls="tabset-17-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" aria-controls="tabset-17-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" aria-controls="tabset-18-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" aria-controls="tabset-18-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-17-1" class="tab-pane active" aria-labelledby="tabset-17-1-tab">
+<div id="tabset-18-1" class="tab-pane active" aria-labelledby="tabset-18-1-tab">
 <p>Make sure the Google Cloud SDK is installed and restart PowerShell.</p>
 </div>
-<div id="tabset-17-2" class="tab-pane" aria-labelledby="tabset-17-2-tab">
+<div id="tabset-18-2" class="tab-pane" aria-labelledby="tabset-18-2-tab">
 <p>If you installed via Homebrew, run <code>source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"</code> or restart your terminal. If you used the curl installer, make sure you ran <code>source ~/.zshrc</code> after install.</p>
 </div>
 </div>
 </div>
 <p><strong>Authentication expired:</strong></p>
 <p>Re-run (both platforms):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> auth application-default login</span></code></pre></div></div>
 </div>
-<div id="tabset-19-2" class="tab-pane" aria-labelledby="tabset-19-2-tab">
+<div id="tabset-20-2" class="tab-pane" aria-labelledby="tabset-20-2-tab">
 <p><strong><code>AccessDeniedException</code>:</strong></p>
 <p>Your IAM user/role doesn’t have the required Bedrock permissions. Ensure your policy includes <code>bedrock:InvokeModel</code> and <code>bedrock:InvokeModelWithResponseStream</code>. See Section 4 for the full policy.</p>
 <p><strong><code>ValidationException: Model not found</code>:</strong></p>
@@ -4793,19 +5044,19 @@ font-style: inherit;">gcloud</span> auth application-default login</span></code>
 <p>You’ve hit your Bedrock quota. Request an increase at <a href="https://console.aws.amazon.com/servicequotas/home/services/bedrock/quotas">Service Quotas → Amazon Bedrock</a>. Default quotas are low (e.g., 25 RPM for Opus).</p>
 <p><strong><code>aws</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" aria-controls="tabset-18-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" aria-controls="tabset-18-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" aria-controls="tabset-19-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" aria-controls="tabset-19-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-18-1" class="tab-pane active" aria-labelledby="tabset-18-1-tab">
+<div id="tabset-19-1" class="tab-pane active" aria-labelledby="tabset-19-1-tab">
 <p>Make sure the AWS CLI is installed and restart PowerShell.</p>
 </div>
-<div id="tabset-18-2" class="tab-pane" aria-labelledby="tabset-18-2-tab">
+<div id="tabset-19-2" class="tab-pane" aria-labelledby="tabset-19-2-tab">
 <p>If you installed via Homebrew, restart your terminal. If you used the pkg installer, ensure <code>/usr/local/bin</code> is in your <code>$PATH</code>.</p>
 </div>
 </div>
 </div>
 <p><strong>Credentials expired (SSO):</strong></p>
 <p>Re-run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">aws</span> sso login <span class="at" style="color: #657422;
 background-color: null;
@@ -4830,18 +5081,18 @@ Tip
 <h3 class="anchored" data-anchor-id="common-issues-both-providers">Common issues (both providers)</h3>
 <p><strong><code>claude</code> command not found:</strong></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" aria-controls="tabset-20-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" aria-controls="tabset-20-2" aria-selected="false" href="">macOS</a></li></ul>
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" aria-controls="tabset-21-1" aria-selected="true" href="">Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" aria-controls="tabset-21-2" aria-selected="false" href="">macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-20-1" class="tab-pane active" aria-labelledby="tabset-20-1-tab">
+<div id="tabset-21-1" class="tab-pane active" aria-labelledby="tabset-21-1-tab">
 <p>Ensure <code>C:\Users\&lt;you&gt;\.local\bin</code> is in your user PATH (see Section 2). Restart PowerShell after editing PATH.</p>
 </div>
-<div id="tabset-20-2" class="tab-pane" aria-labelledby="tabset-20-2-tab">
+<div id="tabset-21-2" class="tab-pane" aria-labelledby="tabset-21-2-tab">
 <p>Ensure <code>~/.claude/bin</code> or <code>~/.local/bin</code> is in your <code>$PATH</code>. Restart your terminal or run <code>source ~/.zshrc</code>.</p>
 </div>
 </div>
 </div>
 <p><strong>Run diagnostics:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb68-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span> doctor</span></code></pre></div></div>
 <p>This checks your installation, authentication, and configuration for common issues.</p>
@@ -4850,13 +5101,13 @@ font-style: inherit;">claude</span> doctor</span></code></pre></div></div>
 <section id="quick-reference" class="level2">
 <h2 class="anchored" data-anchor-id="quick-reference">12. Quick Reference</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" aria-controls="tabset-21-1" aria-selected="true" href="">Vertex AI + Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" aria-controls="tabset-21-2" aria-selected="false" href="">Vertex AI + macOS</a></li><li class="nav-item"><a class="nav-link" id="tabset-21-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-3" aria-controls="tabset-21-3" aria-selected="false" href="">Bedrock + Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-21-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-4" aria-controls="tabset-21-4" aria-selected="false" href="">Bedrock + macOS</a></li></ul>
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-22-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-1" aria-controls="tabset-22-1" aria-selected="true" href="">Vertex AI + Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-22-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-2" aria-controls="tabset-22-2" aria-selected="false" href="">Vertex AI + macOS</a></li><li class="nav-item"><a class="nav-link" id="tabset-22-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-3" aria-controls="tabset-22-3" aria-selected="false" href="">Bedrock + Windows</a></li><li class="nav-item"><a class="nav-link" id="tabset-22-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-4" aria-controls="tabset-22-4" aria-selected="false" href="">Bedrock + macOS</a></li></ul>
 <div class="tab-content">
-<div id="tabset-21-1" class="tab-pane active" aria-labelledby="tabset-21-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb60-1"><span class="co" style="color: #5E5E5E;
+<div id="tabset-22-1" class="tab-pane active" aria-labelledby="tabset-22-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb69-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install Claude Code</span></span>
-<span id="cb60-2"><span class="fu" style="color: #4758AB;
+<span id="cb69-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">irm</span> https<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -4875,35 +5126,35 @@ background-color: null;
 font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">iex</span></span>
-<span id="cb60-3"></span>
-<span id="cb60-4"><span class="co" style="color: #5E5E5E;
+<span id="cb69-3"></span>
+<span id="cb69-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install gcloud (if needed)</span></span>
-<span id="cb60-5"><span class="co" style="color: #5E5E5E;
+<span id="cb69-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Download from https://cloud.google.com/sdk/docs/install</span></span>
-<span id="cb60-6"></span>
-<span id="cb60-7"><span class="co" style="color: #5E5E5E;
+<span id="cb69-6"></span>
+<span id="cb69-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Authenticate with GCP</span></span>
-<span id="cb60-8">gcloud auth login</span>
-<span id="cb60-9">gcloud auth application-default login</span>
-<span id="cb60-10"></span>
-<span id="cb60-11"><span class="co" style="color: #5E5E5E;
+<span id="cb69-8">gcloud auth login</span>
+<span id="cb69-9">gcloud auth application-default login</span>
+<span id="cb69-10"></span>
+<span id="cb69-11"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Launch Claude Code</span></span>
-<span id="cb60-12"><span class="fu" style="color: #4758AB;
+<span id="cb69-12"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cd</span> C<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span>\your\project</span>
-<span id="cb60-13">claude</span></code></pre></div></div>
+<span id="cb69-13">claude</span></code></pre></div></div>
 </div>
-<div id="tabset-21-2" class="tab-pane" aria-labelledby="tabset-21-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb61-1"><span class="co" style="color: #5E5E5E;
+<div id="tabset-22-2" class="tab-pane" aria-labelledby="tabset-22-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install Claude Code</span></span>
-<span id="cb61-2"><span class="ex" style="color: null;
+<span id="cb70-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">curl</span> <span class="at" style="color: #657422;
 background-color: null;
@@ -4913,47 +5164,47 @@ font-weight: bold;
 font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">bash</span></span>
-<span id="cb61-3"><span class="co" style="color: #5E5E5E;
+<span id="cb70-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or: brew install --cask claude-code</span></span>
-<span id="cb61-4"></span>
-<span id="cb61-5"><span class="co" style="color: #5E5E5E;
+<span id="cb70-4"></span>
+<span id="cb70-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install gcloud (if needed)</span></span>
-<span id="cb61-6"><span class="ex" style="color: null;
+<span id="cb70-6"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">brew</span> install <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--cask</span> google-cloud-sdk</span>
-<span id="cb61-7"><span class="co" style="color: #5E5E5E;
+<span id="cb70-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or: curl https://sdk.cloud.google.com | bash</span></span>
-<span id="cb61-8"></span>
-<span id="cb61-9"><span class="co" style="color: #5E5E5E;
+<span id="cb70-8"></span>
+<span id="cb70-9"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Authenticate with GCP</span></span>
-<span id="cb61-10"><span class="ex" style="color: null;
+<span id="cb70-10"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> auth login</span>
-<span id="cb61-11"><span class="ex" style="color: null;
+<span id="cb70-11"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gcloud</span> auth application-default login</span>
-<span id="cb61-12"></span>
-<span id="cb61-13"><span class="co" style="color: #5E5E5E;
+<span id="cb70-12"></span>
+<span id="cb70-13"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Launch Claude Code</span></span>
-<span id="cb61-14"><span class="bu" style="color: null;
+<span id="cb70-14"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">cd</span> ~/your/project</span>
-<span id="cb61-15"><span class="ex" style="color: null;
+<span id="cb70-15"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span></span></code></pre></div></div>
 </div>
-<div id="tabset-21-3" class="tab-pane" aria-labelledby="tabset-21-3-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb62-1"><span class="co" style="color: #5E5E5E;
+<div id="tabset-22-3" class="tab-pane" aria-labelledby="tabset-22-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb71-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install Claude Code</span></span>
-<span id="cb62-2"><span class="fu" style="color: #4758AB;
+<span id="cb71-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">irm</span> https<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -4972,39 +5223,39 @@ background-color: null;
 font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">iex</span></span>
-<span id="cb62-3"></span>
-<span id="cb62-4"><span class="co" style="color: #5E5E5E;
+<span id="cb71-3"></span>
+<span id="cb71-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install AWS CLI (if needed)</span></span>
-<span id="cb62-5"><span class="co" style="color: #5E5E5E;
+<span id="cb71-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Download from https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</span></span>
-<span id="cb62-6"></span>
-<span id="cb62-7"><span class="co" style="color: #5E5E5E;
+<span id="cb71-6"></span>
+<span id="cb71-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Authenticate with AWS</span></span>
-<span id="cb62-8">aws sso login <span class="op" style="color: #5E5E5E;
+<span id="cb71-8">aws sso login <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">--</span>profile your-profile</span>
-<span id="cb62-9"><span class="co" style="color: #5E5E5E;
+<span id="cb71-9"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or: aws configure</span></span>
-<span id="cb62-10"></span>
-<span id="cb62-11"><span class="co" style="color: #5E5E5E;
+<span id="cb71-10"></span>
+<span id="cb71-11"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Launch Claude Code</span></span>
-<span id="cb62-12"><span class="fu" style="color: #4758AB;
+<span id="cb71-12"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cd</span> C<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span>\your\project</span>
-<span id="cb62-13">claude</span></code></pre></div></div>
+<span id="cb71-13">claude</span></code></pre></div></div>
 </div>
-<div id="tabset-21-4" class="tab-pane" aria-labelledby="tabset-21-4-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><span class="co" style="color: #5E5E5E;
+<div id="tabset-22-4" class="tab-pane" aria-labelledby="tabset-22-4-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install Claude Code</span></span>
-<span id="cb63-2"><span class="ex" style="color: null;
+<span id="cb72-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">curl</span> <span class="at" style="color: #657422;
 background-color: null;
@@ -5014,36 +5265,36 @@ font-weight: bold;
 font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">bash</span></span>
-<span id="cb63-3"><span class="co" style="color: #5E5E5E;
+<span id="cb72-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or: brew install --cask claude-code</span></span>
-<span id="cb63-4"></span>
-<span id="cb63-5"><span class="co" style="color: #5E5E5E;
+<span id="cb72-4"></span>
+<span id="cb72-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Install AWS CLI (if needed)</span></span>
-<span id="cb63-6"><span class="ex" style="color: null;
+<span id="cb72-6"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">brew</span> install awscli</span>
-<span id="cb63-7"></span>
-<span id="cb63-8"><span class="co" style="color: #5E5E5E;
+<span id="cb72-7"></span>
+<span id="cb72-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Authenticate with AWS</span></span>
-<span id="cb63-9"><span class="ex" style="color: null;
+<span id="cb72-9"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">aws</span> sso login <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--profile</span> your-profile</span>
-<span id="cb63-10"><span class="co" style="color: #5E5E5E;
+<span id="cb72-10"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or: aws configure</span></span>
-<span id="cb63-11"></span>
-<span id="cb63-12"><span class="co" style="color: #5E5E5E;
+<span id="cb72-11"></span>
+<span id="cb72-12"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Launch Claude Code</span></span>
-<span id="cb63-13"><span class="bu" style="color: null;
+<span id="cb72-13"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">cd</span> ~/your/project</span>
-<span id="cb63-14"><span class="ex" style="color: null;
+<span id="cb72-14"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">claude</span></span></code></pre></div></div>
 </div>
@@ -5324,7 +5575,7 @@ Shift+Tab      # Cycle through permission modes</code></pre>
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="de1cde2e" class="cell" data-execution_count="1">
+<div id="880f90c9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -5333,7 +5584,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="60b53590" class="cell" data-execution_count="2">
+<div id="381c79cd" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -5367,7 +5618,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="b16a3c72" class="cell" data-execution_count="3">
+<div id="ad96f498" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -5639,7 +5890,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="b060cb28" class="cell" data-execution_count="4">
+<div id="8356f2ef" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -5819,7 +6070,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="817c6192" class="cell" data-execution_count="5">
+<div id="e011fe1d" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>
@@ -6136,7 +6387,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <h2 class="anchored" data-anchor-id="step-1-load-the-corpus">Step 1: Load the corpus</h2>
 <p>In this example, we’ll use “Romeo and Juliet” as our text corpus. This text is freely available via <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/Gutenberg.html">Project Gutenberg</a>.</p>
 <p>Preview the file</p>
-<div id="72f6f1d3" class="cell" data-execution_count="1">
+<div id="06ce079c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Download Romeo and Juliet from Project Gutenberg</span></span>
@@ -6172,7 +6423,7 @@ font-style: inherit;">print</span>(file_contents[:preview_len])</span></code></p
 <section id="step-2-split-text-into-chunks" class="level2">
 <h2 class="anchored" data-anchor-id="step-2-split-text-into-chunks">Step 2: Split text into “chunks”</h2>
 <p>Next, we define a function to split the corpus into smaller chunks based on word count. The simplest “chunking” approach is to chunk by word count or character count.</p>
-<div id="f6cd14b2" class="cell" data-execution_count="2">
+<div id="e3a5a37c" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -6295,7 +6546,7 @@ background-color: null;
 font-style: inherit;"># Return list of chunks</span></span></code></pre></div></div>
 </div>
 <p>We then apply our chunking function to the corpus.</p>
-<div id="60b98b0a" class="cell" data-execution_count="3">
+<div id="71d7d791" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Apply the chunking function to your full text file</span></span>
@@ -6384,7 +6635,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <li>Retrieve the top-matching chunks to pass along as context to the language model.</li>
 </ol>
 <p>This allows the system to surface text that is meaningfully related to the question—even if it doesn’t use the same words. For example, a question like “<em>What does Juliet think of Romeo?</em>” might retrieve a passage describing her inner turmoil or emotional reaction, even if the words “think” or “Romeo” aren’t explicitly present. Embedding-based retrieval improves relevance, flexibility, and ultimately the quality of the answers your language model can generate.</p>
-<div id="f98df671" class="cell" data-execution_count="4">
+<div id="0e6ca68a" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> sentence_transformers <span class="im" style="color: #00769E;
@@ -6470,7 +6721,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="are-question-embeddings-and-chunk-embeddings-really-comparable" class="level3">
 <h3 class="anchored" data-anchor-id="are-question-embeddings-and-chunk-embeddings-really-comparable">Are question embeddings and chunk embeddings really comparable?</h3>
 <p>We’re assuming that the embedding model (e.g., <code>all-MiniLM-L6-v2</code>) was trained in such a way that <em>questions and answers occupy the same semantic space</em>. That is, if a question and a passage are semantically aligned (e.g., about the same topic or fact), their embeddings should be close. This assumption holds reasonably well for general-purpose models trained on sentence pairs, but it’s not perfect — especially for very abstract or indirect questions. If a model was only trained to embed statements, it may not align questions correctly. You might retrieve chunks that are <strong>related but not directly useful</strong> for answering the question.</p>
-<div id="f88e724a" class="cell" data-execution_count="5">
+<div id="c4a80163" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> sklearn.metrics.pairwise <span class="im" style="color: #00769E;
@@ -6518,7 +6769,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> results</span></code></pre></div></div>
 </div>
-<div id="7688dd98" class="cell" data-execution_count="6">
+<div id="b63d785e" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">question <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -6601,7 +6852,7 @@ font-style: inherit;">print</span>(chunk)</span></code></pre></div></div>
 </section>
 <section id="run-a-few-additional-queries-report-top-ranked-chunk" class="level3">
 <h3 class="anchored" data-anchor-id="run-a-few-additional-queries-report-top-ranked-chunk">Run a few additional queries &amp; report top-ranked chunk</h3>
-<div id="0f55b080" class="cell" data-execution_count="7">
+<div id="2f1d7627" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Run a few factual queries and inspect the top-ranked chunks</span></span>
@@ -6722,7 +6973,7 @@ font-style: inherit;"># print first ~800 chars for readability</span></span></co
 <h3 class="anchored" data-anchor-id="refining-chunking-strategy">Refining chunking strategy</h3>
 <p>Our current chunks are only based on word length. Instead, we can create chunks that are more tuned to the dataset and potential questions we might ask by defining a chunk as a “dialogue block”, i.e., as a group of N full speaker turns (e.g., JULIET. + her lines, ROMEO. + his lines, etc.).</p>
 <p>Let’s give this a shot to see how it impacts retrieval.</p>
-<div id="fe1f855b" class="cell" data-execution_count="8">
+<div id="cf6df355" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> re</span>
@@ -6969,7 +7220,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> grouped_chunks</span></code></pre></div></div>
 </div>
-<div id="69f34b32" class="cell" data-execution_count="9">
+<div id="f279ac19" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">speaker_chunks <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> chunk_by_speaker_blocks(file_contents, block_size<span class="op" style="color: #5E5E5E;
@@ -7007,7 +7258,7 @@ background-color: null;
 font-style: inherit;">"</span>)</span></code></pre></div></div>
 </div>
 <p>Our chunks have now been improved so that we aren’t cutting off any diagloue mid-sentence, and each chunk contains a few turns between speakers – allowing us to better capture the overall semantics of short passages from <em>Romeo and Juliet</em>.</p>
-<div id="5a2cc53c" class="cell" data-execution_count="10">
+<div id="8d4f3bc9" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">dialogue_embeddings <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> model.encode(speaker_chunks, device<span class="op" style="color: #5E5E5E;
@@ -7030,7 +7281,7 @@ font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span></code></pre></div></div>
 </div>
-<div id="e3acd4bf" class="cell" data-execution_count="11">
+<div id="e3995e20" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Run a few factual queries and inspect the top-ranked chunks</span></span>
@@ -7158,7 +7409,7 @@ font-style: inherit;"># print first ~800 chars for readability</span></span></co
 <p>The model we’ve used so far, <a href="https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1"><code>multi-qa-MiniLM-L6-cos-v1</code></a>, is a solid starting point for retrieval-augmented generation (RAG) pipelines, it is relatively lightweight (22M parameters, ~500–800 MB GPU memory), which makes it efficient but less expressive than larger models.</p>
 <p>However, larger embedding models have more capacity to capture subtle semantic relationships, including indirect phrasing or domain-specific language. This can make a dramatic difference in tasks like matching Shakespearean dialogue to modern questions—something smaller models often struggle with.</p>
 <p>Let’s try a slightly larger model with 109 M parameters, <a href="https://huggingface.co/sentence-transformers/all-mpnet-base-v2"><code>all-mpnet-base-v2</code></a></p>
-<div id="f58ebc78" class="cell" data-execution_count="12">
+<div id="2e606db6" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> sentence_transformers <span class="im" style="color: #00769E;
@@ -7187,7 +7438,7 @@ font-style: inherit;">=</span> model_larger.encode(speaker_chunks, device<span c
 background-color: null;
 font-style: inherit;">=</span>device)</span></code></pre></div></div>
 </div>
-<div id="11ff30f5" class="cell" data-execution_count="13">
+<div id="af2759e9" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Run a few factual queries and inspect the top-ranked chunks</span></span>
@@ -7309,7 +7560,7 @@ QUESTION: [your question]
 ANSWER:</code></pre>
 <p>By framing the input this way, we signal to the model that it should focus only on the retrieved content. We’re not asking it to draw from general knowledge of the play—just from the selected passages.</p>
 <p>Let’s begin assembling the full prompt:</p>
-<div id="9a48aea3" class="cell" data-execution_count="14">
+<div id="41dcd596" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">question <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -7318,7 +7569,7 @@ font-style: inherit;">"Who killed Mercutio?"</span> <span class="co" style="colo
 background-color: null;
 font-style: inherit;"># Tybalt/Tibalt</span></span></code></pre></div></div>
 </div>
-<div id="16228ce3" class="cell" data-execution_count="15">
+<div id="76bfdf2b" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1">top_dialgoue_chunks <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> retrieve_relevant_chunks(model_larger, question, speaker_chunks, dialogue_embeddings, top_n<span class="op" style="color: #5E5E5E;
@@ -7349,7 +7600,7 @@ font-style: inherit;">in</span> top_dialgoue_chunks)</span>
 background-color: null;
 font-style: inherit;">print</span>(context)</span></code></pre></div></div>
 </div>
-<div id="a197c3de" class="cell" data-execution_count="16">
+<div id="51b974c0" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">prompt <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
@@ -7391,7 +7642,7 @@ font-style: inherit;">print</span>(prompt)</span></code></pre></div></div>
 <h3 class="anchored" data-anchor-id="language-model-for-generation">Language model for generation</h3>
 <p>For this section, we’re using <a href="https://huggingface.co/tiiuae/falcon-rw-1b"><code>tiiuae/falcon-rw-1b</code></a>, a small 1.3B parameter decoder-only model trained on the RefinedWeb dataset. It’s designed for general-purpose text continuation, not for answering questions or following instructions.</p>
 <p>This makes it a good baseline for testing how much a generative model can do with only retrieved context and minimal guidance. As we’ll see, its output often reflects surface-level patterns or recent tokens, rather than accurate reasoning grounded in the text.</p>
-<div id="ce8dd075" class="cell" data-execution_count="17">
+<div id="81f0e934" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> transformers <span class="im" style="color: #00769E;
@@ -7420,7 +7671,7 @@ font-style: inherit;">"auto"</span>)</span></code></pre></div></div>
 <li><code>do_sample=True</code>: Enables creative variation rather than deterministic output. For the purposes of getting a reproducible result, we’ll set this to <code>False</code></li>
 </ul>
 <p>These parameters influence not just length, but also how literal or speculative the answer might be. Sampling increases variety but can also introduce tangents or continuation artifacts.</p>
-<div id="b770ea16" class="cell" data-execution_count="18">
+<div id="2a0af98b" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">result <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> llm(prompt, max_new_tokens<span class="op" style="color: #5E5E5E;
@@ -7437,7 +7688,7 @@ font-style: inherit;">0</span>][<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"generated_text"</span>]</span></code></pre></div></div>
 </div>
-<div id="5cab909b" class="cell" data-execution_count="19">
+<div id="b0037c7c" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(result)</span></code></pre></div></div>
@@ -7452,7 +7703,7 @@ font-style: inherit;">print</span>(result)</span></code></pre></div></div>
 <pre><code>[prompt] + [generated text]</code></pre>
 <p>If you’re only interested in the generated part (e.g., the model’s answer), you’ll need to remove the prompt manually after generation.</p>
 <p>We can strip off the final answer / generated result with the next code cell.</p>
-<div id="7ba98661" class="cell" data-execution_count="20">
+<div id="f9d2fdc5" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1">generated_answer <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> result[<span class="bu" style="color: null;
@@ -7487,7 +7738,7 @@ Answer: She curses fortune.</code></pre>
 <li>Add a <code>stop</code> sequence after the first answer (if supported)</li>
 <li>Use a tighter or more explicit prompt style</li>
 </ul>
-<div id="0dfdc39a" class="cell" data-execution_count="21">
+<div id="cb648f5b" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1">result <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> llm(prompt, max_new_tokens<span class="op" style="color: #5E5E5E;
@@ -7547,7 +7798,7 @@ The life of Tybalt</p>
 <h4 class="anchored" data-anchor-id="instruction-tuning-improves-perfomance">Instruction tuning improves perfomance</h4>
 <p>To improve factual accuracy in your RAG pipeline, it’s helpful to use an <strong>instruction-tuned</strong> model rather than a base language model. You’ve been using <code>falcon-rw-1b</code> (where “rw” stands for “Refined Web”), which is trained only to continue text — not to follow specific question-and-answer instructions. That’s why it often hallucinates factual events.</p>
 <p>A lightweight upgrade is to instead use <code>tiiuae/Falcon3-1B-Instruct</code>, an instruction-tuned version of Falcon. It still runs on modest hardware but is trained to follow prompts and answer questions in a focused way.</p>
-<div id="9c0a5d89" class="cell" data-execution_count="22">
+<div id="d36f4c7b" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> transformers <span class="im" style="color: #00769E;
@@ -7579,7 +7830,7 @@ background-color: null;
 font-style: inherit;"># optional, helps with GPU memory</span></span>
 <span id="cb26-8">)</span></code></pre></div></div>
 </div>
-<div id="be10f949" class="cell" data-execution_count="23">
+<div id="a0917928" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># </span><span class="al" style="color: #AD0000;
