@@ -14,6 +14,7 @@ categories:
   - LLM
   - Kubernetes
   - Jupyter
+  - Education
   - NSF
 ---
 
@@ -151,6 +152,20 @@ NRP enforces real resource-utilization rules. Skim the full [Cluster Policies](h
 - **Resource limits must be within 20% of requests** for most pods, and `limit = request` if you're running >100 pods/jobs.
 - **Storage purges after 6 months idle.** NRP is not archival storage — keep only what you're actively using.
 
+## Classroom and instructional use
+
+NRP has a dedicated Educational Resources track for instructors who want to give students access to GPUs, LLMs, and IDEs without each student wrangling their own setup. Useful capabilities for teaching:
+
+- **Shared hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/)** — students sign in via CILogon and get a notebook environment without installing anything. Good for one-off workshops or short courses where a stock image is enough.
+- **Private JupyterHub for your class** — NRP can [stand up a JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub/) scoped to your course, with a custom container image (whatever Python / CUDA / library stack you need) and per-student persistent storage. Better for full-semester courses.
+- **Hosted LLM API for student projects** — students can build RAG pipelines, agents, evaluators, or other GenAI apps against open-weight models (`qwen3`, `gpt-oss`, etc.) without anyone needing to provide API credits. Each student creates their own [LLM token](https://nrp.ai/llmtoken).
+- **Classroom GPU access** — modern GPUs (RTX 30/40-series, A10, A100 with admin approval) for assignments and projects. Plan around the >40% utilization rule and the 6 hr interactive cap, or run student work as `Job`s.
+- **[Coder](https://nrp.ai/documentation/userdocs/coder/coder/) (web-based VS Code)** — useful when students should write and debug code in a browser-based IDE rather than a notebook.
+
+To set up a classroom, email **[support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org)** with course details (size, duration, GPU/LLM needs, custom image requirements) — and join the Matrix `#ask-nautilus` channel for ongoing support.
+
+For UW–Madison instructors, weigh NRP against options closer to home: [BadgerCompute](BadgerCompute.qmd) gives every NetID-holding student a JupyterHub session with light GPU access (no setup), [CHTC](CHTC.qmd) offers free GPU Lab time and dedicated facilitators that can support classroom workflows, and [Google Colab](GoogleColab.qmd) is the lowest-friction option for short assignments. NRP shines when you want a custom Jupyter image scoped to your class, hosted open-weight LLMs your students can build on, or a Coder-based VS Code workflow.
+
 ## When to choose NRP vs. other compute
 
 NRP overlaps with several resources UW–Madison researchers already use. Quick guidance:
@@ -162,6 +177,7 @@ NRP overlaps with several resources UW–Madison researchers already use. Quick 
 | Quick interactive notebook, no setup (UW–Madison) | [**BadgerCompute**](BadgerCompute.qmd) or [**Google Colab**](GoogleColab.qmd) |
 | NVLink multi-GPU, persistent endpoints, managed ML platforms | [**UW Cloud Services**](UW-Cloud-Services.qmd) (AWS / GCP / Azure) |
 | Multi-site GPU jobs, open-weight LLM API, Kubernetes-native workflows | **NRP / Nautilus** |
+| Classroom needing custom Jupyter image, hosted LLMs, or VS Code in-browser | **NRP / Nautilus** (private JupyterHub + Coder) |
 | Frontier proprietary LLMs (Claude, GPT-4o, Gemini) | [**GenAI at UW-Madison**](../GenAI/GenAI-at-UW-Madison.qmd) |
 
 The honest tradeoff: NRP gives you free access to compute and to a serious roster of open-weight LLMs, but it expects you to learn Kubernetes (or use the JupyterHub) and to play nicely under shared fair-use and cluster-utilization rules. CHTC is friendlier for batch ML at UW and has dedicated facilitators; cloud services are friendlier for managed platforms and NVLink. NRP shines when you want a free open-weight LLM API, when CHTC's queue is blocking you, or when you want multi-site Kubernetes for AI/ML workloads — and you're willing to write some YAML.
