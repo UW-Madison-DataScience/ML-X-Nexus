@@ -34,6 +34,13 @@ NRP is most useful in two ways for ML/AI researchers:
 5. For cluster access: install `kubectl` and the [`kubelogin`](https://github.com/int128/kubelogin) plugin, then drop the [NRP config](https://nrp.ai/config) at `~/.kube/config`. Full walkthrough: [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/).
 :::
 
+::: {.callout-warning}
+## Pick one identity provider and stick with it
+The first time you log in at [nrp.ai](https://nrp.ai/), authentik binds your account to whichever CILogon identity provider you picked (UW–Madison, Google, GitHub, ORCID, etc.). If you try to sign in later with a *different* provider, you'll get `Permission denied — Request to authenticate with CiLogon has been denied. Please authenticate with the source you've previously signed up with.` Use the same IdP every time, or ask in the [Matrix](https://nrp.ai/contact/) `#ask-nautilus` channel to merge identities.
+
+ORCID has an extra requirement: your ORCID email must be set to **public visibility**, otherwise CILogon won't release the email and the login is rejected.
+:::
+
 ## Why use NRP?
 
 - **Free GPU and LLM access** for AI/ML research at participating institutions — no cloud bills, no grant overhead.
