@@ -25,22 +25,6 @@ NRP is most useful in two ways for ML/AI researchers:
 1. **Compute** — Kubernetes-orchestrated GPU jobs (RTX 2080 Ti, 3090, 4090, A10, A100) and a hosted JupyterHub for interactive notebook work.
 2. **Managed LLM inference** — A free, OpenAI-compatible API endpoint serving open-weight models (Qwen3, GPT-OSS, Kimi, GLM-5, Gemma, MiniMax-M2, OLMo, embeddings).
 
-::: {.callout-tip}
-## Get started
-1. **Log in** at [nrp.ai](https://nrp.ai/) via [CILogon](https://www.cilogon.org/) using your institutional identity (UW–Madison is supported).
-2. **Join Matrix** — required for support and account promotion ([instructions](https://nrp.ai/contact/)).
-3. **Get added to a namespace.** Students: ask your faculty advisor to add you. Faculty/postdocs: request admin promotion in the Matrix `#ask-nautilus` channel and pick a namespace name (lowercase, descriptive, e.g., `uw-madison-mlx-yourgroup`).
-4. **Read the [AUP](https://nrp.ai/NRP-AUP.pdf) and [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/)** before submitting workloads — there are real resource-utilization rules and you can be banned for violating them.
-5. For cluster access: install `kubectl` and the [`kubelogin`](https://github.com/int128/kubelogin) plugin, then drop the [NRP config](https://nrp.ai/config) at `~/.kube/config`. Full walkthrough: [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/).
-:::
-
-::: {.callout-warning}
-## Pick one identity provider and stick with it
-The first time you log in at [nrp.ai](https://nrp.ai/), authentik binds your account to whichever CILogon identity provider you picked (UW–Madison, Google, GitHub, ORCID, etc.). If you try to sign in later with a *different* provider, you'll get `Permission denied — Request to authenticate with CiLogon has been denied. Please authenticate with the source you've previously signed up with.` Use the same IdP every time, or ask in the [Matrix](https://nrp.ai/contact/) `#ask-nautilus` channel to merge identities.
-
-ORCID has an extra requirement: your ORCID email must be set to **public visibility**, otherwise CILogon won't release the email and the login is rejected.
-:::
-
 ## Why use NRP?
 
 - **Free GPU and LLM access** for AI/ML research at participating institutions — no cloud bills, no grant overhead.
@@ -70,17 +54,7 @@ The catalog rotates as the open-weights frontier moves. **`main`** = generally s
 | `minimax-m2` | evaluating | 230B | 204,800 | ✓ | implicit | text |
 | `olmo` | evaluating | 32B | 65,536 | ✓ | — | text |
 
-See the [Available models page](https://nrp.ai/documentation/userdocs/ai/llm-managed/models/) for full per-model cards and the [lifecycle & changelog](https://nrp.ai/documentation/userdocs/ai/llm-managed/lifecycle/) before pinning a model name in production scripts.
-
-### Picking a model
-
-From NRP's own recommendations:
-
-- **Frontier reasoning, longest context, multimodal** → `qwen3`
-- **Agentic coding** → `kimi`, `glm-5`, or `minimax-m2`
-- **Multimodal with audio (ASR / speech-to-text)** → `gemma-small` (the only catalogued model that accepts audio)
-- **Reproducible research / general-purpose long-term-support** → `gpt-oss` (pinnable, text-only, low GPU footprint)
-- **Embeddings for vector search / RAG** → `qwen3-embedding` (chat completions will not work here)
+See the [Available models page](https://nrp.ai/documentation/userdocs/ai/llm-managed/models/) for full per-model cards (with recommended use cases) and the [lifecycle & changelog](https://nrp.ai/documentation/userdocs/ai/llm-managed/lifecycle/) before pinning a model name in production scripts.
 
 ### API access
 
@@ -134,8 +108,34 @@ Caveats from the [fair-use policy](https://nrp.ai/documentation/userdocs/ai/llm-
 - **Need more than the limits?** Contact admins in advance (e.g., deadline, workshop) — or [deploy your own model](https://nrp.ai/documentation/admindocs/ai/managing_models/) on the cluster via vLLM or SGLang.
 - **Scripts should retry indefinitely** with exponential backoff, and dynamically reduce concurrency when latency climbs. Models go down for maintenance.
 
+#### What's actually capped (and what isn't)
+
+NRP does **not** publish a daily-token, daily-inference-time, or monthly-spend cap on the managed LLM API. The only quantified limits are:
+
+- **Per-user concurrency** — the table above.
+- **Per-request context** — anything ≥35% of a model's context window is treated as a long-context request and limited to 1 in-flight at a time per user.
+- **Max context per model** — the `Context` column in the [models table](#available-models-as-of-may-2026). For example, `qwen3` and `qwen3-small` both top out at ~1.01M tokens; `gpt-oss` at 131K; `olmo` at 65K. Output (`max_tokens`) should be ≈ 1/3–1/4 of the context window.
+
+In practice that means **throughput** is governed by concurrency × per-request latency, not by a daily budget you can blow through. If you push enough volume to matter, the constraint will show up as latency / queueing rather than as a hard cutoff — and that's the signal to back off (or contact admins for a higher-volume session). For compute pods, "max model size" depends entirely on which GPU pod you can schedule — an A100 80 GB can run ~70B-parameter inference at INT4 quantization, while RTX 30/40-series cards are practical up to ~13B at INT4.
+
 ::: {.callout-note}
 NRP's managed LLMs are great for prototyping, evaluation, and research that benefits from open-weight reproducibility. For proprietary frontier models (Claude, GPT-4o, Gemini) and HIPAA-eligible inference, see [GenAI at UW-Madison](../GenAI/GenAI-at-UW-Madison.qmd) and [UW Cloud Services](UW-Cloud-Services.qmd).
+:::
+
+::: {.callout-tip}
+## Get started
+1. **Log in** at [nrp.ai](https://nrp.ai/) via [CILogon](https://www.cilogon.org/) using your institutional identity (UW–Madison is supported).
+2. **Join Matrix** — required for support and account promotion ([instructions](https://nrp.ai/contact/)).
+3. **Get added to a namespace.** Students: ask your faculty advisor to add you. Faculty/postdocs: request admin promotion in the Matrix `#ask-nautilus` channel and pick a namespace name (lowercase, descriptive, e.g., `uw-madison-mlx-yourgroup`).
+4. **Read the [AUP](https://nrp.ai/NRP-AUP.pdf) and [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/)** before submitting workloads — there are real resource-utilization rules and you can be banned for violating them.
+5. For cluster access: install `kubectl` and the [`kubelogin`](https://github.com/int128/kubelogin) plugin, then drop the [NRP config](https://nrp.ai/config) at `~/.kube/config`. Full walkthrough: [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/).
+:::
+
+::: {.callout-warning}
+## Pick one identity provider and stick with it
+The first time you log in at [nrp.ai](https://nrp.ai/), authentik binds your account to whichever CILogon identity provider you picked (UW–Madison, Google, GitHub, ORCID, etc.). If you try to sign in later with a *different* provider, you'll get `Permission denied — Request to authenticate with CiLogon has been denied. Please authenticate with the source you've previously signed up with.` Use the same IdP every time, or ask in the [Matrix](https://nrp.ai/contact/) `#ask-nautilus` channel to merge identities.
+
+ORCID has an extra requirement: your ORCID email must be set to **public visibility**, otherwise CILogon won't release the email and the login is rejected.
 :::
 
 ## Compute (Kubernetes pods and Jupyter)
