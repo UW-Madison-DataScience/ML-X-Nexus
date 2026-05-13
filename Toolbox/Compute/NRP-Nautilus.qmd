@@ -1,0 +1,138 @@
+---
+title: "National Research Platform (Nautilus)"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-05-13
+date-modified: 2026-05-13
+date-format: long
+image: "../../../images/vincent-van-zalinge-mDohQISBnCk-unsplash.jpg"
+categories:
+  - Compute
+  - GPU
+  - HPC
+  - LLM
+  - Kubernetes
+  - Jupyter
+  - NSF
+---
+
+The [National Research Platform (NRP)](https://nrp.ai/) — sometimes called **Nautilus** — is an NSF-supported, distributed Kubernetes cluster that stitches together GPU servers, storage, and high-speed networking across dozens of sites. It is **free** for researchers at [InCommon](https://incommon.org/)-affiliated institutions (including UW–Madison) who are doing sponsored AI/ML research, subject to NRP's [Acceptable Use Policy](https://nrp.ai/documentation/userdocs/start/policies/) and fair-use limits.
+
+NRP is most useful in two ways for ML/AI researchers:
+
+1. **Compute** — Kubernetes-orchestrated GPU jobs (RTX 2080 Ti, 3090, 4090, A10, A100) and a JupyterHub for interactive notebook work.
+2. **Managed LLM inference** — A free, OpenAI-compatible API endpoint serving open-weight models (Qwen3, GPT-OSS, Kimi, GLM-5, Gemma, MiniMax-M2, OLMo, embeddings).
+
+::: {.callout-tip}
+## Get started
+Join the [Nautilus Matrix channel](https://nrp.ai/documentation/userdocs/start/contact/) first — a Matrix account is required before you can request a Nautilus account. From there, follow [Get Access](https://nrp.ai/documentation/userdocs/start/get-access/) to register and be promoted to User.
+:::
+
+## Why use NRP?
+
+- **Free GPU and LLM access** for AI/ML research at participating institutions — no cloud bills, no grant overhead.
+- **Distributed across dozens of sites** — jobs land wherever capacity is available, and you don't manage the placement.
+- **Hosted LLM API** with current open-weight models, callable from any OpenAI-compatible client (Python `openai` SDK, LangChain, LlamaIndex, etc.).
+- **JupyterLab option** — if you don't want to learn Kubernetes, request access to NRP's hosted JupyterHub and write code in the browser.
+- **Non-commercial / non-profit** — usage is governed by the NRP [AUP](https://nrp.ai/documentation/userdocs/start/policies/); research and educational use only.
+
+## Managed LLM inference
+
+NRP runs a [managed LLM gateway](https://nrp.ai/documentation/userdocs/ai/llm-managed/overview/) backed by GPU nodes contributed by the San Diego Supercomputer Center (SDSC) and Internet2. It exposes an OpenAI-compatible API and a web chat UI, with a rotating roster of open-weight models.
+
+### Available models (as of May 2026)
+
+| Family | Examples | Notes |
+|--------|----------|-------|
+| General chat | `qwen3`, `qwen3-small`, `gpt-oss`, `kimi`, `glm-5`, `minimax-m2` | Frontier-quality open-weight models |
+| Smaller / fast | `gemma`, `gemma-small`, `olmo` | Lower latency, lower context |
+| Embeddings | `qwen3-embedding` | For RAG / vector search |
+
+See the [Available models](https://nrp.ai/documentation/userdocs/ai/llm-managed/models/) page for the current list, context lengths, and chat interfaces. Models come and go — check the [lifecycle & changelog](https://nrp.ai/documentation/userdocs/ai/llm-managed/changelog/) before depending on a specific name in production scripts.
+
+### Fair-use limits
+
+Limits are **per-user concurrency** (not requests-per-minute). They are not yet auto-enforced, but rate limiting in the gateway is "coming soon," and admins ask users to self-regulate.
+
+| Max concurrent requests | Models |
+|-------------------------|--------|
+| 2 | `kimi` |
+| 4 | `glm-5` |
+| 8 | `minimax-m2`, `qwen3-small`, `gemma`, `gemma-small`, `olmo` |
+| 16 | `qwen3`, `gpt-oss`, `qwen3-embedding` |
+
+A few important caveats from the [fair-use policy](https://nrp.ai/documentation/userdocs/ai/llm-managed/fair-use/):
+
+- **Long-context requests count more.** Any request using ≥35% of a model's context length is limited to **1 concurrent request per user**, and the *sum* of in-flight context across your requests must stay under 35%.
+- **SDSC and Internet2 affiliates get 2× limits**, plus the option to arrange higher-volume sessions.
+- **Need more than the limits?** Contact admins in advance (e.g., for a deadline or a workshop) — or [deploy your own model](https://nrp.ai/documentation/userdocs/ai/managing/) on the cluster.
+- **Scripts should retry indefinitely** with exponential backoff and dynamically reduce concurrency when latency climbs. Models go down for maintenance.
+
+### Calling the API
+
+NRP's LLM endpoint is OpenAI-compatible, so any client that accepts a custom `base_url` works. See [API access](https://nrp.ai/documentation/userdocs/ai/llm-managed/api/) and [client configurations](https://nrp.ai/documentation/userdocs/ai/llm-managed/clients/) for token setup and example clients (Python `openai`, `litellm`, LangChain, OpenWebUI, Continue, etc.).
+
+::: {.callout-note}
+NRP's managed LLMs are great for prototyping, evaluation, and research that benefits from open-weight reproducibility. For proprietary frontier models (Claude, GPT-4o, Gemini) and HIPAA-eligible inference, see [GenAI at UW-Madison](../GenAI/GenAI-at-UW-Madison.qmd) and [UW Cloud Services](UW-Cloud-Services.qmd).
+:::
+
+## Compute (Kubernetes pods and Jupyter)
+
+NRP is a Kubernetes cluster — you describe workloads in YAML and submit them with `kubectl`. The [Using Nautilus](https://nrp.ai/documentation/userdocs/running/intro/) guides walk through pods, scaling, batch jobs, scheduling, container images, and persistent storage.
+
+GPU hardware spans both general-purpose (RTX 2080 Ti, 3090, 4090, A10) and high-precision (A100) cards, distributed across many sites. Specialized hardware (e.g., Qualcomm Cloud AI 100 cards) is also available — see the [docs](https://nrp.ai/documentation/userdocs/ai/cloud-ai-100/).
+
+If you don't want to learn Kubernetes, NRP also offers a hosted [JupyterHub](https://nrp.ai/documentation/userdocs/ai/jupyterhub/) for interactive notebook work — browser-based, no local installs, backed by cluster GPUs.
+
+## When to choose NRP vs. other compute
+
+NRP overlaps with several resources UW–Madison researchers already use. Quick guidance:
+
+| Use case | Recommendation |
+|----------|----------------|
+| Free, hosted LLM API for prototyping or research | **NRP managed LLMs** — open-weight models, no cost |
+| Batch ML training, hyperparameter sweeps (UW–Madison) | [**CHTC**](CHTC.qmd) — free GPU Lab, dedicated facilitators |
+| Quick interactive notebook, no setup (UW–Madison) | [**BadgerCompute**](BadgerCompute.qmd) or [**Google Colab**](GoogleColab.qmd) |
+| NVLink multi-GPU, persistent endpoints, managed ML platforms | [**UW Cloud Services**](UW-Cloud-Services.qmd) (AWS / GCP / Azure) |
+| Multi-site GPU jobs, open-weight LLM API, Kubernetes-native workflows | **NRP / Nautilus** |
+| Frontier proprietary LLMs (Claude, GPT-4o, Gemini) | [**GenAI at UW-Madison**](../GenAI/GenAI-at-UW-Madison.qmd) |
+
+The honest tradeoff: NRP gives you free access to compute and to a serious roster of open-weight LLMs, but it expects you to learn Kubernetes (or use the JupyterHub) and to play nicely under shared fair-use limits. CHTC is friendlier for batch ML at UW and has dedicated facilitators; cloud services are friendlier for managed platforms and NVLink. NRP shines when you want a free open-weight LLM API or when CHTC's queue is blocking you and you're willing to write some YAML.
+
+## Connections to the ML Marathon
+
+The [ML+X Machine Learning Marathon](../../Projects/ML-Marathon/index.qmd) is a 12-week ML/AI hackathon where teams tackle real-world challenges. NRP is a natural fit:
+
+- **Free LLM API for GenAI / RAG challenges.** Teams building retrieval-augmented pipelines, agentic workflows, or LLM-based evaluators can call `qwen3`, `gpt-oss`, or `kimi` from any OpenAI-compatible client — no credit card needed, no per-token billing to plan around. `qwen3-embedding` covers the vector-search side.
+- **Free GPUs for fine-tuning and inference on open weights.** Teams that want to fine-tune Llama, Qwen, Gemma, or similar can request GPU pods on NRP without burning grant funds or competing in CHTC's queue.
+- **Reproducibility.** Open-weight models hosted by a non-profit research platform are easier to cite and revisit after the Marathon than closed APIs whose pricing or model versions may change.
+- **Plan for fair-use limits.** With per-user concurrency capped (often 8–16, lower for the largest models), teams should design pipelines that batch sequentially, retry with backoff, and avoid >35% context usage per request. This is good engineering hygiene regardless of platform.
+- **Mix platforms.** Many teams will combine NRP (open-weight LLM API), CHTC (training and batch sweeps), and UW Cloud (occasional managed-service needs). None of these are mutually exclusive.
+
+If you're organizing a Marathon challenge that needs NRP capacity beyond fair-use limits, contact the NRP admins in advance via the Matrix channel to arrange a higher-volume session.
+
+## Policies and acceptable use
+
+- NRP is **non-profit and non-commercial**. All usage is subject to the [AUP](https://nrp.ai/documentation/userdocs/start/policies/).
+- Do not use NRP for restricted/regulated data unless you have explicit confirmation from admins that your data class is permitted.
+- Standard data hygiene applies: don't store secrets in container images, don't share credentials, follow your institution's data-handling rules.
+
+## Getting help
+
+- **Matrix channel** (required for account creation): see [Asking for Support](https://nrp.ai/documentation/userdocs/start/contact/)
+- **Documentation**: [nrp.ai/documentation](https://nrp.ai/documentation/)
+- **FAQ**: [nrp.ai/documentation/userdocs/start/faq/](https://nrp.ai/documentation/userdocs/start/faq/)
+- **Glossary**: [nrp.ai/documentation/userdocs/start/glossary/](https://nrp.ai/documentation/userdocs/start/glossary/)
+- **AI/ML chat room** (for LLM-specific questions, latency reports, and capacity requests): linked from the Nautilus Matrix space
+
+## Related resources
+
+- [**Compute**: Center for High Throughput Computing (CHTC)](CHTC.qmd) — Free GPU Lab and HTC pool for UW–Madison researchers; better for batch ML training and large hyperparameter sweeps.
+- [**Compute**: UW–Madison Cloud Services (AWS, GCP, Azure)](UW-Cloud-Services.qmd) — When you need NVLink multi-GPU, managed ML platforms, or persistent services.
+- [**Compute**: BadgerCompute](BadgerCompute.qmd) — UW–Madison's lightweight, NetID-authenticated JupyterHub for quick interactive work.
+- [**Compute**: Google Colab](GoogleColab.qmd) — Free hosted notebooks with optional GPU access for prototyping.
+- [**GenAI**: UW Generative AI Services & Policies](../GenAI/GenAI-at-UW-Madison.qmd) — UW-vetted access to proprietary frontier models (Claude, GPT-4o, Gemini) and policy guidance.
+- [**Projects**: ML+X Machine Learning Marathon](../../Projects/ML-Marathon/index.qmd) — Annual ML/AI hackathon; NRP's free LLM API and GPUs are well suited to Marathon team workflows.
+
+## Comments
