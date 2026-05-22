@@ -1,0 +1,238 @@
+---
+title: "NRP-Hosted LLMs: Access Setup and a First API Call"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-05-13
+date-format: long
+image: "../../../images/vincent-van-zalinge-mDohQISBnCk-unsplash.jpg"
+description: "A code-along walkthrough of getting an NRP Nautilus account, requesting an LLM-enabled namespace, generating a token, and making your first calls (chat, reasoning, multimodal, embeddings) against the NRP's OpenAI-compatible endpoint."
+categories:
+  - Notebooks
+  - Code-along
+  - LLM
+  - NRP
+  - API
+  - Prompt engineering
+jupyter: python3
+execute:
+  echo: true
+  eval: false   # prevents execution during Quarto build — readers run locally with their own token
+
+---
+
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/NRP-Hosted-LLMs.ipynb)
+
+This notebook walks through getting access to the [National Research Platform (NRP)](https://nrp.ai/)'s hosted, OpenAI-compatible LLM API and making your first calls. The endpoint is **free** for researchers and educators at [InCommon](https://incommon.org/)-affiliated institutions (UW–Madison is in) and exposes a rotating catalog of open-weight frontier models — Qwen3, GPT-OSS, Kimi, GLM-5, Gemma, MiniMax-M2, OLMo, plus embeddings.
+
+For a fuller reference on NRP — fair-use limits, cluster policies, classroom support, and how it compares to CHTC / cloud — see the [NRP / Nautilus card](../../Toolbox/Compute/NRP-Nautilus.qmd).
+
+### Learning objectives
+
+By the end of this notebook, you should be able to:
+
+- Set up access to the NRP-hosted LLM API (account, LLM-enabled namespace, personal token).
+- Call NRP's OpenAI-compatible endpoint from the Python `openai` client.
+- List the currently available models.
+- Run a simple chat completion.
+- Toggle reasoning mode on models that support it (e.g., `qwen3-small`).
+- Send a multimodal request with an image (e.g., `gemma`).
+- Generate embeddings for retrieval / RAG (e.g., `qwen3-embedding`).
+- Isolate your prompt cache with `cache_salt`.
+
+### Step-by-step overview
+
+1. **Get access** — NRP account, LLM-enabled namespace, personal token.
+2. **Install and configure the `openai` client** to point at NRP's endpoint.
+3. **List available models** via the API.
+4. **Run a chat completion** against `gpt-oss`.
+5. **Toggle reasoning** on `qwen3-small`.
+6. **Send a multimodal (image) request** to `gemma`.
+7. **Generate embeddings** with `qwen3-embedding`.
+8. **Add `cache_salt`** for tenant-isolated caching.
+
+::: {.callout-warning}
+## You need your own NRP token to run any of the cells below
+The cells in this notebook are not executed during the site build — they're shown as-is so you can copy/paste once you have a token. Without a token, every call will return `401 Unauthorized`.
+:::
+
+## Step 1: Get access
+
+Three things, all free:
+
+1. **Get an NRP account.** Sign in at [nrp.ai](https://nrp.ai/) via CILogon using your institutional identity (UW–Madison is supported). **Important:** authentik binds your account to the first identity provider you use — pick one (your institution, Google, GitHub, or ORCID) and stick with it. Switching IdPs later gets a "Permission denied" error.
+2. **Request an LLM-enabled namespace.** Your namespace needs the **LLM flag** before you can mint tokens. Existing groups: check at [nrp.ai/namespaces](https://nrp.ai/namespaces) (LLM-enabled namespaces are flagged). New groups: email [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org) or ask in the Nautilus Matrix channel ([nrp.ai/contact](https://nrp.ai/contact/)).
+3. **Generate a token** at [nrp.ai/llmtoken](https://nrp.ai/llmtoken). Save it somewhere safe — it authenticates against the OpenAI-compatible endpoint `https://ellm.nrp-nautilus.io/v1`.
+
+## Step 2: Install the client and load your token
+
+```{python}
+# In a fresh environment:
+# %pip install --quiet openai python-dotenv pillow requests
+```
+
+Put your token in an environment variable rather than hard-coding it. A common pattern is a local `.env` file (do **not** commit it):
+
+```
+# .env
+NRP_LLM_TOKEN=your_long_token_string_here
+```
+
+```{python}
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # reads .env in the current directory if present
+
+NRP_LLM_TOKEN = os.environ["NRP_LLM_TOKEN"]
+NRP_BASE_URL = "https://ellm.nrp-nautilus.io/v1"
+```
+
+Construct the OpenAI client pointing at NRP's endpoint. The `openai` package works unchanged — only `base_url` and `api_key` change:
+
+```{python}
+from openai import OpenAI
+
+client = OpenAI(api_key=NRP_LLM_TOKEN, base_url=NRP_BASE_URL)
+```
+
+## Step 3: List available models
+
+NRP's catalog rotates as the open-weights frontier moves. List what's live right now:
+
+```{python}
+models = client.models.list()
+for m in models.data:
+    print(m.id)
+```
+
+Expect to see names like `qwen3`, `qwen3-small`, `gpt-oss`, `gemma`, `gemma-small`, `kimi`, `glm-5`, `minimax-m2`, `olmo`, `qwen3-embedding`. The exact set depends on the [lifecycle & changelog](https://nrp.ai/documentation/userdocs/ai/llm-managed/lifecycle/).
+
+## Step 4: A simple chat completion
+
+`gpt-oss` is a good first call — text-only, low GPU footprint, long-term-support candidate, and one of the higher concurrency limits (16 per user):
+
+```{python}
+completion = client.chat.completions.create(
+    model="gpt-oss",
+    messages=[
+        {"role": "system", "content": "You are a concise teaching assistant for a graduate ML course."},
+        {"role": "user", "content": "In 2-3 sentences, when should I use LoRA instead of full fine-tuning?"},
+    ],
+)
+print(completion.choices[0].message.content)
+```
+
+::: {.callout-caution}
+## `max_tokens` is not your context window
+If you set `max_tokens` (or `max_output_tokens`), it caps the **output** length only — not the total context. Set it to roughly 1/3–1/4 of the model's context window if your client requires a value. Setting it to the full context will error.
+:::
+
+## Step 5: Toggle reasoning mode
+
+Several models default to "thinking" mode, which adds latency for simple queries. You can disable it via `extra_body`. With `qwen3-small`:
+
+```{python}
+completion = client.chat.completions.create(
+    model="qwen3-small",
+    messages=[{"role": "user", "content": "Give me a one-line definition of overfitting."}],
+    extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+)
+print(completion.choices[0].message.content)
+```
+
+For agentic-coding flows where you *want* the model to keep its chain of thought across turns, use:
+
+```{python}
+# Keep reasoning on and preserve it (qwen3-small / qwen3 syntax)
+agent_kwargs = {"enable_thinking": True, "preserve_thinking": True}
+# For glm-5: {"enable_thinking": True, "clear_thinking": False}
+# For kimi: {"thinking": True, "preserve_thinking": True}
+```
+
+The exact keys vary per model — see each [model card](https://nrp.ai/documentation/userdocs/ai/llm-managed/models/) for the right invocation.
+
+## Step 6: Multimodal (image input)
+
+`gemma`, `qwen3`, `qwen3-small`, `gemma-small`, and `kimi` accept image inputs. Pass them as `image_url` content blocks (URL or base64 data URI):
+
+```{python}
+import base64
+import requests
+from PIL import Image
+from io import BytesIO
+
+img_url = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"
+img_bytes = requests.get(img_url, timeout=30).content
+b64 = base64.b64encode(img_bytes).decode("ascii")
+
+completion = client.chat.completions.create(
+    model="gemma",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "In one sentence, what is the animal in this image and what is it doing?"},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}},
+            ],
+        }
+    ],
+)
+print(completion.choices[0].message.content)
+```
+
+`gemma-small` is the only catalogued model that accepts **audio** input (ASR / speech-to-text). Pass audio in the same content-blocks pattern — see the [chat interfaces](https://nrp.ai/documentation/userdocs/ai/llm-managed/chat-interfaces/) docs.
+
+## Step 7: Embeddings
+
+`qwen3-embedding` is the embedding model in the catalog. Same OpenAI-compatible interface:
+
+```{python}
+emb = client.embeddings.create(
+    model="qwen3-embedding",
+    input=[
+        "Retrieval-augmented generation pairs a vector store with an LLM.",
+        "LoRA inserts low-rank adapter matrices into a frozen base model.",
+    ],
+)
+for i, e in enumerate(emb.data):
+    print(f"embedding {i}: dim={len(e.embedding)}, first 5 = {e.embedding[:5]}")
+```
+
+These vectors plug into any vector DB — Chroma, Qdrant, pgvector, etc. — for RAG. **Do not** call `client.chat.completions.create(model='qwen3-embedding', ...)` — it's not a chat model.
+
+## Step 8: Isolate your prompt cache with `cache_salt`
+
+NRP caches prompts and responses across users sharing a tenant. That's fine for shared utility queries, but if your prompts could be sensitive (or you want to avoid surfacing other users' cached output), pass a `cache_salt` — a base64 string of ≥256 random bits that **only you** know:
+
+```{python}
+import os, base64
+
+# Generate a per-project cache_salt once, store it like an API key
+project_salt = base64.b64encode(os.urandom(32)).decode("ascii")
+
+completion = client.chat.completions.create(
+    model="gpt-oss",
+    messages=[{"role": "user", "content": "Summarize this internal memo in one line: ..."}],
+    extra_body={"cache_salt": project_salt},
+)
+print(completion.choices[0].message.content)
+```
+
+Without a `cache_salt`, your cached prompts and responses can mix with others' — convenient but not private. See [API access](https://nrp.ai/documentation/userdocs/ai/llm-managed/api-access/) for the full details.
+
+## What's next
+
+- **Look at all available models** and their use-case recommendations: [Available models](https://nrp.ai/documentation/userdocs/ai/llm-managed/models/).
+- **Pick a chat interface** (Open WebUI, Chatbox, Cherry Studio) if you'd rather not script: [Chat interfaces](https://nrp.ai/documentation/userdocs/ai/llm-managed/chat-interfaces/).
+- **Plug into a coding CLI** (Claude Code, OpenCode, Crush, Kimi CLI, Copilot CLI, pi): [Client configurations](https://nrp.ai/documentation/userdocs/ai/llm-managed/client-configs/).
+- **Stay under fair-use limits**: 2–16 concurrent requests per user depending on model, with a hard 1-request limit for requests using ≥35% of the model's context. Full details on the [NRP card](../../Toolbox/Compute/NRP-Nautilus.qmd) and the [fair-use policy](https://nrp.ai/documentation/userdocs/ai/llm-managed/fair-use/).
+- **Need more capacity?** Contact admins in Matrix or email [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org). For sustained higher concurrency, [deploy your own model](https://nrp.ai/documentation/admindocs/ai/managing_models/) on the cluster via vLLM or SGLang.
+
+## Related resources
+
+- [**Compute**: National Research Platform (Nautilus)](../../Toolbox/Compute/NRP-Nautilus.qmd) — Full reference for NRP: access, fair-use limits, classroom support, cluster policies, ML Marathon fit.
+- [**Notebook**: RAG on Romeo and Juliet](2025-05-07_RAG-Romeo-Juliet.qmd) — Build a RAG pipeline that you could point at `qwen3-embedding` + a chat model on NRP.
+- [**GenAI**: UW Generative AI Services & Policies](../../Toolbox/GenAI/GenAI-at-UW-Madison.qmd) — UW-vetted access to proprietary frontier models (Claude, GPT-4o, Gemini).
+
+## Comments

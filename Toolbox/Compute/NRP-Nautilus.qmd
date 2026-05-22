@@ -58,7 +58,11 @@ See the [Available models page](https://nrp.ai/documentation/userdocs/ai/llm-man
 
 ### API access
 
-The endpoint is OpenAI-compatible and lives at `https://ellm.nrp-nautilus.io/v1`. To use it, your namespace needs the **LLM flag** (check on the [namespaces page](https://nrp.ai/namespaces)); then create a token at [nrp.ai/llmtoken](https://nrp.ai/llmtoken).
+The endpoint is OpenAI-compatible and lives at `https://ellm.nrp-nautilus.io/v1`. Three steps to get a token:
+
+1. **Get an NRP account** — sign in via CILogon at [nrp.ai](https://nrp.ai/) (see Get started below).
+2. **Request an LLM-enabled namespace** — your namespace needs the **LLM flag**. Existing groups can check on the [namespaces page](https://nrp.ai/namespaces); new groups should email [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org) or ask in Matrix.
+3. **Generate a personal token** at [nrp.ai/llmtoken](https://nrp.ai/llmtoken), then plug it into Open WebUI, Chatbox, Cherry Studio, or any OpenAI-compatible client.
 
 ```python
 import os
@@ -79,6 +83,11 @@ print(completion.choices[0].message.content)
 ```
 
 Ready-to-paste configs for Claude Code, OpenCode, Crush, Kimi CLI, pi, and Copilot CLI are in the [client configurations](https://nrp.ai/documentation/userdocs/ai/llm-managed/client-configs/) docs.
+
+::: {.callout-tip}
+## Hands-on notebook
+For a code-along version of this section — installing `openai`, listing models, running chat/reasoning/multimodal/embedding calls, and using `cache_salt` — see the [**NRP-Hosted LLMs notebook**](../../Learn/Notebooks/NRP-Hosted-LLMs.qmd).
+:::
 
 ::: {.callout-caution}
 ## `max_tokens` is not your context window
@@ -107,6 +116,7 @@ Caveats from the [fair-use policy](https://nrp.ai/documentation/userdocs/ai/llm-
 - **SDSC and Internet2 affiliates get 2× limits**, plus the option to arrange higher-volume sessions.
 - **Need more than the limits?** Contact admins in advance (e.g., deadline, workshop) — or [deploy your own model](https://nrp.ai/documentation/admindocs/ai/managing_models/) on the cluster via vLLM or SGLang.
 - **Scripts should retry indefinitely** with exponential backoff, and dynamically reduce concurrency when latency climbs. Models go down for maintenance.
+- **Check capacity before high-volume work.** NRP exposes a [Live LLM Status page](https://nrp.ai/documentation/userdocs/ai/llm-managed/) (Prometheus / vLLM metrics, one card per Kubernetes container) so you can see real-time health and queue depth.
 
 #### What's actually capped (and what isn't)
 
@@ -210,7 +220,9 @@ If you're organizing a Marathon challenge that needs NRP capacity beyond fair-us
 
 ## Getting help
 
-- **Matrix** (required for account creation and ongoing support): [nrp.ai/contact](https://nrp.ai/contact/)
+- **Matrix** (required for account creation and ongoing support): [nrp.ai/contact](https://nrp.ai/contact/) — register a `@you:matrix.nrp-nautilus.io` account via [element.nrp-nautilus.io](https://element.nrp-nautilus.io/). **Use public rooms; private messages to admins are rejected.**
+- **Email**: [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org) for account, namespace, and LLM access questions.
+- **Mailing list**: weekly meeting recordings and announcements ([subscribe via the Contact page](https://nrp.ai/contact/)).
 - **Documentation**: [nrp.ai/documentation](https://nrp.ai/documentation/)
 - **Getting Started walkthrough**: [nrp.ai/documentation/userdocs/start/getting-started](https://nrp.ai/documentation/userdocs/start/getting-started/)
 - **Namespaces manager**: [nrp.ai/namespaces](https://nrp.ai/namespaces)
@@ -220,6 +232,7 @@ If you're organizing a Marathon challenge that needs NRP capacity beyond fair-us
 
 ## Related resources
 
+- [**Notebook**: NRP-Hosted LLMs — Access Setup and a First API Call](../../Learn/Notebooks/NRP-Hosted-LLMs.qmd) — Code-along walkthrough: install `openai`, list models, run chat/reasoning/multimodal/embedding calls, isolate caches.
 - [**Compute**: Center for High Throughput Computing (CHTC)](CHTC.qmd) — Free GPU Lab and HTC pool for UW–Madison researchers; better for batch ML training and large hyperparameter sweeps.
 - [**Compute**: UW–Madison Cloud Services (AWS, GCP, Azure)](UW-Cloud-Services.qmd) — When you need NVLink multi-GPU, managed ML platforms, or persistent services.
 - [**Compute**: BadgerCompute](BadgerCompute.qmd) — UW–Madison's lightweight, NetID-authenticated JupyterHub for quick interactive work.
