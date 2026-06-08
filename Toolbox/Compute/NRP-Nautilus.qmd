@@ -77,11 +77,19 @@ NRP is Kubernetes — workloads are described in YAML. Key rules:
 
 ## How NRP fits alongside other UW–Madison resources
 
-For UW–Madison researchers and teams building LLM- or VLM-based applications, NRP complements rather than replaces other UW options:
+For UW–Madison researchers and teams building LLM- or VLM-based applications, NRP complements rather than replaces other UW options. Two ways to think about the choice:
 
+### Hosted LLM endpoints (call the model via API)
+
+- **NRP** — free, open-weight models (Qwen3, GPT-OSS, Kimi, etc.) via OpenAI-compatible endpoint. Per-user concurrency limits; no service-level agreement; best-effort capacity.
+- [**UW Cloud Services**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) — proprietary frontier models via [Amazon Bedrock](https://aws.amazon.com/bedrock/) (Claude, etc.), [Google's Gemini API](https://ai.google.dev/), and [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/) (GPT-4o). Pay-per-token with world-class latency. UW-provisioned accounts cut grant overhead from 55.5% to 26%, get Internet2 NET+ pricing, and are HIPAA-eligible.
+- [**GenAI at UW–Madison**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html) — UW-vetted free chat UIs (Google Gemini, Microsoft 365 Copilot, NotebookLM). End-user tools, not programmatic APIs — useful for ad-hoc analysis, not for building applications.
+
+### General compute (run your own code on GPUs)
+
+- **NRP** — hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/), [Coder](https://nrp.ai/documentation/userdocs/coder/coder/), and self-managed GPU pods (RTX 2080 Ti / 3090 / 4090, A10, A100) on a free, multi-site Kubernetes cluster.
 - [**CHTC**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) — free GPU Lab (A100s, H100s, H200s) on a traditional high-throughput computing model: borrow GPUs for limited-duration compute, with batching for jobs that need to run longer than a single allocation. Good for training, fine-tuning, parameter sweeps, and one-off inference up to ~70B with quantization on a single 80 GB GPU. Not a model-serving platform; no NVLink multi-GPU.
-- [**UW Cloud Services**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) (AWS / GCP / Azure) — hyperscaler hardware (B200s, NVLink multi-GPU, world-class latency), with direct equivalents to NRP's offerings: hosted LLM APIs via [Amazon Bedrock](https://aws.amazon.com/bedrock/) or [Google's Gemini API](https://ai.google.dev/) (analog of NRP's LLM endpoint), and managed ML platforms — [SageMaker](https://aws.amazon.com/sagemaker/), [Vertex AI](https://cloud.google.com/vertex-ai), [Azure ML](https://azure.microsoft.com/en-us/products/machine-learning) — for notebooks and training (analog of NRP's JupyterHub / GPU pods). Also the route for persistent endpoints that stay up beyond HPC job time limits. Pay-per-hour, but UW-provisioned accounts cut grant overhead from 55.5% to 26%, get Internet2 NET+ pricing, and are HIPAA-eligible.
-- [**GenAI at UW–Madison**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html) — UW-vetted, free enterprise chat and meeting AI (Google Gemini, Microsoft 365 Copilot, NotebookLM, Zoom AI Companion, WebEx AI Assistant) and policy guidance for sensitive data. For programmatic API access to proprietary frontier models, that route is Bedrock / Vertex AI / Azure OpenAI via UW Cloud Services above.
+- [**UW Cloud Services**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) — hyperscaler hardware (B200s, NVLink multi-GPU, world-class latency) and managed ML platforms ([SageMaker](https://aws.amazon.com/sagemaker/), [Vertex AI](https://cloud.google.com/vertex-ai), [Azure ML](https://azure.microsoft.com/en-us/products/machine-learning)) for notebooks and training. Also the route for persistent endpoints that stay up beyond HPC job time limits. Same UW-account pricing benefits as above.
 
 ## Getting help
 
