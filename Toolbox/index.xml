@@ -9,8 +9,228 @@
 <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/</link>
 <atom:link href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/index.xml" rel="self" type="application/rss+xml"/>
 <description>ML and AI tools, models, datasets, and libraries from the UW-Madison ML+X community</description>
-<generator>quarto-1.9.37</generator>
-<lastBuildDate>Mon, 09 Mar 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.38</generator>
+<lastBuildDate>Wed, 13 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>National Research Platform (NRP)</title>
+  <dc:creator>Chris Endemann</dc:creator>
+  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>The <a href="https://nrp.ai/">National Research Platform (NRP)</a> is an NSF-supported distributed Kubernetes cluster providing <strong>free</strong> GPU compute and a hosted open-weight LLM API to researchers and educators at <a href="https://incommon.org/">InCommon</a>-affiliated institutions (UW–Madison is in). Usage is governed by the <a href="https://nrp.ai/NRP-AUP.pdf">Acceptable Use Policy</a> and per-user fair-use limits.</p>
+<p>For ML/AI work, NRP gives you:</p>
+<ol type="1">
+<li><strong>Hosted LLM endpoints</strong> — call open-weight models through an OpenAI-compatible API at <code>https://ellm.nrp-nautilus.io/v1</code>. No GPU on your side; NRP runs the inference. See the model table below.</li>
+<li><strong>General compute</strong> for everything else — your own GPU pods (RTX 2080 Ti / 3090 / 4090, A10, A100) for training, fine-tuning, or non-LLM work. Most users go through the hosted <a href="https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/">JupyterHub</a> or <a href="https://nrp.ai/documentation/userdocs/coder/coder/">Coder</a> (VS Code in browser); classrooms can request private JupyterHub deployments via <a href="mailto:support@nationalresearchplatform.org">support@nationalresearchplatform.org</a>.</li>
+</ol>
+<section id="get-started" class="level2">
+<h2 class="anchored" data-anchor-id="get-started">Get started</h2>
+<ol type="1">
+<li><strong>Sign in</strong> at <a href="https://nrp.ai/">nrp.ai</a> via CILogon. <em>Pick one identity provider and stick with it</em> — authentik binds your account to the first IdP you use, and switching later gives a “Permission denied” error.</li>
+<li><strong>Join <em>Matrix</em></strong> (<a href="https://nrp.ai/contact/">nrp.ai/contact</a>) for support and account promotion. Admin requests, LLM-flag enablement, and most help happen in the <strong>Nautilus Support</strong> channel — DMs to admins are rejected.</li>
+<li><strong>Get into a namespace</strong> — required for <em>both</em> LLM API and GPU/compute access (an account alone has no resources). Three patterns:
+<ul>
+<li><strong>Solo researcher / faculty / postdoc:</strong> ask in Nautilus Support to be promoted to admin, then create your own namespace at <a href="https://nrp.ai/namespaces">nrp.ai/namespaces</a>. NRP’s convention is <code>&lt;institution&gt;-&lt;group&gt;</code> (e.g., <code>wisc-ml-marathon</code>); admins may rename to fit. Mention LLM use in your request and they’ll enable the LLM flag at the same time.</li>
+<li><strong>Lab or research group:</strong> the PI becomes the namespace admin and adds members.</li>
+<li><strong>Student:</strong> ask your advisor to add you to their existing namespace.</li>
+</ul></li>
+<li><strong>Generate an LLM token</strong> at <a href="https://nrp.ai/llmtoken">nrp.ai/llmtoken</a>. If you forgot to mention LLM use up front and your namespace isn’t flagged for it, ask in Nautilus Support — it’s a one-line toggle.</li>
+<li><strong>For general compute</strong> (anything beyond the LLM endpoint — training, fine-tuning, your own notebooks): most users go through the hosted <a href="https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/">JupyterHub</a> or <a href="https://nrp.ai/documentation/userdocs/coder/coder/">Coder</a> (browser-based, no install). Only if you want to write Kubernetes YAML directly: install <code>kubectl</code> + <a href="https://github.com/int128/kubelogin"><code>kubelogin</code></a> and drop the <a href="https://nrp.ai/config">NRP config</a> at <code>~/.kube/config</code> — full walkthrough in <a href="https://nrp.ai/documentation/userdocs/start/getting-started/">Getting Started</a>.</li>
+</ol>
+<p>Read the <a href="https://nrp.ai/NRP-AUP.pdf">Acceptable Use Policy</a> and <a href="https://nrp.ai/documentation/userdocs/start/policies/">Cluster Policies</a> before submitting workloads — there are real resource-utilization rules and you can be banned for violating them.</p>
+</section>
+<section id="available-llms-and-fair-use-limits" class="level2">
+<h2 class="anchored" data-anchor-id="available-llms-and-fair-use-limits">Available LLMs and fair-use limits</h2>
+<p>The catalog rotates as the open-weights frontier moves (<code>main</code> = generally supported, <code>evaluating</code> = may change). Full per-model cards on the <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">models page</a>; see <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/lifecycle/">lifecycle &amp; changelog</a> before pinning a model name in production scripts.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Status</th>
+<th style="text-align: right;">Params</th>
+<th style="text-align: right;">Context</th>
+<th>Modalities</th>
+<th style="text-align: right;">Max concurrent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>qwen3</code></td>
+<td>main</td>
+<td style="text-align: right;">397B</td>
+<td style="text-align: right;">1.01M</td>
+<td>image, video</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td><code>qwen3-small</code></td>
+<td>main</td>
+<td style="text-align: right;">27B</td>
+<td style="text-align: right;">1.01M</td>
+<td>image, video</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td><code>gpt-oss</code></td>
+<td>main</td>
+<td style="text-align: right;">120B</td>
+<td style="text-align: right;">131K</td>
+<td>text</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td><code>gemma</code></td>
+<td>main</td>
+<td style="text-align: right;">31B</td>
+<td style="text-align: right;">262K</td>
+<td>image, video</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td><code>qwen3-embedding</code></td>
+<td>main</td>
+<td style="text-align: right;">8B</td>
+<td style="text-align: right;">—</td>
+<td>image, video</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td><code>gemma-small</code></td>
+<td>evaluating</td>
+<td style="text-align: right;">~8B</td>
+<td style="text-align: right;">131K</td>
+<td>image, video, audio</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td><code>kimi</code></td>
+<td>evaluating</td>
+<td style="text-align: right;">1T</td>
+<td style="text-align: right;">262K</td>
+<td>image, video</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td><code>glm-5</code></td>
+<td>evaluating</td>
+<td style="text-align: right;">744B</td>
+<td style="text-align: right;">203K</td>
+<td>text</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td><code>minimax-m2</code></td>
+<td>evaluating</td>
+<td style="text-align: right;">230B</td>
+<td style="text-align: right;">205K</td>
+<td>text</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td><code>olmo</code></td>
+<td>evaluating</td>
+<td style="text-align: right;">32B</td>
+<td style="text-align: right;">65K</td>
+<td>text</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
+<p>“Max concurrent” = how many requests you can have <strong>open at the same instant</strong> under one access token. Not per minute, not per day — just simultaneously. A single-threaded script that sends one request, waits, then sends the next has concurrency 1 and never hits the limit, however long it runs. Parallel/<code>asyncio</code> code that fires N requests at once does. There is <strong>no published requests-per-minute, tokens-per-minute, or daily token cap</strong> — concurrency is the only quantified throttle.</p>
+<p>Requests using ≥35% of a model’s context drop to 1 concurrent request, and the sum of in-flight context must stay under 35%. For higher-volume sessions, contact admins in advance.</p>
+<p>Point any OpenAI-compatible client at NRP’s API with your token: desktop apps (Chatbox, Cherry Studio), coding CLIs (Claude Code, OpenCode, Crush, Kimi CLI, Copilot CLI), or Python — see <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/client-configs/">client configurations</a> and <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/api-access/">API access docs</a>. NRP also hosts <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/chat-interfaces/">browser chat UIs</a> (Open WebUI, LibreChat), though as of May 2026 they’ve been intermittently unreliable.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hands-on notebook
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a code-along walking through token setup and chat / reasoning / multimodal / embedding calls against NRP, see the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/NRP-Hosted-LLMs.html"><strong>NRP-Hosted LLMs notebook</strong></a>.</p>
+</div>
+</div>
+</section>
+<section id="cluster-compute-essentials" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-compute-essentials">Cluster compute essentials</h2>
+<p>NRP is Kubernetes — workloads are described in YAML. Key rules:</p>
+<ul>
+<li><strong>Containers are stateless.</strong> Use persistent volumes for anything you can’t lose.</li>
+<li><strong>Interactive pods</strong>: 6 hr max, capped at 2 GPUs / 32 GB RAM / 16 CPU (see <a href="https://nrp.ai/documentation/userdocs/start/policies/">Cluster Policies</a> for the current numbers).</li>
+<li><strong>Batch work</strong> goes in a <code>Job</code>. <strong><code>sleep infinity</code> is bannable.</strong></li>
+<li><strong>Long-running services</strong> use a <code>Deployment</code> (no GPU), auto-deleted after 2 weeks.</li>
+<li><strong>GPUs must run &gt;40% utilized.</strong> A100 quota is 0 by default and requires the <a href="https://nrp.ai/documentation/userdocs/start/policies/">A100 access request</a>.</li>
+<li><strong>Storage idle 6+ months is purged.</strong></li>
+</ul>
+</section>
+<section id="how-nrp-fits-alongside-other-uwmadison-resources" class="level2">
+<h2 class="anchored" data-anchor-id="how-nrp-fits-alongside-other-uwmadison-resources">How NRP fits alongside other UW–Madison resources</h2>
+<p>For UW–Madison researchers and teams building LLM- or VLM-based applications, NRP complements rather than replaces other UW options. Two ways to think about the choice:</p>
+<section id="hosted-llm-endpoints-call-the-model-via-api" class="level3">
+<h3 class="anchored" data-anchor-id="hosted-llm-endpoints-call-the-model-via-api">Hosted LLM endpoints (call the model via API)</h3>
+<ul>
+<li><strong>NRP</strong> — free, open-weight models (Qwen3, GPT-OSS, Kimi, etc.) via OpenAI-compatible endpoint. Per-user concurrency limits; no service-level agreement; best-effort capacity.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html"><strong>UW Cloud Services</strong></a> — proprietary frontier via <a href="https://aws.amazon.com/bedrock/">Bedrock</a> / <a href="https://ai.google.dev/">Gemini API</a> / <a href="https://learn.microsoft.com/azure/ai-services/openai/">Azure OpenAI</a>; pay-per-token, fastest latency at a fee. UW-provisioned accounts cut grant overhead from 55.5% to 26%, get Internet2 NET+ pricing, and are HIPAA-eligible.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI at UW–Madison</strong></a> — UW-vetted free chat UIs (Google Gemini, Microsoft 365 Copilot, NotebookLM). End-user tools, not programmatic APIs — useful for ad-hoc analysis, not for building applications.</li>
+</ul>
+</section>
+<section id="general-compute-run-your-own-code-on-gpus" class="level3">
+<h3 class="anchored" data-anchor-id="general-compute-run-your-own-code-on-gpus">General compute (run your own code on GPUs)</h3>
+<ul>
+<li><strong>NRP</strong> — hosted <a href="https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/">JupyterHub</a>, <a href="https://nrp.ai/documentation/userdocs/coder/coder/">Coder</a>, and self-managed GPU pods (RTX 2080 Ti / 3090 / 4090, A10, A100) on a free, multi-site Kubernetes cluster.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>CHTC</strong></a> — free GPU Lab (A100s, H100s, H200s) on a traditional high-throughput computing model: borrow GPUs for limited-duration compute, with batching for jobs that need to run longer than a single allocation. Good for training, fine-tuning, parameter sweeps, and one-off inference up to ~70B with quantization on a single 80 GB GPU. Not a model-serving platform; no NVLink multi-GPU.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html"><strong>UW Cloud Services</strong></a> — hyperscaler hardware (B200s, NVLink multi-GPU, world-class latency) and managed ML platforms (<a href="https://aws.amazon.com/sagemaker/">SageMaker</a>, <a href="https://cloud.google.com/vertex-ai">Vertex AI</a>, <a href="https://azure.microsoft.com/en-us/products/machine-learning">Azure ML</a>) for notebooks and training. Also the route for persistent endpoints that stay up beyond HPC job time limits. Same UW-account pricing benefits as above.</li>
+</ul>
+</section>
+</section>
+<section id="getting-help" class="level2">
+<h2 class="anchored" data-anchor-id="getting-help">Getting help</h2>
+<ul>
+<li><strong>Matrix</strong> (public rooms only): <a href="https://nrp.ai/contact/">nrp.ai/contact</a></li>
+<li><strong>Email</strong>: <a href="mailto:support@nationalresearchplatform.org">support@nationalresearchplatform.org</a></li>
+<li><strong>Docs</strong>: <a href="https://nrp.ai/documentation/">nrp.ai/documentation</a> · <a href="https://nrp.ai/documentation/userdocs/start/getting-started/">Getting Started</a> · <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/fair-use/">Fair-use policy</a> · <a href="https://nrp.ai/documentation/userdocs/start/policies/">Cluster Policies</a></li>
+<li><strong>Reference</strong>: Wang et al., <em><a href="https://arxiv.org/abs/2505.22864">The National Research Platform: Stretched, Multi-Tenant, Scientific Kubernetes Cluster</a></em>, arXiv:2505.22864.</li>
+</ul>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/NRP-Hosted-LLMs.html"><strong>Notebook</strong>: NRP-Hosted LLMs — Access Setup and a First API Call</a> — Code-along walkthrough: install <code>openai</code>, list models, run chat / reasoning / multimodal / embedding calls.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> — UW–Madison’s free HPC/HTC platform; the default for batch training and parameter sweeps.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html"><strong>Compute</strong>: UW–Madison Cloud Services</a> — AWS / GCP / Azure with UW-negotiated rates; the route for persistent endpoints, managed ML platforms, and NVLink multi-GPU.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html"><strong>Compute</strong>: BadgerCompute</a> — UW NetID-authenticated JupyterHub for short interactive sessions.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> — Free cloud-based Jupyter notebooks with GPU access for prototyping.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-GCP.html"><strong>Workshop/Compute</strong>: Intro to GCP for Machine Learning &amp; AI</a> — Hands-on workshop covering Vertex AI, model training/tuning, and RAG pipelines on GCP.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Workshop/Compute</strong>: Intro to AWS SageMaker for Predictive ML/AI</a> — Workshop covering ML workflows in AWS SageMaker.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: UW Generative AI Services &amp; Policies</a> — UW-vetted enterprise chat and meeting AI tools (Google Gemini, M365 Copilot, NotebookLM, Zoom AI Companion, WebEx AI Assistant) and policy guidance.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html"><strong>GenAI</strong>: OpenScholar</a> — Open-source scientific literature synthesis tool; relevant for RAG-style workflows you could host on NRP.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Quantization and Precision</a> — Background on the quantization tricks that make large-model inference fit on a single GPU.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/"><strong>Projects</strong>: ML+X Machine Learning Marathon</a> — Annual 12-week ML/AI hackathon at UW–Madison.</li>
+</ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
+
+
+</section>
+
+ ]]></description>
+  <category>Compute</category>
+  <category>GPU</category>
+  <category>LLM</category>
+  <category>Kubernetes</category>
+  <category>Jupyter</category>
+  <category>Education</category>
+  <category>NSF</category>
+  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html</guid>
+  <pubDate>Wed, 13 May 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/NRP-logo-square.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Understanding Quantization and Precision</title>
   <dc:creator>Chris Endemann</dc:creator>
@@ -39,14 +259,14 @@
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="be128ab1" class="cell" data-execution_count="1">
+<div id="74047e7f" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="c8c20b9d" class="cell" data-execution_count="2">
+<div id="ef572901" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -159,7 +379,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="97940212" class="cell" data-execution_count="3">
+<div id="9f342455" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -396,7 +616,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="b5619f7e" class="cell" data-execution_count="4">
+<div id="f2468558" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -424,7 +644,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="11e073ed" class="cell" data-execution_count="5">
+<div id="0cdc1a68" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -447,7 +667,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="e2e33bc7" class="cell" data-execution_count="6">
+<div id="7aca5a14" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -469,7 +689,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="e0d26374" class="cell" data-execution_count="7">
+<div id="ec1e45ea" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -592,7 +812,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="9b29803b" class="cell" data-execution_count="8">
+<div id="21c8fe95" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -622,7 +842,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="4e9b7db2" class="cell" data-execution_count="9">
+<div id="a1303681" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -667,7 +887,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="6fa4bd9b" class="cell" data-execution_count="10">
+<div id="d830ddb8" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -903,7 +1123,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="77bd7651" class="cell" data-execution_count="11">
+<div id="c0fd5ebb" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -979,7 +1199,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="fa92154a" class="cell" data-execution_count="12">
+<div id="c35b7ee1" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -1095,7 +1315,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="e55f2425" class="cell" data-execution_count="13">
+<div id="fe0b6090" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1341,7 +1561,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="9b7ab362" class="cell" data-execution_count="14">
+<div id="b4d92a17" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3684,114 +3904,6 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
   <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/NotebookLM.html</guid>
   <pubDate>Mon, 09 Dec 2024 00:00:00 GMT</pubDate>
   <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/NotebookLM.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>AI Fairness 360 (AIF360)</title>
-  <dc:creator>Chris Endemann</dc:creator>
-  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/AI-Fairness-360.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p><a href="https://github.com/Trusted-AI/AIF360">AI Fairness 360 (AIF360)</a> is a scikit-learn-compatible open-source Python library designed to detect and mitigate bias in machine learning models. Its compatibility with scikit-learn pipelines allows seamless integration into workflows for tabular data tasks, which is the library’s primary focus. Many of AIF360’s fairness metrics and mitigation algorithms operate directly on model outputs (<code>y_pred</code> and <code>y_true</code>), making it easy to adapt for use with other models, even outside the tabular domain.</p>
-<p>AIF360 is particularly suited for tasks where fairness is a critical concern. Its extensibility and modular design make it a powerful tool for ethical AI development across a range of applications, including preprocessing, in-processing, and post-processing bias mitigation.</p>
-<section id="key-features" class="level4">
-<h4 class="anchored" data-anchor-id="key-features">Key features</h4>
-<ul>
-<li><strong>Bias detection</strong>: Comprehensive metrics to measure fairness at both individual and group levels.
-<ul>
-<li><strong>Group fairness</strong>: Metrics like disparate impact ratio and equal opportunity difference.</li>
-<li><strong>Individual fairness</strong>: Measures such as consistency score to evaluate treatment of similar individuals.</li>
-<li><strong>Distributional fairness</strong>: Metrics like generalized entropy error to quantify benefit distribution.</li>
-</ul></li>
-<li><strong>Bias mitigation algorithms</strong>:
-<ul>
-<li><strong>Pre-processing</strong>: Techniques like reweighing and learned fair representations to adjust data before training.</li>
-<li><strong>In-processing</strong>: Models like adversarial debiasing to apply fairness constraints during training.</li>
-<li><strong>Post-processing</strong>: Tools like reject option classifier for fair adjustments to model outputs.</li>
-</ul></li>
-<li><strong>Dataset integration</strong>: Includes commonly used datasets for fairness research (e.g., COMPAS).</li>
-<li><strong>Scikit-learn compatibility</strong>: Built with scikit-learn conventions, AIF360 integrates easily into standard pipelines, enabling compatibility with a wide range of estimators and transformers.</li>
-<li><strong>Modular and extensible design</strong>: Easily add new datasets, metrics, or algorithms.</li>
-</ul>
-</section>
-<section id="integration-and-compatibility" class="level2">
-<h2 class="anchored" data-anchor-id="integration-and-compatibility">Integration and compatibility</h2>
-<p>AIF360 is fully compatible with scikit-learn pipelines, which explains its primary focus on tabular data. While scikit-learn is less commonly used for image and text tasks, AIF360’s ability to operate directly on <code>y_pred</code> and <code>y_true</code> makes it versatile and easy to extend to other domains, such as computer vision and NLP.</p>
-<ul>
-<li><strong>Frameworks supported</strong>: Scikit-learn, Python, R</li>
-<li><strong>Installation instructions</strong>:
-<ul>
-<li>For basic installation: <code>pip install aif360</code></li>
-<li>For full functionality: <code>pip install 'aif360[all]'</code></li>
-<li>For R: <code>install.packages("aif360")</code></li>
-</ul></li>
-</ul>
-</section>
-<section id="extending-aif360-for-computer-vision-and-nlp" class="level2">
-<h2 class="anchored" data-anchor-id="extending-aif360-for-computer-vision-and-nlp">Extending AIF360 for computer vision and NLP</h2>
-<p>Although AIF360 is focused on tabular data, its compatibility with <code>y_pred</code> and <code>y_true</code> outputs enables its fairness metrics and algorithms to be applied in other domains:</p>
-<ol type="1">
-<li><p><strong>Computer vision</strong>: Convert image-based predictions into tabular formats using model outputs and metadata (e.g., race, gender). This allows AIF360’s fairness metrics and mitigation strategies to evaluate bias in vision tasks, such as object detection.</p></li>
-<li><p><strong>Natural language processing (NLP)</strong>: Similarly, AIF360 can be used to assess fairness in text models by processing structured outputs, such as sentiment scores or embeddings. Combining AIF360 with libraries like FairSeq or Hugging Face Transformers offers powerful solutions for fairness in text applications.</p></li>
-<li><p><strong>General extensibility</strong>: Since many metrics and algorithms in AIF360 require only <code>y_pred</code>, <code>y_true</code>, and protected attribute data, the library can be adapted to virtually any domain where these inputs are available.</p></li>
-</ol>
-</section>
-<section id="why-use-aif360" class="level2">
-<h2 class="anchored" data-anchor-id="why-use-aif360">Why use AIF360?</h2>
-<ol type="1">
-<li><strong>Ethical AI development</strong>: Essential for ensuring fairness in AI models, reducing societal bias, and improving trustworthiness.</li>
-<li><strong>Scikit-learn compatibility</strong>: Makes it easy to integrate fairness assessments and mitigation into existing workflows.</li>
-<li><strong>Extensibility</strong>: Flexible design enables adaptation for custom datasets, metrics, and algorithms across domains.</li>
-<li><strong>Educational value</strong>: A resourceful tool for teaching fairness concepts in machine learning.</li>
-</ol>
-</section>
-<section id="use-cases" class="level2">
-<h2 class="anchored" data-anchor-id="use-cases">Use cases</h2>
-<ul>
-<li><strong>Healthcare</strong>: Ensuring fairness in predictive models for patient outcomes.</li>
-<li><strong>Finance</strong>: Mitigating bias in credit scoring models.</li>
-<li><strong>Hiring</strong>: Addressing bias in applicant ranking systems.</li>
-<li><strong>Criminal justice</strong>: Evaluating bias in risk assessment tools (e.g., COMPAS).</li>
-<li><strong>Computer vision</strong>: Adapting fairness metrics for image data (e.g., object detection outcomes and metadata).</li>
-<li><strong>NLP</strong>: Assessing fairness in text models using structured metadata or embeddings.</li>
-</ul>
-</section>
-<section id="tutorials-and-resources" class="level2">
-<h2 class="anchored" data-anchor-id="tutorials-and-resources">Tutorials and resources</h2>
-<ul>
-<li>The <a href="https://github.com/Trusted-AI/AIF360?tab=readme-ov-file">AIF360 README</a> lists several notebooks and tutorails for getting started.</li>
-<li>The Trustworthy AI/ML workshop also has an <a href="https://carpentries-incubator.github.io/fair-explainable-ml/3-model-fairness-deep-dive.html">AIF360-focused episode</a> that implements various fairness metrics. Be sure to complete the <a href="https://carpentries-incubator.github.io/fair-explainable-ml/index.html">workshop setup</a> first to follow along with that material.</li>
-</ul>
-</section>
-<section id="related-resources" class="level2">
-<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
-<ul>
-<li><a href="https://carpentries-incubator.github.io/fair-explainable-ml/index.html"><strong>Workshop</strong>: Trustworthy AI: Explainability, Bias, Fairness, and Safety</a>: A beginner-friendly workshop on Trustworthy AI/ML concepts and mitigation tools, including a <a href="https://carpentries-incubator.github.io/fair-explainable-ml/3-model-fairness-deep-dive.html">hands-on tutorial using AIF360</a>, OOD deteciton, and explainability methods.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2024-05-11.html"><strong>Talk</strong>: Trustworthy LLMs &amp; Ethical AI</a>: Learn how DeTox can be used to remove toxic embeddings in LLMs.</li>
-</ul>
-</section>
-<section id="comments" class="level2">
-<h2 class="anchored" data-anchor-id="comments">Comments</h2>
-
-
-</section>
-
- ]]></description>
-  <category>Libraries</category>
-  <category>AIF360</category>
-  <category>Fairness</category>
-  <category>Trustworthy AI</category>
-  <category>Bias</category>
-  <category>Sklearn</category>
-  <category>Tabular</category>
-  <category>Computer vision</category>
-  <category>NLP</category>
-  <category>Text analysis</category>
-  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/AI-Fairness-360.html</guid>
-  <pubDate>Tue, 03 Dec 2024 00:00:00 GMT</pubDate>
-  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/aif360.png" medium="image" type="image/png" height="82" width="144"/>
 </item>
 </channel>
 </rss>

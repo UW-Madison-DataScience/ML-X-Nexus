@@ -6,11 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Sam Gelman">
-<meta name="dcterms.date" content="2024-06-18">
-<meta name="description" content="We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations.">
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2026-05-13">
+<meta name="description" content="Code-along: get an NRP account and LLM token, then make your first chat, multimodal, and embedding calls against the OpenAI-compatible endpoint.">
 
-<title>A Biophysics-based Protein Language Model for Protein Engineering – Nexus: Crowdsourced ML Resources</title>
+<title>NRP-Hosted LLMs: Access Setup and a First API Call – Nexus: Crowdsourced ML Resources</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,25 +26,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../">
-<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-18b35ecc112cb1bc92ad18054c476a79.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-18b35ecc112cb1bc92ad18054c476a79.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -85,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">A Biophysics-based Protein Language Model for Protein Engineering</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">NRP-Hosted LLMs: Access Setup and a First API Call</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -99,13 +134,13 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="../../../index.html" class="sidebar-logo-link">
-      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="../../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../../images/ML+X_Logo_Secondary_Transparent.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
-    <a href="../../../index.xml" title="Subscribe via RSS" class="quarto-navigation-tool px-1" aria-label="Subscribe via RSS"><i class="bi bi-rss"></i></a>
+    <a href="../../index.xml" title="Subscribe via RSS" class="quarto-navigation-tool px-1" aria-label="Subscribe via RSS"><i class="bi bi-rss"></i></a>
 </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -117,19 +152,19 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Guides/How-to-contribute.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to contribute?</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Learn/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Learn/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learn</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -138,37 +173,37 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Guides/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Guides</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Notebooks/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Notebooks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Learn/Workshops/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Workshops</span></a>
   </div>
 </li>
@@ -176,7 +211,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Projects/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Projects/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Projects</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -185,7 +220,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Projects/ML-Marathon/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Projects/ML-Marathon/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML Marathon</span></a>
   </div>
 </li>
@@ -193,7 +228,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Applications/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Applications/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Stories</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -202,13 +237,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Blogs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Blogs</span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Applications/Videos/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Videos</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -217,31 +252,31 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/Exploring-AI-at-UW/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">AI @ UW</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/Forums/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML+X</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/ML4MI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ML4MI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/SILO/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SILO</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Applications/Videos/Other/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other</span></a>
   </div>
 </li>
@@ -251,7 +286,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../../Toolbox/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Toolbox</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -260,43 +295,43 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Benchmarks/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Benchmarks/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Benchmarks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Compute/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compute</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Data/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GenAI</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Libraries/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Libraries</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/MLOps/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">MLOps</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../Toolbox/Models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Models</span></a>
   </div>
 </li>
@@ -304,7 +339,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../../glossary.html" class="sidebar-item-text sidebar-link">
+  <a href="../../glossary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Category glossary</span></a>
   </div>
 </li>
@@ -318,38 +353,37 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#summary-from-cross-labs-ai" id="toc-summary-from-cross-labs-ai" class="nav-link active" data-scroll-target="#summary-from-cross-labs-ai">Summary from Cross Labs AI:</a></li>
-  <li><a href="#links-code" id="toc-links-code" class="nav-link" data-scroll-target="#links-code">Links &amp; code</a></li>
-  <li><a href="#jump-to-section" id="toc-jump-to-section" class="nav-link" data-scroll-target="#jump-to-section">Jump to section</a></li>
+  <li><a href="#get-access" id="toc-get-access" class="nav-link active" data-scroll-target="#get-access">1. Get access</a></li>
+  <li><a href="#configure-the-client" id="toc-configure-the-client" class="nav-link" data-scroll-target="#configure-the-client">2. Configure the client</a></li>
+  <li><a href="#list-available-models" id="toc-list-available-models" class="nav-link" data-scroll-target="#list-available-models">3. List available models</a></li>
+  <li><a href="#a-chat-completion" id="toc-a-chat-completion" class="nav-link" data-scroll-target="#a-chat-completion">4. A chat completion</a></li>
+  <li><a href="#toggle-reasoning-mode" id="toc-toggle-reasoning-mode" class="nav-link" data-scroll-target="#toggle-reasoning-mode">5. Toggle reasoning mode</a></li>
+  <li><a href="#multimodal-image-input" id="toc-multimodal-image-input" class="nav-link" data-scroll-target="#multimodal-image-input">6. Multimodal: image input</a></li>
+  <li><a href="#embeddings-for-rag" id="toc-embeddings-for-rag" class="nav-link" data-scroll-target="#embeddings-for-rag">7. Embeddings for RAG</a></li>
+  <li><a href="#cache-isolation-for-sensitive-prompts" id="toc-cache-isolation-for-sensitive-prompts" class="nav-link" data-scroll-target="#cache-isolation-for-sensitive-prompts">8. Cache isolation for sensitive prompts</a></li>
+  <li><a href="#where-to-go-next" id="toc-where-to-go-next" class="nav-link" data-scroll-target="#where-to-go-next">Where to go next</a></li>
   <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/NRP-Hosted-LLMs.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">A Biophysics-based Protein Language Model for Protein Engineering</h1>
+<h1 class="title">NRP-Hosted LLMs: Access Setup and a First API Call</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Videos</div>
-    <div class="quarto-category">Cross Labs AI</div>
-    <div class="quarto-category">UW-Madison</div>
-    <div class="quarto-category">Transfer learning</div>
-    <div class="quarto-category">Biology</div>
-    <div class="quarto-category">Biophysics</div>
-    <div class="quarto-category">Protein language models</div>
-    <div class="quarto-category">Foundation models</div>
+    <div class="quarto-category">Notebooks</div>
+    <div class="quarto-category">Code-along</div>
     <div class="quarto-category">LLM</div>
-    <div class="quarto-category">Deep learning</div>
-    <div class="quarto-category">Protein engineering</div>
-    <div class="quarto-category">Simulations</div>
+    <div class="quarto-category">NRP</div>
+    <div class="quarto-category">API</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations.
+    Code-along: get an NRP account and LLM token, then make your first chat, multimodal, and embedding calls against the OpenAI-compatible endpoint.
   </div>
 </div>
 
@@ -357,16 +391,16 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Presenter</div>
+    <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Sam Gelman </p>
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
           </div>
   </div>
     
     <div>
-    <div class="quarto-title-meta-heading">Date</div>
+    <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 18, 2024</p>
+      <p class="date">May 13, 2026</p>
     </div>
   </div>
   
@@ -378,52 +412,154 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="summary-from-cross-labs-ai" class="level3">
-<h3 class="anchored" data-anchor-id="summary-from-cross-labs-ai">Summary from Cross Labs AI:</h3>
-<blockquote class="blockquote">
-<p>Just as words combine to form sentences that convey meaning in human languages, the specific arrangement of amino acids in proteins can be viewed as an information-rich language describing molecular structure and behavior.</p>
-<p>Protein language models harness advances in natural language processing to decode intricate patterns and relationships within protein sequences. These models learn meaningful, low-dimensional representations that capture the semantic organization of protein space and have broad utility in protein engineering. However, while protein language models are powerful, they do not take advantage of the extensive knowledge of protein biophysics and molecular mechanisms acquired over the last century. Thus, they are largely unaware of the underlying physical principles governing protein function.</p>
-<p>We introduce Mutational Effect Transfer Learning (METL), a specialized protein language model that bridges the gap between traditional biophysics-based and machine learning approaches by incorporating synthetic data from molecular simulations. We pretrain a transformer on millions of molecular simulations to capture the relationship between protein sequence, structure, energetics, and stability. We then finetune the neural network to harness these fundamental biophysical signals and apply them when predicting protein functional scores from experimental assays. METL excels in protein engineering tasks like generalizing from small training sets and extrapolating to new sequence positions. We demonstrate METL’s ability to design functional green fluorescent protein variants when trained on only 64 experimental examples.</p>
-</blockquote>
+<p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/NRP-Hosted-LLMs.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
+<p><strong>Free frontier-LLM endpoints for researchers.</strong> The <a href="https://nrp.ai/">National Research Platform (NRP)</a> hosts open-weight models (Qwen3, GPT-OSS, Kimi, Gemma, embeddings, etc.) behind an OpenAI-compatible API at <strong>no cost</strong> to researchers and educators at <a href="https://incommon.org/">InCommon</a>-affiliated institutions — UW–Madison included. This notebook walks through getting an access token and making your first calls (chat, reasoning, multimodal, embeddings). For the fuller reference — fair-use limits, cluster policies, where it fits alongside CHTC / UW Cloud — see the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">NRP card</a>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You need your own NRP token to run these cells. The notebook is rendered as-is — without a token, every call returns <code>401 Unauthorized</code>.</p>
+</div>
+</div>
+<section id="get-access" class="level2">
+<h2 class="anchored" data-anchor-id="get-access">1. Get access</h2>
+<ol type="1">
+<li><strong>Sign in</strong> at <a href="https://nrp.ai/">nrp.ai</a> via CILogon. Pick one identity provider and stick with it — switching IdPs later fails with a “Permission denied” error.</li>
+<li><strong>Get into an LLM-enabled namespace.</strong> Already in a namespace? Check at <a href="https://nrp.ai/namespaces">nrp.ai/namespaces</a> (LLM-enabled ones are flagged). Need a new namespace or the LLM flag added? Ask in the <strong>Nautilus Support</strong> channel in <a href="https://nrp.ai/contact/">Matrix</a> or email <a href="mailto:support@nationalresearchplatform.org">support@nationalresearchplatform.org</a>. See the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">NRP card</a> for the three signup patterns (solo, lab, student).</li>
+<li><strong>Generate a token</strong> at <a href="https://nrp.ai/llmtoken">nrp.ai/llmtoken</a>.</li>
+</ol>
 </section>
-<section id="links-code" class="level3">
-<h3 class="anchored" data-anchor-id="links-code">Links &amp; code</h3>
-<ul>
-<li>About the speaker: Sam Gelamn, PhD → <a href="https://samgelman.com">samgelman.com</a></li>
-<li>Check out the <a href="https://www.biorxiv.org/content/10.1101/2024.03.15.585128v1">preprint</a></li>
-<li>All code is available under the MIT license. A collection of METL software repositories is provided to reproduce the results of this manuscript and run METL on new data:
-<ul>
-<li><a href="https://github.com/gitter-lab/metl">github.com/gitter-lab/metl</a> for pretraining and finetuning METL PLMs (archived at doi:10.5281/zenodo.10819483)</li>
-<li><a href="https://github.com/gitter-lab/metl-sim">github.com/gitter-lab/metl-sim</a> for generating biophysical attributes with Rosetta (archived at doi:10.5281/zenodo.10819523)</li>
-<li><a href="https://github.com/gitter-lab/metl-pretrained">github.com/gitter-lab/metl-pretrained</a> for making predictions with pretrained METL PLMs (archived at doi:10.5281/zenodo.10819499)</li>
-<li><a href="https://github.com/gitter-lab/metl-pub">github.com/gitter-lab/metl-pub</a> for additional code and data to reproduce these results (archived at doi:10.5281/zenodo.10819536)</li>
-</ul></li>
-</ul>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/milM6-2RF18" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<section id="configure-the-client" class="level2">
+<h2 class="anchored" data-anchor-id="configure-the-client">2. Configure the client</h2>
+<p>Install <code>openai</code> and point it at NRP’s endpoint. Store the token in an env var (e.g., a local <code>.env</code>), not in code.</p>
+<div id="c2c7db25" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># %pip install --quiet openai python-dotenv requests</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="4edf648c" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>load_dotenv()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"NRP_LLM_TOKEN"</span>],</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span><span class="st">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
-<section id="jump-to-section" class="level3">
-<h3 class="anchored" data-anchor-id="jump-to-section">Jump to section</h3>
+<section id="list-available-models" class="level2">
+<h2 class="anchored" data-anchor-id="list-available-models">3. List available models</h2>
+<div id="677cb543" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> client.models.<span class="bu">list</span>().data:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(m.<span class="bu">id</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Expect names like <code>qwen3</code>, <code>qwen3-small</code>, <code>gpt-oss</code>, <code>gemma</code>, <code>kimi</code>, <code>glm-5</code>, <code>qwen3-embedding</code>. The exact set rotates — see the <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/lifecycle/">lifecycle &amp; changelog</a>.</p>
+</section>
+<section id="a-chat-completion" class="level2">
+<h2 class="anchored" data-anchor-id="a-chat-completion">4. A chat completion</h2>
+<p><code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
+<div id="165373ac" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"gpt-oss"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"You are a concise teaching assistant for a graduate ML course."</span>},</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"In 2-3 sentences, when should I use LoRA instead of full fine-tuning?"</span>},</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(completion.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If your client needs a <code>max_tokens</code> value, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
+</div>
+</div>
+</section>
+<section id="toggle-reasoning-mode" class="level2">
+<h2 class="anchored" data-anchor-id="toggle-reasoning-mode">5. Toggle reasoning mode</h2>
+<p>Several models default to “thinking” mode, which adds latency. Disable it via <code>extra_body</code>:</p>
+<div id="1dc7d84d" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"qwen3-small"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"One-line definition of overfitting."</span>}],</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    extra_body<span class="op">=</span>{<span class="st">"chat_template_kwargs"</span>: {<span class="st">"enable_thinking"</span>: <span class="va">False</span>}},</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(completion.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
+</section>
+<section id="multimodal-image-input" class="level2">
+<h2 class="anchored" data-anchor-id="multimodal-image-input">6. Multimodal: image input</h2>
+<p><code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept image inputs as <code>image_url</code> content blocks (URL or base64 data URI):</p>
+<div id="f380e761" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64, requests</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> requests.get(<span class="st">"https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"</span>, timeout<span class="op">=</span><span class="dv">30</span>).content</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>b64 <span class="op">=</span> base64.b64encode(img).decode(<span class="st">"ascii"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"gemma"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"role"</span>: <span class="st">"user"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"content"</span>: [</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"type"</span>: <span class="st">"text"</span>, <span class="st">"text"</span>: <span class="st">"In one sentence: what animal and what is it doing?"</span>},</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"type"</span>: <span class="st">"image_url"</span>, <span class="st">"image_url"</span>: {<span class="st">"url"</span>: <span class="ss">f"data:image/jpeg;base64,</span><span class="sc">{</span>b64<span class="sc">}</span><span class="ss">"</span>}},</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    }],</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(completion.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> input (ASR / speech-to-text).</p>
+</section>
+<section id="embeddings-for-rag" class="level2">
+<h2 class="anchored" data-anchor-id="embeddings-for-rag">7. Embeddings for RAG</h2>
+<div id="c192470f" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emb <span class="op">=</span> client.embeddings.create(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"qwen3-embedding"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span><span class="op">=</span>[</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Retrieval-augmented generation pairs a vector store with an LLM."</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"LoRA inserts low-rank adapter matrices into a frozen base model."</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"dim=</span><span class="sc">{</span><span class="bu">len</span>(emb.data[<span class="dv">0</span>].embedding)<span class="sc">}</span><span class="ss">, first 5=</span><span class="sc">{</span>emb<span class="sc">.</span>data[<span class="dv">0</span>]<span class="sc">.</span>embedding[:<span class="dv">5</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>These vectors plug into any vector DB (Chroma, Qdrant, pgvector, etc.). Do not call <code>qwen3-embedding</code> for chat completions — it’s not a chat model.</p>
+</section>
+<section id="cache-isolation-for-sensitive-prompts" class="level2">
+<h2 class="anchored" data-anchor-id="cache-isolation-for-sensitive-prompts">8. Cache isolation for sensitive prompts</h2>
+<p>NRP caches prompts and responses across users sharing a tenant. If your prompts could be sensitive, pass a <code>cache_salt</code> (≥256 random bits, base64-encoded) that only you know:</p>
+<div id="b1e42764" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64, os</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>project_salt <span class="op">=</span> base64.b64encode(os.urandom(<span class="dv">32</span>)).decode(<span class="st">"ascii"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"gpt-oss"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Summarize this internal memo: ..."</span>}],</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    extra_body<span class="op">=</span>{<span class="st">"cache_salt"</span>: project_salt},</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(completion.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="where-to-go-next" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-go-next">Where to go next</h2>
 <ul>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=181s" target="_blank">[3:01] Intro</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=307s" target="_blank">[5:03] Proteins as nature’s molecular machines</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=360s" target="_blank">[6:58] Proteins defined by a sequence of amino acids</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=634s" target="_blank">[10:34] Challenge: Vastness of sequence space</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=678s" target="_blank">[11:18] Navigating sequence space</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=712s" target="_blank">[11:52] Challenge: Small changes can have a large impact</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=771s" target="_blank">[12:51] Protein language models (PLMs)</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=957s" target="_blank">[15:57] Incorporating biophysics</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1053s" target="_blank">[17:33] Mutational Effect Transfer Learning (METL)</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1190s" target="_blank">[19:50] Simulating protein structures with Rosetta</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1270s" target="_blank">[21:10] Local and global strategies for simulations</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1466s" target="_blank">[24:26] Train transformer encoder to predict Rosetta scores</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1538s" target="_blank">[25:38] Finetune to predict experimental fitness score</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1630s" target="_blank">[27:10] Evaluation baselines (evolutionary models): METL, ESM, and EVE</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1706s" target="_blank">[28:26] Generalizing from small datasets</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=1868s" target="_blank">[31:08] Extrapolating beyond train set</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2030s" target="_blank">[33:50] Simulating specific functions</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2146s" target="_blank">[35:46] How much simulated/experimental data is needed?</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2281s" target="_blank">[38:01] Engineering GFP variants with METL</a></li>
-<li><a href="https://www.youtube.com/watch?v=milM6-2RF18&amp;t=2500s" target="_blank">[41:40] Q&amp;A</a></li>
+<li><a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">Available models</a> — full per-model cards and use-case recommendations.</li>
+<li><a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/chat-interfaces/">Chat interfaces</a> and <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/client-configs/">coding CLI configs</a> if you’d rather not script.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">NRP card</a> — fair-use limits, cluster policies, where it fits alongside CHTC / UW Cloud.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -867,4 +1003,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Applications/Videos/Other/CrossLabsAI-CrossRoads45-METL-Biophysics-based-Protein-Language-Model.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/NRP-Hosted-LLMs.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
