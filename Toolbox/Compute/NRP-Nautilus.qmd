@@ -16,7 +16,7 @@ categories:
   - NSF
 ---
 
-The [National Research Platform (NRP)](https://nrp.ai/), also called **Nautilus**, is an NSF-supported distributed Kubernetes cluster providing **free** GPU compute and a hosted open-weight LLM API to researchers and educators at [InCommon](https://incommon.org/)-affiliated institutions (UW–Madison is in). Usage is governed by the [AUP](https://nrp.ai/NRP-AUP.pdf) and per-user fair-use limits.
+The [National Research Platform (NRP)](https://nrp.ai/), also called **Nautilus**, is an NSF-supported distributed Kubernetes cluster providing **free** GPU compute and a hosted open-weight LLM API to researchers and educators at [InCommon](https://incommon.org/)-affiliated institutions (UW–Madison is in). Usage is governed by the [Acceptable Use Policy (AUP)](https://nrp.ai/NRP-AUP.pdf) and per-user fair-use limits.
 
 Two things make NRP useful for ML/AI:
 
@@ -32,7 +32,7 @@ Two things make NRP useful for ML/AI:
    - **Lab or research group:** the PI becomes the namespace admin and adds members.
    - **Student:** ask your advisor to add you to their existing namespace.
 4. **Generate an LLM token** at [nrp.ai/llmtoken](https://nrp.ai/llmtoken). If you forgot to mention LLM use up front and your namespace isn't flagged for it, ask in Nautilus Support — it's a one-line toggle.
-5. **For Kubernetes compute:** install `kubectl` + [`kubelogin`](https://github.com/int128/kubelogin), drop the [NRP config](https://nrp.ai/config) at `~/.kube/config`. Full walkthrough: [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/).
+5. **For compute:** most users go through the hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/) or [Coder](https://nrp.ai/documentation/userdocs/coder/coder/) (browser-based, no install). Only if you want to write Kubernetes YAML directly: install `kubectl` + [`kubelogin`](https://github.com/int128/kubelogin) and drop the [NRP config](https://nrp.ai/config) at `~/.kube/config` — full walkthrough in [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/).
 
 Read the [AUP](https://nrp.ai/NRP-AUP.pdf) and [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/) before submitting workloads — there are real resource-utilization rules and you can be banned for violating them.
 
@@ -42,18 +42,18 @@ The catalog rotates as the open-weights frontier moves (`main` = generally suppo
 
 | Model | Status | Params | Context | Modalities | Max concurrent |
 |-------|--------|-------:|--------:|------------|---------------:|
-| `qwen3` | main | 397B MoE | 1.01M | image, video | 16 |
+| `qwen3` | main | 397B | 1.01M | image, video | 16 |
 | `qwen3-small` | main | 27B | 1.01M | image, video | 8 |
 | `gpt-oss` | main | 120B | 131K | text | 16 |
 | `gemma` | main | 31B | 262K | image, video | 8 |
 | `qwen3-embedding` | main | 8B | — | image, video | 16 |
 | `gemma-small` | evaluating | ~8B | 131K | image, video, audio | 8 |
-| `kimi` | evaluating | 1T MoE | 262K | image, video | 2 |
+| `kimi` | evaluating | 1T | 262K | image, video | 2 |
 | `glm-5` | evaluating | 744B | 203K | text | 4 |
 | `minimax-m2` | evaluating | 230B | 205K | text | 8 |
 | `olmo` | evaluating | 32B | 65K | text | 8 |
 
-"Max concurrent" = how many requests you can have **open at the same instant** under one token. Not per minute, not per day — just simultaneously. A single-threaded script that sends one request, waits, then sends the next has concurrency 1 and never hits the limit, however long it runs. Parallel/`asyncio` code that fires N requests at once does. There is **no published RPM, TPM, or daily token cap** — concurrency is the only quantified throttle.
+"Max concurrent" = how many requests you can have **open at the same instant** under one token. Not per minute, not per day — just simultaneously. A single-threaded script that sends one request, waits, then sends the next has concurrency 1 and never hits the limit, however long it runs. Parallel/`asyncio` code that fires N requests at once does. There is **no published requests-per-minute, tokens-per-minute, or daily token cap** — concurrency is the only quantified throttle.
 
 Requests using ≥35% of a model's context drop to 1 concurrent request, and the sum of in-flight context must stay under 35%. SDSC and Internet2 affiliates get 2× limits — but "affiliated" here almost certainly means staff of those organizations (the people who contributed the GPU nodes), not all users at the 300+ Internet2 member institutions. UW–Madison is an Internet2 primary network participant via the Big Ten Academic Alliance OmniPoP, but **most UW researchers should plan around the standard 1× limit** unless an admin confirms otherwise. For higher-volume sessions, contact admins in advance.
 
@@ -79,7 +79,7 @@ NRP is Kubernetes — workloads are described in YAML. Key rules:
 
 ## Fit for UW–Madison and the ML Marathon
 
-NRP complements [CHTC](CHTC.qmd) rather than replacing it. CHTC remains the easier choice for batch training and hyperparameter sweeps (free GPU Lab, dedicated facilitators). NRP shines for [ML Marathon](../../Projects/ML-Marathon/index.qmd) teams building GenAI/RAG challenges that benefit from a free open-weight LLM API (`qwen3`, `gpt-oss`, `qwen3-embedding`), or for groups that want a Kubernetes-native workflow. For proprietary frontier models (Claude, GPT-4o, Gemini) and HIPAA-eligible inference, see [GenAI at UW-Madison](../GenAI/GenAI-at-UW-Madison.qmd).
+NRP complements [CHTC](CHTC.qmd) rather than replacing it. CHTC remains the easier choice for batch training and hyperparameter sweeps (free GPU Lab, dedicated facilitators). NRP shines for [ML Marathon](../../Projects/ML-Marathon/index.qmd) teams building GenAI / retrieval-augmented generation (RAG) challenges that benefit from a free open-weight LLM API (`qwen3`, `gpt-oss`, `qwen3-embedding`), or for groups that want a Kubernetes-native workflow. For proprietary frontier models (Claude, GPT-4o, Gemini) and HIPAA-eligible inference, see [GenAI at UW-Madison](../GenAI/GenAI-at-UW-Madison.qmd).
 
 ## Getting help
 
