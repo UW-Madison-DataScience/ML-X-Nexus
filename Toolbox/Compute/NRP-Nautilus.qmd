@@ -69,7 +69,7 @@ For a code-along walking through token setup and chat / reasoning / multimodal /
 NRP is Kubernetes — workloads are described in YAML. Key rules:
 
 - **Containers are stateless.** Use persistent volumes for anything you can't lose.
-- **Interactive pods**: 6 hr max, capped at 2 GPUs / 32 GB RAM / 16 CPU.
+- **Interactive pods**: 6 hr max, capped at 2 GPUs / 32 GB RAM / 16 CPU (see [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/) for the current numbers).
 - **Batch work** goes in a `Job`. **`sleep infinity` is bannable.**
 - **Long-running services** use a `Deployment` (no GPU), auto-deleted after 2 weeks.
 - **GPUs must run >40% utilized.** A100 quota is 0 by default and requires the [A100 access request](https://nrp.ai/documentation/userdocs/start/policies/).
