@@ -38,7 +38,7 @@ Read the [AUP](https://nrp.ai/NRP-AUP.pdf) and [Cluster Policies](https://nrp.ai
 
 ## Available LLMs and fair-use limits
 
-The catalog rotates as the open-weights frontier moves (`main` = generally supported, `evaluating` = may change). Full per-model cards on the [models page](https://nrp.ai/documentation/userdocs/ai/llm-managed/models/).
+The catalog rotates as the open-weights frontier moves (`main` = generally supported, `evaluating` = may change). Full per-model cards on the [models page](https://nrp.ai/documentation/userdocs/ai/llm-managed/models/); see [lifecycle & changelog](https://nrp.ai/documentation/userdocs/ai/llm-managed/lifecycle/) before pinning a model name in production scripts.
 
 | Model | Status | Params | Context | Modalities | Max concurrent |
 |-------|--------|-------:|--------:|------------|---------------:|
@@ -56,6 +56,8 @@ The catalog rotates as the open-weights frontier moves (`main` = generally suppo
 "Max concurrent" = how many requests you can have **open at the same instant** under one token. Not per minute, not per day — just simultaneously. A single-threaded script that sends one request, waits, then sends the next has concurrency 1 and never hits the limit, however long it runs. Parallel/`asyncio` code that fires N requests at once does. There is **no published RPM, TPM, or daily token cap** — concurrency is the only quantified throttle.
 
 Requests using ≥35% of a model's context drop to 1 concurrent request, and the sum of in-flight context must stay under 35%. SDSC and Internet2 affiliates get 2× limits — but "affiliated" here almost certainly means staff of those organizations (the people who contributed the GPU nodes), not all users at the 300+ Internet2 member institutions. UW–Madison is an Internet2 primary network participant via the Big Ten Academic Alliance OmniPoP, but **most UW researchers should plan around the standard 1× limit** unless an admin confirms otherwise. For higher-volume sessions, contact admins in advance.
+
+For browser chat: [Open WebUI, Chatbox, Cherry Studio](https://nrp.ai/documentation/userdocs/ai/llm-managed/chat-interfaces/). For coding CLIs (Claude Code, OpenCode, Crush, Kimi CLI, Copilot CLI): [client configurations](https://nrp.ai/documentation/userdocs/ai/llm-managed/client-configs/). For programmatic use: [API access docs](https://nrp.ai/documentation/userdocs/ai/llm-managed/api-access/).
 
 ::: {.callout-tip}
 ## Hands-on notebook
@@ -82,6 +84,7 @@ NRP complements [CHTC](CHTC.qmd) rather than replacing it. CHTC remains the easi
 - **Matrix** (public rooms only): [nrp.ai/contact](https://nrp.ai/contact/)
 - **Email**: [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org)
 - **Docs**: [nrp.ai/documentation](https://nrp.ai/documentation/) · [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/) · [Fair-use policy](https://nrp.ai/documentation/userdocs/ai/llm-managed/fair-use/) · [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/)
+- **Reference**: Wang et al., *[The National Research Platform: Stretched, Multi-Tenant, Scientific Kubernetes Cluster](https://arxiv.org/abs/2505.22864)*, arXiv:2505.22864.
 
 ## Related resources
 
