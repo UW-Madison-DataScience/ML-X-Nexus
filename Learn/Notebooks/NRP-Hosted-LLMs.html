@@ -6,9 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Chris Endemann">
-<meta name="dcterms.date" content="2026-05-13">
-<meta name="description" content="Code-along: get an NRP account and LLM token, then make your first chat, multimodal, and embedding calls against the OpenAI-compatible endpoint.">
 
 <title>NRP-Hosted LLMs: Access Setup and a First API Call – Nexus: Crowdsourced ML Resources</title>
 <style>
@@ -353,7 +350,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#get-access" id="toc-get-access" class="nav-link active" data-scroll-target="#get-access">1. Get access</a></li>
+  <li><a href="#chris-endemann-endemannwisc.edu" id="toc-chris-endemann-endemannwisc.edu" class="nav-link active" data-scroll-target="#chris-endemann-endemannwisc.edu">Chris Endemann, endemann@wisc.edu</a></li>
+  <li><a href="#nexus-version" id="toc-nexus-version" class="nav-link" data-scroll-target="#nexus-version">Nexus version</a></li>
+  <li><a href="#categories" id="toc-categories" class="nav-link" data-scroll-target="#categories">Categories</a></li>
+  <li><a href="#get-access" id="toc-get-access" class="nav-link" data-scroll-target="#get-access">1. Get access</a></li>
   <li><a href="#configure-the-client" id="toc-configure-the-client" class="nav-link" data-scroll-target="#configure-the-client">2. Configure the client</a></li>
   <li><a href="#list-available-models" id="toc-list-available-models" class="nav-link" data-scroll-target="#list-available-models">3. List available models</a></li>
   <li><a href="#a-chat-completion" id="toc-a-chat-completion" class="nav-link" data-scroll-target="#a-chat-completion">4. A chat completion</a></li>
@@ -364,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#where-to-go-next" id="toc-where-to-go-next" class="nav-link" data-scroll-target="#where-to-go-next">Where to go next</a></li>
   <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/NRP-Hosted-LLMs.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/NRP-Hosted-LLMs.ipynb" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -372,37 +372,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">NRP-Hosted LLMs: Access Setup and a First API Call</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">Notebooks</div>
-    <div class="quarto-category">Code-along</div>
-    <div class="quarto-category">LLM</div>
-    <div class="quarto-category">NRP</div>
-    <div class="quarto-category">API</div>
-  </div>
-  </div>
-
-<div>
-  <div class="description">
-    Code-along: get an NRP account and LLM token, then make your first chat, multimodal, and embedding calls against the OpenAI-compatible endpoint.
-  </div>
 </div>
+
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 13, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -412,6 +388,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="chris-endemann-endemannwisc.edu" class="level3">
+<h3 class="anchored" data-anchor-id="chris-endemann-endemannwisc.edu">Chris Endemann, endemann@wisc.edu</h3>
+</section>
+<section id="nexus-version" class="level3">
+<h3 class="anchored" data-anchor-id="nexus-version"><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/NRP-Hosted-LLMs.html">Nexus version</a></h3>
+</section>
+<section id="categories" class="level3">
+<h3 class="anchored" data-anchor-id="categories">Categories</h3>
+<ul>
+<li>Notebooks</li>
+<li>Code-along</li>
+<li>LLM</li>
+<li>NRP</li>
+<li>API</li>
+</ul>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/NRP-Hosted-LLMs.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Free frontier-LLM endpoints for researchers.</strong> The <a href="https://nrp.ai/">National Research Platform (NRP)</a> hosts open-weight models (Qwen3, GPT-OSS, Kimi, Gemma, embeddings, etc.) behind an OpenAI-compatible API at <strong>no cost</strong> to researchers and educators at <a href="https://incommon.org/">InCommon</a>-affiliated institutions — UW–Madison included. This notebook walks through getting an access token and making your first calls (chat, reasoning, multimodal, embeddings). For the fuller reference — fair-use limits, cluster policies, where it fits alongside CHTC / UW Cloud — see the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">NRP card</a>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -427,6 +418,7 @@ Warning
 <p>You need your own NRP token to run these cells. The notebook is rendered as-is — without a token, every call returns <code>401 Unauthorized</code>.</p>
 </div>
 </div>
+</section>
 <section id="get-access" class="level2">
 <h2 class="anchored" data-anchor-id="get-access">1. Get access</h2>
 <ol type="1">
@@ -438,10 +430,10 @@ Warning
 <section id="configure-the-client" class="level2">
 <h2 class="anchored" data-anchor-id="configure-the-client">2. Configure the client</h2>
 <p>Install <code>openai</code> and point it at NRP’s endpoint. Store the token in an env var (e.g., a local <code>.env</code>), not in code.</p>
-<div id="c2c7db25" class="cell" data-execution_count="1">
+<div id="cell-3" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># %pip install --quiet openai python-dotenv requests</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4edf648c" class="cell" data-execution_count="2">
+<div id="cell-4" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
@@ -455,7 +447,7 @@ Warning
 </section>
 <section id="list-available-models" class="level2">
 <h2 class="anchored" data-anchor-id="list-available-models">3. List available models</h2>
-<div id="677cb543" class="cell" data-execution_count="3">
+<div id="cell-6" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> client.models.<span class="bu">list</span>().data:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(m.<span class="bu">id</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -464,7 +456,7 @@ Warning
 <section id="a-chat-completion" class="level2">
 <h2 class="anchored" data-anchor-id="a-chat-completion">4. A chat completion</h2>
 <p><code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="165373ac" class="cell" data-execution_count="4">
+<div id="cell-8" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"gpt-oss"</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[</span>
@@ -491,7 +483,7 @@ Caution
 <section id="toggle-reasoning-mode" class="level2">
 <h2 class="anchored" data-anchor-id="toggle-reasoning-mode">5. Toggle reasoning mode</h2>
 <p>Several models default to “thinking” mode, which adds latency. Disable it via <code>extra_body</code>:</p>
-<div id="1dc7d84d" class="cell" data-execution_count="5">
+<div id="cell-10" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"qwen3-small"</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"One-line definition of overfitting."</span>}],</span>
@@ -504,7 +496,7 @@ Caution
 <section id="multimodal-image-input" class="level2">
 <h2 class="anchored" data-anchor-id="multimodal-image-input">6. Multimodal: image input</h2>
 <p><code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept image inputs as <code>image_url</code> content blocks (URL or base64 data URI):</p>
-<div id="f380e761" class="cell" data-execution_count="6">
+<div id="cell-12" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64, requests</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> requests.get(<span class="st">"https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"</span>, timeout<span class="op">=</span><span class="dv">30</span>).content</span>
@@ -526,7 +518,7 @@ Caution
 </section>
 <section id="embeddings-for-rag" class="level2">
 <h2 class="anchored" data-anchor-id="embeddings-for-rag">7. Embeddings for RAG</h2>
-<div id="c192470f" class="cell" data-execution_count="7">
+<div id="cell-14" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emb <span class="op">=</span> client.embeddings.create(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"qwen3-embedding"</span>,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span><span class="op">=</span>[</span>
@@ -541,7 +533,7 @@ Caution
 <section id="cache-isolation-for-sensitive-prompts" class="level2">
 <h2 class="anchored" data-anchor-id="cache-isolation-for-sensitive-prompts">8. Cache isolation for sensitive prompts</h2>
 <p>NRP caches prompts and responses across users sharing a tenant. If your prompts could be sensitive, pass a <code>cache_salt</code> (≥256 random bits, base64-encoded) that only you know:</p>
-<div id="b1e42764" class="cell" data-execution_count="8">
+<div id="cell-16" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64, os</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>project_salt <span class="op">=</span> base64.b64encode(os.urandom(<span class="dv">32</span>)).decode(<span class="st">"ascii"</span>)</span>
@@ -1003,4 +995,4 @@ Caution
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Notebooks/NRP-Hosted-LLMs.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/NRP-Hosted-LLMs.ipynb" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
