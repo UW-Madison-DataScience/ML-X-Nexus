@@ -55,7 +55,7 @@ The catalog rotates as the open-weights frontier moves (`main` = generally suppo
 
 "Max concurrent" = how many requests you can have **open at the same instant** under one token. Not per minute, not per day — just simultaneously. A single-threaded script that sends one request, waits, then sends the next has concurrency 1 and never hits the limit, however long it runs. Parallel/`asyncio` code that fires N requests at once does. There is **no published RPM, TPM, or daily token cap** — concurrency is the only quantified throttle.
 
-Requests using ≥35% of a model's context drop to 1 concurrent request, and the sum of in-flight context must stay under 35%. SDSC and Internet2 affiliates get 2× limits — UW–Madison is an Internet2 member, but NRP's docs don't clearly say whether member-institution users qualify or only Internet2 staff do; confirm with admins before relying on the bump. For higher-volume sessions, contact admins in advance.
+Requests using ≥35% of a model's context drop to 1 concurrent request, and the sum of in-flight context must stay under 35%. SDSC and Internet2 affiliates get 2× limits — but "affiliated" here almost certainly means staff of those organizations (the people who contributed the GPU nodes), not all users at the 300+ Internet2 member institutions. UW–Madison is an Internet2 primary network participant via the Big Ten Academic Alliance OmniPoP, but **most UW researchers should plan around the standard 1× limit** unless an admin confirms otherwise. For higher-volume sessions, contact admins in advance.
 
 ::: {.callout-tip}
 ## Hands-on notebook
