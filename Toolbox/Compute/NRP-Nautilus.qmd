@@ -16,12 +16,12 @@ categories:
   - NSF
 ---
 
-The [National Research Platform (NRP)](https://nrp.ai/), also called **Nautilus**, is an NSF-supported distributed Kubernetes cluster providing **free** GPU compute and a hosted open-weight LLM API to researchers and educators at [InCommon](https://incommon.org/)-affiliated institutions (UW–Madison is in). Usage is governed by the [Acceptable Use Policy (AUP)](https://nrp.ai/NRP-AUP.pdf) and per-user fair-use limits.
+The [National Research Platform (NRP)](https://nrp.ai/), also called **Nautilus**, is an NSF-supported distributed Kubernetes cluster providing **free** GPU compute and a hosted open-weight LLM API to researchers and educators at [InCommon](https://incommon.org/)-affiliated institutions (UW–Madison is in). Usage is governed by the [Acceptable Use Policy](https://nrp.ai/NRP-AUP.pdf) and per-user fair-use limits.
 
 For ML/AI work, NRP gives you:
 
-1. **Hosted, OpenAI-compatible LLM API** at `https://ellm.nrp-nautilus.io/v1` — open-weight models (Qwen3, GPT-OSS, Kimi, GLM-5, Gemma, MiniMax-M2, OLMo, plus embeddings).
-2. **GPU compute** (RTX 2080 Ti / 3090 / 4090, A10, A100) with a hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/) and [Coder](https://nrp.ai/documentation/userdocs/coder/coder/) (VS Code in browser). Classrooms can request private JupyterHub deployments via [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org).
+1. **Hosted LLM endpoints** — call open-weight models through an OpenAI-compatible API at `https://ellm.nrp-nautilus.io/v1`. No GPU on your side; NRP runs the inference. See the [model table](#available-llms-and-fair-use-limits) below.
+2. **General compute** for everything else — your own GPU pods (RTX 2080 Ti / 3090 / 4090, A10, A100) for training, fine-tuning, or non-LLM work. Most users go through the hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/) or [Coder](https://nrp.ai/documentation/userdocs/coder/coder/) (VS Code in browser); classrooms can request private JupyterHub deployments via [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org).
 
 ## Get started
 
@@ -32,9 +32,9 @@ For ML/AI work, NRP gives you:
    - **Lab or research group:** the PI becomes the namespace admin and adds members.
    - **Student:** ask your advisor to add you to their existing namespace.
 4. **Generate an LLM token** at [nrp.ai/llmtoken](https://nrp.ai/llmtoken). If you forgot to mention LLM use up front and your namespace isn't flagged for it, ask in Nautilus Support — it's a one-line toggle.
-5. **For compute:** most users go through the hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/) or [Coder](https://nrp.ai/documentation/userdocs/coder/coder/) (browser-based, no install). Only if you want to write Kubernetes YAML directly: install `kubectl` + [`kubelogin`](https://github.com/int128/kubelogin) and drop the [NRP config](https://nrp.ai/config) at `~/.kube/config` — full walkthrough in [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/).
+5. **For general compute** (anything beyond the LLM endpoint — training, fine-tuning, your own notebooks): most users go through the hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/) or [Coder](https://nrp.ai/documentation/userdocs/coder/coder/) (browser-based, no install). Only if you want to write Kubernetes YAML directly: install `kubectl` + [`kubelogin`](https://github.com/int128/kubelogin) and drop the [NRP config](https://nrp.ai/config) at `~/.kube/config` — full walkthrough in [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/).
 
-Read the [AUP](https://nrp.ai/NRP-AUP.pdf) and [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/) before submitting workloads — there are real resource-utilization rules and you can be banned for violating them.
+Read the [Acceptable Use Policy](https://nrp.ai/NRP-AUP.pdf) and [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/) before submitting workloads — there are real resource-utilization rules and you can be banned for violating them.
 
 ## Available LLMs and fair-use limits
 
