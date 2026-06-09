@@ -87,7 +87,13 @@ A short code-along. To run it yourself, you'll need:
 
      Add `.env` to `.gitignore`. The `python-dotenv` package in the install line below reads `.env` automatically into `os.environ` when you call `load_dotenv()`.
 
-   - **Google Colab** — Don't paste the token into a cell; Colab autosaves to Drive in real time and your token would ride along. Instead, use Colab's built-in **Secrets** panel (key icon in the left sidebar): click *Add new secret*, name it `NRP_LLM_TOKEN`, paste the value, and toggle "Notebook access." Then in the install cell, swap the `dotenv` block for:
+   - **Google Colab** — Don't paste the token into a cell; Colab autosaves to Drive in real time and your token would ride along. Use Colab's built-in **Secrets** panel instead:
+
+     1. Open the notebook (the Secrets panel only appears once a notebook is loaded, not on the Colab home screen).
+     2. In the far-left vertical icon strip, click the **🔑 key icon** (it's the literal key shape — not the `≡` hamburger, which is Table of Contents).
+     3. Click *Add new secret*, name it `NRP_LLM_TOKEN`, paste the token value, and toggle **Notebook access** on.
+
+     Then swap the `dotenv` block in the install cell for:
 
      ```python
      from google.colab import userdata
