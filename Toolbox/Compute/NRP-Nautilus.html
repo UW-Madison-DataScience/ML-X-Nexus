@@ -546,20 +546,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="calling-the-llm-endpoint-from-python">Calling the LLM endpoint from Python</h2>
 <p>A short code-along. To run it yourself, you’ll need:</p>
 <ol type="1">
-<li><p><strong>An LLM token.</strong> Visit <a href="https://nrp.ai/llmtoken">nrp.ai/llmtoken</a> (you need to be in an LLM-flagged namespace — see <a href="#get-started">Get started</a> above) and click to mint one. The page shows a long opaque string — copy it and treat it like a password. Don’t paste it into source code or commit it.</p></li>
+<li><p><strong>An LLM token.</strong> Visit <a href="https://nrp.ai/llmtoken">nrp.ai/llmtoken</a> (you need to be in an LLM-flagged namespace — see <a href="#get-started">Get started</a> above). Two fields:</p>
+<ul>
+<li><strong>Group:</strong> dropdown of your LLM-flagged namespaces — pick the one this token should belong to (e.g., <code>wisc-ml-marathon</code>). Tokens are scoped to one namespace; if you later need one for a different group, you mint a new token.</li>
+<li><strong>Alias:</strong> free-text label for your own bookkeeping — NRP doesn’t validate it or show it anywhere else. <code>lastname-dev</code> is a good default (e.g., <code>endemann-dev</code>); use something more specific (e.g., <code>endemann-laptop</code>, <code>endemann-nexus-demo</code>) if you’ll have multiple tokens you want to tell apart and revoke independently.</li>
+</ul>
+<p>Click to mint. The page shows a long opaque string — copy it and treat it like a password. Don’t paste it into source code or commit it.</p></li>
 <li><p><strong>A local <code>.env</code> file</strong> so the code below can read the token from an environment variable instead of you typing it in. In the same directory as this notebook, create a file called <code>.env</code>:</p>
 <pre><code># .env  (do not commit this file)
 NRP_LLM_TOKEN=paste-your-long-token-string-here</code></pre>
 <p>Then add <code>.env</code> to your <code>.gitignore</code>. The <code>python-dotenv</code> package in the install line below reads <code>.env</code> automatically into <code>os.environ</code>.</p></li>
 </ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img"></a></p>
-<figcaption>Open in Colab</figcaption>
-</figure>
-</div>
+<p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="b9543a4f" class="cell" data-execution_count="1">
+<div id="ec074251" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pip install --quiet openai python-dotenv requests</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
@@ -572,12 +572,12 @@ NRP_LLM_TOKEN=paste-your-long-token-string-here</code></pre>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="5c42da8c" class="cell" data-execution_count="2">
+<div id="fc9b8232" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> client.models.<span class="bu">list</span>().data:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(m.<span class="bu">id</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="36d357e2" class="cell" data-execution_count="3">
+<div id="6c5cbed7" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"gpt-oss"</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[</span>
@@ -589,7 +589,7 @@ NRP_LLM_TOKEN=paste-your-long-token-string-here</code></pre>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="c99e57ea" class="cell" data-execution_count="4">
+<div id="db1e943b" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"qwen3-small"</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"One-line definition of overfitting."</span>}],</span>
@@ -599,7 +599,7 @@ NRP_LLM_TOKEN=paste-your-long-token-string-here</code></pre>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="259f2ef8" class="cell" data-execution_count="5">
+<div id="53db832f" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64, requests</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> requests.get(<span class="st">"https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"</span>, timeout<span class="op">=</span><span class="dv">30</span>).content</span>
@@ -618,7 +618,7 @@ NRP_LLM_TOKEN=paste-your-long-token-string-here</code></pre>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(completion.choices[<span class="dv">0</span>].message.content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="66af5d5c" class="cell" data-execution_count="6">
+<div id="831ab167" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emb <span class="op">=</span> client.embeddings.create(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"qwen3-embedding"</span>,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span><span class="op">=</span>[</span>
@@ -630,7 +630,7 @@ NRP_LLM_TOKEN=paste-your-long-token-string-here</code></pre>
 </div>
 <p>Vectors plug into any vector DB (Chroma, Qdrant, pgvector, etc.).</p>
 <p><strong>Cache isolation for sensitive prompts.</strong> NRP caches prompts and responses across users sharing a tenant. If yours could be sensitive, pass a <code>cache_salt</code> (≥256 random bits, base64) that only you know:</p>
-<div id="210af060" class="cell" data-execution_count="7">
+<div id="a760c998" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>project_salt <span class="op">=</span> base64.b64encode(os.urandom(<span class="dv">32</span>)).decode(<span class="st">"ascii"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>completion <span class="op">=</span> client.chat.completions.create(</span>
