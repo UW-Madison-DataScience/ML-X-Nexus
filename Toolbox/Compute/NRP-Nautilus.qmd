@@ -61,7 +61,7 @@ The catalog rotates as the open-weights frontier moves (`main` = generally suppo
 | `minimax-m2` | evaluating | 230B | 205K | text | 8 |
 | `olmo` | evaluating | 32B | 65K | text | 8 |
 
-"Max concurrent" = how many requests you can have **open at the same instant** under one access token. Not per minute, not per day — just simultaneously. A single-threaded script that sends one request, waits, then sends the next has concurrency 1 and never hits the limit, however long it runs. Parallel/`asyncio` code that fires N requests at once does. There is **no published requests-per-minute, tokens-per-minute, or daily token cap** — concurrency is the only quantified throttle.
+The **Max concurrent** column is transposed directly from NRP's [Fair Use Policy](https://nrp.ai/documentation/userdocs/ai/llm-managed/fair-use/), which publishes the same numbers in the inverse layout (concurrency → list of models). "Max concurrent" = how many requests you can have **open at the same instant** under one access token. Not per minute, not per day — just simultaneously. A single-threaded script that sends one request, waits, then sends the next has concurrency 1 and never hits the limit, however long it runs. Parallel/`asyncio` code that fires N requests at once does. There is **no published requests-per-minute, tokens-per-minute, or daily token cap** — concurrency is the only quantified throttle.
 
 Requests using ≥35% of a model's context drop to 1 concurrent request, and the sum of in-flight context must stay under 35%. For higher-volume sessions, contact admins in advance.
 
