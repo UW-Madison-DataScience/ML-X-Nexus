@@ -76,14 +76,25 @@ A short code-along. To run it yourself, you'll need:
    - **Alias:** free-text label for your own bookkeeping — NRP doesn't validate it or show it anywhere else. `lastname-dev` is a good default (e.g., `endemann-dev`); use something more specific (e.g., `endemann-laptop`, `endemann-nexus-demo`) if you'll have multiple tokens you want to tell apart and revoke independently.
 
    Click to mint. The page shows a long opaque string — copy it and treat it like a password. Don't paste it into source code or commit it.
-2. **A local `.env` file** so the code below can read the token from an environment variable instead of you typing it in. In the same directory as this notebook, create a file called `.env`:
+2. **A way to load the token into `os.environ["NRP_LLM_TOKEN"]`** without typing it into a notebook cell that gets saved or shared. Two paths:
 
-   ```
-   # .env  (do not commit this file)
-   NRP_LLM_TOKEN=paste-your-long-token-string-here
-   ```
+   - **Local Jupyter / VS Code / etc.** — Create a `.env` file in the same directory as this notebook:
 
-   Then add `.env` to your `.gitignore`. The `python-dotenv` package in the install line below reads `.env` automatically into `os.environ`.
+     ```
+     # .env  (do not commit this file)
+     NRP_LLM_TOKEN=paste-your-long-token-string-here
+     ```
+
+     Add `.env` to `.gitignore`. The `python-dotenv` package in the install line below reads `.env` automatically into `os.environ` when you call `load_dotenv()`.
+
+   - **Google Colab** — Don't paste the token into a cell; Colab autosaves to Drive in real time and your token would ride along. Instead, use Colab's built-in **Secrets** panel (key icon in the left sidebar): click *Add new secret*, name it `NRP_LLM_TOKEN`, paste the value, and toggle "Notebook access." Then in the install cell, swap the `dotenv` block for:
+
+     ```python
+     from google.colab import userdata
+     os.environ["NRP_LLM_TOKEN"] = userdata.get("NRP_LLM_TOKEN")
+     ```
+
+     The secret persists across Colab sessions, never appears in notebook output, and isn't shared if you share the notebook.
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb)
 
