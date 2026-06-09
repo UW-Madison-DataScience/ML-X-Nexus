@@ -97,7 +97,7 @@ A short code-along. To run it yourself, you'll need:
 
      ```python
      from google.colab import userdata
-     os.environ["NRP_LLM_TOKEN"] = userdata.get("NRP_LLM_TOKEN")
+     os.environ["NRP_LLM_TOKEN"] = userdata.get("NRP_LLM_TOKEN").strip()
      ```
 
      The secret persists across Colab sessions, never appears in notebook output, and isn't shared if you share the notebook.
@@ -114,7 +114,7 @@ from openai import OpenAI
 
 load_dotenv()
 client = OpenAI(
-    api_key=os.environ["NRP_LLM_TOKEN"],
+    api_key=os.environ["NRP_LLM_TOKEN"].strip(),  # .strip() avoids "Illegal header value" if a \r\n snuck in during paste
     base_url="https://ellm.nrp-nautilus.io/v1",
 )
 ```
