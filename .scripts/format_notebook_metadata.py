@@ -3,55 +3,62 @@ import glob
 import yaml
 import os
 
-for ipynb_path in glob.glob('Learn/Notebooks/**/*.ipynb', recursive=True):
-    if os.path.basename(ipynb_path) == 'index.ipynb':
-        continue
-    qmd_path = ipynb_path.replace('.ipynb', '.qmd')
-    if not os.path.exists(qmd_path):
-        continue
+# (glob_pattern, html_base_path)
+NOTEBOOK_TARGETS = [
+    ('Learn/Notebooks/**/*.ipynb', 'Learn/Notebooks'),
+    ('Toolbox/Compute/NRP-Nautilus.ipynb', 'Toolbox/Compute'),
+]
 
-    with open(qmd_path, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
+for pattern, base in NOTEBOOK_TARGETS:
+    for ipynb_path in glob.glob(pattern, recursive=True):
+        if os.path.basename(ipynb_path) == 'index.ipynb':
+            continue
+        qmd_path = ipynb_path.replace('.ipynb', '.qmd')
+        if not os.path.exists(qmd_path):
+            continue
 
-    # Parse YAML front matter
-    if lines[0].strip() != '---':
-        continue
-    yaml_end = next(i for i, line in enumerate(lines[1:], start=1) if line.strip() == '---')
-    yaml_block = ''.join(lines[1:yaml_end])
-    metadata = yaml.safe_load(yaml_block)
+        with open(qmd_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
 
-    title = metadata.get("title", "")
-    authors = metadata.get("author", [])
-    if isinstance(authors, dict):
-        author_str = f'{authors.get("name", "")}, {authors.get("email", "")}'
-    else:
-        author_str = ', '.join(
-            f'{a.get("name", "")}' + (f', {a.get("email", "")}' if a.get("email") else '')
-            for a in authors
-        )
-    date = metadata.get("date", "")
-    categories = metadata.get("categories", [])
+        # Parse YAML front matter
+        if lines[0].strip() != '---':
+            continue
+        yaml_end = next(i for i, line in enumerate(lines[1:], start=1) if line.strip() == '---')
+        yaml_block = ''.join(lines[1:yaml_end])
+        metadata = yaml.safe_load(yaml_block)
 
-    html_url = f"https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/{os.path.basename(ipynb_path).replace('.ipynb', '.html')}"
+        title = metadata.get("title", "")
+        authors = metadata.get("author", [])
+        if isinstance(authors, dict):
+            author_str = f'{authors.get("name", "")}, {authors.get("email", "")}'
+        else:
+            author_str = ', '.join(
+                f'{a.get("name", "")}' + (f', {a.get("email", "")}' if a.get("email") else '')
+                for a in authors
+            )
+        date = metadata.get("date", "")
+        categories = metadata.get("categories", [])
 
-    meta_md = f"""# {title}
+        html_url = f"https://uw-madison-datascience.github.io/ML-X-Nexus/{base}/{os.path.basename(ipynb_path).replace('.ipynb', '.html')}"
+
+        meta_md = f"""# {title}
 ### {author_str}
 ### [Nexus version]({html_url})
 ### Categories
 {chr(10).join(f"- {cat}" for cat in categories)}
 """
 
-    with open(ipynb_path, 'r', encoding='utf-8') as f:
-        nb = nbformat.read(f, as_version=4)
+        with open(ipynb_path, 'r', encoding='utf-8') as f:
+            nb = nbformat.read(f, as_version=4)
 
-    if nb.cells and nb.cells[0].cell_type == 'markdown':
-        src = nb.cells[0].source.strip()
-        if src.startswith('---'):
-            parts = src.split('---')
-            intro_text = '---'.join(parts[2:]).strip()
-            nb.cells[0] = nbformat.v4.new_markdown_cell(intro_text) if intro_text else nb.cells.pop(0)
+        if nb.cells and nb.cells[0].cell_type == 'markdown':
+            src = nb.cells[0].source.strip()
+            if src.startswith('---'):
+                parts = src.split('---')
+                intro_text = '---'.join(parts[2:]).strip()
+                nb.cells[0] = nbformat.v4.new_markdown_cell(intro_text) if intro_text else nb.cells.pop(0)
 
-    nb.cells.insert(0, nbformat.v4.new_markdown_cell(meta_md))
+        nb.cells.insert(0, nbformat.v4.new_markdown_cell(meta_md))
 
-    with open(ipynb_path, 'w', encoding='utf-8') as f:
-        nbformat.write(nb, f)
+        with open(ipynb_path, 'w', encoding='utf-8') as f:
+            nbformat.write(nb, f)

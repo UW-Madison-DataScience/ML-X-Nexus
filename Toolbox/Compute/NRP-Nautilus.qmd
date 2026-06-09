@@ -6,16 +6,22 @@ author:
 date: 2026-05-13
 date-format: long
 image: "../../../images/NRP-logo-square.jpg"
+description: "Free open-weight LLM endpoints plus free Kubernetes GPU compute for InCommon-affiliated researchers. Reference + Python code-along for hitting the NRP-hosted LLM API."
 categories:
   - Compute
+  - Notebooks
+  - Code-along
   - GPU
   - LLM
-  - Code-along
   - API
   - Kubernetes
   - Jupyter
   - Education
   - NSF
+jupyter: python3
+execute:
+  echo: true
+  eval: false   # readers run locally with their own NRP_LLM_TOKEN
 ---
 
 **Free frontier-LLM endpoints for researchers** — plus free GPU compute on a multi-site Kubernetes cluster. The [National Research Platform (NRP)](https://nrp.ai/) is NSF-supported and open at no cost to researchers and educators at [InCommon](https://incommon.org/)-affiliated institutions (UW–Madison is in). Usage is governed by the [Acceptable Use Policy](https://nrp.ai/NRP-AUP.pdf) and per-user fair-use limits.
@@ -63,11 +69,23 @@ Point any OpenAI-compatible client at NRP's API with your token: desktop apps (C
 
 ## Calling the LLM endpoint from Python
 
-A short code-along. Replace the token bits with your own; the cells aren't executed at build time.
+A short code-along. To run it yourself, you'll need:
 
-**Install and configure the client.** Store your token in an env var (e.g., a local `.env`), not in code.
+1. **An LLM token.** Visit [nrp.ai/llmtoken](https://nrp.ai/llmtoken) (you need to be in an LLM-flagged namespace — see [Get started](#get-started) above) and click to mint one. The page shows a long opaque string — copy it and treat it like a password. Don't paste it into source code or commit it.
+2. **A local `.env` file** so the code below can read the token from an environment variable instead of you typing it in. In the same directory as this notebook, create a file called `.env`:
 
-```python
+   ```
+   # .env  (do not commit this file)
+   NRP_LLM_TOKEN=paste-your-long-token-string-here
+   ```
+
+   Then add `.env` to your `.gitignore`. The `python-dotenv` package in the install line below reads `.env` automatically into `os.environ`.
+
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb)
+
+**Install and configure the client.**
+
+```{python}
 # pip install --quiet openai python-dotenv requests
 import os
 from dotenv import load_dotenv
@@ -82,14 +100,14 @@ client = OpenAI(
 
 **List available models.** Expect `qwen3`, `gpt-oss`, `kimi`, `gemma`, `qwen3-embedding`, etc. — the live set rotates.
 
-```python
+```{python}
 for m in client.models.list().data:
     print(m.id)
 ```
 
 **A chat completion.** `gpt-oss` is a good first call — text-only, low GPU footprint, stable across model updates.
 
-```python
+```{python}
 completion = client.chat.completions.create(
     model="gpt-oss",
     messages=[
@@ -104,7 +122,7 @@ If your client needs `max_tokens`, set it to ~1/3–1/4 of the model's context �
 
 **Toggle reasoning mode.** Several models default to "thinking" mode, which adds latency. Disable via `extra_body`:
 
-```python
+```{python}
 completion = client.chat.completions.create(
     model="qwen3-small",
     messages=[{"role": "user", "content": "One-line definition of overfitting."}],
@@ -117,7 +135,7 @@ Exact keys vary by model — see each [model card](https://nrp.ai/documentation/
 
 **Multimodal image input.** `gemma`, `qwen3`, `qwen3-small`, `gemma-small`, and `kimi` accept images as `image_url` content blocks (URL or base64 data URI). `gemma-small` is the only catalogued model that also accepts **audio** (ASR / speech-to-text).
 
-```python
+```{python}
 import base64, requests
 
 img = requests.get("https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg", timeout=30).content
@@ -138,7 +156,7 @@ print(completion.choices[0].message.content)
 
 **Embeddings for RAG.** `qwen3-embedding` is the embedding model; do not call it for chat completions.
 
-```python
+```{python}
 emb = client.embeddings.create(
     model="qwen3-embedding",
     input=[
@@ -153,7 +171,7 @@ Vectors plug into any vector DB (Chroma, Qdrant, pgvector, etc.).
 
 **Cache isolation for sensitive prompts.** NRP caches prompts and responses across users sharing a tenant. If yours could be sensitive, pass a `cache_salt` (≥256 random bits, base64) that only you know:
 
-```python
+```{python}
 project_salt = base64.b64encode(os.urandom(32)).decode("ascii")
 
 completion = client.chat.completions.create(
