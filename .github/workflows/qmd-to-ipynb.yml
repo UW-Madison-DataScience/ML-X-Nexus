@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'Learn/Notebooks/**/*.qmd'
+      - 'Toolbox/Compute/NRP-Nautilus.qmd'
       - '.github/workflows/qmd-to-ipynb.yml'
       - '.scripts/format_notebook_metadata.py'
   workflow_dispatch:
@@ -24,7 +25,8 @@ jobs:
       - name: Convert all .qmd notebooks to .ipynb (no execution)
         run: |
           shopt -s globstar nullglob
-          for file in Learn/Notebooks/**/*.qmd; do
+          for file in Learn/Notebooks/**/*.qmd Toolbox/Compute/NRP-Nautilus.qmd; do
+            [[ ! -f "$file" ]] && continue
             [[ "$(basename "$file")" == "index.qmd" ]] && continue
             echo "Converting $file"
             quarto convert "$file" -o "${file%.qmd}.ipynb"
@@ -41,5 +43,8 @@ jobs:
           git config user.name "quarto-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           find Learn/Notebooks -name "*.ipynb" ! -name "index.ipynb" -exec git add {} +
+          if [[ -f Toolbox/Compute/NRP-Nautilus.ipynb ]]; then
+            git add Toolbox/Compute/NRP-Nautilus.ipynb
+          fi
           git commit -m "Auto-convert .qmd notebooks to .ipynb [skip ci]" || echo "No changes to commit"
           git push
