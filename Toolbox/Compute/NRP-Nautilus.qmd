@@ -223,15 +223,36 @@ print(f"dim={len(emb.data[0].embedding)}, first 5={emb.data[0].embedding[:5]}")
 
 Vectors plug into any vector DB (Chroma, Qdrant, pgvector, etc.).
 
-**Cache isolation for sensitive prompts.** NRP caches prompts and responses across users sharing a tenant. If yours could be sensitive, pass a `cache_salt` (≥256 random bits, base64) that only you know:
+**Cache isolation for sensitive prompts.**
+
+NRP's gateway caches prompt → response pairs across everyone who hits the same model. That's normally a speed win — if a second user sends the literal same prompt as the first, they get the first's response instantly, no GPU time spent. The flip side: if your prompt contains private content (`"Summarize this internal memo: ..."`), an unrelated user who happens to type the same prompt could pull *your* cached response back out.
+
+A `cache_salt` is a secret random string you mix into every request so your cache entries are scoped to you. Other users sending the same prompt won't have your salt, so they don't match your cache (and you don't match theirs).
+
+Treat it like a second API key. Generate **once per project** (NRP recommends ≥256 bits of entropy — i.e. 32 random bytes, base64-encoded). Save it the same way you saved `NRP_LLM_TOKEN`. Reuse the same value across runs so your own repeated prompts still get cache hits from you yesterday.
+
+Generate the salt one time (run this in a throwaway cell or terminal and copy the output):
+
+```python
+import base64, os
+print(base64.b64encode(os.urandom(32)).decode("ascii"))
+# e.g. -> 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ=='
+```
+
+Add it alongside the token in your `.env` (or Colab Secrets):
+
+```
+NRP_LLM_TOKEN=...
+NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==
+```
+
+Then pass it on each request:
 
 ```{python}
-project_salt = base64.b64encode(os.urandom(32)).decode("ascii")
-
 completion = client.chat.completions.create(
     model="gpt-oss",
     messages=[{"role": "user", "content": "Summarize this internal memo: ..."}],
-    extra_body={"cache_salt": project_salt},
+    extra_body={"cache_salt": os.environ["NRP_CACHE_SALT"]},
 )
 print(completion.choices[0].message.content)
 ```
