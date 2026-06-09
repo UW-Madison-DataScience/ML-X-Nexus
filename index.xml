@@ -177,13 +177,13 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>] <span class="op" style="color: #5E
 background-color: null;
 font-style: inherit;">=</span> userdata.get(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"NRP_LLM_TOKEN"</span>)</span></code></pre></div></div>
+font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div></div>
 <p>The secret persists across Colab sessions, never appears in notebook output, and isn’t shared if you share the notebook.</p></li>
 </ul></li>
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="fc5fa7f5" class="cell" data-execution_count="1">
+<div id="40a2b610" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -209,7 +209,9 @@ font-style: inherit;">=</span> OpenAI(</span>
 background-color: null;
 font-style: inherit;">=</span>os.environ[<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"NRP_LLM_TOKEN"</span>],</span>
+font-style: inherit;">"NRP_LLM_TOKEN"</span>].strip(),  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># .strip() avoids "Illegal header value" if a \r\n snuck in during paste</span></span>
 <span id="cb3-9">    base_url<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
@@ -218,7 +220,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="eef16eb0" class="cell" data-execution_count="2">
+<div id="5af0c2c8" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -235,7 +237,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="ab288d9d" class="cell" data-execution_count="3">
+<div id="44e7848d" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -275,7 +277,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="27f685cb" class="cell" data-execution_count="4">
+<div id="502d9ef9" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -313,46 +315,77 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="af607038" class="cell" data-execution_count="5">
+<div id="0b73f59a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
-<span id="cb7-2"></span>
-<span id="cb7-3">img <span class="op" style="color: #5E5E5E;
+<span id="cb7-2"><span class="im" style="color: #00769E;
 background-color: null;
-font-style: inherit;">=</span> requests.get(<span class="st" style="color: #20794D;
+font-style: inherit;">from</span> IPython.display <span class="im" style="color: #00769E;
 background-color: null;
-font-style: inherit;">"https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"</span>, timeout<span class="op" style="color: #5E5E5E;
+font-style: inherit;">import</span> Image, display</span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Wikimedia blocks the default `python-requests` User-Agent and returns HTML</span></span>
+<span id="cb7-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># instead of the image. Pass any descriptive UA and it serves the JPEG.</span></span>
+<span id="cb7-6">img <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(</span>
+<span id="cb7-7">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"</span>,</span>
+<span id="cb7-8">    timeout<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">30</span>).content</span>
-<span id="cb7-4">b64 <span class="op" style="color: #5E5E5E;
+font-style: inherit;">30</span>,</span>
+<span id="cb7-9">    headers<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>{<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"User-Agent"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Nexus-NRP-card/1.0 (https://uw-madison-datascience.github.io/ML-X-Nexus/)"</span>},</span>
+<span id="cb7-10">).content</span>
+<span id="cb7-11"></span>
+<span id="cb7-12">display(Image(data<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>img, width<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">320</span>))  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># preview the image inline before sending it</span></span>
+<span id="cb7-13"></span>
+<span id="cb7-14">b64 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> base64.b64encode(img).decode(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"ascii"</span>)</span>
-<span id="cb7-5"></span>
-<span id="cb7-6">completion <span class="op" style="color: #5E5E5E;
+<span id="cb7-15">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
-<span id="cb7-7">    model<span class="op" style="color: #5E5E5E;
+<span id="cb7-16">    model<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"gemma"</span>,</span>
-<span id="cb7-8">    messages<span class="op" style="color: #5E5E5E;
+<span id="cb7-17">    messages<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>[{</span>
-<span id="cb7-9">        <span class="st" style="color: #20794D;
+<span id="cb7-18">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"role"</span>: <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"user"</span>,</span>
-<span id="cb7-10">        <span class="st" style="color: #20794D;
+<span id="cb7-19">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"content"</span>: [</span>
-<span id="cb7-11">            {<span class="st" style="color: #20794D;
+<span id="cb7-20">            {<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"type"</span>: <span class="st" style="color: #20794D;
 background-color: null;
@@ -361,7 +394,7 @@ background-color: null;
 font-style: inherit;">"text"</span>: <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"In one sentence: what animal and what is it doing?"</span>},</span>
-<span id="cb7-12">            {<span class="st" style="color: #20794D;
+<span id="cb7-21">            {<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"type"</span>: <span class="st" style="color: #20794D;
 background-color: null;
@@ -378,39 +411,114 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>}},</span>
-<span id="cb7-13">        ],</span>
-<span id="cb7-14">    }],</span>
-<span id="cb7-15">)</span>
-<span id="cb7-16"><span class="bu" style="color: null;
+<span id="cb7-22">        ],</span>
+<span id="cb7-23">    }],</span>
+<span id="cb7-24">)</span>
+<span id="cb7-25"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(completion.choices[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
+<p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
+<div id="e50b1727" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(</span>
+<span id="cb8-2">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://huggingface.co/datasets/Narsil/asr_dummy/resolve/main/mlk.flac"</span>,</span>
+<span id="cb8-3">    timeout<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>,</span>
+<span id="cb8-4">).content</span>
+<span id="cb8-5">b64 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> base64.b64encode(audio).decode(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ascii"</span>)</span>
+<span id="cb8-6"></span>
+<span id="cb8-7">completion <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> client.chat.completions.create(</span>
+<span id="cb8-8">    model<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gemma-small"</span>,</span>
+<span id="cb8-9">    messages<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[{</span>
+<span id="cb8-10">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"role"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"user"</span>,</span>
+<span id="cb8-11">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"content"</span>: [</span>
+<span id="cb8-12">            {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"type"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"text"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"text"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Transcribe the speech in this clip verbatim."</span>},</span>
+<span id="cb8-13">            {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"type"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"audio_url"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"audio_url"</span>: {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"data:audio/flac;base64,</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>b64<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>}},</span>
+<span id="cb8-14">        ],</span>
+<span id="cb8-15">    }],</span>
+<span id="cb8-16">)</span>
+<span id="cb8-17"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(completion.choices[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
+</div>
+<p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="7ae6f2fd" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">emb <span class="op" style="color: #5E5E5E;
+<div id="0c6a100b" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
-<span id="cb8-2">    model<span class="op" style="color: #5E5E5E;
+<span id="cb9-2">    model<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"qwen3-embedding"</span>,</span>
-<span id="cb8-3">    <span class="bu" style="color: null;
+<span id="cb9-3">    <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">input</span><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>[</span>
-<span id="cb8-4">        <span class="st" style="color: #20794D;
+<span id="cb9-4">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Retrieval-augmented generation pairs a vector store with an LLM."</span>,</span>
-<span id="cb8-5">        <span class="st" style="color: #20794D;
+<span id="cb9-5">        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"LoRA inserts low-rank adapter matrices into a frozen base model."</span>,</span>
-<span id="cb8-6">    ],</span>
-<span id="cb8-7">)</span>
-<span id="cb8-8"><span class="bu" style="color: null;
+<span id="cb9-6">    ],</span>
+<span id="cb9-7">)</span>
+<span id="cb9-8"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -441,25 +549,38 @@ background-color: null;
 font-style: inherit;">"</span>)</span></code></pre></div></div>
 </div>
 <p>Vectors plug into any vector DB (Chroma, Qdrant, pgvector, etc.).</p>
-<p><strong>Cache isolation for sensitive prompts.</strong> NRP caches prompts and responses across users sharing a tenant. If yours could be sensitive, pass a <code>cache_salt</code> (≥256 random bits, base64) that only you know:</p>
-<div id="4604697a" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">project_salt <span class="op" style="color: #5E5E5E;
+<p><strong>Cache isolation for sensitive prompts.</strong></p>
+<p>NRP’s gateway caches prompt → response pairs across everyone who hits the same model. That’s normally a speed win — if a second user sends the literal same prompt as the first, they get the first’s response instantly, no GPU time spent. The flip side: if your prompt contains private content (<code>"Summarize this internal memo: ..."</code>), an unrelated user who happens to type the same prompt could pull <em>your</em> cached response back out.</p>
+<p>A <code>cache_salt</code> is a secret random string you mix into every request so your cache entries are scoped to you. Other users sending the same prompt won’t have your salt, so they don’t match your cache (and you don’t match theirs).</p>
+<p>Treat it like a second API key. Generate <strong>once per project</strong> (NRP recommends ≥256 bits of entropy — i.e.&nbsp;32 random bytes, base64-encoded). Save it the same way you saved <code>NRP_LLM_TOKEN</code>. Reuse the same value across runs so your own repeated prompts still get cache hits from you yesterday.</p>
+<p>Generate the salt one time (run this in a throwaway cell or terminal and copy the output):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="im" style="color: #00769E;
 background-color: null;
-font-style: inherit;">=</span> base64.b64encode(os.urandom(<span class="dv" style="color: #AD0000;
+font-style: inherit;">import</span> base64, os</span>
+<span id="cb10-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(base64.b64encode(os.urandom(<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">32</span>)).decode(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"ascii"</span>)</span>
-<span id="cb9-2"></span>
-<span id="cb9-3">completion <span class="op" style="color: #5E5E5E;
+font-style: inherit;">"ascii"</span>))</span>
+<span id="cb10-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ=='</span></span></code></pre></div></div>
+<p>Add it alongside the token in your <code>.env</code> (or Colab Secrets):</p>
+<pre><code>NRP_LLM_TOKEN=...
+NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
+<p>Then pass it on each request:</p>
+<div id="d72af971" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
-<span id="cb9-4">    model<span class="op" style="color: #5E5E5E;
+<span id="cb12-2">    model<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"gpt-oss"</span>,</span>
-<span id="cb9-5">    messages<span class="op" style="color: #5E5E5E;
+<span id="cb12-3">    messages<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>[{<span class="st" style="color: #20794D;
 background-color: null;
@@ -470,13 +591,15 @@ background-color: null;
 font-style: inherit;">"content"</span>: <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Summarize this internal memo: ..."</span>}],</span>
-<span id="cb9-6">    extra_body<span class="op" style="color: #5E5E5E;
+<span id="cb12-4">    extra_body<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>{<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"cache_salt"</span>: project_salt},</span>
-<span id="cb9-7">)</span>
-<span id="cb9-8"><span class="bu" style="color: null;
+font-style: inherit;">"cache_salt"</span>: os.environ[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"NRP_CACHE_SALT"</span>]},</span>
+<span id="cb12-5">)</span>
+<span id="cb12-6"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(completion.choices[<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -1646,14 +1769,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="d3b38fa6" class="cell" data-execution_count="1">
+<div id="29714e00" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="1036cd9e" class="cell" data-execution_count="2">
+<div id="53218701" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1766,7 +1889,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="df71e18d" class="cell" data-execution_count="3">
+<div id="64eaf3fe" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2003,7 +2126,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="5d8046f5" class="cell" data-execution_count="4">
+<div id="32f0b8d9" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -2031,7 +2154,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="b030cc20" class="cell" data-execution_count="5">
+<div id="8f01009c" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2054,7 +2177,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="6fa6b72e" class="cell" data-execution_count="6">
+<div id="5399ac8a" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2076,7 +2199,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="579205bd" class="cell" data-execution_count="7">
+<div id="9533325a" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2199,7 +2322,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="0756dcd6" class="cell" data-execution_count="8">
+<div id="74104d59" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -2229,7 +2352,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="814c6c9d" class="cell" data-execution_count="9">
+<div id="78ea09a5" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -2274,7 +2397,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="3d2fe740" class="cell" data-execution_count="10">
+<div id="1c069e65" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2510,7 +2633,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="4b557a75" class="cell" data-execution_count="11">
+<div id="554ff51a" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2586,7 +2709,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="b791da04" class="cell" data-execution_count="12">
+<div id="47125d40" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2702,7 +2825,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="d8c6125d" class="cell" data-execution_count="13">
+<div id="152fc417" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2948,7 +3071,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="7171e84a" class="cell" data-execution_count="14">
+<div id="7d31af85" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
