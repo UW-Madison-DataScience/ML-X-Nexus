@@ -159,7 +159,13 @@ Exact keys vary by model — see each [model card](https://nrp.ai/documentation/
 ```{python}
 import base64, requests
 
-img = requests.get("https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg", timeout=30).content
+# Wikimedia blocks the default `python-requests` User-Agent and returns HTML
+# instead of the image. Pass any descriptive UA and it serves the JPEG.
+img = requests.get(
+    "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg",
+    timeout=30,
+    headers={"User-Agent": "Nexus-NRP-card/1.0 (https://uw-madison-datascience.github.io/ML-X-Nexus/)"},
+).content
 b64 = base64.b64encode(img).decode("ascii")
 
 completion = client.chat.completions.create(
