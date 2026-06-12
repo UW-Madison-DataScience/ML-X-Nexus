@@ -286,21 +286,14 @@ NRP is Kubernetes — workloads are described in YAML. Key rules:
 
 For UW–Madison researchers and teams building LLM- or VLM-based applications, NRP complements rather than replaces other UW options. Two ways to think about the choice:
 
-### Hosted LLM endpoints (call the model via API)
+### Other hosted LLM endpoints (call the model via API)
 
-- **NRP** — free, open-weight models (Qwen3, GPT-OSS, Kimi, etc.) via OpenAI-compatible endpoint. Per-user concurrency limits; no service-level agreement; best-effort capacity.
-- [**UW Cloud Services**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) — proprietary frontier via [Bedrock](https://aws.amazon.com/bedrock/) / [Gemini API](https://ai.google.dev/) / [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/); pay-per-token, fastest latency at a fee. UW-provisioned accounts cut grant overhead from 55.5% to 26%, get Internet2 NET+ pricing, and are HIPAA-eligible.
-- [**GenAI at UW–Madison**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html) — UW-vetted free chat UIs (Google Gemini, Microsoft 365 Copilot, NotebookLM). End-user tools, not programmatic APIs — useful for ad-hoc analysis, not for building applications.
-
-### General compute (run your own code on GPUs)
-
-- **NRP** — hosted [JupyterHub](https://nrp.ai/documentation/userdocs/jupyter/jupyterhub-service/), [Coder](https://nrp.ai/documentation/userdocs/coder/coder/), and self-managed GPU pods (RTX 2080 Ti / 3090 / 4090, A10, A100) on a free, multi-site Kubernetes cluster.
-- [**CHTC**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) — free GPU Lab (A100s, H100s, H200s) on a traditional high-throughput computing model: borrow GPUs for limited-duration compute, with batching for jobs that need to run longer than a single allocation. Good for training, fine-tuning, parameter sweeps, and one-off inference up to ~70B with quantization on a single 80 GB GPU. Not a model-serving platform; no NVLink multi-GPU.
-- [**UW Cloud Services**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) — hyperscaler hardware (B200s, NVLink multi-GPU, world-class latency) and managed ML platforms ([SageMaker](https://aws.amazon.com/sagemaker/), [Vertex AI](https://cloud.google.com/vertex-ai), [Azure ML](https://azure.microsoft.com/en-us/products/machine-learning)) for notebooks and training. Also the route for persistent endpoints that stay up beyond HPC job time limits. Same UW-account pricing benefits as above.
+- **NRP** — free, open-weight models (Qwen3, GPT-OSS, Kimi, etc.) via OpenAI-compatible endpoint. Per-user concurrency limits; no service-level agreement; best-effort capacity. Not HIPAA-eliglble. 
+- [**UW Cloud Services**](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) — proprietary frontier via [Bedrock](https://aws.amazon.com/bedrock/) / [Gemini API](https://ai.google.dev/) / [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/); pay-per-token, fastest latency (hyperscaler hardware) at a fee. UW-provisioned accounts cut grant overhead from 55.5% to 26%, get Internet2 NET+ pricing, and are HIPAA-eligible.
 
 ## Getting help
 
-- **Matrix** (public rooms only): [nrp.ai/contact](https://nrp.ai/contact/)
+- **Matrix**: [nrp.ai/contact](https://nrp.ai/contact/)
 - **Email**: [support@nationalresearchplatform.org](mailto:support@nationalresearchplatform.org)
 - **Docs**: [nrp.ai/documentation](https://nrp.ai/documentation/) · [Getting Started](https://nrp.ai/documentation/userdocs/start/getting-started/) · [Fair-use policy](https://nrp.ai/documentation/userdocs/ai/llm-managed/fair-use/) · [Cluster Policies](https://nrp.ai/documentation/userdocs/start/policies/)
 - **Reference**: Wang et al., *[The National Research Platform: Stretched, Multi-Tenant, Scientific Kubernetes Cluster](https://arxiv.org/abs/2505.22864)*, arXiv:2505.22864.
