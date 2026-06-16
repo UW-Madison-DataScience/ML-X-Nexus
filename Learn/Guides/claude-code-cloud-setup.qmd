@@ -888,6 +888,118 @@ The `//` prefix in permission rules means "absolute path from the filesystem roo
 **Important caveat:** `Read` deny rules apply on a "best-effort" basis to built-in tools like Grep and Glob. However, if a Bash command (like `cat .env`) is allowed, it can still read the file. This is why denying both `Read` and the relevant `Bash` commands together gives stronger protection. See [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details.
 :::
 
+### Keep secrets out of `.env` files — inject them at runtime with 1Password {#1password-secrets}
+
+Deny rules ([above](#add-deny-rules)) stop Claude Code from reading `.env`, but they don't help if you accidentally `git add .` and commit the file, paste it into a chat, or share your screen. The safer pattern is to **not have an `.env` file on disk in the first place**. Instead, store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.
+
+::: {.callout-tip}
+## UW-Madison provides free 1Password accounts
+Enrolled students, student employees, and paid faculty/staff are eligible for a **UW-Madison University 1Password account** at no cost. Anyone with a `@wisc.edu` address (including retirees and emeritus) can get a free **Families account**.
+
+- [**UW-Madison 1Password service page**](https://it.wisc.edu/services/1password/) — overview and links
+- [**Eligibility**](https://kb.wisc.edu/security/page.php?id=147122) — who can get which plan
+- [**Request activation**](https://kb.wisc.edu/security/147715) — go to [profile.wisc.edu/doit-services](https://profile.wisc.edu/doit-services), click *Request Activation*, then accept the invite from `accounts@1password.com` and sign in with your NetID at [uw-madison.1password.com](https://uw-madison.1password.com)
+- [**Getting started with 1Password at UW**](https://kb.wisc.edu/security/144301)
+
+UW Health note: do **not** store UW Health or Meriter credentials in 1Password.
+:::
+
+#### How it works
+
+Instead of plaintext like `OPENAI_API_KEY=sk-...` in `.env`, you store a **secret reference** that points to your vault:
+
+```text
+OPENAI_API_KEY=op://Private/OpenAI/api-key
+ANTHROPIC_API_KEY=op://Private/Anthropic/credential
+```
+
+Then you launch your command through [`op run`](https://developer.1password.com/docs/cli/secrets-environment-variables/), which resolves the references and exposes the real values **only inside the child process's environment** — nothing is ever written to disk:
+
+```bash
+op run --env-file=.env -- python train.py
+op run --env-file=.env -- node index.js
+op run --env-file=.env -- claude     # Claude Code sees the keys; the disk does not
+```
+
+The reference syntax is `op://<vault>/<item>/[section/]<field>` — see the [official reference](https://developer.1password.com/docs/cli/secret-reference-syntax/). The easiest way to get one: right-click a field in the 1Password desktop app and choose **Copy Secret Reference**.
+
+#### Set it up
+
+**Step 1 — Install the 1Password CLI** ([official install docs](https://developer.1password.com/docs/cli/get-started/)):
+
+::: {.panel-tabset}
+
+##### macOS
+
+```bash
+brew install 1password-cli
+op --version
+```
+
+##### Windows (PowerShell)
+
+```powershell
+winget install 1Password.CLI
+op --version
+```
+
+##### Linux / WSL2
+
+Follow the apt/dnf instructions on the [official install page](https://developer.1password.com/docs/cli/get-started/). Homebrew on Linux also works.
+
+:::
+
+**Step 2 — Enable desktop app integration.** Open the 1Password 8 desktop app → **Settings → Developer** → enable **"Integrate with 1Password CLI"**. Now `op` authenticates via Touch ID / Windows Hello / system biometrics instead of long-lived session tokens. See the [app integration docs](https://developer.1password.com/docs/cli/app-integration/) and [biometric unlock docs](https://developer.1password.com/docs/cli/use-biometric-unlock/).
+
+**Step 3 — Store your API keys in 1Password.** Create a new item (type: *API Credential* or *Password*) in your UW-Madison vault for each key you use (Anthropic, OpenAI, HuggingFace, etc.).
+
+**Step 4 — Replace your `.env` with references.** The new file contains only `op://...` references — no plaintext secrets — and is **safe to commit** to the repo so the rest of your team knows which variables to set:
+
+```text
+# .env — safe to commit; values resolved at runtime by `op run`
+OPENAI_API_KEY=op://Private/OpenAI/api-key
+ANTHROPIC_API_KEY=op://Private/Anthropic/credential
+HF_TOKEN=op://Private/HuggingFace/token
+```
+
+**Step 5 — Run commands through `op run`.** Your script reads `os.environ["OPENAI_API_KEY"]` (Python) or `process.env.OPENAI_API_KEY` (Node) exactly as before — `op run` populates them transparently.
+
+#### `.gitignore`
+
+Even though the `op://`-style `.env` is safe to commit, gitignore any *resolved* output from `op inject` (a sibling command that writes the resolved file to disk for tools that can't be wrapped in `op run`):
+
+```gitignore
+# Resolved secret files — never commit
+.env.local
+.env.resolved
+*.resolved.env
+```
+
+If you prefer the older convention of keeping `.env` itself gitignored, commit `.env.template` (with `op://` references) instead and have teammates `cp .env.template .env` on first checkout.
+
+#### Headless / CI use
+
+`op run` requires an unlocked 1Password app, which won't work in GitHub Actions, GitLab CI, or other unattended environments. For those, create a [**service account**](https://developer.1password.com/docs/service-accounts/get-started/) scoped to a single vault and export its token as a CI secret:
+
+```bash
+export OP_SERVICE_ACCOUNT_TOKEN="ops_..."
+op run --env-file=.env -- ./deploy.sh
+```
+
+See the [CI/CD integrations docs](https://developer.1password.com/docs/ci-cd/) for GitHub Actions, GitLab, and other platforms.
+
+#### Common pitfalls
+
+- **Shell expansion happens before `op run` injects.** `op run -- echo $OPENAI_API_KEY` expands `$OPENAI_API_KEY` in your *parent* shell (where it's empty) before the child runs. Use single quotes and a subshell: `op run -- bash -c 'echo $OPENAI_API_KEY'` — though, ideally, never echo a secret at all.
+- **Don't `export` secrets in your shell profile.** Adding `export OPENAI_API_KEY=...` to `~/.zshrc` puts the plaintext back on disk and defeats the point. Always launch the consuming process under `op run`.
+- **Watch which vault you're signed into.** If you have both a UW-Madison University account and a personal account, `op://Private/...` resolves against whichever account is active. Use `op signin` to switch, or qualify references with the account shorthand.
+- **Shell history.** Once a secret is in the child process's environment, anything that prints it (e.g., `env`, `printenv`, an accidental `echo`) may end up in `~/.bash_history` or `~/.zsh_history`. Treat env-var secrets as memory-only.
+
+::: {.callout-note}
+## This is complementary to deny rules, not a replacement
+Even with 1Password, keep your `.env` deny rules in place — there will be projects (legacy code, third-party tools) where a real `.env` still lands on disk temporarily, and you want Claude blocked from reading it if so. **Defense in depth**: deny rules block reads of any secrets file that *does* exist; 1Password ensures most of them never exist in the first place.
+:::
+
 ### Add `allow` rules to reduce prompt fatigue {#allow-rules}
 
 These also go in **`~/.claude/settings.json`**, inside the same `permissions` block as your deny rules. By default, Claude Code asks "Do you want to proceed?" before *every* file write, shell command, and git operation. This gets old fast — in a typical session you might approve the same `git add`, `git commit`, and `git push` sequence a dozen times. You can add `allow` rules so Claude runs trusted commands without asking:
