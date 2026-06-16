@@ -923,6 +923,22 @@ op run --env-file=.env -- claude     # Claude Code sees the keys; the disk does 
 
 The reference syntax is `op://<vault>/<item>/[section/]<field>` — see the [official reference](https://developer.1password.com/docs/cli/secret-reference-syntax/). The easiest way to get one: right-click a field in the 1Password desktop app and choose **Copy Secret Reference**.
 
+::: {.callout-tip}
+## How `op run` actually works (step by step)
+
+This trips a lot of people up the first time, so it's worth being explicit:
+
+1. **The `.env` file exists on disk**, but it only contains `op://...` references — no real secret values. This file is safe to commit.
+2. **You run `op run --env-file=.env -- python train.py`.** `op run` parses `.env`, sees the references, and fetches the real values from your 1Password vault into memory.
+3. **`op run` spawns `python train.py` as a child process** with `OPENAI_API_KEY=sk-...real-value...` set in *that process's environment only*.
+4. **Your Python script reads `os.environ["OPENAI_API_KEY"]`** and gets the real key — no code changes needed.
+5. **When the Python process exits**, those env vars disappear. Nothing was ever written to `.env`, no temp files, no shell history.
+
+So the real secret only ever lives in the child process's memory. The `.env` on disk only ever holds the pointer. `op run` does **not** rewrite `.env` — there's no "fill in the values at runtime" step that touches the file.
+
+There is a separate command, [`op inject`](https://developer.1password.com/docs/cli/reference/commands/inject/), that *does* write resolved values to a file — useful for tools that can't be wrapped in `op run` (e.g., a daemon's config file). But that output lands on disk, so you gitignore it and delete it afterward. **Default to `op run`** unless you have a specific reason to materialize the file.
+:::
+
 #### Set it up
 
 **Step 1 — Install the 1Password CLI** ([official install docs](https://developer.1password.com/docs/cli/get-started/)):
@@ -964,6 +980,16 @@ HF_TOKEN=op://Private/HuggingFace/token
 
 **Step 5 — Run commands through `op run`.** Your script reads `os.environ["OPENAI_API_KEY"]` (Python) or `process.env.OPENAI_API_KEY` (Node) exactly as before — `op run` populates them transparently.
 
+#### Do I need to be logged into 1Password? How often does it expire?
+
+**For interactive use on your own machine: yes, the 1Password desktop app must be unlocked when you run `op run`.** Day-to-day, this is barely noticeable — the app auto-locks after a period of inactivity (default 10 minutes after sleep, configurable in **Settings → Security**), and unlocking it is a Touch ID / Windows Hello tap. If you run `op run` while the app is locked, it prompts you to unlock right then. No long-lived session tokens land on disk.
+
+If you don't use the desktop-app integration and authenticate via `op signin` instead, **session tokens default to 30 minutes** of inactivity before they expire and you have to re-authenticate. See [Sign in and out](https://developer.1password.com/docs/cli/sign-in-manually/).
+
+**For a long-running server (e.g., a Gemini- or Claude-backed web app serving external users): you do *not* want to rely on a user being logged into 1Password on the server.** That would mean the server can't restart without a human at a keyboard — clearly a dealbreaker for anything production-shaped.
+
+The supported pattern for servers is a [**service account**](https://developer.1password.com/docs/service-accounts/get-started/) (covered below) — a non-human identity with its own long-lived token that the server uses to fetch secrets at startup. No desktop app, no biometrics, no user login required on the server.
+
 #### `.gitignore`
 
 Even though the `op://`-style `.env` is safe to commit, gitignore any *resolved* output from `op inject` (a sibling command that writes the resolved file to disk for tools that can't be wrapped in `op run`):
@@ -977,14 +1003,29 @@ Even though the `op://`-style `.env` is safe to commit, gitignore any *resolved*
 
 If you prefer the older convention of keeping `.env` itself gitignored, commit `.env.template` (with `op://` references) instead and have teammates `cp .env.template .env` on first checkout.
 
-#### Headless / CI use
+#### Long-running servers, CI, and other headless environments
 
-`op run` requires an unlocked 1Password app, which won't work in GitHub Actions, GitLab CI, or other unattended environments. For those, create a [**service account**](https://developer.1password.com/docs/service-accounts/get-started/) scoped to a single vault and export its token as a CI secret:
+`op run` with desktop-app integration is great for developer laptops, but it can't work where there's no human to unlock the app — GitHub Actions runners, GitLab CI, a VM hosting your Gemini/Claude-backed web app, a cron job, etc. For those, use a [**1Password service account**](https://developer.1password.com/docs/service-accounts/get-started/).
+
+A service account is a non-human identity. You create it in 1Password, scope it to a specific vault (read-only is typical for app deployments), and get back a token like `ops_eyJhbG...`. The server exports that token as `OP_SERVICE_ACCOUNT_TOKEN` and can now run `op run` non-interactively:
 
 ```bash
 export OP_SERVICE_ACCOUNT_TOKEN="ops_..."
-op run --env-file=.env -- ./deploy.sh
+op run --env-file=.env -- python app.py
 ```
+
+**Is the desktop-login requirement a dealbreaker for a server app? No** — as long as you use a service account, the server itself never needs a logged-in user. **Service account tokens don't expire on their own**; they're valid until you rotate or revoke them in the 1Password admin console. Plan to rotate periodically and immediately if the server is compromised.
+
+::: {.callout-warning}
+## The service account token is itself a secret — don't put it in `.env`
+You can't bootstrap 1Password using 1Password. The `OP_SERVICE_ACCOUNT_TOKEN` has to come from somewhere on the server. Reasonable options:
+
+- **A cloud provider's secret manager** — [GCP Secret Manager](https://cloud.google.com/secret-manager), [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/), or AWS SSM Parameter Store. The token is fetched at startup using the VM's IAM identity (no static credentials on disk).
+- **A systemd `EnvironmentFile`** with `0600` permissions, owned by the service user. Less elegant but works fine for a single VM.
+- **The CI platform's secret store** — GitHub Actions secrets, GitLab CI variables, etc. — for build/deploy pipelines.
+
+If you're already running on GCP or AWS, ask yourself whether 1Password is buying you anything that the cloud's native secret manager isn't. For UW-Madison researchers on institutional GCP/AWS projects, a common pattern is: **1Password for developer machines + the cloud secret manager for production servers.** Use whichever fits the surface.
+:::
 
 See the [CI/CD integrations docs](https://developer.1password.com/docs/ci-cd/) for GitHub Actions, GitLab, and other platforms.
 
