@@ -939,6 +939,22 @@ So the real secret only ever lives in the child process's memory. The `.env` on 
 There is a separate command, [`op inject`](https://developer.1password.com/docs/cli/reference/commands/inject/), that *does* write resolved values to a file — useful for tools that can't be wrapped in `op run` (e.g., a daemon's config file). But that output lands on disk, so you gitignore it and delete it afterward. **Default to `op run`** unless you have a specific reason to materialize the file.
 :::
 
+::: {.callout-tip}
+## Two ways to wire this up: `op run` vs. the 1Password SDKs
+This guide focuses on `op run` because it works with any language and requires zero code changes — you keep reading `os.environ["OPENAI_API_KEY"]` exactly as before.
+
+If you'd rather have your app fetch secrets directly (no shell wrapper), 1Password also ships [**native SDKs for Python, Node, Go, .NET, and others**](https://developer.1password.com/docs/sdks/) that resolve `op://` references from inside your code:
+
+```python
+# Python example — pulls the secret at startup, no .env file at all
+from onepassword import Client
+client = await Client.authenticate(auth=os.environ["OP_SERVICE_ACCOUNT_TOKEN"], ...)
+api_key = await client.secrets.resolve("op://Private/OpenAI/api-key")
+```
+
+The SDKs are the more natural fit for long-running web apps (Flask, FastAPI, Express, etc.) and for [Kubernetes-style deployments](https://blog.1password.com/expanding-programmatic-access/), where wrapping the process entrypoint with `op run` is awkward. They also support [**1Password Environments**](https://developer.1password.com/docs/environments/), a newer dedicated home for application secrets (as opposed to keeping them in your personal vault). See ["Replace .env with 1Password SDKs"](https://blog.1password.com/replace-env-files-1password-sdks/) for a getting-started walkthrough.
+:::
+
 #### Set it up
 
 **Step 1 — Install the 1Password CLI** ([official install docs](https://developer.1password.com/docs/cli/get-started/)):
@@ -982,9 +998,13 @@ HF_TOKEN=op://Private/HuggingFace/token
 
 #### Do I need to be logged into 1Password? How often does it expire?
 
-**For interactive use on your own machine: yes, the 1Password desktop app must be unlocked when you run `op run`.** Day-to-day, this is barely noticeable — the app auto-locks after a period of inactivity (default 10 minutes after sleep, configurable in **Settings → Security**), and unlocking it is a Touch ID / Windows Hello tap. If you run `op run` while the app is locked, it prompts you to unlock right then. No long-lived session tokens land on disk.
+**For interactive use on your own machine: yes, the 1Password desktop app must be unlocked when you run `op run`.** Day-to-day, this is barely noticeable — unlocking the app is a Touch ID / Windows Hello tap, and if you run `op run` while the app is locked, it prompts you to unlock right then. No long-lived session tokens land on disk.
 
-If you don't use the desktop-app integration and authenticate via `op signin` instead, **session tokens default to 30 minutes** of inactivity before they expire and you have to re-authenticate. See [Sign in and out](https://developer.1password.com/docs/cli/sign-in-manually/).
+A few specifics on expiration:
+
+- **Desktop-authenticated CLI/SDK sessions expire after 10 minutes of inactivity, or whenever 1Password locks** ([1Password announcement, Feb 2026](https://blog.1password.com/expanding-programmatic-access/)). That means if you run `op run` once and then idle for 15 minutes, the next `op run` will prompt for biometrics again. This is by design — short windows reduce the blast radius if your machine is left unlocked.
+- **The desktop app's own auto-lock** is separately configurable in **Settings → Security**.
+- **If you authenticate via `op signin` without desktop integration**, session tokens default to 30 minutes of inactivity before re-auth. See [Sign in and out](https://developer.1password.com/docs/cli/sign-in-manually/).
 
 **For a long-running server (e.g., a Gemini- or Claude-backed web app serving external users): you do *not* want to rely on a user being logged into 1Password on the server.** That would mean the server can't restart without a human at a keyboard — clearly a dealbreaker for anything production-shaped.
 
