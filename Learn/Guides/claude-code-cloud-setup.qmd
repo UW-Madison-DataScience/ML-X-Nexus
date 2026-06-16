@@ -1026,6 +1026,18 @@ op run --env-file=.env -- python app.py
 
 Service-account tokens don't expire on their own — they're valid until you rotate or revoke them. Treat the token like any other production credential: don't commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform's secret UI, systemd `EnvironmentFile`, etc.). See the [CI/CD integrations docs](https://developer.1password.com/docs/ci-cd/) for GitHub Actions, GitLab, Kubernetes, and other recipes.
 
+::: {.callout-note collapse="true"}
+## "Isn't this just kicking the can down the road? You still have to store *something*."
+
+Fair question. The honest answer depends on where you're running.
+
+**On your laptop: there is no long-lived token on disk.** You authenticate to 1Password with three things: a master password (in your head), a Secret Key (random, can be kept offline), and device biometrics (Touch ID / Windows Hello, which live in the OS secure enclave — not a file). The unlocked session sits in the desktop app's memory and expires on lock. None of these are a file an attacker can `cat` off your disk. That's a real improvement over a plaintext `.env` sitting at `~/projects/myapp/.env`.
+
+**On a server: yes, there's a service-account token on disk somewhere — but it's a meaningful reduction.** You've gone from *N* API keys spread across every `.env` file on every server to *one* narrowly-scoped bootstrap credential. That one token can be (a) scoped read-only to a single vault, so the blast radius is bounded if it's grabbed, (b) rotated and revoked centrally in the 1Password admin console instead of SSH-ing into every server, and (c) audited — 1Password logs which service account read which secret when, which raw `.env` files don't. And the actual app secrets (Gemini, DB, etc.) still never touch disk — only the bootstrap token does.
+
+So: laptop case is a clean win. Server case is "one narrowly-scoped, rotatable, audited token instead of many sprawling plaintext credentials." Not zero risk, but defense in depth — not security theater.
+:::
+
 #### `.gitignore`
 
 Even though the `op://`-style `.env` is safe to commit, gitignore any *resolved* output from `op inject` (a sibling command that writes the resolved file to disk for tools that can't be wrapped in `op run`):
