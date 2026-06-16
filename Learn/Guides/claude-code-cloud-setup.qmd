@@ -940,19 +940,30 @@ There is a separate command, [`op inject`](https://developer.1password.com/docs/
 :::
 
 ::: {.callout-tip}
-## Two ways to wire this up: `op run` vs. the 1Password SDKs
-This guide focuses on `op run` because it works with any language and requires zero code changes — you keep reading `os.environ["OPENAI_API_KEY"]` exactly as before.
+## `op run` vs. the 1Password SDKs — which one do I use?
 
-If you'd rather have your app fetch secrets directly (no shell wrapper), 1Password also ships [**native SDKs for Python, Node, Go, .NET, and others**](https://developer.1password.com/docs/sdks/) that resolve `op://` references from inside your code:
+You have two ways to pull secrets from 1Password. They aren't competing; they fit different shapes of project.
 
-```python
-# Python example — pulls the secret at startup, no .env file at all
-from onepassword import Client
-client = await Client.authenticate(auth=os.environ["OP_SERVICE_ACCOUNT_TOKEN"], ...)
-api_key = await client.secrets.resolve("op://Private/OpenAI/api-key")
+**`op run` — wraps a command at the shell level.** Your code is unchanged — it reads `os.environ["OPENAI_API_KEY"]` like always.
+
+```bash
+op run --env-file=.env -- python train.py
+op run --env-file=.env -- claude
 ```
 
-The SDKs are the more natural fit for long-running web apps (Flask, FastAPI, Express, etc.) and for [Kubernetes-style deployments](https://blog.1password.com/expanding-programmatic-access/), where wrapping the process entrypoint with `op run` is awkward. They also support [**1Password Environments**](https://developer.1password.com/docs/environments/), a newer dedicated home for application secrets (as opposed to keeping them in your personal vault). See ["Replace .env with 1Password SDKs"](https://blog.1password.com/replace-env-files-1password-sdks/) for a getting-started walkthrough.
+Use it for: CLI scripts, training jobs, dev tooling, Makefile targets, Claude Code itself — anything you launch from a terminal. This is the default; start here.
+
+**The 1Password SDK — embed the fetch inside your app code.** Your app imports the [Python / Node / Go / .NET SDK](https://developer.1password.com/docs/sdks/) and calls `resolve()` at startup:
+
+```python
+from onepassword import Client
+client = await Client.authenticate(auth=os.environ["OP_SERVICE_ACCOUNT_TOKEN"], ...)
+GEMINI_API_KEY = await client.secrets.resolve("op://Research/Gemini/api-key")
+```
+
+Use it for: long-running web apps (Flask, FastAPI, Express), Kubernetes pods, daemons — anything where wrapping the entrypoint with `op run` is awkward, or where you want to re-fetch / rotate secrets without restarting the process.
+
+The SDKs also pair with [**1Password Environments**](https://developer.1password.com/docs/environments/) — a per-app bucket of secrets, separate from your Private vault — which is the recommended home for production app secrets. See ["Replace .env with 1Password SDKs"](https://blog.1password.com/replace-env-files-1password-sdks/) for a walkthrough.
 :::
 
 #### Set it up
@@ -996,19 +1007,24 @@ HF_TOKEN=op://Private/HuggingFace/token
 
 **Step 5 — Run commands through `op run`.** Your script reads `os.environ["OPENAI_API_KEY"]` (Python) or `process.env.OPENAI_API_KEY` (Node) exactly as before — `op run` populates them transparently.
 
-#### Do I need to be logged into 1Password? How often does it expire?
+#### Authentication and session lifetime
 
-**For interactive use on your own machine: yes, the 1Password desktop app must be unlocked when you run `op run`.** Day-to-day, this is barely noticeable — unlocking the app is a Touch ID / Windows Hello tap, and if you run `op run` while the app is locked, it prompts you to unlock right then. No long-lived session tokens land on disk.
+How `op` authenticates depends on whether a human is at the keyboard.
 
-A few specifics on expiration:
+**Interactive (your laptop, with desktop app integration):** The 1Password desktop app must be unlocked. Day-to-day this is barely noticeable — unlocking is a Touch ID / Windows Hello tap, and `op run` triggers an unlock prompt if the app is locked. Two timers to know:
 
-- **Desktop-authenticated CLI/SDK sessions expire after 10 minutes of inactivity, or whenever 1Password locks** ([1Password announcement, Feb 2026](https://blog.1password.com/expanding-programmatic-access/)). That means if you run `op run` once and then idle for 15 minutes, the next `op run` will prompt for biometrics again. This is by design — short windows reduce the blast radius if your machine is left unlocked.
+- **Desktop-authenticated CLI/SDK sessions expire after 10 minutes of inactivity, or whenever 1Password locks** ([1Password announcement, Feb 2026](https://blog.1password.com/expanding-programmatic-access/)). After that, your next `op run` re-prompts for biometrics. The short window is deliberate — it limits exposure if you walk away from an unlocked machine.
 - **The desktop app's own auto-lock** is separately configurable in **Settings → Security**.
-- **If you authenticate via `op signin` without desktop integration**, session tokens default to 30 minutes of inactivity before re-auth. See [Sign in and out](https://developer.1password.com/docs/cli/sign-in-manually/).
+- **If you `op signin` without desktop integration**, session tokens default to 30 minutes of inactivity. See [Sign in and out](https://developer.1password.com/docs/cli/sign-in-manually/).
 
-**For a long-running server (e.g., a Gemini- or Claude-backed web app serving external users): you do *not* want to rely on a user being logged into 1Password on the server.** That would mean the server can't restart without a human at a keyboard — clearly a dealbreaker for anything production-shaped.
+**Unattended (servers, CI runners, cron, scheduled jobs):** Use a [**service account**](https://developer.1password.com/docs/service-accounts/get-started/) — a non-human identity scoped to specific vaults. You create the account in the 1Password admin console, get a token like `ops_eyJhbG...`, and export it as `OP_SERVICE_ACCOUNT_TOKEN`. Both `op run` and the SDKs work non-interactively from that point on:
 
-The supported pattern for servers is a [**service account**](https://developer.1password.com/docs/service-accounts/get-started/) (covered below) — a non-human identity with its own long-lived token that the server uses to fetch secrets at startup. No desktop app, no biometrics, no user login required on the server.
+```bash
+export OP_SERVICE_ACCOUNT_TOKEN="ops_..."
+op run --env-file=.env -- python app.py
+```
+
+Service-account tokens don't expire on their own — they're valid until you rotate or revoke them. Treat the token like any other production credential: don't commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform's secret UI, systemd `EnvironmentFile`, etc.). See the [CI/CD integrations docs](https://developer.1password.com/docs/ci-cd/) for GitHub Actions, GitLab, Kubernetes, and other recipes.
 
 #### `.gitignore`
 
@@ -1022,32 +1038,6 @@ Even though the `op://`-style `.env` is safe to commit, gitignore any *resolved*
 ```
 
 If you prefer the older convention of keeping `.env` itself gitignored, commit `.env.template` (with `op://` references) instead and have teammates `cp .env.template .env` on first checkout.
-
-#### Long-running servers, CI, and other headless environments
-
-`op run` with desktop-app integration is great for developer laptops, but it can't work where there's no human to unlock the app — GitHub Actions runners, GitLab CI, a VM hosting your Gemini/Claude-backed web app, a cron job, etc. For those, use a [**1Password service account**](https://developer.1password.com/docs/service-accounts/get-started/).
-
-A service account is a non-human identity. You create it in 1Password, scope it to a specific vault (read-only is typical for app deployments), and get back a token like `ops_eyJhbG...`. The server exports that token as `OP_SERVICE_ACCOUNT_TOKEN` and can now run `op run` non-interactively:
-
-```bash
-export OP_SERVICE_ACCOUNT_TOKEN="ops_..."
-op run --env-file=.env -- python app.py
-```
-
-**Is the desktop-login requirement a dealbreaker for a server app? No** — as long as you use a service account, the server itself never needs a logged-in user. **Service account tokens don't expire on their own**; they're valid until you rotate or revoke them in the 1Password admin console. Plan to rotate periodically and immediately if the server is compromised.
-
-::: {.callout-warning}
-## The service account token is itself a secret — don't put it in `.env`
-You can't bootstrap 1Password using 1Password. The `OP_SERVICE_ACCOUNT_TOKEN` has to come from somewhere on the server. Reasonable options:
-
-- **A cloud provider's secret manager** — [GCP Secret Manager](https://cloud.google.com/secret-manager), [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/), or AWS SSM Parameter Store. The token is fetched at startup using the VM's IAM identity (no static credentials on disk).
-- **A systemd `EnvironmentFile`** with `0600` permissions, owned by the service user. Less elegant but works fine for a single VM.
-- **The CI platform's secret store** — GitHub Actions secrets, GitLab CI variables, etc. — for build/deploy pipelines.
-
-If you're already running on GCP or AWS, ask yourself whether 1Password is buying you anything that the cloud's native secret manager isn't. For UW-Madison researchers on institutional GCP/AWS projects, a common pattern is: **1Password for developer machines + the cloud secret manager for production servers.** Use whichever fits the surface.
-:::
-
-See the [CI/CD integrations docs](https://developer.1password.com/docs/ci-cd/) for GitHub Actions, GitLab, and other platforms.
 
 #### Common pitfalls
 
