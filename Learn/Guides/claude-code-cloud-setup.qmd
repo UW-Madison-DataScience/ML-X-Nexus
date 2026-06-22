@@ -224,9 +224,11 @@ A VS Code devcontainer gives you a reproducible, isolated environment for using 
 
 **Set up a devcontainer in your project:**
 
-1. Open your project folder in VS Code (or create a new one with `mkdir my-project && code my-project`).
+1. **Open your project folder in VS Code.** Either `cd` into the folder in your terminal and run `code .` (the `.` means "this folder"), or launch VS Code and go to **File → Open Folder…** (or `Ctrl+K Ctrl+O`) and pick the folder. You'll know it worked when the file tree in the left sidebar shows your project's files.
 
-2. Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run **Dev Containers: Add Dev Container Configuration Files…**. Choose **Ubuntu → latest**. VS Code creates `.devcontainer/devcontainer.json`:
+2. **Make sure Docker Desktop is running** before the next step. Launch it from the Start menu / Applications and wait for the whale icon in the system tray to stop animating (~30–60 seconds). If you skip this you'll get a "Docker daemon is not running" error.
+
+3. Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run **Dev Containers: Add Dev Container Configuration Files…**. Choose **Ubuntu → noble** (the current LTS — `latest` and `noble` point to the same image). When prompted to select additional features, you can skip that screen — we'll set them explicitly in a moment. VS Code creates `.devcontainer/devcontainer.json`:
 
     ```json
     {
@@ -240,9 +242,22 @@ A VS Code devcontainer gives you a reproducible, isolated environment for using 
     }
     ```
 
-3. Run **Dev Containers: Reopen in Container** to build and launch.
+4. Run **Dev Containers: Reopen in Container** to build and launch. First build takes 3–5 minutes — Docker is downloading the base image and installing features. VS Code will reload into the container automatically when it's done. You'll know you're inside the container because:
 
-See [Section 3](#install-cloud-cli) for a fuller `devcontainer.json` that also installs `gcloud`, Python, Claude Code, R, and Quarto via devcontainer features.
+    - The bottom-left status bar shows a green badge: **"Dev Container: claude-code"**
+    - New terminals (<kbd>Ctrl</kbd> + <kbd>`</kbd>) open as `bash` shells with a prompt like `vscode ➜ /workspaces/my-project $`, not PowerShell.
+
+::: {.callout-tip}
+## If the build fails
+
+You'll see a "Command failed" dialog with an exit code but no detail. The real error is upstream:
+
+- Click **Show Log** on the dialog, or run `Ctrl+Shift+P` → **Dev Containers: Show Container Log**.
+- Scroll up from the bottom to find the first line containing `ERROR` or `failed to`. That's the actual cause.
+- Common culprits: Docker Desktop not fully started, an unmaintained third-party feature failing on a newer Ubuntu base (see [Section 3](#install-cloud-cli)), or a corporate VPN blocking image pulls from `ghcr.io` / `mcr.microsoft.com`.
+:::
+
+See [Section 3](#install-cloud-cli) for a fuller `devcontainer.json` that also installs `gcloud`, Python, Claude Code, R, and Quarto.
 
 ::: {.callout-important}
 ## Devcontainer vs. `/sandbox` — the container *is* your sandbox
@@ -314,7 +329,7 @@ source ~/.zshrc   # or source ~/.bashrc
 
 #### VS Code with Devcontainer
 
-If you set up the devcontainer in [Section 2](#install-claude-code), use this `devcontainer.json` to get `gcloud`, Python, Claude Code, R, and Quarto pre-installed:
+If you set up the devcontainer in [Section 2](#install-claude-code), use this `devcontainer.json` to get Python, Node, Claude Code, R, Quarto, and `gcloud` pre-installed:
 
 ```json
 {
@@ -323,19 +338,27 @@ If you set up the devcontainer in [Section 2](#install-claude-code), use this `d
     "features": {
         "ghcr.io/devcontainers/features/node:1": {},
         "ghcr.io/devcontainers/features/python:1": {},
-        "ghcr.io/dhoeric/features/google-cloud-cli:1": {
-            "version": "latest"
-        },
         "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
         "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
             "version": "release"
         },
         "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {}
-    }
+    },
+    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates gnupg curl && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && echo 'deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main' | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list && sudo apt-get update && sudo apt-get install -y google-cloud-cli"
 }
 ```
 
-Once the container is running, open a VS Code terminal and authenticate with GCP:
+::: {.callout-note}
+## Why `postCreateCommand` for gcloud instead of a devcontainer feature?
+
+The popular community feature `ghcr.io/dhoeric/features/google-cloud-cli` is **unmaintained** and fails to install on Ubuntu 24.04 (Noble) — the current default base image — because its install script relies on `apt-key`, which Debian/Ubuntu removed in favor of the keyring directory approach. If you use it, the container build errors out with `./install.sh: line 72: apt-key: command not found`.
+
+`postCreateCommand` is a generic escape hatch built into the devcontainer spec: it runs once, automatically, the first time a container is created from this config. We use it to run the modern (keyring-based) install commands directly, which is exactly what you'd run by hand on WSL2. This pattern works for any tool that doesn't have a working, maintained devcontainer feature — just write the install commands you'd normally run, joined with `&&`.
+
+**What persists across sessions:** stopping/restarting the container (closing and reopening VS Code) keeps everything intact, including gcloud and your `gcloud auth` credentials. **Rebuilding** the container (e.g., when you change `devcontainer.json`) wipes state and re-runs `postCreateCommand` — which is the whole point: anyone who clones this repo gets the same environment automatically.
+:::
+
+Once the container is running, open a VS Code terminal (<kbd>Ctrl</kbd> + <kbd>`</kbd>) and authenticate with GCP:
 
 1. Log in with your UW-Madison Google account:
 
