@@ -888,6 +888,181 @@ The `//` prefix in permission rules means "absolute path from the filesystem roo
 **Important caveat:** `Read` deny rules apply on a "best-effort" basis to built-in tools like Grep and Glob. However, if a Bash command (like `cat .env`) is allowed, it can still read the file. This is why denying both `Read` and the relevant `Bash` commands together gives stronger protection. See [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details.
 :::
 
+### Keep secrets out of `.env` files — inject them at runtime with 1Password {#1password-secrets}
+
+Deny rules ([above](#add-deny-rules)) stop Claude Code from reading `.env`, but they don't help if you accidentally `git add .` and commit the file, paste it into a chat, or share your screen. The safer pattern is to **not have an `.env` file on disk in the first place**. Instead, store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.
+
+::: {.callout-tip}
+## UW-Madison provides free 1Password accounts
+Enrolled students, student employees, and paid faculty/staff are eligible for a **UW-Madison University 1Password account** at no cost. Anyone with a `@wisc.edu` address (including retirees and emeritus) can get a free **Families account**.
+
+- [**UW-Madison 1Password service page**](https://it.wisc.edu/services/1password/) — overview and links
+- [**Eligibility**](https://kb.wisc.edu/security/page.php?id=147122) — who can get which plan
+- [**Request activation**](https://kb.wisc.edu/security/147715) — go to [profile.wisc.edu/doit-services](https://profile.wisc.edu/doit-services), click *Request Activation*, then accept the invite from `accounts@1password.com` and sign in with your NetID at [uw-madison.1password.com](https://uw-madison.1password.com)
+- [**Getting started with 1Password at UW**](https://kb.wisc.edu/security/144301)
+
+UW Health note: do **not** store UW Health or Meriter credentials in 1Password.
+:::
+
+#### How it works
+
+Instead of plaintext like `OPENAI_API_KEY=sk-...` in `.env`, you store a **secret reference** that points to your vault:
+
+```text
+OPENAI_API_KEY=op://Private/OpenAI/api-key
+ANTHROPIC_API_KEY=op://Private/Anthropic/credential
+```
+
+Then you launch your command through [`op run`](https://developer.1password.com/docs/cli/secrets-environment-variables/), which resolves the references and exposes the real values **only inside the child process's environment** — nothing is ever written to disk:
+
+```bash
+op run --env-file=.env -- python train.py
+op run --env-file=.env -- node index.js
+op run --env-file=.env -- claude     # Claude Code sees the keys; the disk does not
+```
+
+The reference syntax is `op://<vault>/<item>/[section/]<field>` — see the [official reference](https://developer.1password.com/docs/cli/secret-reference-syntax/). The easiest way to get one: right-click a field in the 1Password desktop app and choose **Copy Secret Reference**.
+
+::: {.callout-tip}
+## How `op run` actually works (step by step)
+
+This trips a lot of people up the first time, so it's worth being explicit:
+
+1. **The `.env` file exists on disk**, but it only contains `op://...` references — no real secret values. This file is safe to commit.
+2. **You run `op run --env-file=.env -- python train.py`.** `op run` parses `.env`, sees the references, and fetches the real values from your 1Password vault into memory.
+3. **`op run` spawns `python train.py` as a child process** with `OPENAI_API_KEY=sk-...real-value...` set in *that process's environment only*.
+4. **Your Python script reads `os.environ["OPENAI_API_KEY"]`** and gets the real key — no code changes needed.
+5. **When the Python process exits**, those env vars disappear. Nothing was ever written to `.env`, no temp files, no shell history.
+
+So the real secret only ever lives in the child process's memory. The `.env` on disk only ever holds the pointer. `op run` does **not** rewrite `.env` — there's no "fill in the values at runtime" step that touches the file.
+
+There is a separate command, [`op inject`](https://developer.1password.com/docs/cli/reference/commands/inject/), that *does* write resolved values to a file — useful for tools that can't be wrapped in `op run` (e.g., a daemon's config file). But that output lands on disk, so you gitignore it and delete it afterward. **Default to `op run`** unless you have a specific reason to materialize the file.
+:::
+
+::: {.callout-tip}
+## `op run` vs. the 1Password SDKs — which one do I use?
+
+You have two ways to pull secrets from 1Password. They aren't competing; they fit different shapes of project.
+
+**`op run` — wraps a command at the shell level.** Your code is unchanged — it reads `os.environ["OPENAI_API_KEY"]` like always.
+
+```bash
+op run --env-file=.env -- python train.py
+op run --env-file=.env -- claude
+```
+
+Use it for: CLI scripts, training jobs, dev tooling, Makefile targets, Claude Code itself — anything you launch from a terminal. This is the default; start here.
+
+**The 1Password SDK — embed the fetch inside your app code.** Your app imports the [Python / Node / Go / .NET SDK](https://developer.1password.com/docs/sdks/) and calls `resolve()` at startup:
+
+```python
+from onepassword import Client
+client = await Client.authenticate(auth=os.environ["OP_SERVICE_ACCOUNT_TOKEN"], ...)
+GEMINI_API_KEY = await client.secrets.resolve("op://Research/Gemini/api-key")
+```
+
+Use it for: long-running web apps (Flask, FastAPI, Express), Kubernetes pods, daemons — anything where wrapping the entrypoint with `op run` is awkward, or where you want to re-fetch / rotate secrets without restarting the process.
+
+The SDKs also pair with [**1Password Environments**](https://developer.1password.com/docs/environments/) — a per-app bucket of secrets, separate from your Private vault — which is the recommended home for production app secrets. See ["Replace .env with 1Password SDKs"](https://blog.1password.com/replace-env-files-1password-sdks/) for a walkthrough.
+:::
+
+#### Set it up
+
+**Step 1 — Install the 1Password CLI** ([official install docs](https://developer.1password.com/docs/cli/get-started/)):
+
+::: {.panel-tabset}
+
+##### macOS
+
+```bash
+brew install 1password-cli
+op --version
+```
+
+##### Windows (PowerShell)
+
+```powershell
+winget install 1Password.CLI
+op --version
+```
+
+##### Linux / WSL2
+
+Follow the apt/dnf instructions on the [official install page](https://developer.1password.com/docs/cli/get-started/). Homebrew on Linux also works.
+
+:::
+
+**Step 2 — Enable desktop app integration.** Open the 1Password 8 desktop app → **Settings → Developer** → enable **"Integrate with 1Password CLI"**. Now `op` authenticates via Touch ID / Windows Hello / system biometrics instead of long-lived session tokens. See the [app integration docs](https://developer.1password.com/docs/cli/app-integration/) and [biometric unlock docs](https://developer.1password.com/docs/cli/use-biometric-unlock/).
+
+**Step 3 — Store your API keys in 1Password.** Create a new item (type: *API Credential* or *Password*) in your UW-Madison vault for each key you use (Anthropic, OpenAI, HuggingFace, etc.).
+
+**Step 4 — Replace your `.env` with references.** The new file contains only `op://...` references — no plaintext secrets — and is **safe to commit** to the repo so the rest of your team knows which variables to set:
+
+```text
+# .env — safe to commit; values resolved at runtime by `op run`
+OPENAI_API_KEY=op://Private/OpenAI/api-key
+ANTHROPIC_API_KEY=op://Private/Anthropic/credential
+HF_TOKEN=op://Private/HuggingFace/token
+```
+
+**Step 5 — Run commands through `op run`.** Your script reads `os.environ["OPENAI_API_KEY"]` (Python) or `process.env.OPENAI_API_KEY` (Node) exactly as before — `op run` populates them transparently.
+
+#### Authentication and session lifetime
+
+How `op` authenticates depends on whether a human is at the keyboard.
+
+**Interactive (your laptop, with desktop app integration):** The 1Password desktop app must be unlocked. Day-to-day this is barely noticeable — unlocking is a Touch ID / Windows Hello tap, and `op run` triggers an unlock prompt if the app is locked. Two timers to know:
+
+- **Desktop-authenticated CLI/SDK sessions expire after 10 minutes of inactivity, or whenever 1Password locks** ([1Password announcement, Feb 2026](https://blog.1password.com/expanding-programmatic-access/)). After that, your next `op run` re-prompts for biometrics. The short window is deliberate — it limits exposure if you walk away from an unlocked machine.
+- **The desktop app's own auto-lock** is separately configurable in **Settings → Security**.
+- **If you `op signin` without desktop integration**, session tokens default to 30 minutes of inactivity. See [Sign in and out](https://developer.1password.com/docs/cli/sign-in-manually/).
+
+**Unattended (servers, CI runners, cron, scheduled jobs):** Use a [**service account**](https://developer.1password.com/docs/service-accounts/get-started/) — a non-human identity scoped to specific vaults. You create the account in the 1Password admin console, get a token like `ops_eyJhbG...`, and export it as `OP_SERVICE_ACCOUNT_TOKEN`. Both `op run` and the SDKs work non-interactively from that point on:
+
+```bash
+export OP_SERVICE_ACCOUNT_TOKEN="ops_..."
+op run --env-file=.env -- python app.py
+```
+
+Service-account tokens don't expire on their own — they're valid until you rotate or revoke them. Treat the token like any other production credential: don't commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform's secret UI, systemd `EnvironmentFile`, etc.). See the [CI/CD integrations docs](https://developer.1password.com/docs/ci-cd/) for GitHub Actions, GitLab, Kubernetes, and other recipes.
+
+::: {.callout-note collapse="true"}
+## "Isn't this just kicking the can down the road? You still have to store *something*."
+
+Fair question. The honest answer depends on where you're running.
+
+**On your laptop: there is no long-lived token on disk.** You authenticate to 1Password with three things: a master password (in your head), a Secret Key (random, can be kept offline), and device biometrics (Touch ID / Windows Hello, which live in the OS secure enclave — not a file). The unlocked session sits in the desktop app's memory and expires on lock. None of these are a file an attacker can `cat` off your disk. That's a real improvement over a plaintext `.env` sitting at `~/projects/myapp/.env`.
+
+**On a server: yes, there's a service-account token on disk somewhere — but it's a meaningful reduction.** You've gone from *N* API keys spread across every `.env` file on every server to *one* narrowly-scoped bootstrap credential. That one token can be (a) scoped read-only to a single vault, so the blast radius is bounded if it's grabbed, (b) rotated and revoked centrally in the 1Password admin console instead of SSH-ing into every server, and (c) audited — 1Password logs which service account read which secret when, which raw `.env` files don't. And the actual app secrets (Gemini, DB, etc.) still never touch disk — only the bootstrap token does.
+
+So: laptop case is a clean win. Server case is "one narrowly-scoped, rotatable, audited token instead of many sprawling plaintext credentials." Not zero risk, but defense in depth — not security theater.
+:::
+
+#### `.gitignore`
+
+Even though the `op://`-style `.env` is safe to commit, gitignore any *resolved* output from `op inject` (a sibling command that writes the resolved file to disk for tools that can't be wrapped in `op run`):
+
+```gitignore
+# Resolved secret files — never commit
+.env.local
+.env.resolved
+*.resolved.env
+```
+
+If you prefer the older convention of keeping `.env` itself gitignored, commit `.env.template` (with `op://` references) instead and have teammates `cp .env.template .env` on first checkout.
+
+#### Common pitfalls
+
+- **Shell expansion happens before `op run` injects.** `op run -- echo $OPENAI_API_KEY` expands `$OPENAI_API_KEY` in your *parent* shell (where it's empty) before the child runs. Use single quotes and a subshell: `op run -- bash -c 'echo $OPENAI_API_KEY'` — though, ideally, never echo a secret at all.
+- **Don't `export` secrets in your shell profile.** Adding `export OPENAI_API_KEY=...` to `~/.zshrc` puts the plaintext back on disk and defeats the point. Always launch the consuming process under `op run`.
+- **Watch which vault you're signed into.** If you have both a UW-Madison University account and a personal account, `op://Private/...` resolves against whichever account is active. Use `op signin` to switch, or qualify references with the account shorthand.
+- **Shell history.** Once a secret is in the child process's environment, anything that prints it (e.g., `env`, `printenv`, an accidental `echo`) may end up in `~/.bash_history` or `~/.zsh_history`. Treat env-var secrets as memory-only.
+
+::: {.callout-note}
+## This is complementary to deny rules, not a replacement
+Even with 1Password, keep your `.env` deny rules in place — there will be projects (legacy code, third-party tools) where a real `.env` still lands on disk temporarily, and you want Claude blocked from reading it if so. **Defense in depth**: deny rules block reads of any secrets file that *does* exist; 1Password ensures most of them never exist in the first place.
+:::
+
 ### Add `allow` rules to reduce prompt fatigue {#allow-rules}
 
 These also go in **`~/.claude/settings.json`**, inside the same `permissions` block as your deny rules. By default, Claude Code asks "Do you want to proceed?" before *every* file write, shell command, and git operation. This gets old fast — in a typical session you might approve the same `git add`, `git commit`, and `git push` sequence a dozen times. You can add `allow` rules so Claude runs trusted commands without asking:
