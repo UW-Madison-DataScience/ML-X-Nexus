@@ -381,7 +381,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#security-fundamentals" id="toc-security-fundamentals" class="nav-link" data-scroll-target="#security-fundamentals">Security fundamentals</a>
   <ul class="collapse">
-  <li><a href="#use-permissions-and-deny-rules" id="toc-use-permissions-and-deny-rules" class="nav-link" data-scroll-target="#use-permissions-and-deny-rules">Use permissions and deny rules</a></li>
+  <li><a href="#secrets-out-of-storage" id="toc-secrets-out-of-storage" class="nav-link" data-scroll-target="#secrets-out-of-storage">Keep secrets out of local storage entirely</a></li>
+  <li><a href="#use-permissions-and-deny-rules-as-an-extra-layer-not-a-guarantee" id="toc-use-permissions-and-deny-rules-as-an-extra-layer-not-a-guarantee" class="nav-link" data-scroll-target="#use-permissions-and-deny-rules-as-an-extra-layer-not-a-guarantee">Use permissions and deny rules — as an extra layer, not a guarantee</a></li>
   <li><a href="#enable-claude-codes-built-in-sandbox" id="toc-enable-claude-codes-built-in-sandbox" class="nav-link" data-scroll-target="#enable-claude-codes-built-in-sandbox">Enable Claude Code’s built-in sandbox</a></li>
   <li><a href="#scope-your-credentials" id="toc-scope-your-credentials" class="nav-link" data-scroll-target="#scope-your-credentials">Scope your credentials</a></li>
   <li><a href="#consider-containers-for-cicd-and-headless-environments" id="toc-consider-containers-for-cicd-and-headless-environments" class="nav-link" data-scroll-target="#consider-containers-for-cicd-and-headless-environments">Consider containers for CI/CD and headless environments</a></li>
@@ -1196,14 +1197,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="security-fundamentals" class="level2">
 <h2 class="anchored" data-anchor-id="security-fundamentals">Security fundamentals</h2>
 <p>When you launch Claude Code from the CLI, it runs with your user’s full filesystem permissions. It can read, modify, or delete files anywhere your account can reach — not just your project directory. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
-<section id="use-permissions-and-deny-rules" class="level3">
-<h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules">Use permissions and deny rules</h3>
+<section id="secrets-out-of-storage" class="level3">
+<h3 class="anchored" data-anchor-id="secrets-out-of-storage">Keep secrets out of local storage entirely</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Never store passwords or API keys in <code>.env</code> files (or anywhere else on disk)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you give an agent terminal access, assume that <strong>anything sitting in plaintext on your filesystem can eventually be read</strong> — <code>.env</code> files, <code>credentials.json</code>, tokens pasted into shell profiles, notes files. Permission settings and deny rules reduce the odds, but they are not a guarantee (see below). The only secret an agent can’t leak is one that isn’t there.</p>
+<p>Instead, keep secrets in a secrets manager like 1Password and inject them at runtime — via <a href="https://developer.1password.com/docs/cli/secrets-environment-variables/"><code>op run</code></a> for anything you launch from a terminal, or the <a href="https://developer.1password.com/docs/sdks/">1Password SDKs</a> for long-running apps. Your <code>.env</code> file then contains only <code>op://</code> <em>references</em>, never real values. See the <a href="../../Learn/Guides/claude-code-cloud-setup.html#1password-secrets">Cloud Setup Guide’s 1Password walkthrough</a> for step-by-step setup (UW-Madison provides free 1Password accounts).</p>
+</div>
+</div>
+<p>This is the single most effective thing you can do before granting terminal access: an agent can’t exfiltrate, commit, or <code>echo</code> a credential that only ever exists in a child process’s memory. Everything below — permissions, sandboxing, credential scoping — is defense in depth <em>on top of</em> this, not a substitute for it.</p>
+</section>
+<section id="use-permissions-and-deny-rules-as-an-extra-layer-not-a-guarantee" class="level3">
+<h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules-as-an-extra-layer-not-a-guarantee">Use permissions and deny rules — as an extra layer, not a guarantee</h3>
 <p>Claude Code has a <a href="https://code.claude.com/docs/en/permissions">built-in permissions system</a> that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in <code>settings.json</code>:</p>
 <ul>
-<li><strong><code>deny</code></strong> — hard block. Claude can’t use the tool, period. Deny rules always win, even if you accidentally click “always allow” on a prompt.</li>
+<li><strong><code>deny</code></strong> — hard block. Claude shouldn’t use the tool, period. Deny rules always win over allow rules, even if you accidentally click “always allow” on a prompt.</li>
 <li><strong><code>allow</code></strong> — auto-approve. Skips the approval prompt for things you trust (e.g., <code>git add</code>, <code>pytest</code>).</li>
 </ul>
-<p><strong>Deny rules are your most important security layer.</strong> They protect sensitive paths — SSH keys, cloud credentials, <code>.env</code> files — regardless of what the agent tries to do. The approval prompt is your first line of defense; deny rules are the backup that can’t be bypassed.</p>
+<p><strong>Treat the permission system as one layer of defense, not a vault door.</strong> It’s genuinely useful — configure it — but it can be finicky in practice: rule syntax is easy to get subtly wrong, <code>Read</code> deny rules are enforced on a “best-effort” basis for some built-in tools, and an allowed Bash command (like <code>cat</code>) can read a file that a <code>Read</code> deny rule covers. Users also report that agents don’t follow permission settings 100% of the time — see <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for documented gaps and workarounds. This is exactly why the previous section comes first: deny rules should be the <em>backup</em> for a secret that briefly lands on disk, never the <em>only</em> thing standing between an agent and your credentials.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"permissions"</span><span class="fu">:</span> <span class="fu">{</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"deny"</span><span class="fu">:</span> <span class="ot">[</span></span>
@@ -1231,7 +1250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Even with deny rules and sandboxing, it’s good practice to limit what credentials the agent has access to in the first place.</p>
 <p><strong>Use minimal-scope tokens.</strong> Create fine-grained GitHub tokens scoped to only the repos and permissions the agent needs. If it only pushes to one repo, don’t give it access to your entire account. Use a bot account for agent-driven git operations, and generate dedicated deploy keys rather than reusing your personal SSH keys.</p>
 <p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
-<p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
+<p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them, and deny rules block reads only imperfectly — which is why <a href="#secrets-out-of-storage">keeping secrets off disk entirely</a> is the first recommendation in this section.)</p>
 </section>
 <section id="consider-containers-for-cicd-and-headless-environments" class="level3">
 <h3 class="anchored" data-anchor-id="consider-containers-for-cicd-and-headless-environments">Consider containers for CI/CD and headless environments</h3>
@@ -1279,7 +1298,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Scope your requests tightly</strong> — features, not projects</li>
 <li><strong>Use <code>CLAUDE.md</code></strong> to encode guardrails and project context</li>
 <li><strong>Tune permissions deliberately</strong> — start conservative, loosen as you build trust</li>
-<li><strong>Set deny rules and enable the sandbox</strong> — your two strongest security layers</li>
+<li><strong>Keep secrets off disk</strong> — no plaintext passwords or API keys in <code>.env</code>; inject them at runtime with 1Password (<code>op run</code> or the SDKs)</li>
+<li><strong>Set deny rules and enable the sandbox</strong> — valuable extra layers, but not guarantees</li>
 <li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, <code>.gitignore</code> for secrets</li>
 <li><strong>Monitor costs</strong> — set limits, be specific, use the right model for the task</li>
 <li><strong>Commit frequently</strong> — keep escape hatches available</li>

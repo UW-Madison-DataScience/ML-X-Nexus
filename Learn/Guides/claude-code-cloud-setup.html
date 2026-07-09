@@ -1127,6 +1127,7 @@ Note
 <p><strong>Practical recommendations:</strong></p>
 <ul>
 <li><strong>Avoid running Claude Code on machines where restricted or sensitive data is stored.</strong> Sandboxing restricts <em>writes</em> but not <em>reads</em> — Claude can still read files anywhere on the machine and send their contents to Anthropic’s servers as part of a prompt. UW does not yet have a data-use agreement with Anthropic (see <a href="#use-caution-with-restricted-or-sensitive-data">warning above</a>), so even cloud-routed usage sends your prompts to Anthropic’s infrastructure.</li>
+<li><strong>Keep passwords and API keys out of local storage entirely.</strong> Permission settings are only an extra layer and can be finicky — don’t count on them to protect a plaintext secret sitting on disk. Store secrets in 1Password and inject them at runtime instead (see <a href="#1password-secrets">the 1Password section below</a>).</li>
 <li><strong>If you must run on a machine with sensitive files</strong>, add <strong>deny rules</strong> (see <a href="#add-deny-rules">below</a>) to block read access to sensitive paths. But note that <code>Read</code> deny rules are best-effort — allowed Bash commands like <code>cat</code> can still read denied files. Denying both <code>Read</code> and the relevant <code>Bash</code> patterns together provides stronger protection (see <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for details).</li>
 <li><strong>Test only within isolated Git repositories</strong>, with no sensitive data present in the local repo.</li>
 <li><strong>Always enable sandboxing</strong> (<a href="#enable-sandboxing">Section 8</a>) — it restricts <em>writes</em> to your project directory and adds network isolation at the OS level. It’s available on macOS (built-in) and Linux/WSL2 (requires <code>bubblewrap</code>). Native Windows does not yet support it.</li>
@@ -1180,7 +1181,7 @@ Note
 </section>
 <section id="add-deny-rules" class="level3">
 <h3 class="anchored" data-anchor-id="add-deny-rules">Add <code>deny</code> rules to protect sensitive areas</h3>
-<p>Add a <code>permissions</code> block to your <strong><code>~/.claude/settings.json</code></strong> file (the same file you edited in <a href="#configure-claude-code">Section 5</a>). Think of <code>deny</code> rules as guardrails — they block Claude from accessing sensitive paths regardless of what it tries to do.</p>
+<p>Add a <code>permissions</code> block to your <strong><code>~/.claude/settings.json</code></strong> file (the same file you edited in <a href="#configure-claude-code">Section 5</a>). Think of <code>deny</code> rules as guardrails — they block Claude from accessing sensitive paths. Like any guardrail, they reduce risk rather than eliminate it (see the caveats at the end of this section), so pair them with the <a href="#1password-secrets">runtime secret injection</a> covered next.</p>
 <p>These examples block: SSH keys, <code>.env</code> files, cloud credentials (<code>~/.config/gcloud/</code> and <code>~/.aws/</code>), destructive commands (<code>rm -rf</code>), and network tools (<code>curl</code>, <code>wget</code>). <strong>Replace <code>endemann</code> with your actual username</strong> before pasting into <code>settings.json</code>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1283,14 +1284,40 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Why not just rely on the approval prompt?</strong> Because deny rules are absolute — they work even if you accidentally click “allow” or “always allow” on a prompt. They also protect against <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attacks</a> where malicious content in a file tricks Claude into running something harmful. The approval prompt is your first line of defense; deny rules are the backup that can’t be bypassed.</p>
-<p><strong>Important caveat:</strong> <code>Read</code> deny rules apply on a “best-effort” basis to built-in tools like Grep and Glob. However, if a Bash command (like <code>cat .env</code>) is allowed, it can still read the file. This is why denying both <code>Read</code> and the relevant <code>Bash</code> commands together gives stronger protection. See <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for details.</p>
+<p><strong>Why not just rely on the approval prompt?</strong> Deny rules take precedence over allow rules — they still apply even if you accidentally click “allow” or “always allow” on a prompt. They also help against <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attacks</a> where malicious content in a file tricks Claude into running something harmful.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>But treat permissions as an extra layer, not a guarantee.</strong> The permission system can be finicky in practice: rule syntax is easy to get subtly wrong, <code>Read</code> deny rules apply only on a “best-effort” basis to built-in tools like Grep and Glob, and an allowed Bash command (like <code>cat .env</code>) can still read a file that a <code>Read</code> deny rule covers — which is why you should deny both <code>Read</code> and the relevant <code>Bash</code> commands together. Beyond these documented gaps, users report that agents don’t follow permission settings 100% of the time. See <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for details.</p>
+<p>The practical conclusion: <strong>if you’re giving an agent terminal access, don’t let permission settings be the only thing protecting a real secret.</strong> Anything genuinely sensitive — passwords, API keys, tokens — should not sit in plaintext in local storage at all. The next section shows how.</p>
 </div>
 </div>
 </section>
 <section id="1password-secrets" class="level3">
 <h3 class="anchored" data-anchor-id="1password-secrets">Keep secrets out of <code>.env</code> files — inject them at runtime with 1Password</h3>
-<p>Deny rules (<a href="#add-deny-rules">above</a>) stop Claude Code from reading <code>.env</code>, but they don’t help if you accidentally <code>git add .</code> and commit the file, paste it into a chat, or share your screen. The safer pattern is to <strong>not have an <code>.env</code> file on disk in the first place</strong>. Instead, store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Never store passwords or API keys in <code>.env</code> files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If an agent has terminal access, assume anything in plaintext on your disk can eventually be read. Deny rules (<a href="#add-deny-rules">above</a>) <em>should</em> stop Claude Code from reading <code>.env</code>, but as noted, enforcement isn’t perfect — and deny rules don’t help at all if you accidentally <code>git add .</code> and commit the file, paste it into a chat, or share your screen. The only secret an agent can’t leak is one that never touches the disk: keep real values in 1Password and inject them at runtime with <code>op run</code> (terminal workflows) or the <a href="https://developer.1password.com/docs/sdks/">1Password SDKs</a> (long-running apps).</p>
+</div>
+</div>
+<p>The safer pattern is to <strong>not have plaintext secrets on disk in the first place</strong>. Store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1409,7 +1436,7 @@ HF_TOKEN=op://Private/HuggingFace/token</code></pre>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="ex">op</span> run <span class="at">--env-file</span><span class="op">=</span>.env <span class="at">--</span> python app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Service-account tokens don’t expire on their own — they’re valid until you rotate or revoke them. Treat the token like any other production credential: don’t commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform’s secret UI, systemd <code>EnvironmentFile</code>, etc.). See the <a href="https://developer.1password.com/docs/ci-cd/">CI/CD integrations docs</a> for GitHub Actions, GitLab, Kubernetes, and other recipes.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1418,7 +1445,7 @@ HF_TOKEN=op://Private/HuggingFace/token</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Fair question. The honest answer depends on where you’re running.</p>
 <p><strong>On your laptop: there is no long-lived token on disk.</strong> You authenticate to 1Password with three things: a master password (in your head), a Secret Key (random, can be kept offline), and device biometrics (Touch ID / Windows Hello, which live in the OS secure enclave — not a file). The unlocked session sits in the desktop app’s memory and expires on lock. None of these are a file an attacker can <code>cat</code> off your disk. That’s a real improvement over a plaintext <code>.env</code> sitting at <code>~/projects/myapp/.env</code>.</p>
@@ -1455,7 +1482,7 @@ HF_TOKEN=op://Private/HuggingFace/token</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Even with 1Password, keep your <code>.env</code> deny rules in place — there will be projects (legacy code, third-party tools) where a real <code>.env</code> still lands on disk temporarily, and you want Claude blocked from reading it if so. <strong>Defense in depth</strong>: deny rules block reads of any secrets file that <em>does</em> exist; 1Password ensures most of them never exist in the first place.</p>
+<p>Even with 1Password, keep your <code>.env</code> deny rules in place — there will be projects (legacy code, third-party tools) where a real <code>.env</code> still lands on disk temporarily, and you want Claude blocked from reading it if so. <strong>Defense in depth</strong>: deny rules block (most) reads of any secrets file that <em>does</em> exist; 1Password ensures most of them never exist in the first place.</p>
 </div>
 </div>
 </section>
@@ -1664,7 +1691,7 @@ Tip
 <li><strong>Network isolation:</strong> Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1673,7 +1700,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Add these deny rules to your <code>~/.claude/settings.json</code> to prevent Claude from reading files outside your project:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>

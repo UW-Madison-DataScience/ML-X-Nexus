@@ -203,7 +203,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="eb35989e" class="cell" data-execution_count="1">
+<div id="26dfd5a0" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -240,7 +240,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="c16b4451" class="cell" data-execution_count="2">
+<div id="1a7d775b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -257,7 +257,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="12bd9eea" class="cell" data-execution_count="3">
+<div id="d428ed6f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -297,7 +297,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="742bff4d" class="cell" data-execution_count="4">
+<div id="5b64dcc4" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -335,7 +335,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="8d6dda0e" class="cell" data-execution_count="5">
+<div id="2f88e8ae" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -441,7 +441,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="4dd60d78" class="cell" data-execution_count="6">
+<div id="8a39b902" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -516,7 +516,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="60211298" class="cell" data-execution_count="7">
+<div id="fbfbacb3" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -591,7 +591,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="27394fca" class="cell" data-execution_count="8">
+<div id="ab854a93" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1528,14 +1528,32 @@ font-style: inherit;">`tests/`</span></span></code></pre></div></div>
 <section id="security-fundamentals" class="level2">
 <h2 class="anchored" data-anchor-id="security-fundamentals">Security fundamentals</h2>
 <p>When you launch Claude Code from the CLI, it runs with your user’s full filesystem permissions. It can read, modify, or delete files anywhere your account can reach — not just your project directory. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn’t intend. Here’s how to limit the blast radius, from most important to least.</p>
-<section id="use-permissions-and-deny-rules" class="level3">
-<h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules">Use permissions and deny rules</h3>
+<section id="secrets-out-of-storage" class="level3">
+<h3 class="anchored" data-anchor-id="secrets-out-of-storage">Keep secrets out of local storage entirely</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Never store passwords or API keys in <code>.env</code> files (or anywhere else on disk)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you give an agent terminal access, assume that <strong>anything sitting in plaintext on your filesystem can eventually be read</strong> — <code>.env</code> files, <code>credentials.json</code>, tokens pasted into shell profiles, notes files. Permission settings and deny rules reduce the odds, but they are not a guarantee (see below). The only secret an agent can’t leak is one that isn’t there.</p>
+<p>Instead, keep secrets in a secrets manager like 1Password and inject them at runtime — via <a href="https://developer.1password.com/docs/cli/secrets-environment-variables/"><code>op run</code></a> for anything you launch from a terminal, or the <a href="https://developer.1password.com/docs/sdks/">1Password SDKs</a> for long-running apps. Your <code>.env</code> file then contains only <code>op://</code> <em>references</em>, never real values. See the <a href="../../Learn/Guides/claude-code-cloud-setup.html#1password-secrets">Cloud Setup Guide’s 1Password walkthrough</a> for step-by-step setup (UW-Madison provides free 1Password accounts).</p>
+</div>
+</div>
+<p>This is the single most effective thing you can do before granting terminal access: an agent can’t exfiltrate, commit, or <code>echo</code> a credential that only ever exists in a child process’s memory. Everything below — permissions, sandboxing, credential scoping — is defense in depth <em>on top of</em> this, not a substitute for it.</p>
+</section>
+<section id="use-permissions-and-deny-rules-as-an-extra-layer-not-a-guarantee" class="level3">
+<h3 class="anchored" data-anchor-id="use-permissions-and-deny-rules-as-an-extra-layer-not-a-guarantee">Use permissions and deny rules — as an extra layer, not a guarantee</h3>
 <p>Claude Code has a <a href="https://code.claude.com/docs/en/permissions">built-in permissions system</a> that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in <code>settings.json</code>:</p>
 <ul>
-<li><strong><code>deny</code></strong> — hard block. Claude can’t use the tool, period. Deny rules always win, even if you accidentally click “always allow” on a prompt.</li>
+<li><strong><code>deny</code></strong> — hard block. Claude shouldn’t use the tool, period. Deny rules always win over allow rules, even if you accidentally click “always allow” on a prompt.</li>
 <li><strong><code>allow</code></strong> — auto-approve. Skips the approval prompt for things you trust (e.g., <code>git add</code>, <code>pytest</code>).</li>
 </ul>
-<p><strong>Deny rules are your most important security layer.</strong> They protect sensitive paths — SSH keys, cloud credentials, <code>.env</code> files — regardless of what the agent tries to do. The approval prompt is your first line of defense; deny rules are the backup that can’t be bypassed.</p>
+<p><strong>Treat the permission system as one layer of defense, not a vault door.</strong> It’s genuinely useful — configure it — but it can be finicky in practice: rule syntax is easy to get subtly wrong, <code>Read</code> deny rules are enforced on a “best-effort” basis for some built-in tools, and an allowed Bash command (like <code>cat</code>) can read a file that a <code>Read</code> deny rule covers. Users also report that agents don’t follow permission settings 100% of the time — see <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for documented gaps and workarounds. This is exactly why the previous section comes first: deny rules should be the <em>backup</em> for a secret that briefly lands on disk, never the <em>only</em> thing standing between an agent and your credentials.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
@@ -1621,7 +1639,7 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 <p>Even with deny rules and sandboxing, it’s good practice to limit what credentials the agent has access to in the first place.</p>
 <p><strong>Use minimal-scope tokens.</strong> Create fine-grained GitHub tokens scoped to only the repos and permissions the agent needs. If it only pushes to one repo, don’t give it access to your entire account. Use a bot account for agent-driven git operations, and generate dedicated deploy keys rather than reusing your personal SSH keys.</p>
 <p><strong>Set spending limits</strong> on API keys and use separate keys from your personal or production ones.</p>
-<p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them. Deny rules are what actually block the agent from accessing sensitive files.)</p>
+<p><strong>Add secrets to <code>.gitignore</code></strong> — <code>.env</code>, <code>credentials.json</code>, <code>*.pem</code>, <code>*.key</code>, <code>.netrc</code> — before the agent ever runs. Once a secret is committed, it’s in the history. (But note: <code>.gitignore</code> prevents <em>committing</em> secrets, not <em>reading</em> them, and deny rules block reads only imperfectly — which is why keeping secrets off disk entirely is the first recommendation in this section.)</p>
 </section>
 <section id="consider-containers-for-cicd-and-headless-environments" class="level3">
 <h3 class="anchored" data-anchor-id="consider-containers-for-cicd-and-headless-environments">Consider containers for CI/CD and headless environments</h3>
@@ -1669,7 +1687,8 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 <li><strong>Scope your requests tightly</strong> — features, not projects</li>
 <li><strong>Use <code>CLAUDE.md</code></strong> to encode guardrails and project context</li>
 <li><strong>Tune permissions deliberately</strong> — start conservative, loosen as you build trust</li>
-<li><strong>Set deny rules and enable the sandbox</strong> — your two strongest security layers</li>
+<li><strong>Keep secrets off disk</strong> — no plaintext passwords or API keys in <code>.env</code>; inject them at runtime with 1Password (<code>op run</code> or the SDKs)</li>
+<li><strong>Set deny rules and enable the sandbox</strong> — valuable extra layers, but not guarantees</li>
 <li><strong>Scope your credentials</strong> — fine-grained tokens, dedicated keys, <code>.gitignore</code> for secrets</li>
 <li><strong>Monitor costs</strong> — set limits, be specific, use the right model for the task</li>
 <li><strong>Commit frequently</strong> — keep escape hatches available</li>
@@ -1781,14 +1800,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="cc072134" class="cell" data-execution_count="1">
+<div id="44d4e4f5" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="cb153ad7" class="cell" data-execution_count="2">
+<div id="02e079be" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1901,7 +1920,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="986a4d88" class="cell" data-execution_count="3">
+<div id="a4460117" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2138,7 +2157,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="573ec95c" class="cell" data-execution_count="4">
+<div id="ea0f759a" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -2166,7 +2185,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="8b117695" class="cell" data-execution_count="5">
+<div id="1ee6eede" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2189,7 +2208,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="8da37889" class="cell" data-execution_count="6">
+<div id="4a40f499" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2211,7 +2230,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="abd8c426" class="cell" data-execution_count="7">
+<div id="0b91677e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2334,7 +2353,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="dccf28f5" class="cell" data-execution_count="8">
+<div id="248dbf53" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -2364,7 +2383,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="cb143e2b" class="cell" data-execution_count="9">
+<div id="7b38c73f" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -2409,7 +2428,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="50eef052" class="cell" data-execution_count="10">
+<div id="5c43a679" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2645,7 +2664,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="d4302ae1" class="cell" data-execution_count="11">
+<div id="d594caac" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2721,7 +2740,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="c376c490" class="cell" data-execution_count="12">
+<div id="38766224" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2837,7 +2856,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="df3cf738" class="cell" data-execution_count="13">
+<div id="99c189f3" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3083,7 +3102,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="41b5ca4a" class="cell" data-execution_count="14">
+<div id="6eea0872" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -4984,6 +5003,7 @@ Note
 <p><strong>Practical recommendations:</strong></p>
 <ul>
 <li><strong>Avoid running Claude Code on machines where restricted or sensitive data is stored.</strong> Sandboxing restricts <em>writes</em> but not <em>reads</em> — Claude can still read files anywhere on the machine and send their contents to Anthropic’s servers as part of a prompt. UW does not yet have a data-use agreement with Anthropic (see warning above), so even cloud-routed usage sends your prompts to Anthropic’s infrastructure.</li>
+<li><strong>Keep passwords and API keys out of local storage entirely.</strong> Permission settings are only an extra layer and can be finicky — don’t count on them to protect a plaintext secret sitting on disk. Store secrets in 1Password and inject them at runtime instead (see the 1Password section below).</li>
 <li><strong>If you must run on a machine with sensitive files</strong>, add <strong>deny rules</strong> (see below) to block read access to sensitive paths. But note that <code>Read</code> deny rules are best-effort — allowed Bash commands like <code>cat</code> can still read denied files. Denying both <code>Read</code> and the relevant <code>Bash</code> patterns together provides stronger protection (see <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for details).</li>
 <li><strong>Test only within isolated Git repositories</strong>, with no sensitive data present in the local repo.</li>
 <li><strong>Always enable sandboxing</strong> (Section 8) — it restricts <em>writes</em> to your project directory and adds network isolation at the OS level. It’s available on macOS (built-in) and Linux/WSL2 (requires <code>bubblewrap</code>). Native Windows does not yet support it.</li>
@@ -5045,7 +5065,7 @@ font-style: inherit;">claude</span></span></code></pre></div></div>
 </section>
 <section id="add-deny-rules" class="level3">
 <h3 class="anchored" data-anchor-id="add-deny-rules">Add <code>deny</code> rules to protect sensitive areas</h3>
-<p>Add a <code>permissions</code> block to your <strong><code>~/.claude/settings.json</code></strong> file (the same file you edited in Section 5). Think of <code>deny</code> rules as guardrails — they block Claude from accessing sensitive paths regardless of what it tries to do.</p>
+<p>Add a <code>permissions</code> block to your <strong><code>~/.claude/settings.json</code></strong> file (the same file you edited in Section 5). Think of <code>deny</code> rules as guardrails — they block Claude from accessing sensitive paths. Like any guardrail, they reduce risk rather than eliminate it (see the caveats at the end of this section), so pair them with the runtime secret injection covered next.</p>
 <p>These examples block: SSH keys, <code>.env</code> files, cloud credentials (<code>~/.config/gcloud/</code> and <code>~/.aws/</code>), destructive commands (<code>rm -rf</code>), and network tools (<code>curl</code>, <code>wget</code>). <strong>Replace <code>endemann</code> with your actual username</strong> before pasting into <code>settings.json</code>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -5334,14 +5354,40 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Why not just rely on the approval prompt?</strong> Because deny rules are absolute — they work even if you accidentally click “allow” or “always allow” on a prompt. They also protect against <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attacks</a> where malicious content in a file tricks Claude into running something harmful. The approval prompt is your first line of defense; deny rules are the backup that can’t be bypassed.</p>
-<p><strong>Important caveat:</strong> <code>Read</code> deny rules apply on a “best-effort” basis to built-in tools like Grep and Glob. However, if a Bash command (like <code>cat .env</code>) is allowed, it can still read the file. This is why denying both <code>Read</code> and the relevant <code>Bash</code> commands together gives stronger protection. See <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for details.</p>
+<p><strong>Why not just rely on the approval prompt?</strong> Deny rules take precedence over allow rules — they still apply even if you accidentally click “allow” or “always allow” on a prompt. They also help against <a href="https://www.petefreitag.com/blog/claude-code-permissions/">prompt injection attacks</a> where malicious content in a file tricks Claude into running something harmful.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>But treat permissions as an extra layer, not a guarantee.</strong> The permission system can be finicky in practice: rule syntax is easy to get subtly wrong, <code>Read</code> deny rules apply only on a “best-effort” basis to built-in tools like Grep and Glob, and an allowed Bash command (like <code>cat .env</code>) can still read a file that a <code>Read</code> deny rule covers — which is why you should deny both <code>Read</code> and the relevant <code>Bash</code> commands together. Beyond these documented gaps, users report that agents don’t follow permission settings 100% of the time. See <a href="https://www.petefreitag.com/blog/claude-code-permissions/">this security deep-dive</a> for details.</p>
+<p>The practical conclusion: <strong>if you’re giving an agent terminal access, don’t let permission settings be the only thing protecting a real secret.</strong> Anything genuinely sensitive — passwords, API keys, tokens — should not sit in plaintext in local storage at all. The next section shows how.</p>
 </div>
 </div>
 </section>
 <section id="1password-secrets" class="level3">
 <h3 class="anchored" data-anchor-id="1password-secrets">Keep secrets out of <code>.env</code> files — inject them at runtime with 1Password</h3>
-<p>Deny rules (above) stop Claude Code from reading <code>.env</code>, but they don’t help if you accidentally <code>git add .</code> and commit the file, paste it into a chat, or share your screen. The safer pattern is to <strong>not have an <code>.env</code> file on disk in the first place</strong>. Instead, store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Never store passwords or API keys in <code>.env</code> files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If an agent has terminal access, assume anything in plaintext on your disk can eventually be read. Deny rules (above) <em>should</em> stop Claude Code from reading <code>.env</code>, but as noted, enforcement isn’t perfect — and deny rules don’t help at all if you accidentally <code>git add .</code> and commit the file, paste it into a chat, or share your screen. The only secret an agent can’t leak is one that never touches the disk: keep real values in 1Password and inject them at runtime with <code>op run</code> (terminal workflows) or the <a href="https://developer.1password.com/docs/sdks/">1Password SDKs</a> (long-running apps).</p>
+</div>
+</div>
+<p>The safer pattern is to <strong>not have plaintext secrets on disk in the first place</strong>. Store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -5550,7 +5596,7 @@ background-color: null;
 font-style: inherit;">--</span> python app.py</span></code></pre></div></div>
 <p>Service-account tokens don’t expire on their own — they’re valid until you rotate or revoke them. Treat the token like any other production credential: don’t commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform’s secret UI, systemd <code>EnvironmentFile</code>, etc.). See the <a href="https://developer.1password.com/docs/ci-cd/">CI/CD integrations docs</a> for GitHub Actions, GitLab, Kubernetes, and other recipes.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5559,7 +5605,7 @@ font-style: inherit;">--</span> python app.py</span></code></pre></div></div>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Fair question. The honest answer depends on where you’re running.</p>
 <p><strong>On your laptop: there is no long-lived token on disk.</strong> You authenticate to 1Password with three things: a master password (in your head), a Secret Key (random, can be kept offline), and device biometrics (Touch ID / Windows Hello, which live in the OS secure enclave — not a file). The unlocked session sits in the desktop app’s memory and expires on lock. None of these are a file an attacker can <code>cat</code> off your disk. That’s a real improvement over a plaintext <code>.env</code> sitting at <code>~/projects/myapp/.env</code>.</p>
@@ -5596,7 +5642,7 @@ font-style: inherit;">--</span> python app.py</span></code></pre></div></div>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Even with 1Password, keep your <code>.env</code> deny rules in place — there will be projects (legacy code, third-party tools) where a real <code>.env</code> still lands on disk temporarily, and you want Claude blocked from reading it if so. <strong>Defense in depth</strong>: deny rules block reads of any secrets file that <em>does</em> exist; 1Password ensures most of them never exist in the first place.</p>
+<p>Even with 1Password, keep your <code>.env</code> deny rules in place — there will be projects (legacy code, third-party tools) where a real <code>.env</code> still lands on disk temporarily, and you want Claude blocked from reading it if so. <strong>Defense in depth</strong>: deny rules block (most) reads of any secrets file that <em>does</em> exist; 1Password ensures most of them never exist in the first place.</p>
 </div>
 </div>
 </section>
@@ -5839,7 +5885,7 @@ Tip
 <li><strong>Network isolation:</strong> Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5848,7 +5894,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Add these deny rules to your <code>~/.claude/settings.json</code> to prevent Claude from reading files outside your project:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb60-1"><span class="fu" style="color: #4758AB;
@@ -7304,7 +7350,7 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <section id="step-2-set-up-your-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-set-up-your-python-environment">Step 2: Set Up Your Python Environment</h3>
 <p>We’ll use the <code>requests</code> library to make HTTP calls. Let’s install it:</p>
-<div id="bb3f751d" class="cell" data-execution_count="1">
+<div id="04d8e376" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install requests</span></code></pre></div></div>
@@ -7313,7 +7359,7 @@ font-style: inherit;">!</span>pip install requests</span></code></pre></div></di
 <section id="step-3-configure-your-authentication" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-configure-your-authentication">Step 3: Configure Your Authentication</h3>
 <p>Now, let’s set up your authentication. Replace the placeholders with your actual GitHub credentials:</p>
-<div id="7163f19b" class="cell" data-execution_count="2">
+<div id="9b14147e" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
@@ -7347,7 +7393,7 @@ font-style: inherit;">"Authentication configured successfully!"</span>)</span></
 <section id="step-4-query-the-geodeepdive-api" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-query-the-geodeepdive-api">Step 4: Query the GeoDeepDive API</h3>
 <p>Let’s search for documents mentioning the mineral “stishovite”:</p>
-<div id="effe3559" class="cell" data-execution_count="3">
+<div id="3e361f03" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The public endpoint for the GDD API</span></span>
@@ -7619,7 +7665,7 @@ font-style: inherit;">print</span>(response.text)</span></code></pre></div></div
 <section id="step-5-advanced-query---filter-by-journal" class="level3">
 <h3 class="anchored" data-anchor-id="step-5-advanced-query---filter-by-journal">Step 5: Advanced Query - Filter by Journal</h3>
 <p>Let’s try a more specific query to find papers in specific journals:</p>
-<div id="ef322b23" class="cell" data-execution_count="4">
+<div id="c2c93b38" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Search for stishovite in specific journals</span></span>
@@ -7799,7 +7845,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-6-export-results-optional" class="level3">
 <h3 class="anchored" data-anchor-id="step-6-export-results-optional">Step 6: Export Results (Optional)</h3>
 <p>Let’s export the results to a JSON file for further analysis:</p>
-<div id="7466941d" class="cell" data-execution_count="5">
+<div id="fa8654a5" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>
@@ -8380,7 +8426,7 @@ font-style: inherit;"># visit http://127.0.0.1:5000</span></span></code></pre></
 <h2 class="anchored" data-anchor-id="step-1-load-the-corpus">Step 1: Load the corpus</h2>
 <p>In this example, we’ll use “Romeo and Juliet” as our text corpus. This text is freely available via <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/Gutenberg.html">Project Gutenberg</a>.</p>
 <p>Preview the file</p>
-<div id="c7ebf906" class="cell" data-execution_count="1">
+<div id="f2c7393a" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Download Romeo and Juliet from Project Gutenberg</span></span>
@@ -8416,7 +8462,7 @@ font-style: inherit;">print</span>(file_contents[:preview_len])</span></code></p
 <section id="step-2-split-text-into-chunks" class="level2">
 <h2 class="anchored" data-anchor-id="step-2-split-text-into-chunks">Step 2: Split text into “chunks”</h2>
 <p>Next, we define a function to split the corpus into smaller chunks based on word count. The simplest “chunking” approach is to chunk by word count or character count.</p>
-<div id="52d8a038" class="cell" data-execution_count="2">
+<div id="6a0635cd" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -8539,7 +8585,7 @@ background-color: null;
 font-style: inherit;"># Return list of chunks</span></span></code></pre></div></div>
 </div>
 <p>We then apply our chunking function to the corpus.</p>
-<div id="a1101615" class="cell" data-execution_count="3">
+<div id="859c9224" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Apply the chunking function to your full text file</span></span>
@@ -8628,7 +8674,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <li>Retrieve the top-matching chunks to pass along as context to the language model.</li>
 </ol>
 <p>This allows the system to surface text that is meaningfully related to the question—even if it doesn’t use the same words. For example, a question like “<em>What does Juliet think of Romeo?</em>” might retrieve a passage describing her inner turmoil or emotional reaction, even if the words “think” or “Romeo” aren’t explicitly present. Embedding-based retrieval improves relevance, flexibility, and ultimately the quality of the answers your language model can generate.</p>
-<div id="12bc8360" class="cell" data-execution_count="4">
+<div id="51cda3d1" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> sentence_transformers <span class="im" style="color: #00769E;
@@ -8714,7 +8760,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="are-question-embeddings-and-chunk-embeddings-really-comparable" class="level3">
 <h3 class="anchored" data-anchor-id="are-question-embeddings-and-chunk-embeddings-really-comparable">Are question embeddings and chunk embeddings really comparable?</h3>
 <p>We’re assuming that the embedding model (e.g., <code>all-MiniLM-L6-v2</code>) was trained in such a way that <em>questions and answers occupy the same semantic space</em>. That is, if a question and a passage are semantically aligned (e.g., about the same topic or fact), their embeddings should be close. This assumption holds reasonably well for general-purpose models trained on sentence pairs, but it’s not perfect — especially for very abstract or indirect questions. If a model was only trained to embed statements, it may not align questions correctly. You might retrieve chunks that are <strong>related but not directly useful</strong> for answering the question.</p>
-<div id="1aa52c4e" class="cell" data-execution_count="5">
+<div id="2706b09e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> sklearn.metrics.pairwise <span class="im" style="color: #00769E;
@@ -8762,7 +8808,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> results</span></code></pre></div></div>
 </div>
-<div id="63ae7d05" class="cell" data-execution_count="6">
+<div id="e1d94dbd" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">question <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -8845,7 +8891,7 @@ font-style: inherit;">print</span>(chunk)</span></code></pre></div></div>
 </section>
 <section id="run-a-few-additional-queries-report-top-ranked-chunk" class="level3">
 <h3 class="anchored" data-anchor-id="run-a-few-additional-queries-report-top-ranked-chunk">Run a few additional queries &amp; report top-ranked chunk</h3>
-<div id="1d7a8119" class="cell" data-execution_count="7">
+<div id="b56e6a88" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Run a few factual queries and inspect the top-ranked chunks</span></span>
@@ -8966,7 +9012,7 @@ font-style: inherit;"># print first ~800 chars for readability</span></span></co
 <h3 class="anchored" data-anchor-id="refining-chunking-strategy">Refining chunking strategy</h3>
 <p>Our current chunks are only based on word length. Instead, we can create chunks that are more tuned to the dataset and potential questions we might ask by defining a chunk as a “dialogue block”, i.e., as a group of N full speaker turns (e.g., JULIET. + her lines, ROMEO. + his lines, etc.).</p>
 <p>Let’s give this a shot to see how it impacts retrieval.</p>
-<div id="427c93be" class="cell" data-execution_count="8">
+<div id="70aca10c" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> re</span>
@@ -9213,7 +9259,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> grouped_chunks</span></code></pre></div></div>
 </div>
-<div id="fa161945" class="cell" data-execution_count="9">
+<div id="2eb5fcbb" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">speaker_chunks <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> chunk_by_speaker_blocks(file_contents, block_size<span class="op" style="color: #5E5E5E;
@@ -9251,7 +9297,7 @@ background-color: null;
 font-style: inherit;">"</span>)</span></code></pre></div></div>
 </div>
 <p>Our chunks have now been improved so that we aren’t cutting off any diagloue mid-sentence, and each chunk contains a few turns between speakers – allowing us to better capture the overall semantics of short passages from <em>Romeo and Juliet</em>.</p>
-<div id="1d596f78" class="cell" data-execution_count="10">
+<div id="5b8a7881" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">dialogue_embeddings <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> model.encode(speaker_chunks, device<span class="op" style="color: #5E5E5E;
@@ -9274,7 +9320,7 @@ font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span></code></pre></div></div>
 </div>
-<div id="8670985e" class="cell" data-execution_count="11">
+<div id="c232fc16" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Run a few factual queries and inspect the top-ranked chunks</span></span>
@@ -9402,7 +9448,7 @@ font-style: inherit;"># print first ~800 chars for readability</span></span></co
 <p>The model we’ve used so far, <a href="https://huggingface.co/sentence-transformers/multi-qa-MiniLM-L6-cos-v1"><code>multi-qa-MiniLM-L6-cos-v1</code></a>, is a solid starting point for retrieval-augmented generation (RAG) pipelines, it is relatively lightweight (22M parameters, ~500–800 MB GPU memory), which makes it efficient but less expressive than larger models.</p>
 <p>However, larger embedding models have more capacity to capture subtle semantic relationships, including indirect phrasing or domain-specific language. This can make a dramatic difference in tasks like matching Shakespearean dialogue to modern questions—something smaller models often struggle with.</p>
 <p>Let’s try a slightly larger model with 109 M parameters, <a href="https://huggingface.co/sentence-transformers/all-mpnet-base-v2"><code>all-mpnet-base-v2</code></a></p>
-<div id="da990545" class="cell" data-execution_count="12">
+<div id="ee37423a" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> sentence_transformers <span class="im" style="color: #00769E;
@@ -9431,7 +9477,7 @@ font-style: inherit;">=</span> model_larger.encode(speaker_chunks, device<span c
 background-color: null;
 font-style: inherit;">=</span>device)</span></code></pre></div></div>
 </div>
-<div id="b1e01e87" class="cell" data-execution_count="13">
+<div id="20e0bc41" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Run a few factual queries and inspect the top-ranked chunks</span></span>
@@ -9553,7 +9599,7 @@ QUESTION: [your question]
 ANSWER:</code></pre>
 <p>By framing the input this way, we signal to the model that it should focus only on the retrieved content. We’re not asking it to draw from general knowledge of the play—just from the selected passages.</p>
 <p>Let’s begin assembling the full prompt:</p>
-<div id="05e294c9" class="cell" data-execution_count="14">
+<div id="7b52b2cb" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">question <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -9562,7 +9608,7 @@ font-style: inherit;">"Who killed Mercutio?"</span> <span class="co" style="colo
 background-color: null;
 font-style: inherit;"># Tybalt/Tibalt</span></span></code></pre></div></div>
 </div>
-<div id="a387ba93" class="cell" data-execution_count="15">
+<div id="b08b262c" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1">top_dialgoue_chunks <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> retrieve_relevant_chunks(model_larger, question, speaker_chunks, dialogue_embeddings, top_n<span class="op" style="color: #5E5E5E;
@@ -9593,7 +9639,7 @@ font-style: inherit;">in</span> top_dialgoue_chunks)</span>
 background-color: null;
 font-style: inherit;">print</span>(context)</span></code></pre></div></div>
 </div>
-<div id="2d658121" class="cell" data-execution_count="16">
+<div id="6c3a8611" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">prompt <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
@@ -9635,7 +9681,7 @@ font-style: inherit;">print</span>(prompt)</span></code></pre></div></div>
 <h3 class="anchored" data-anchor-id="language-model-for-generation">Language model for generation</h3>
 <p>For this section, we’re using <a href="https://huggingface.co/tiiuae/falcon-rw-1b"><code>tiiuae/falcon-rw-1b</code></a>, a small 1.3B parameter decoder-only model trained on the RefinedWeb dataset. It’s designed for general-purpose text continuation, not for answering questions or following instructions.</p>
 <p>This makes it a good baseline for testing how much a generative model can do with only retrieved context and minimal guidance. As we’ll see, its output often reflects surface-level patterns or recent tokens, rather than accurate reasoning grounded in the text.</p>
-<div id="55136c6e" class="cell" data-execution_count="17">
+<div id="810f85fe" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> transformers <span class="im" style="color: #00769E;
@@ -9664,7 +9710,7 @@ font-style: inherit;">"auto"</span>)</span></code></pre></div></div>
 <li><code>do_sample=True</code>: Enables creative variation rather than deterministic output. For the purposes of getting a reproducible result, we’ll set this to <code>False</code></li>
 </ul>
 <p>These parameters influence not just length, but also how literal or speculative the answer might be. Sampling increases variety but can also introduce tangents or continuation artifacts.</p>
-<div id="a1bf36e7" class="cell" data-execution_count="18">
+<div id="119ff457" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">result <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> llm(prompt, max_new_tokens<span class="op" style="color: #5E5E5E;
@@ -9681,7 +9727,7 @@ font-style: inherit;">0</span>][<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"generated_text"</span>]</span></code></pre></div></div>
 </div>
-<div id="bd126752" class="cell" data-execution_count="19">
+<div id="a277d6f1" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(result)</span></code></pre></div></div>
@@ -9696,7 +9742,7 @@ font-style: inherit;">print</span>(result)</span></code></pre></div></div>
 <pre><code>[prompt] + [generated text]</code></pre>
 <p>If you’re only interested in the generated part (e.g., the model’s answer), you’ll need to remove the prompt manually after generation.</p>
 <p>We can strip off the final answer / generated result with the next code cell.</p>
-<div id="1c58ba8b" class="cell" data-execution_count="20">
+<div id="404a9e49" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1">generated_answer <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> result[<span class="bu" style="color: null;
@@ -9731,7 +9777,7 @@ Answer: She curses fortune.</code></pre>
 <li>Add a <code>stop</code> sequence after the first answer (if supported)</li>
 <li>Use a tighter or more explicit prompt style</li>
 </ul>
-<div id="40b796ce" class="cell" data-execution_count="21">
+<div id="d9b4bb14" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1">result <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> llm(prompt, max_new_tokens<span class="op" style="color: #5E5E5E;
@@ -9791,7 +9837,7 @@ The life of Tybalt</p>
 <h4 class="anchored" data-anchor-id="instruction-tuning-improves-perfomance">Instruction tuning improves perfomance</h4>
 <p>To improve factual accuracy in your RAG pipeline, it’s helpful to use an <strong>instruction-tuned</strong> model rather than a base language model. You’ve been using <code>falcon-rw-1b</code> (where “rw” stands for “Refined Web”), which is trained only to continue text — not to follow specific question-and-answer instructions. That’s why it often hallucinates factual events.</p>
 <p>A lightweight upgrade is to instead use <code>tiiuae/Falcon3-1B-Instruct</code>, an instruction-tuned version of Falcon. It still runs on modest hardware but is trained to follow prompts and answer questions in a focused way.</p>
-<div id="8643110e" class="cell" data-execution_count="22">
+<div id="ec88c767" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> transformers <span class="im" style="color: #00769E;
@@ -9823,7 +9869,7 @@ background-color: null;
 font-style: inherit;"># optional, helps with GPU memory</span></span>
 <span id="cb26-8">)</span></code></pre></div></div>
 </div>
-<div id="45f6f1a3" class="cell" data-execution_count="23">
+<div id="c24e3307" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># </span><span class="al" style="color: #AD0000;
