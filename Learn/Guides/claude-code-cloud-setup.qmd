@@ -737,6 +737,7 @@ This means a poorly worded prompt, an agentic loop, or a [prompt injection attac
 **Practical recommendations:**
 
 - **Avoid running Claude Code on machines where restricted or sensitive data is stored.** Sandboxing restricts *writes* but not *reads* — Claude can still read files anywhere on the machine and send their contents to Anthropic's servers as part of a prompt. UW does not yet have a data-use agreement with Anthropic (see [warning above](#use-caution-with-restricted-or-sensitive-data)), so even cloud-routed usage sends your prompts to Anthropic's infrastructure.
+- **Keep passwords and API keys out of local storage entirely.** Permission settings are only an extra layer and can be finicky — don't count on them to protect a plaintext secret sitting on disk. Store secrets in 1Password and inject them at runtime instead (see [the 1Password section below](#1password-secrets)).
 - **If you must run on a machine with sensitive files**, add **deny rules** (see [below](#add-deny-rules)) to block read access to sensitive paths. But note that `Read` deny rules are best-effort — allowed Bash commands like `cat` can still read denied files. Denying both `Read` and the relevant `Bash` patterns together provides stronger protection (see [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details).
 - **Test only within isolated Git repositories**, with no sensitive data present in the local repo.
 - **Always enable sandboxing** ([Section 8](#enable-sandboxing)) — it restricts *writes* to your project directory and adds network isolation at the OS level. It's available on macOS (built-in) and Linux/WSL2 (requires `bubblewrap`). Native Windows does not yet support it.
@@ -794,7 +795,7 @@ You can customize this behavior with three types of rules in `settings.json`:
 
 ### Add `deny` rules to protect sensitive areas {#add-deny-rules}
 
-Add a `permissions` block to your **`~/.claude/settings.json`** file (the same file you edited in [Section 5](#configure-claude-code)). Think of `deny` rules as guardrails — they block Claude from accessing sensitive paths regardless of what it tries to do.
+Add a `permissions` block to your **`~/.claude/settings.json`** file (the same file you edited in [Section 5](#configure-claude-code)). Think of `deny` rules as guardrails — they block Claude from accessing sensitive paths. Like any guardrail, they reduce risk rather than eliminate it (see the caveats at the end of this section), so pair them with the [runtime secret injection](#1password-secrets) covered next.
 
 These examples block: SSH keys, `.env` files, cloud credentials (`~/.config/gcloud/` and `~/.aws/`), destructive commands (`rm -rf`), and network tools (`curl`, `wget`). **Replace `endemann` with your actual username** before pasting into `settings.json`.
 
@@ -883,14 +884,23 @@ The `//` prefix in permission rules means "absolute path from the filesystem roo
 :::
 
 ::: {.callout-note}
-**Why not just rely on the approval prompt?** Because deny rules are absolute — they work even if you accidentally click "allow" or "always allow" on a prompt. They also protect against [prompt injection attacks](https://www.petefreitag.com/blog/claude-code-permissions/) where malicious content in a file tricks Claude into running something harmful. The approval prompt is your first line of defense; deny rules are the backup that can't be bypassed.
+**Why not just rely on the approval prompt?** Deny rules take precedence over allow rules — they still apply even if you accidentally click "allow" or "always allow" on a prompt. They also help against [prompt injection attacks](https://www.petefreitag.com/blog/claude-code-permissions/) where malicious content in a file tricks Claude into running something harmful.
+:::
 
-**Important caveat:** `Read` deny rules apply on a "best-effort" basis to built-in tools like Grep and Glob. However, if a Bash command (like `cat .env`) is allowed, it can still read the file. This is why denying both `Read` and the relevant `Bash` commands together gives stronger protection. See [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details.
+::: {.callout-warning}
+**But treat permissions as an extra layer, not a guarantee.** The permission system can be finicky in practice: rule syntax is easy to get subtly wrong, `Read` deny rules apply only on a "best-effort" basis to built-in tools like Grep and Glob, and an allowed Bash command (like `cat .env`) can still read a file that a `Read` deny rule covers — which is why you should deny both `Read` and the relevant `Bash` commands together. Beyond these documented gaps, users report that agents don't follow permission settings 100% of the time. See [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for details.
+
+The practical conclusion: **if you're giving an agent terminal access, don't let permission settings be the only thing protecting a real secret.** Anything genuinely sensitive — passwords, API keys, tokens — should not sit in plaintext in local storage at all. The next section shows how.
 :::
 
 ### Keep secrets out of `.env` files — inject them at runtime with 1Password {#1password-secrets}
 
-Deny rules ([above](#add-deny-rules)) stop Claude Code from reading `.env`, but they don't help if you accidentally `git add .` and commit the file, paste it into a chat, or share your screen. The safer pattern is to **not have an `.env` file on disk in the first place**. Instead, store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.
+::: {.callout-warning}
+## Never store passwords or API keys in `.env` files
+If an agent has terminal access, assume anything in plaintext on your disk can eventually be read. Deny rules ([above](#add-deny-rules)) *should* stop Claude Code from reading `.env`, but as noted, enforcement isn't perfect — and deny rules don't help at all if you accidentally `git add .` and commit the file, paste it into a chat, or share your screen. The only secret an agent can't leak is one that never touches the disk: keep real values in 1Password and inject them at runtime with `op run` (terminal workflows) or the [1Password SDKs](https://developer.1password.com/docs/sdks/) (long-running apps).
+:::
+
+The safer pattern is to **not have plaintext secrets on disk in the first place**. Store API keys (Anthropic, OpenAI, HuggingFace, database passwords, etc.) in 1Password and have them injected into the process environment only at the moment a command runs.
 
 ::: {.callout-tip}
 ## UW-Madison provides free 1Password accounts
@@ -1060,7 +1070,7 @@ If you prefer the older convention of keeping `.env` itself gitignored, commit `
 
 ::: {.callout-note}
 ## This is complementary to deny rules, not a replacement
-Even with 1Password, keep your `.env` deny rules in place — there will be projects (legacy code, third-party tools) where a real `.env` still lands on disk temporarily, and you want Claude blocked from reading it if so. **Defense in depth**: deny rules block reads of any secrets file that *does* exist; 1Password ensures most of them never exist in the first place.
+Even with 1Password, keep your `.env` deny rules in place — there will be projects (legacy code, third-party tools) where a real `.env` still lands on disk temporarily, and you want Claude blocked from reading it if so. **Defense in depth**: deny rules block (most) reads of any secrets file that *does* exist; 1Password ensures most of them never exist in the first place.
 :::
 
 ### Add `allow` rules to reduce prompt fatigue {#allow-rules}

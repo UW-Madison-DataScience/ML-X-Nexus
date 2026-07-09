@@ -584,14 +584,25 @@ For a detailed breakdown by provider, see the [Cloud Setup Guide — Data Usage 
 
 When you launch Claude Code from the CLI, it runs with your user's full filesystem permissions. It can read, modify, or delete files anywhere your account can reach — not just your project directory. A poorly worded prompt, an agentic loop, or a prompt injection attack could cause changes you didn't intend. Here's how to limit the blast radius, from most important to least.
 
-### Use permissions and deny rules
+### Keep secrets out of local storage entirely {#secrets-out-of-storage}
+
+::: {.callout-warning}
+## Never store passwords or API keys in `.env` files (or anywhere else on disk)
+If you give an agent terminal access, assume that **anything sitting in plaintext on your filesystem can eventually be read** — `.env` files, `credentials.json`, tokens pasted into shell profiles, notes files. Permission settings and deny rules reduce the odds, but they are not a guarantee (see below). The only secret an agent can't leak is one that isn't there.
+
+Instead, keep secrets in a secrets manager like 1Password and inject them at runtime — via [`op run`](https://developer.1password.com/docs/cli/secrets-environment-variables/) for anything you launch from a terminal, or the [1Password SDKs](https://developer.1password.com/docs/sdks/) for long-running apps. Your `.env` file then contains only `op://` *references*, never real values. See the [Cloud Setup Guide's 1Password walkthrough](../Guides/claude-code-cloud-setup.qmd#1password-secrets) for step-by-step setup (UW-Madison provides free 1Password accounts).
+:::
+
+This is the single most effective thing you can do before granting terminal access: an agent can't exfiltrate, commit, or `echo` a credential that only ever exists in a child process's memory. Everything below — permissions, sandboxing, credential scoping — is defense in depth *on top of* this, not a substitute for it.
+
+### Use permissions and deny rules — as an extra layer, not a guarantee
 
 Claude Code has a [built-in permissions system](https://code.claude.com/docs/en/permissions) that controls what it can do. In the default mode, it asks for approval before file writes, shell commands, and git operations. You can customize this with rules in `settings.json`:
 
-- **`deny`** — hard block. Claude can't use the tool, period. Deny rules always win, even if you accidentally click "always allow" on a prompt.
+- **`deny`** — hard block. Claude shouldn't use the tool, period. Deny rules always win over allow rules, even if you accidentally click "always allow" on a prompt.
 - **`allow`** — auto-approve. Skips the approval prompt for things you trust (e.g., `git add`, `pytest`).
 
-**Deny rules are your most important security layer.** They protect sensitive paths — SSH keys, cloud credentials, `.env` files — regardless of what the agent tries to do. The approval prompt is your first line of defense; deny rules are the backup that can't be bypassed.
+**Treat the permission system as one layer of defense, not a vault door.** It's genuinely useful — configure it — but it can be finicky in practice: rule syntax is easy to get subtly wrong, `Read` deny rules are enforced on a "best-effort" basis for some built-in tools, and an allowed Bash command (like `cat`) can read a file that a `Read` deny rule covers. Users also report that agents don't follow permission settings 100% of the time — see [this security deep-dive](https://www.petefreitag.com/blog/claude-code-permissions/) for documented gaps and workarounds. This is exactly why the previous section comes first: deny rules should be the *backup* for a secret that briefly lands on disk, never the *only* thing standing between an agent and your credentials.
 
 ```json
 {
@@ -626,7 +637,7 @@ Even with deny rules and sandboxing, it's good practice to limit what credential
 
 **Set spending limits** on API keys and use separate keys from your personal or production ones.
 
-**Add secrets to `.gitignore`** — `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc` — before the agent ever runs. Once a secret is committed, it's in the history. (But note: `.gitignore` prevents *committing* secrets, not *reading* them. Deny rules are what actually block the agent from accessing sensitive files.)
+**Add secrets to `.gitignore`** — `.env`, `credentials.json`, `*.pem`, `*.key`, `.netrc` — before the agent ever runs. Once a secret is committed, it's in the history. (But note: `.gitignore` prevents *committing* secrets, not *reading* them, and deny rules block reads only imperfectly — which is why [keeping secrets off disk entirely](#secrets-out-of-storage) is the first recommendation in this section.)
 
 ### Consider containers for CI/CD and headless environments
 
@@ -678,11 +689,12 @@ Agentic coding tools are genuinely powerful — they can dramatically accelerate
 1. **Scope your requests tightly** — features, not projects
 2. **Use `CLAUDE.md`** to encode guardrails and project context
 3. **Tune permissions deliberately** — start conservative, loosen as you build trust
-4. **Set deny rules and enable the sandbox** — your two strongest security layers
-5. **Scope your credentials** — fine-grained tokens, dedicated keys, `.gitignore` for secrets
-6. **Monitor costs** — set limits, be specific, use the right model for the task
-7. **Commit frequently** — keep escape hatches available
-8. **Review everything** — you're the engineer; the agent is a very fast intern
+4. **Keep secrets off disk** — no plaintext passwords or API keys in `.env`; inject them at runtime with 1Password (`op run` or the SDKs)
+5. **Set deny rules and enable the sandbox** — valuable extra layers, but not guarantees
+6. **Scope your credentials** — fine-grained tokens, dedicated keys, `.gitignore` for secrets
+7. **Monitor costs** — set limits, be specific, use the right model for the task
+8. **Commit frequently** — keep escape hatches available
+9. **Review everything** — you're the engineer; the agent is a very fast intern
 
 The technology is moving fast, and best practices will continue to evolve. The core principle stays the same: **give agents the minimum access they need, provide maximum clarity in your instructions, and always keep a human in the loop for decisions that matter**.
 
