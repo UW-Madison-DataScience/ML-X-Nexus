@@ -446,6 +446,9 @@ Average uniques per day: 2.12</code></pre>
 </div>
 </div>
 </div>
+<div id="a1cd7764" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># === Zoomed-in plot for a custom date range ===# Set start_date / end_date to any "YYYY-MM-DD" strings, or leave start_date# as None to default to the past year (365 days back from the latest data).start_date = None  # e.g. "2025-01-01"end_date = None    # e.g. "2025-12-31"; None = latest date in the dataend = pd.Timestamp(end_date) if end_date else df["date"].max()start = pd.Timestamp(start_date) if start_date else end - pd.Timedelta(days=365)df_range = df[(df["date"] &gt;= start) &amp; (df["date"] &lt;= end)].copy()df_range["uniques_rolling"] = df_range["uniques"].rolling(window=rolling_window).mean()print(f"=== Traffic Summary ({start.date()} → {end.date()}) ===")print(f"Days tracked: {len(df_range)}")print(f"Total visits: {df_range['count'].sum()}")print(f"Total uniques: {df_range['uniques'].sum()}")print(f"Average visits per day: {df_range['count'].mean():.2f}")print(f"Average uniques per day: {df_range['uniques'].mean():.2f}")plt.figure(figsize=(10, 6))plt.plot(df_range["date"], df_range["uniques"], label="Uniques", marker='x', linestyle='-', alpha=0.7)plt.plot(df_range["date"], df_range["uniques_rolling"], label=f"{rolling_window}-Day Rolling Average", linewidth=2)plt.xlabel("Date")plt.ylabel("Uniques")plt.title(f"Uniques Over Time ({start.date()} → {end.date()})")plt.legend()plt.grid(True)plt.tight_layout()plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 
 
 
