@@ -1034,6 +1034,15 @@ export OP_SERVICE_ACCOUNT_TOKEN="ops_..."
 op run --env-file=.env -- python app.py
 ```
 
+::: {.callout-warning}
+## Be careful with that `export` command — it briefly puts the token in the open
+The moment you paste the token into an `export` command, it exists in your clipboard, your terminal scrollback, and (depending on your shell) your shell history. Handle it deliberately:
+
+- **Never run the `export` in a terminal where a coding agent is active or might be launched.** An agent with terminal access can read the environment it inherits (`env`, `printenv`) and may see your scrollback or history — pasting the token there hands it over. Do the export in a **fresh terminal session** used only for this, then close it.
+- **Keep it out of shell history.** In bash/zsh, a leading space usually skips history (`HISTCONTROL=ignorespace` / zsh's `HIST_IGNORE_SPACE`), or unset/re-check with `history | tail` afterward. Better: on a real server, skip the interactive `export` entirely and load the token from your platform's secret mechanism (CI secret store, systemd `EnvironmentFile`, hosting platform secret UI).
+- **Clear your clipboard when you're done** — clipboard managers keep history, and anything running on your machine can read the clipboard. Copy something harmless over it, or use your clipboard manager's clear/exclude feature. (The 1Password app can auto-clear copied values after a timeout: **Settings → Security → Clear clipboard contents**.)
+:::
+
 Service-account tokens don't expire on their own — they're valid until you rotate or revoke them. Treat the token like any other production credential: don't commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform's secret UI, systemd `EnvironmentFile`, etc.). See the [CI/CD integrations docs](https://developer.1password.com/docs/ci-cd/) for GitHub Actions, GitLab, Kubernetes, and other recipes.
 
 ::: {.callout-note collapse="true"}
