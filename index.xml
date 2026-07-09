@@ -203,7 +203,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="5176c000" class="cell" data-execution_count="1">
+<div id="2da96d2d" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -240,7 +240,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="318459c7" class="cell" data-execution_count="2">
+<div id="4fe420af" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -257,7 +257,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="39ad7542" class="cell" data-execution_count="3">
+<div id="28de34f1" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -297,7 +297,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="04e4652e" class="cell" data-execution_count="4">
+<div id="eebfe288" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -335,7 +335,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="7df2a0c0" class="cell" data-execution_count="5">
+<div id="29619e9c" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -441,7 +441,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="19b1ae0f" class="cell" data-execution_count="6">
+<div id="24ac2861" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -516,7 +516,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="7fbb83ad" class="cell" data-execution_count="7">
+<div id="a3328100" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -591,7 +591,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="af24087d" class="cell" data-execution_count="8">
+<div id="94dbffcd" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1800,14 +1800,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="55a90caf" class="cell" data-execution_count="1">
+<div id="724f577e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="bdcc63de" class="cell" data-execution_count="2">
+<div id="8d12086c" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1920,7 +1920,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="e8db5218" class="cell" data-execution_count="3">
+<div id="08080759" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2157,7 +2157,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="0a527597" class="cell" data-execution_count="4">
+<div id="eb461de6" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -2185,7 +2185,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="4a5143e7" class="cell" data-execution_count="5">
+<div id="6a9d0771" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2208,7 +2208,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="e5389758" class="cell" data-execution_count="6">
+<div id="9ad5901d" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2230,7 +2230,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="d25750bb" class="cell" data-execution_count="7">
+<div id="676d465f" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2353,7 +2353,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="5fb297b3" class="cell" data-execution_count="8">
+<div id="1d222358" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -2383,7 +2383,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="7991b46f" class="cell" data-execution_count="9">
+<div id="325a46e0" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -2428,7 +2428,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="b370deda" class="cell" data-execution_count="10">
+<div id="189a684d" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2664,7 +2664,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="82978ac9" class="cell" data-execution_count="11">
+<div id="2d5b9130" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2740,7 +2740,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="ed4194eb" class="cell" data-execution_count="12">
+<div id="b49eae34" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2856,7 +2856,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="c1c830f7" class="cell" data-execution_count="13">
+<div id="421c965c" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3102,7 +3102,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="d7f3e373" class="cell" data-execution_count="14">
+<div id="e0a65980" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -4229,8 +4229,9 @@ font-style: inherit;">--version</span></span></code></pre></div></div>
 </ul>
 <p><strong>Set up a devcontainer in your project:</strong></p>
 <ol type="1">
-<li><p>Open your project folder in VS Code (or create a new one with <code>mkdir my-project &amp;&amp; code my-project</code>).</p></li>
-<li><p>Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run <strong>Dev Containers: Add Dev Container Configuration Files…</strong>. Choose <strong>Ubuntu → latest</strong>. VS Code creates <code>.devcontainer/devcontainer.json</code>:</p>
+<li><p><strong>Open your project folder in VS Code.</strong> Either <code>cd</code> into the folder in your terminal and run <code>code .</code> (the <code>.</code> means “this folder”), or launch VS Code and go to <strong>File → Open Folder…</strong> (or <code>Ctrl+K Ctrl+O</code>) and pick the folder. You’ll know it worked when the file tree in the left sidebar shows your project’s files.</p></li>
+<li><p><strong>Make sure Docker Desktop is running</strong> before the next step. Launch it from the Start menu / Applications and wait for the whale icon in the system tray to stop animating (~30–60 seconds). If you skip this you’ll get a “Docker daemon is not running” error.</p></li>
+<li><p>Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run <strong>Dev Containers: Add Dev Container Configuration Files…</strong>. Choose <strong>Ubuntu → noble</strong> (the current LTS — <code>latest</code> and <code>noble</code> point to the same image). When prompted to select additional features, you can skip that screen — we’ll set them explicitly in a moment. VS Code creates <code>.devcontainer/devcontainer.json</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb9-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
@@ -4282,9 +4283,31 @@ font-style: inherit;">}</span></span>
 <span id="cb9-9"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div></li>
-<li><p>Run <strong>Dev Containers: Reopen in Container</strong> to build and launch.</p></li>
+<li><p>Run <strong>Dev Containers: Reopen in Container</strong> to build and launch. First build takes 3–5 minutes — Docker is downloading the base image and installing features. VS Code will reload into the container automatically when it’s done. You’ll know you’re inside the container because:</p>
+<ul>
+<li>The bottom-left status bar shows a green badge: <strong>“Dev Container: claude-code”</strong></li>
+<li>New terminals (<kbd>Ctrl</kbd> + <kbd><code>&lt;/kbd&gt;) open as</code>bash<code>shells with a prompt like</code>vscode ➜ /workspaces/my-project $`, not PowerShell.</kbd></li>
+</ul></li>
 </ol>
-<p>See Section 3 for a fuller <code>devcontainer.json</code> that also installs <code>gcloud</code>, Python, Claude Code, R, and Quarto via devcontainer features.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>If the build fails
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You’ll see a “Command failed” dialog with an exit code but no detail. The real error is upstream:</p>
+<ul>
+<li>Click <strong>Show Log</strong> on the dialog, or run <code>Ctrl+Shift+P</code> → <strong>Dev Containers: Show Container Log</strong>.</li>
+<li>Scroll up from the bottom to find the first line containing <code>ERROR</code> or <code>failed to</code>. That’s the actual cause.</li>
+<li>Common culprits: Docker Desktop not fully started, an unmaintained third-party feature failing on a newer Ubuntu base (see Section 3), or a corporate VPN blocking image pulls from <code>ghcr.io</code> / <code>mcr.microsoft.com</code>.</li>
+</ul>
+</div>
+</div>
+<p>See Section 3 for a fuller <code>devcontainer.json</code> that also installs <code>gcloud</code>, Python, Claude Code, R, and Quarto.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -4387,7 +4410,7 @@ background-color: null;
 font-style: inherit;"># or source ~/.bashrc</span></span></code></pre></div></div>
 </div>
 <div id="tabset-5-4" class="tab-pane" aria-labelledby="tabset-5-4-tab">
-<p>If you set up the devcontainer in Section 2, use this <code>devcontainer.json</code> to get <code>gcloud</code>, Python, Claude Code, R, and Quarto pre-installed:</p>
+<p>If you set up the devcontainer in Section 2, use this <code>devcontainer.json</code> to get Python, Node, Claude Code, R, Quarto, and <code>gcloud</code> pre-installed:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb15-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
@@ -4432,59 +4455,64 @@ background-color: null;
 font-style: inherit;">{},</span></span>
 <span id="cb15-7">        <span class="dt" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">"ghcr.io/dhoeric/features/google-cloud-cli:1"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">{</span></span>
-<span id="cb15-8">            <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">"version"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">:</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"latest"</span></span>
-<span id="cb15-9">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">},</span></span>
-<span id="cb15-10">        <span class="dt" style="color: #AD0000;
-background-color: null;
 font-style: inherit;">"ghcr.io/anthropics/devcontainer-features/claude-code:1.0"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{},</span></span>
-<span id="cb15-11">        <span class="dt" style="color: #AD0000;
+<span id="cb15-8">        <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"ghcr.io/rocker-org/devcontainer-features/r-rig:1"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{</span></span>
-<span id="cb15-12">            <span class="dt" style="color: #AD0000;
+<span id="cb15-9">            <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"version"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"release"</span></span>
-<span id="cb15-13">        <span class="fu" style="color: #4758AB;
+<span id="cb15-10">        <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">},</span></span>
-<span id="cb15-14">        <span class="dt" style="color: #AD0000;
+<span id="cb15-11">        <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1"</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">{}</span></span>
-<span id="cb15-15">    <span class="fu" style="color: #4758AB;
+<span id="cb15-12">    <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">}</span></span>
-<span id="cb15-16"><span class="fu" style="color: #4758AB;
+font-style: inherit;">},</span></span>
+<span id="cb15-13">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"postCreateCommand"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sudo apt-get update &amp;&amp; sudo apt-get install -y apt-transport-https ca-certificates gnupg curl &amp;&amp; curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg &amp;&amp; echo 'deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main' | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list &amp;&amp; sudo apt-get update &amp;&amp; sudo apt-get install -y google-cloud-cli"</span></span>
+<span id="cb15-14"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
-<p>Once the container is running, open a VS Code terminal and authenticate with GCP:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Why <code>postCreateCommand</code> for gcloud instead of a devcontainer feature?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The popular community feature <code>ghcr.io/dhoeric/features/google-cloud-cli</code> is <strong>unmaintained</strong> and fails to install on Ubuntu 24.04 (Noble) — the current default base image — because its install script relies on <code>apt-key</code>, which Debian/Ubuntu removed in favor of the keyring directory approach. If you use it, the container build errors out with <code>./install.sh: line 72: apt-key: command not found</code>.</p>
+<p><code>postCreateCommand</code> is a generic escape hatch built into the devcontainer spec: it runs once, automatically, the first time a container is created from this config. We use it to run the modern (keyring-based) install commands directly, which is exactly what you’d run by hand on WSL2. This pattern works for any tool that doesn’t have a working, maintained devcontainer feature — just write the install commands you’d normally run, joined with <code>&amp;&amp;</code>.</p>
+<p><strong>What persists across sessions:</strong> stopping/restarting the container (closing and reopening VS Code) keeps everything intact, including gcloud and your <code>gcloud auth</code> credentials. <strong>Rebuilding</strong> the container (e.g., when you change <code>devcontainer.json</code>) wipes state and re-runs <code>postCreateCommand</code> — which is the whole point: anyone who clones this repo gets the same environment automatically.</p>
+</div>
+</div>
+<p>Once the container is running, open a VS Code terminal (<kbd>Ctrl</kbd> + <kbd>`</kbd>) and authenticate with GCP:</p>
 <ol type="1">
 <li><p>Log in with your UW-Madison Google account:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;
@@ -5796,7 +5824,7 @@ font-style: inherit;">--</span> python app.py</span></code></pre></div></div>
 </div>
 <p>Service-account tokens don’t expire on their own — they’re valid until you rotate or revoke them. Treat the token like any other production credential: don’t commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform’s secret UI, systemd <code>EnvironmentFile</code>, etc.). See the <a href="https://developer.1password.com/docs/ci-cd/">CI/CD integrations docs</a> for GitHub Actions, GitLab, Kubernetes, and other recipes.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -5805,7 +5833,7 @@ font-style: inherit;">--</span> python app.py</span></code></pre></div></div>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Fair question. The honest answer depends on where you’re running.</p>
 <p><strong>On your laptop: there is no long-lived token on disk.</strong> You authenticate to 1Password with three things: a master password (in your head), a Secret Key (random, can be kept offline), and device biometrics (Touch ID / Windows Hello, which live in the OS secure enclave — not a file). The unlocked session sits in the desktop app’s memory and expires on lock. None of these are a file an attacker can <code>cat</code> off your disk. That’s a real improvement over a plaintext <code>.env</code> sitting at <code>~/projects/myapp/.env</code>.</p>
@@ -6085,7 +6113,7 @@ Tip
 <li><strong>Network isolation:</strong> Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -6094,7 +6122,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Add these deny rules to your <code>~/.claude/settings.json</code> to prevent Claude from reading files outside your project:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb60-1"><span class="fu" style="color: #4758AB;

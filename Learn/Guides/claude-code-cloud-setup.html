@@ -664,8 +664,9 @@ Warning
 </ul>
 <p><strong>Set up a devcontainer in your project:</strong></p>
 <ol type="1">
-<li><p>Open your project folder in VS Code (or create a new one with <code>mkdir my-project &amp;&amp; code my-project</code>).</p></li>
-<li><p>Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run <strong>Dev Containers: Add Dev Container Configuration Files…</strong>. Choose <strong>Ubuntu → latest</strong>. VS Code creates <code>.devcontainer/devcontainer.json</code>:</p>
+<li><p><strong>Open your project folder in VS Code.</strong> Either <code>cd</code> into the folder in your terminal and run <code>code .</code> (the <code>.</code> means “this folder”), or launch VS Code and go to <strong>File → Open Folder…</strong> (or <code>Ctrl+K Ctrl+O</code>) and pick the folder. You’ll know it worked when the file tree in the left sidebar shows your project’s files.</p></li>
+<li><p><strong>Make sure Docker Desktop is running</strong> before the next step. Launch it from the Start menu / Applications and wait for the whale icon in the system tray to stop animating (~30–60 seconds). If you skip this you’ll get a “Docker daemon is not running” error.</p></li>
+<li><p>Open the command palette (<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and run <strong>Dev Containers: Add Dev Container Configuration Files…</strong>. Choose <strong>Ubuntu → noble</strong> (the current LTS — <code>latest</code> and <code>noble</code> point to the same image). When prompted to select additional features, you can skip that screen — we’ll set them explicitly in a moment. VS Code creates <code>.devcontainer/devcontainer.json</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"claude-code"</span><span class="fu">,</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"image"</span><span class="fu">:</span> <span class="st">"mcr.microsoft.com/devcontainers/base:ubuntu"</span><span class="fu">,</span></span>
@@ -675,9 +676,31 @@ Warning
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Run <strong>Dev Containers: Reopen in Container</strong> to build and launch.</p></li>
+<li><p>Run <strong>Dev Containers: Reopen in Container</strong> to build and launch. First build takes 3–5 minutes — Docker is downloading the base image and installing features. VS Code will reload into the container automatically when it’s done. You’ll know you’re inside the container because:</p>
+<ul>
+<li>The bottom-left status bar shows a green badge: <strong>“Dev Container: claude-code”</strong></li>
+<li>New terminals (<kbd>Ctrl</kbd> + <kbd><code>&lt;/kbd&gt;) open as</code>bash<code>shells with a prompt like</code>vscode ➜ /workspaces/my-project $`, not PowerShell.</kbd></li>
+</ul></li>
 </ol>
-<p>See <a href="#install-cloud-cli">Section 3</a> for a fuller <code>devcontainer.json</code> that also installs <code>gcloud</code>, Python, Claude Code, R, and Quarto via devcontainer features.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>If the build fails
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You’ll see a “Command failed” dialog with an exit code but no detail. The real error is upstream:</p>
+<ul>
+<li>Click <strong>Show Log</strong> on the dialog, or run <code>Ctrl+Shift+P</code> → <strong>Dev Containers: Show Container Log</strong>.</li>
+<li>Scroll up from the bottom to find the first line containing <code>ERROR</code> or <code>failed to</code>. That’s the actual cause.</li>
+<li>Common culprits: Docker Desktop not fully started, an unmaintained third-party feature failing on a newer Ubuntu base (see <a href="#install-cloud-cli">Section 3</a>), or a corporate VPN blocking image pulls from <code>ghcr.io</code> / <code>mcr.microsoft.com</code>.</li>
+</ul>
+</div>
+</div>
+<p>See <a href="#install-cloud-cli">Section 3</a> for a fuller <code>devcontainer.json</code> that also installs <code>gcloud</code>, Python, Claude Code, R, and Quarto.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -732,24 +755,37 @@ Warning
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.zshrc   <span class="co"># or source ~/.bashrc</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
-<p>If you set up the devcontainer in <a href="#install-claude-code">Section 2</a>, use this <code>devcontainer.json</code> to get <code>gcloud</code>, Python, Claude Code, R, and Quarto pre-installed:</p>
+<p>If you set up the devcontainer in <a href="#install-claude-code">Section 2</a>, use this <code>devcontainer.json</code> to get Python, Node, Claude Code, R, Quarto, and <code>gcloud</code> pre-installed:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"claude-code"</span><span class="fu">,</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"image"</span><span class="fu">:</span> <span class="st">"mcr.microsoft.com/devcontainers/base:ubuntu"</span><span class="fu">,</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"features"</span><span class="fu">:</span> <span class="fu">{</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/devcontainers/features/node:1"</span><span class="fu">:</span> <span class="fu">{},</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/devcontainers/features/python:1"</span><span class="fu">:</span> <span class="fu">{},</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/dhoeric/features/google-cloud-cli:1"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"version"</span><span class="fu">:</span> <span class="st">"latest"</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/anthropics/devcontainer-features/claude-code:1.0"</span><span class="fu">:</span> <span class="fu">{},</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/rocker-org/devcontainer-features/r-rig:1"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"version"</span><span class="fu">:</span> <span class="st">"release"</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1"</span><span class="fu">:</span> <span class="fu">{}</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Once the container is running, open a VS Code terminal and authenticate with GCP:</p>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/anthropics/devcontainer-features/claude-code:1.0"</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/rocker-org/devcontainer-features/r-rig:1"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"version"</span><span class="fu">:</span> <span class="st">"release"</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1"</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"postCreateCommand"</span><span class="fu">:</span> <span class="st">"sudo apt-get update &amp;&amp; sudo apt-get install -y apt-transport-https ca-certificates gnupg curl &amp;&amp; curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg &amp;&amp; echo 'deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main' | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list &amp;&amp; sudo apt-get update &amp;&amp; sudo apt-get install -y google-cloud-cli"</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Why <code>postCreateCommand</code> for gcloud instead of a devcontainer feature?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The popular community feature <code>ghcr.io/dhoeric/features/google-cloud-cli</code> is <strong>unmaintained</strong> and fails to install on Ubuntu 24.04 (Noble) — the current default base image — because its install script relies on <code>apt-key</code>, which Debian/Ubuntu removed in favor of the keyring directory approach. If you use it, the container build errors out with <code>./install.sh: line 72: apt-key: command not found</code>.</p>
+<p><code>postCreateCommand</code> is a generic escape hatch built into the devcontainer spec: it runs once, automatically, the first time a container is created from this config. We use it to run the modern (keyring-based) install commands directly, which is exactly what you’d run by hand on WSL2. This pattern works for any tool that doesn’t have a working, maintained devcontainer feature — just write the install commands you’d normally run, joined with <code>&amp;&amp;</code>.</p>
+<p><strong>What persists across sessions:</strong> stopping/restarting the container (closing and reopening VS Code) keeps everything intact, including gcloud and your <code>gcloud auth</code> credentials. <strong>Rebuilding</strong> the container (e.g., when you change <code>devcontainer.json</code>) wipes state and re-runs <code>postCreateCommand</code> — which is the whole point: anyone who clones this repo gets the same environment automatically.</p>
+</div>
+</div>
+<p>Once the container is running, open a VS Code terminal (<kbd>Ctrl</kbd> + <kbd>`</kbd>) and authenticate with GCP:</p>
 <ol type="1">
 <li><p>Log in with your UW-Madison Google account:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> auth login <span class="at">--no-launch-browser</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
@@ -1454,7 +1490,7 @@ HF_TOKEN=op://Private/HuggingFace/token</code></pre>
 </div>
 <p>Service-account tokens don’t expire on their own — they’re valid until you rotate or revoke them. Treat the token like any other production credential: don’t commit it, and load it through whatever mechanism your platform already uses for sensitive env vars (CI secret stores, your hosting platform’s secret UI, systemd <code>EnvironmentFile</code>, etc.). See the <a href="https://developer.1password.com/docs/ci-cd/">CI/CD integrations docs</a> for GitHub Actions, GitLab, Kubernetes, and other recipes.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1463,7 +1499,7 @@ HF_TOKEN=op://Private/HuggingFace/token</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Fair question. The honest answer depends on where you’re running.</p>
 <p><strong>On your laptop: there is no long-lived token on disk.</strong> You authenticate to 1Password with three things: a master password (in your head), a Secret Key (random, can be kept offline), and device biometrics (Touch ID / Windows Hello, which live in the OS secure enclave — not a file). The unlocked session sits in the desktop app’s memory and expires on lock. None of these are a file an attacker can <code>cat</code> off your disk. That’s a real improvement over a plaintext <code>.env</code> sitting at <code>~/projects/myapp/.env</code>.</p>
@@ -1709,7 +1745,7 @@ Tip
 <li><strong>Network isolation:</strong> Only approved domains can be accessed. New domain requests trigger a permission prompt. This prevents data exfiltration even if Claude is compromised.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1718,7 +1754,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Add these deny rules to your <code>~/.claude/settings.json</code> to prevent Claude from reading files outside your project:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
