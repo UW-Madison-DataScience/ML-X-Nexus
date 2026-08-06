@@ -1,0 +1,164 @@
+---
+title: "Qwen: Open-Weight Large Language and Multimodal Models"
+author:
+  - name: Claude
+
+date: 2026-03-25
+date-format: long
+image: "../../../images/Qwen.png"
+
+categories:
+  - Models
+  - Deep learning
+  - NLP
+  - Multimodal
+  - Transformer
+  - Language modeling
+  - Text generation
+---
+
+Qwen (short for Tongyi Qianwen) is a family of open-weight large language and multimodal models developed by Alibaba Cloud. First released in 2023, the Qwen series has rapidly evolved through multiple generations — Qwen1.5, Qwen2, Qwen2.5, and QwQ — establishing itself as one of the most capable and accessible open-weight model families available. Qwen models span a wide range of sizes (0.5B to 72B+ parameters) and modalities (text, vision, audio, code, and math), making them suitable for tasks ranging from conversational AI and code generation to visual understanding and scientific reasoning.
+
+#### Key features
+- **Dense and Mixture-of-Experts Architectures**: Qwen offers both standard dense transformer models and Mixture-of-Experts (MoE) variants that activate only a subset of parameters per token, enabling larger model capacity with efficient inference.
+- **Multimodal Capabilities**: The Qwen family includes specialized models such as Qwen-VL (vision-language), Qwen-Audio, and Qwen2.5-Omni, supporting text, image, audio, and video understanding within a unified framework.
+- **Long-Context Support**: Qwen2.5 models support context windows of up to 128K tokens, enabling processing of lengthy documents, codebases, and multi-turn conversations.
+- **Multilingual Proficiency**: Trained on data spanning 29+ languages, Qwen models perform well across English, Chinese, and many other languages.
+- **Permissive Licensing**: Most Qwen models are released under the Apache 2.0 license, allowing broad commercial and research use.
+
+## Timeline context
+Qwen fits into the rapidly evolving landscape of open-weight large language models. Here is a timeline placing Qwen in context with other important models.
+
+- **[LLaMA (2023)](https://arxiv.org/abs/2302.13971)**: Meta's open-weight LLM that catalyzed the open-source LLM movement.
+- **[Qwen (2023)](https://arxiv.org/abs/2309.16609)**: Alibaba Cloud's first-generation open-weight LLM family, competitive across benchmarks.
+- **[Mistral 7B (2023)](https://arxiv.org/abs/2310.06825)**: Efficient open-weight model with sliding window attention and grouped-query attention.
+- **[LLaMA 2 (2023)](https://arxiv.org/abs/2307.09288)**: Improved open-weight models with RLHF-aligned chat variants.
+- **[Qwen1.5 (2024)](https://qwenlm.github.io/blog/qwen1.5/)**: Refinement of the original Qwen series with improved alignment and multilingual support.
+- **[LLaMA 3 (2024)](https://arxiv.org/abs/2407.21783)**: Meta's third-generation open-weight LLMs with expanded context and capabilities.
+- **[Qwen2 (2024)](https://arxiv.org/abs/2407.10671)**: Major generational leap with improved reasoning, coding, and multilingual performance.
+- **[Qwen2.5 (2024)](https://qwenlm.github.io/blog/qwen2.5/)**: State-of-the-art open-weight models with expanded sizes, MoE variants, and domain-specific models for code and math.
+- **[QwQ (2024)](https://qwenlm.github.io/blog/qwq-32b-preview/)**: A reasoning-focused model leveraging chain-of-thought for complex problem solving.
+- **[DeepSeek-R1 (2025)](https://arxiv.org/abs/2501.12948)**: Open-weight reasoning model advancing chain-of-thought capabilities.
+
+## Qwen model families — what to use and when
+
+The Qwen ecosystem covers a broad set of modalities and tasks. The table below summarizes the main model families and their intended use cases.
+
+| Model Family | Modality | Sizes | Best For | Example Use Cases |
+|---|---|---|---|---|
+| **Qwen2.5** | Text | 0.5B – 72B | General-purpose language tasks | Chatbots, summarization, translation, Q&A |
+| **Qwen2.5-Coder** | Text (code) | 1.5B – 32B | Code generation & understanding | Autocomplete, debugging, code review, docstrings |
+| **Qwen2.5-Math** | Text (math) | 1.5B – 72B | Mathematical reasoning | Proofs, word problems, symbolic computation |
+| **Qwen2.5-VL** | Text + Image/Video | 3B – 72B | Visual understanding | Document OCR, chart reading, visual Q&A |
+| **Qwen2.5-Omni** | Text + Image + Audio + Video | 3B – 7B | Unified multimodal I/O | Voice assistants, video understanding, accessibility |
+| **QwQ-32B** | Text (reasoning) | 32B | Complex multi-step reasoning | Research problems, math olympiad, agentic tasks |
+
+### Choosing the right size
+- **0.5B – 3B**: Edge devices, mobile, or latency-critical applications. Good for simple classification, extraction, and reformatting tasks.
+- **7B – 14B**: The best balance of quality and cost for most research and production workloads. Strong general reasoning at manageable memory requirements.
+- **32B – 72B**: When you need top-tier reasoning, nuanced instruction following, or state-of-the-art benchmark performance. Requires multi-GPU setups at full precision.
+
+## How parameter count impacts GPU memory
+
+Understanding memory requirements is critical when selecting a model size. The rule of thumb: **each billion parameters requires ~2 GB of VRAM in float16** (and ~1 GB in 8-bit quantization). The table below shows approximate VRAM needed to *load* Qwen2.5 models (inference only — training requires 2–3x more).
+
+| Model | Parameters | float16 (FP16/BF16) | 8-bit (INT8) | 4-bit (GPTQ/AWQ) |
+|---|---|---|---|---|
+| Qwen2.5-0.5B | 0.5B | ~1 GB | ~0.5 GB | ~0.3 GB |
+| Qwen2.5-1.5B | 1.5B | ~3 GB | ~1.5 GB | ~1 GB |
+| Qwen2.5-3B | 3B | ~6 GB | ~3 GB | ~2 GB |
+| Qwen2.5-7B | 7B | ~14 GB | ~7 GB | ~4 GB |
+| Qwen2.5-14B | 14B | ~28 GB | ~14 GB | ~8 GB |
+| Qwen2.5-32B | 32B | ~64 GB | ~32 GB | ~18 GB |
+| Qwen2.5-72B | 72B | ~144 GB | ~72 GB | ~40 GB |
+
+> **Note**: These are estimates for model weights only. Actual VRAM usage increases with context length (KV cache), batch size, and framework overhead. Long contexts (32K–128K tokens) can add several GB.
+
+### Hands-on: Measure memory yourself
+
+You can profile the actual GPU memory footprint of any Qwen model with the following snippet. Try swapping model sizes to see how parameter count directly impacts VRAM.
+
+```python
+# Requires: pip install transformers torch accelerate
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_name = "Qwen/Qwen2.5-0.5B-Instruct"  # Try: 0.5B, 1.5B, 3B, 7B, ...
+
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    torch_dtype=torch.float16,  # Change to torch.float32 to compare
+    device_map="auto",          # Automatically uses GPU if available
+)
+
+# --- Check memory usage ---
+if torch.cuda.is_available():
+    mem_gb = torch.cuda.memory_allocated() / 1e9
+    print(f"Model: {model_name}")
+    print(f"GPU memory used: {mem_gb:.2f} GB")
+    print(f"Parameters: {sum(p.numel() for p in model.parameters()) / 1e9:.2f}B")
+else:
+    print("No GPU detected — model loaded on CPU.")
+    print(f"Parameters: {sum(p.numel() for p in model.parameters()) / 1e9:.2f}B")
+
+# --- Run a quick generation to see peak memory ---
+prompt = "Explain gradient descent in one paragraph."
+inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+with torch.no_grad():
+    output = model.generate(**inputs, max_new_tokens=100)
+
+if torch.cuda.is_available():
+    peak_gb = torch.cuda.max_memory_allocated() / 1e9
+    print(f"Peak GPU memory during generation: {peak_gb:.2f} GB")
+
+print("\nResponse:", tokenizer.decode(output[0], skip_special_tokens=True))
+```
+
+**Try these experiments:**
+
+1. **Compare sizes**: Change `model_name` to `"Qwen/Qwen2.5-1.5B-Instruct"` or `"Qwen/Qwen2.5-7B-Instruct"` and compare the memory usage.
+2. **Compare precisions**: Switch `torch_dtype` between `torch.float16` and `torch.float32` to see how precision halves/doubles memory.
+3. **Try quantization**: Load a 4-bit quantized model to see drastic memory savings:
+
+```python
+# Requires: pip install transformers torch accelerate bitsandbytes
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+
+quantization_config = BitsAndBytesConfig(load_in_4bit=True)
+model_4bit = AutoModelForCausalLM.from_pretrained(
+    "Qwen/Qwen2.5-7B-Instruct",
+    quantization_config=quantization_config,
+    device_map="auto",
+)
+
+import torch
+mem_gb = torch.cuda.memory_allocated() / 1e9
+print(f"7B model in 4-bit: {mem_gb:.2f} GB")  # Expect ~4 GB vs ~14 GB in FP16
+```
+
+## Model playground
+#### Tutorials and Getting Started
+- **Qwen on Hugging Face**: Explore all Qwen models on the [Qwen Hugging Face collection](https://huggingface.co/Qwen). Each model card includes usage examples with the `transformers` library.
+- **Official Documentation**: The [Qwen documentation](https://qwen.readthedocs.io/) covers installation, inference, fine-tuning, and deployment.
+- **vLLM Deployment**: Qwen models are supported by [vLLM](https://docs.vllm.ai/) for high-throughput serving with efficient memory management.
+
+#### High-level tips for effective use
+- **Quantization**: For resource-constrained environments, use GPTQ or AWQ quantized versions (available on Hugging Face) to reduce memory usage with minimal quality loss.
+- **Fine-tuning**: Use frameworks like [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) or Hugging Face TRL for supervised fine-tuning and RLHF on domain-specific data.
+- **Prompt Engineering**: Qwen chat models follow a structured chat template. Use system prompts to guide behavior and formatting for best results.
+- **Model Selection**: Start with smaller models (7B–14B) for rapid prototyping, then scale up to 32B–72B for production tasks requiring stronger reasoning.
+- **Local Inference**: Use [Ollama](https://ollama.com/) or [llama.cpp](https://github.com/ggerganov/llama.cpp) with GGUF-format Qwen models for efficient local deployment.
+
+#### Related benchmarks & challenges
+- **[MMLU](https://arxiv.org/abs/2009.03300)**: A widely used benchmark for evaluating language understanding across 57 subjects. Qwen2.5-72B is highly competitive on this benchmark.
+- **[HumanEval](https://arxiv.org/abs/2107.03374)**: A code generation benchmark where Qwen2.5-Coder models demonstrate strong performance.
+- **[MATH](https://arxiv.org/abs/2103.03874)**: A challenging mathematical reasoning benchmark where Qwen2.5-Math excels.
+
+## Related resources
+- [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html): The primary platform for accessing, downloading, and fine-tuning Qwen models.
+- [**Blog**: Qwen Technical Blog](https://qwenlm.github.io/blog/): Official blog with detailed technical reports and announcements for each Qwen release.
+- [**Paper**: Qwen2.5 Technical Report](https://arxiv.org/abs/2407.10671): The technical report detailing architecture, training, and evaluation of the Qwen2 model family.
+
+## Comments
