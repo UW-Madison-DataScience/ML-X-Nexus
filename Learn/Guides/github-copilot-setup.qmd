@@ -1,0 +1,285 @@
+---
+title: "GitHub Copilot Setup Guide"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-08-10
+date-modified: 2026-08-10
+date-format: long
+image: "../../../images/github-logo.png"
+toc-depth: 2
+toc-expand: true
+categories:
+  - Guides
+  - GenAI
+  - LLM
+  - Agentic coding
+  - GitHub
+  - VS Code
+---
+
+This guide walks UW-Madison researchers, students, and staff through getting started with [GitHub Copilot](https://github.com/features/copilot) — from choosing a plan (including **free Copilot Pro for students, teachers, and open-source maintainers**) to installing it in your editor, using chat and agent mode, and trying the asynchronous coding agent on GitHub.com.
+
+It's the GitHub Copilot counterpart to our two Claude Code posts: [Claude Code Best Practices](./claude-code-best-practices.qmd) (which compares Copilot and Claude Code head-to-head) and the [Claude Code Cloud Setup Guide](./claude-code-cloud-setup.qmd).
+
+::: {.callout-note}
+## This guide reflects the author's understanding as of the last date modified
+AI tools, pricing, features, and contractual terms change frequently — Copilot's plan limits and model lineup in particular have changed several times in the past year. This guide is **community guidance, not official UW-Madison policy**. Always cross-check the [official Copilot plans page](https://github.com/features/copilot/plans) and [Copilot docs](https://docs.github.com/en/copilot) for current details. For institutional policy questions, consult [UW-Madison Research Cyberinfrastructure](https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/) or your department's IT office.
+:::
+
+::: {.callout-tip}
+## New to agentic coding?
+See [Claude Code Best Practices](./claude-code-best-practices.qmd) for a broader introduction to agentic coding tools — what they can do, what they can access on your machine, and how to work with them safely. That guide also includes a detailed section on [how "Claude inside Copilot" differs from Claude Code](./claude-code-best-practices.qmd#github-copilot), and a walkthrough of the same task done in Claude.ai, Claude Code, and Copilot.
+:::
+
+::: {.callout-important}
+## GitHub Copilot ≠ Microsoft Copilot
+Despite the shared branding, these are different products. **Microsoft 365 Copilot** is the assistant integrated into Word, Excel, Teams, etc. — UW-Madison [provides it institutionally](https://it.wisc.edu/services/microsoft-copilot/) with enterprise data protections (see our [GenAI at UW-Madison](../../Toolbox/GenAI/GenAI-at-UW-Madison.qmd) page). **GitHub Copilot** is the AI coding assistant that lives in your editor and on GitHub.com — it is a separate subscription with separate terms, and **UW's Microsoft 365 agreement does not cover it**. This guide is about GitHub Copilot.
+:::
+
+## What is GitHub Copilot?
+
+GitHub Copilot started as an autocomplete tool ("AI pair programmer") and has grown into a multi-surface, **multi-model** coding platform. Unlike Claude Code — which is Anthropic's own orchestration around Claude models — Copilot lets you pick the underlying model (Claude, GPT, Gemini, and others) while GitHub provides the orchestration layer, the tools, and the GitHub integration.
+
+The main surfaces you'll actually use:
+
+| Surface | Where it lives | What it does |
+|---|---|---|
+| **Code completions** | VS Code, JetBrains, Neovim, Xcode, Visual Studio | Inline "ghost text" suggestions as you type; press <kbd>Tab</kbd> to accept |
+| **Copilot Chat** | Editor side panel + [github.com/copilot](https://github.com/copilot) + mobile app | Ask questions about your code, generate snippets, explain errors |
+| **Agent mode** | Editor chat panel (mode dropdown) | Multi-step autonomous edits in your local workspace: plans, edits multiple files, runs terminal commands, iterates on errors |
+| **Coding agent** | GitHub.com | Fully asynchronous: assign an issue (or delegate a task) to Copilot and it works in a GitHub Actions sandbox, then opens a draft PR for review |
+| **Code review** | GitHub.com PRs + editor | Copilot reviews your pull request and leaves suggestions |
+| **Copilot CLI** | Your terminal | Terminal-based agentic coding — the closest analog to the Claude Code CLI experience |
+
+If you're coming from Claude Code, the rough mapping is: **agent mode ≈ an interactive Claude Code session in your IDE**, the **coding agent ≈ Claude Code on the web / `@claude` GitHub integration**, and **Copilot CLI ≈ the Claude Code CLI**.
+
+## Plans at a glance
+
+> Official, current details: [github.com/features/copilot/plans](https://github.com/features/copilot/plans) and [Copilot plan docs](https://docs.github.com/en/copilot/get-started/plans-for-github-copilot)
+
+| Plan | Price | Who it's for |
+|---|---|---|
+| **Copilot Free** | $0 | Anyone with a GitHub account. Monthly cap on completions and a small allowance of premium chat/agent requests. No coding agent. |
+| **Copilot Pro** | $10/month or $100/year — **free for verified students, teachers, and popular open-source maintainers** | Individuals. Unlimited completions, a monthly allowance of premium requests, agent mode and the coding agent. |
+| **Copilot Pro+** | $39/month or $390/year | Heavy individual users. Larger premium-request allowance and access to the full model lineup. |
+| **Copilot Business / Enterprise** | $19 / $39 per user/month | Organizations. Centralized policy controls, IP indemnity, and stronger data-handling guarantees. |
+
+::: {.callout-note}
+## What's a "premium request"?
+Basic completions and chat with the base model are effectively unlimited on paid plans. **Premium requests** are the metered unit for everything else — chatting with premium models (e.g., Claude or GPT frontier models), agent mode turns, coding agent sessions, and code review. Each plan includes a monthly allowance; different models consume the allowance at different multipliers, and you can optionally pay per additional request beyond it. See [requests in GitHub Copilot](https://docs.github.com/en/copilot/managing-copilot/monitoring-usage-and-entitlements/about-premium-requests) for the current allowances and multipliers — these numbers have changed several times, so don't trust blog posts (including this one) over the official table.
+:::
+
+## Free Copilot Pro for students, teachers, and open-source maintainers {#free-education-access}
+
+This is the best-kept non-secret in this space: if you're a **student**, a **teacher/instructor**, or a **maintainer of a popular open-source project**, you can get **Copilot Pro at no cost**. For most people at UW-Madison, this — not the Free plan — is the right starting point.
+
+> Official docs: [Get free access to Copilot Pro](https://docs.github.com/en/copilot/how-tos/manage-your-account/get-free-access-to-copilot-pro)
+
+::: {.panel-tabset}
+
+### Students
+
+1. Make sure your `@wisc.edu` email is added and verified on your GitHub account ([Settings → Emails](https://github.com/settings/emails)).
+2. Apply to **GitHub Education** as a student: [Apply to GitHub Education as a student](https://docs.github.com/en/education/about-github-education/github-education-for-students/apply-to-github-education-as-a-student). You'll need to be currently enrolled in a degree- or diploma-granting program and may be asked for proof of enrollment (a dated school ID, enrollment letter, or transcript). Applying from campus (or at least with your school email) helps automated verification.
+3. Once approved, Copilot Pro appears as part of your GitHub Education benefits (alongside the broader [Student Developer Pack](https://education.github.com/pack)). Activate it from [github.com/settings/copilot](https://github.com/settings/copilot) or the [Education dashboard](https://education.github.com/).
+
+Verification typically takes from a few minutes to a few days, and benefits need periodic re-verification (roughly annually).
+
+### Teachers / instructors
+
+1. Add and verify your `@wisc.edu` email on your GitHub account ([Settings → Emails](https://github.com/settings/emails)).
+2. Apply to **GitHub Education** as a teacher: [Apply to GitHub Education as a teacher](https://docs.github.com/en/education/about-github-education/github-education-for-teachers/apply-to-github-education-as-a-teacher). "Teacher" is broader than tenure-track faculty — instructors, TAs with teaching duties, and staff who teach or support courses at an accredited institution can qualify. You may be asked for proof of your role (faculty/staff ID or an employment letter).
+3. Once verified, enable your free Copilot Pro subscription per [Get free access to Copilot Pro](https://docs.github.com/en/copilot/how-tos/manage-your-account/get-free-access-to-copilot-pro) — from [github.com/settings/copilot](https://github.com/settings/copilot), the free Pro option is offered automatically to verified teachers.
+
+Teacher status also unlocks [GitHub Classroom](https://classroom.github.com/) and other education benefits — useful if you teach workshops or courses with coding assignments.
+
+### Open-source maintainers
+
+If you maintain a sufficiently popular open-source repository, GitHub grants free Copilot Pro automatically — there's no application. GitHub determines eligibility based on your repositories' activity and popularity (the exact criteria aren't published). To check: go to the [Copilot settings/signup page](https://github.com/settings/copilot) while signed in — if you qualify, you'll see a notice that Copilot Pro is free for you instead of a payment prompt. See [Get free access to Copilot Pro](https://docs.github.com/en/copilot/how-tos/manage-your-account/get-free-access-to-copilot-pro).
+
+:::
+
+::: {.callout-tip}
+Not sure whether you qualify? Apply anyway — the application takes a few minutes, and the worst case is a request for additional documentation. If you're denied or don't qualify, **Copilot Free** still works with any GitHub account and is plenty for evaluating whether Copilot fits your workflow.
+:::
+
+## 1. Prerequisites
+
+- A [GitHub account](https://github.com/signup) (free). If you already have one, add your `@wisc.edu` email as a verified secondary address — it's what makes the education benefits above work, and it keeps your account portable if you leave UW.
+- An editor Copilot supports. This guide uses **VS Code** (the most complete Copilot experience); JetBrains IDEs, Neovim, Xcode, and Visual Studio are also supported.
+- For the coding agent ([Section 5](#coding-agent)): a repo hosted on GitHub and a paid or education Copilot plan (the Free plan doesn't include it).
+
+## 2. Enable Copilot on your account
+
+1. Sign in to GitHub and go to [github.com/settings/copilot](https://github.com/settings/copilot).
+2. Pick your path:
+   - **Verified student/teacher or eligible maintainer** → activate the free Copilot Pro subscription ([Section above](#free-education-access)).
+   - **Just exploring** → enable **Copilot Free**. No payment info needed.
+   - **Paying individually** → start a Copilot Pro free trial or subscribe.
+3. While you're on that settings page, review the policy toggles — especially **"Suggestions matching public code"** (whether Copilot may show completions that match public repositories) and the **data/model-training settings** discussed in [Data privacy](#data-privacy) below.
+
+## 3. Set up Copilot in your editor {#editor-setup}
+
+::: {.panel-tabset}
+
+### VS Code
+
+> Official docs: [code.visualstudio.com/docs/copilot/setup](https://code.visualstudio.com/docs/copilot/setup)
+
+1. Install [VS Code](https://code.visualstudio.com/) if you don't have it.
+2. Recent VS Code versions ship with Copilot built in — look for the Copilot icon in the title bar or status bar. If it's missing, install the **GitHub Copilot** extension from the Extensions marketplace (<kbd>Ctrl/Cmd</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>, search "GitHub Copilot"); chat functionality comes with it.
+3. Click the Copilot icon → **Sign in**, and authorize with the GitHub account that has Copilot enabled.
+4. Verify it's working: open any code file and start typing — you should see gray "ghost text" suggestions. Press <kbd>Tab</kbd> to accept, <kbd>Esc</kbd> to dismiss.
+
+**Opening chat:** use the Copilot icon in the title bar, or <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> (Windows/Linux) / <kbd>⌃</kbd>+<kbd>⌘</kbd>+<kbd>I</kbd> (Mac) for the Chat view, and <kbd>Ctrl/Cmd</kbd>+<kbd>I</kbd> for inline chat in the editor.
+
+### JetBrains (PyCharm, IntelliJ, RStudio alternatives)
+
+> Official docs: [Copilot in JetBrains IDEs](https://docs.github.com/en/copilot/managing-copilot/configure-personal-settings/installing-the-github-copilot-extension-in-your-environment)
+
+1. Open **Settings → Plugins**, search for **GitHub Copilot**, install, and restart the IDE.
+2. Sign in when prompted (**Tools → GitHub Copilot → Login to GitHub**) using the device-code flow.
+3. Completions appear inline as you type; the Copilot Chat tool window lives in the right sidebar.
+
+JetBrains support generally trails VS Code — agent mode and new features usually land in VS Code first.
+
+### Copilot CLI (terminal)
+
+If you like the Claude Code CLI's terminal-first workflow, GitHub's answer is the **Copilot CLI** — an agentic assistant that runs in your terminal, can read/edit files, run commands, and use MCP servers.
+
+> Official docs: [Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli)
+
+```bash
+# Requires Node.js 22+
+npm install -g @github/copilot
+
+# Launch from your project directory (same habit as Claude Code)
+cd ~/projects/my-project
+copilot
+```
+
+On first run, authenticate with `/login`. Like Claude Code, it asks before executing commands or modifying files — review what it proposes before approving, and prefer running it inside a Git repository so you can `git diff` and revert its changes.
+
+(There's also an older, simpler `gh copilot` extension for the GitHub CLI that only *suggests and explains* shell commands — the standalone `copilot` CLI above is the full agentic tool.)
+
+:::
+
+## 4. Core workflows in the editor
+
+### Completions
+
+Just type. Copilot suggests completions from a single line to whole functions, informed by your open files. <kbd>Tab</kbd> accepts; hovering the suggestion reveals controls to cycle through alternatives. Writing a descriptive comment or function signature first ("`# read the CSV, drop rows with missing lat/long, return a GeoDataFrame`") dramatically improves what you get.
+
+### Chat: ask, edit, and agent modes
+
+The chat panel has a **mode dropdown** that changes how much autonomy Copilot has:
+
+- **Ask** — questions and explanations; nothing is changed. ("What does this regex match?" "Why might this loop be slow?")
+- **Edit** — you select files to change; Copilot proposes edits you review and apply.
+- **Agent** — the agentic mode. Copilot plans the task, edits multiple files, runs terminal commands (with your approval), watches for errors, and iterates. This is the closest in-IDE equivalent to a Claude Code session.
+
+There's also a **model picker** in the chat panel — you can run chat and agent mode on Claude models, GPT models, Gemini, and others, subject to your plan. Model choice affects both quality and how fast you burn premium requests. Note that picking Claude here is *not* the same as using Claude Code — GitHub's orchestration drives the model; see [our comparison](./claude-code-best-practices.qmd#github-copilot) for the practical differences.
+
+::: {.callout-warning}
+## Agent mode has real access — treat it like any agentic tool
+Agent mode can run terminal commands and edit files across your workspace. The same safety practices from our [Claude Code Best Practices](./claude-code-best-practices.qmd#security-fundamentals) guide apply directly: work inside a Git repository with a clean working tree, review diffs before committing, keep secrets out of plaintext files on disk, and don't run agents on machines that hold restricted data (see [Data privacy](#data-privacy) below).
+:::
+
+### Context helpers
+
+- `#file`, `#selection`, and similar chips let you attach specific context to a chat message.
+- `@workspace` (VS Code) scopes a question to your whole project — "@workspace where is authentication handled?"
+- Slash commands like `/explain`, `/fix`, and `/tests` are shortcuts for common asks.
+
+## 5. The coding agent: assign work on GitHub.com {#coding-agent}
+
+The **Copilot coding agent** is Copilot's fully asynchronous mode — the equivalent of handing a task to Claude Code on the web. You give it a well-scoped task; it spins up an ephemeral GitHub Actions environment, clones the repo, makes changes, runs tests, and opens a **draft pull request** for your review. It never pushes to your default branch.
+
+> Official docs: [About Copilot coding agent](https://docs.github.com/en/copilot/concepts/agents/about-copilot-coding-agent) · GitHub's [Coding Agent 101](https://github.blog/ai-and-ml/github-copilot/github-copilot-coding-agent-101-getting-started-with-agentic-workflows-on-github/)
+
+Ways to launch it:
+
+1. **Assign an issue to Copilot** — on any issue in a repo where the agent is enabled, set the assignee to **Copilot**. It reads the issue (title, body, comments) as its brief, works in the background, and opens a draft PR linked to the issue.
+2. **From the agents panel** — at [github.com/copilot/agents](https://github.com/copilot/agents), describe a task in a repo and delegate it.
+3. **From chat or your editor** — hand off a task to the coding agent from Copilot Chat.
+
+Requirements and notes:
+
+- Needs a **paid or education Copilot plan** (Pro or above); each session consumes premium requests plus GitHub Actions minutes.
+- Write **detailed, well-scoped issues** — acceptance criteria, files involved, constraints. The quality of the brief is the single biggest driver of PR quality.
+- **Review the draft PR like you'd review a new contributor's work.** Copilot responds to PR review comments — leave feedback and it will push revisions.
+
+## 6. Customize Copilot for your repo {#customize}
+
+The Copilot equivalent of Claude Code's `CLAUDE.md` is a **repository custom instructions file**:
+
+```text
+.github/copilot-instructions.md
+```
+
+> Official docs: [Adding repository custom instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot)
+
+Whatever you put there is included as context for chat, agent mode, code review, and the coding agent in that repository. The same advice as for `CLAUDE.md` applies — keep it short and operational:
+
+```markdown
+# Copilot instructions
+
+- Python code follows PEP 8; format with `black`, lint with `ruff`.
+- Run tests with `pytest tests/` before declaring a task done.
+- Notebooks (`.ipynb`) are generated from `.qmd` sources — edit the `.qmd`, never the `.ipynb`.
+- Never commit data files or credentials; datasets live in `data/` (gitignored).
+```
+
+You can also add **path-specific instructions** (`.github/instructions/*.instructions.md` with `applyTo` globs) for rules that only apply to part of the codebase, and configure the coding agent's environment (dependencies, setup steps) via a workflow file — see the docs above.
+
+::: {.callout-tip}
+Maintaining both a `CLAUDE.md` and a `copilot-instructions.md`? Many projects keep one canonical instructions file and have the other reference or mirror it — agent instruction files are converging in content even though the filenames differ. (There's an emerging cross-tool convention, `AGENTS.md`, that several tools — including Copilot — can read; check current docs for support.)
+:::
+
+## 7. Managing usage and cost
+
+- **Check your premium-request usage** at [github.com/settings/copilot](https://github.com/settings/copilot) (or your plan's usage dashboard) before wondering why a model stopped responding — running out of allowance mid-month is the most common "Copilot broke" report.
+- **Match the model to the task.** Base-model chat and completions don't meaningfully consume your allowance; frontier models at high multipliers do. Use premium models for hard reasoning tasks, not for "rename this variable."
+- **Prefer agent mode for bounded tasks, not open-ended exploration** — each iteration loop consumes requests. Do your exploratory "where is this handled?" questions with `@workspace` on a cheaper model first.
+- **Budget-cap overages.** If you enable pay-per-request beyond your allowance, set a spending limit in your billing settings — the same "runaway agent" cost concerns from our [Claude Code cost guide](./claude-code-best-practices.qmd#managing-costs) apply here.
+
+For comparison with Claude Code's cost model (pay-per-token API vs. Max subscription), see the [cost section of Claude Code Best Practices](./claude-code-best-practices.qmd#managing-costs).
+
+## 8. Data privacy: who sees your code? {#data-privacy}
+
+> Official resources: [Copilot trust center](https://copilot.github.trust.page/) · [GitHub Copilot privacy FAQ](https://github.com/features/copilot#faq)
+
+The short version, as of this writing:
+
+- **Business and Enterprise plans**: prompts and suggestions are not retained for training, and organizational data is excluded from model training. This is why employers standardize on these tiers.
+- **Individual plans (Free, Pro, Pro+)**: GitHub may use your prompts and suggestions for product improvement **depending on your settings**. Go to [github.com/settings/copilot](https://github.com/settings/copilot) and review the data-sharing/model-training toggles — opt out if you don't want your snippets used. (This mirrors the advice in our Claude Code guide's ["check your training settings"](./claude-code-best-practices.qmd#data-privacy) section — on individual AI plans, always check the default.)
+- **Your code still leaves your machine.** Completions and chat send code context (open files, selections, repo snippets) to GitHub/Microsoft servers, and — when you select a third-party model like Claude or Gemini — to that model provider's infrastructure under GitHub's agreements with them.
+
+::: {.callout-warning}
+## Use caution with restricted or sensitive data
+UW-Madison does **not** have an institutional GitHub Copilot agreement — an individual Copilot Pro subscription (including the free education one) is a personal agreement between you and GitHub, with none of the data protections UW's enterprise agreements provide. As with Claude Code:
+
+- **Do not use Copilot with restricted data** (HIPAA/PHI, FERPA, CUI, export-controlled, or data under a DUA that prohibits third-party processing).
+- **Don't run Copilot (especially agent mode) on machines where restricted data is stored** — anything in your workspace can end up in a prompt.
+- For general, non-sensitive research code, individual Copilot use is a normal part of the ecosystem today — just check your training-data settings first.
+
+For UW-vetted GenAI tools with institutional protections, see [GenAI at UW-Madison](../../Toolbox/GenAI/GenAI-at-UW-Madison.qmd).
+:::
+
+## Troubleshooting
+
+- **No suggestions appearing in VS Code** — check the Copilot status icon (bottom right): are you signed in with the right GitHub account? Is Copilot enabled for this language/file type? Restarting the extension host (<kbd>Ctrl/Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → "Reload Window") fixes most transient failures.
+- **"You don't have access to Copilot"** — your subscription isn't active on the account you signed in with. Verify at [github.com/settings/copilot](https://github.com/settings/copilot); education users, check that your GitHub Education verification hasn't expired.
+- **Premium models grayed out or erroring** — you've likely exhausted your monthly premium-request allowance, or your plan doesn't include that model. Check usage in settings.
+- **Coding agent option missing on issues** — the agent requires a paid/education plan and must be enabled for the repository (and by policy, for org-owned repos). It's not part of Copilot Free.
+- **Education application rejected** — re-apply with clearer documentation (dated ID or enrollment/employment letter), make sure your `@wisc.edu` email is verified on the account first, and see [GitHub's application tips](https://docs.github.com/en/education/about-github-education/github-education-for-students/apply-to-github-education-as-a-student).
+
+## Further reading
+
+- [Copilot getting-started docs](https://docs.github.com/en/copilot/get-started) — official quickstart
+- [Get free access to Copilot Pro](https://docs.github.com/en/copilot/how-tos/manage-your-account/get-free-access-to-copilot-pro) — students, teachers, and maintainers
+- [Apply to GitHub Education as a teacher](https://docs.github.com/en/education/about-github-education/github-education-for-teachers/apply-to-github-education-as-a-teacher) · [as a student](https://docs.github.com/en/education/about-github-education/github-education-for-students/apply-to-github-education-as-a-student)
+- [Copilot Coding Agent 101](https://github.blog/ai-and-ml/github-copilot/github-copilot-coding-agent-101-getting-started-with-agentic-workflows-on-github/) — GitHub's guide to agentic workflows
+- [Claude Code Best Practices](./claude-code-best-practices.qmd) — our companion post, including the [Copilot vs. Claude Code comparison](./claude-code-best-practices.qmd#github-copilot)
+- [Claude Code Cloud Setup Guide](./claude-code-cloud-setup.qmd) — the Claude Code equivalent of this setup guide
