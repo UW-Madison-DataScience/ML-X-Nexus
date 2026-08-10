@@ -54,7 +54,7 @@ The main surfaces you'll actually use:
 
 If you're coming from Claude Code, the rough mapping is: **agent mode ≈ an interactive Claude Code session in your IDE**, the **cloud coding agent ≈ Claude Code on the web / `@claude` GitHub integration**, **Copilot CLI ≈ the Claude Code CLI**, and the **Copilot app ≈ the Claude Desktop app**.
 
-A note on naming, because GitHub itself is inconsistent: the asynchronous agent is called the **"Copilot coding agent"** in the docs and just **"Cloud agent"** on the pricing page. We call it the **cloud coding agent** throughout this guide — the key word is *cloud*: it runs on GitHub's infrastructure, not your machine, which matters for the isolation discussion in [Section 5](#coding-agent).
+A note on naming, because GitHub itself is inconsistent: the asynchronous agent is called the **"Copilot coding agent"** in the docs, **"Cloud agent"** on the pricing page, and **"Copilot cloud agent"** in your account settings. We call it the **cloud coding agent** throughout this guide — the key word is *cloud*: it runs on GitHub's infrastructure, not your machine, which matters for the isolation discussion in [Section 5](#coding-agent).
 
 ::: {.callout-note}
 ## Web and desktop equivalents
@@ -62,12 +62,14 @@ Claude users often ask what maps to the Claude web and desktop apps. On the web:
 
 On the desktop, the **[GitHub Copilot app](https://github.com/features/ai/github-app)** (macOS, Windows, Linux) is the direct analog of the Claude Desktop app: a standalone app for agent-driven development where you start sessions from an issue, a prompt, or a PR already in flight, run multiple sessions in parallel — each in its own isolated workspace with its own branches, files, and conversation — and review and merge from a centralized inbox. It works on **every Copilot plan, including Free** (or bring your own API key), and automatically syncs your repo's MCP servers and custom skills. See the [Copilot app docs](https://gh.io/github-app-docs).
 
-One naming trap: **GitHub Desktop (the git GUI) is a separate, older product and does not include Copilot** — the AI desktop app is the "GitHub Copilot app."
+One naming trap: **GitHub Desktop (the git GUI) is a separate, older product** — it now has some Copilot assistance built in (e.g., help in the app, generated commit messages), but it is *not* the agent-centric Copilot app. The AI desktop app is the "**GitHub Copilot app**."
 :::
 
 ## Start here: free Copilot for students, teachers, and open-source maintainers {#free-education-access}
 
 If you're a **student**, a **teacher/instructor**, or a **maintainer of a popular open-source project**, you can get Copilot's paid tier at no cost — a free **Copilot Pro** subscription for teachers and maintainers, and the equivalent **Copilot Student plan** for students. For most people at UW-Madison, this — not the limited Free plan — is the right starting point, so sort it out before anything else.
+
+One thing that trips people up: **applying to GitHub Education and activating the Copilot benefit are separate steps.** Getting approved doesn't change your Copilot plan by itself — you still have to claim the free subscription afterward, and until you do, your [settings page](https://github.com/settings/copilot) will keep showing "GitHub Copilot Free" (see [Troubleshooting](#troubleshooting) if that's where you're stuck).
 
 > Official docs: [Get free access to Copilot Pro](https://docs.github.com/en/copilot/how-tos/manage-your-account/get-free-access-to-copilot-pro)
 
@@ -277,6 +279,7 @@ For UW-vetted GenAI tools with institutional protections, see [GenAI at UW-Madis
 - **"You don't have access to Copilot"** — your subscription isn't active on the account you signed in with. Verify at [github.com/settings/copilot](https://github.com/settings/copilot); education users, check that your GitHub Education verification hasn't expired.
 - **Premium models grayed out or erroring** — you've likely exhausted your monthly credit allowance, or your plan doesn't include that model. Check usage in settings.
 - **Can't assign an issue to Copilot / cloud coding agent missing** — it requires a paid/education plan and must be enabled for the repository (and by policy, for org-owned repos). It's not part of Copilot Free.
+- **You went through the education route, but settings still say "GitHub Copilot Free"** — applying to GitHub Education and activating the Copilot benefit are **separate steps**, and approval isn't instant. Check your application status at [education.github.com](https://education.github.com/) (signed in with the same account); confirm your `@wisc.edu` email is verified at [github.com/settings/emails](https://github.com/settings/emails); then claim the free subscription at [github.com/github-copilot/signup](https://github.com/github-copilot/signup) — once you're verified, it offers free access instead of a payment form. If it still asks for payment, your verification is pending, expired (re-verification is required periodically), or attached to a different account. Until the paid-tier license is active, the "Copilot cloud agent" settings page will let you *enable* the agent for repositories but tell you that you can't *assign* tasks — that message means your license, not the repo setting, is the blocker.
 - **Education application rejected** — re-apply with clearer documentation (dated ID or enrollment/employment letter), make sure your `@wisc.edu` email is verified on the account first, and see [GitHub's application tips](https://docs.github.com/en/education/about-github-education/github-education-for-students/apply-to-github-education-as-a-student).
 
 ## Further reading
