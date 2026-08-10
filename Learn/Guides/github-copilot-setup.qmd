@@ -18,7 +18,7 @@ categories:
   - VS Code
 ---
 
-This guide walks UW-Madison researchers, students, and staff through getting started with [GitHub Copilot](https://github.com/features/copilot) — from choosing a plan (including **free Copilot Pro for students, teachers, and open-source maintainers**) to installing it in your editor, using chat and agent mode, and trying the asynchronous coding agent on GitHub.com.
+This guide walks UW-Madison researchers, students, and staff through getting started with [GitHub Copilot](https://github.com/features/copilot) — from choosing a plan (including **free Copilot Pro for students, teachers, and open-source maintainers**) to installing it in VS Code, using chat and agent mode, and trying the asynchronous coding agent on GitHub.com.
 
 It's the GitHub Copilot counterpart to our two Claude Code posts: [Claude Code Best Practices](./claude-code-best-practices.qmd) (which compares Copilot and Claude Code head-to-head) and the [Claude Code Cloud Setup Guide](./claude-code-cloud-setup.qmd).
 
@@ -45,9 +45,9 @@ The main surfaces you'll actually use:
 
 | Surface | Where it lives | What it does |
 |---|---|---|
-| **Code completions** | VS Code, JetBrains, Neovim, Xcode, Visual Studio | Inline "ghost text" suggestions as you type; press <kbd>Tab</kbd> to accept |
-| **Copilot Chat** | Editor side panel + [github.com/copilot](https://github.com/copilot) + mobile app | Ask questions about your code, generate snippets, explain errors |
-| **Agent mode** | Editor chat panel (mode dropdown) | Multi-step autonomous edits in your local workspace: plans, edits multiple files, runs terminal commands, iterates on errors |
+| **Code completions** | VS Code (also JetBrains, Neovim, Xcode, Visual Studio) | Inline "ghost text" suggestions as you type; press <kbd>Tab</kbd> to accept |
+| **Copilot Chat** | VS Code side panel + [github.com/copilot](https://github.com/copilot) + mobile app | Ask questions about your code, generate snippets, explain errors |
+| **Agent mode** | VS Code chat panel (mode dropdown) | Multi-step autonomous edits in your local workspace: plans, edits multiple files, runs terminal commands, iterates on errors |
 | **Coding agent** | GitHub.com | Fully asynchronous: assign an issue (or delegate a task) to Copilot and it works in a GitHub Actions sandbox, then opens a draft PR for review |
 | **Code review** | GitHub.com PRs + editor | Copilot reviews your pull request and leaves suggestions |
 | **Copilot CLI** | Your terminal | Terminal-based agentic coding — the closest analog to the Claude Code CLI experience |
@@ -107,7 +107,7 @@ Not sure whether you qualify? Apply anyway — the application takes a few minut
 ## 1. Prerequisites
 
 - A [GitHub account](https://github.com/signup) (free). If you already have one, add your `@wisc.edu` email as a verified secondary address — it's what makes the education benefits above work, and it keeps your account portable if you leave UW.
-- An editor Copilot supports. This guide uses **VS Code** (the most complete Copilot experience); JetBrains IDEs, Neovim, Xcode, and Visual Studio are also supported.
+- **[VS Code](https://code.visualstudio.com/)** — the editor with the most complete Copilot experience, and the one this guide uses throughout.
 - For the coding agent ([Section 5](#coding-agent)): a repo hosted on GitHub and a paid or education Copilot plan (the Free plan doesn't include it).
 
 ## 2. Enable Copilot on your account
@@ -119,11 +119,7 @@ Not sure whether you qualify? Apply anyway — the application takes a few minut
    - **Paying individually** → start a Copilot Pro free trial or subscribe.
 3. While you're on that settings page, review the policy toggles — especially **"Suggestions matching public code"** (whether Copilot may show completions that match public repositories) and the **data/model-training settings** discussed in [Data privacy](#data-privacy) below.
 
-## 3. Set up Copilot in your editor {#editor-setup}
-
-::: {.panel-tabset}
-
-### VS Code
+## 3. Set up Copilot in VS Code {#editor-setup}
 
 > Official docs: [code.visualstudio.com/docs/copilot/setup](https://code.visualstudio.com/docs/copilot/setup)
 
@@ -134,38 +130,11 @@ Not sure whether you qualify? Apply anyway — the application takes a few minut
 
 **Opening chat:** use the Copilot icon in the title bar, or <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> (Windows/Linux) / <kbd>⌃</kbd>+<kbd>⌘</kbd>+<kbd>I</kbd> (Mac) for the Chat view, and <kbd>Ctrl/Cmd</kbd>+<kbd>I</kbd> for inline chat in the editor.
 
-### JetBrains (PyCharm, IntelliJ, RStudio alternatives)
-
-> Official docs: [Copilot in JetBrains IDEs](https://docs.github.com/en/copilot/managing-copilot/configure-personal-settings/installing-the-github-copilot-extension-in-your-environment)
-
-1. Open **Settings → Plugins**, search for **GitHub Copilot**, install, and restart the IDE.
-2. Sign in when prompted (**Tools → GitHub Copilot → Login to GitHub**) using the device-code flow.
-3. Completions appear inline as you type; the Copilot Chat tool window lives in the right sidebar.
-
-JetBrains support generally trails VS Code — agent mode and new features usually land in VS Code first.
-
-### Copilot CLI (terminal)
-
-If you like the Claude Code CLI's terminal-first workflow, GitHub's answer is the **Copilot CLI** — an agentic assistant that runs in your terminal, can read/edit files, run commands, and use MCP servers.
-
-> Official docs: [Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli)
-
-```bash
-# Requires Node.js 22+
-npm install -g @github/copilot
-
-# Launch from your project directory (same habit as Claude Code)
-cd ~/projects/my-project
-copilot
-```
-
-On first run, authenticate with `/login`. Like Claude Code, it asks before executing commands or modifying files — review what it proposes before approving, and prefer running it inside a Git repository so you can `git diff` and revert its changes.
-
-(There's also an older, simpler `gh copilot` extension for the GitHub CLI that only *suggests and explains* shell commands — the standalone `copilot` CLI above is the full agentic tool.)
-
+::: {.callout-note}
+Copilot also works in JetBrains IDEs, Neovim, Xcode, and Visual Studio, and there's a terminal-based [Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli) for Claude Code-style workflows — see the [official install docs](https://docs.github.com/en/copilot/managing-copilot/configure-personal-settings/installing-the-github-copilot-extension-in-your-environment) if you prefer one of those. This guide sticks to VS Code, which has the most complete Copilot feature set.
 :::
 
-## 4. Core workflows in the editor
+## 4. Core workflows in VS Code
 
 ### Completions
 
