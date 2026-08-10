@@ -54,6 +54,11 @@ The main surfaces you'll actually use:
 
 If you're coming from Claude Code, the rough mapping is: **agent mode ≈ an interactive Claude Code session in your IDE**, the **coding agent ≈ Claude Code on the web / `@claude` GitHub integration**, and **Copilot CLI ≈ the Claude Code CLI**.
 
+::: {.callout-note}
+## Web and desktop equivalents
+Claude users often ask what maps to the Claude web and desktop apps. On the web: [github.com/copilot](https://github.com/copilot) is a full-page Copilot Chat UI (≈ chatting at claude.ai), and [github.com/copilot/agents](https://github.com/copilot/agents) is the dashboard for launching and tracking coding-agent tasks (≈ [Claude Code on the web](https://claude.ai/code)). The GitHub mobile app includes Copilot Chat as well. There is **no standalone Copilot desktop app** — VS Code fills that role — and note that **GitHub Desktop (the git GUI) does not include Copilot**, despite the naming.
+:::
+
 ## Plans at a glance
 
 > Official, current details: [github.com/features/copilot/plans](https://github.com/features/copilot/plans) and [Copilot plan docs](https://docs.github.com/en/copilot/get-started/plans-for-github-copilot)
@@ -152,7 +157,9 @@ There's also a **model picker** in the chat panel — you can run chat and agent
 
 ::: {.callout-warning}
 ## Agent mode has real access — treat it like any agentic tool
-Agent mode can run terminal commands and edit files across your workspace. The same safety practices from our [Claude Code Best Practices](./claude-code-best-practices.qmd#security-fundamentals) guide apply directly: work inside a Git repository with a clean working tree, review diffs before committing, keep secrets out of plaintext files on disk, and don't run agents on machines that hold restricted data (see [Data privacy](#data-privacy) below).
+Agent mode can run terminal commands and edit files across your workspace — it operates with **your user account's full local access**, just like Claude Code on your machine. The same safety practices from our [Claude Code Best Practices](./claude-code-best-practices.qmd#security-fundamentals) guide apply directly: work inside a Git repository with a clean working tree, review diffs before committing, keep secrets out of plaintext files on disk, and don't run agents on machines that hold restricted data (see [Data privacy](#data-privacy) below).
+
+If you want a real isolation boundary around local agent work, you have to build one — put the workspace in a **container**: a [dev container](https://code.visualstudio.com/docs/devcontainers/containers) on your machine (the same approach we walk through in the [Claude Code Cloud Setup Guide](./claude-code-cloud-setup.qmd#install-claude-code), where the container — not the tool's permission prompts — is the boundary) or a [GitHub Codespace](https://docs.github.com/en/codespaces), which moves the whole workspace onto an ephemeral cloud VM so the agent never runs on your laptop at all. Otherwise, delegate the task to the **coding agent** ([next section](#coding-agent)) — the route that avoids local access entirely.
 :::
 
 ### Context helpers
@@ -164,6 +171,15 @@ Agent mode can run terminal commands and edit files across your workspace. The s
 ## 5. The coding agent: assign work on GitHub.com {#coding-agent}
 
 The **Copilot coding agent** is Copilot's fully asynchronous mode — the equivalent of handing a task to Claude Code on the web. You give it a well-scoped task; it spins up an ephemeral GitHub Actions environment, clones the repo, makes changes, runs tests, and opens a **draft pull request** for your review. It never pushes to your default branch.
+
+::: {.callout-tip}
+## The coding agent is the strongest-isolation route — it never touches your machine
+Just as we note for [Claude Code's web version](./claude-code-cloud-setup.qmd#use-caution-with-restricted-or-sensitive-data), the coding agent sidesteps the local-access problem entirely. Each task runs in a **fresh, ephemeral GitHub Actions VM** that can see only the cloned repo (plus any secrets you explicitly configure for its environment) — it cannot reach your local filesystem, SSH keys, credentials, or anything else on your laptop, and the environment is discarded when the task completes. Guardrails on the GitHub side add to this: internet access from the sandbox is **firewalled to an allowlist by default**, the agent can only push to its own `copilot/*` branch, and its PRs require your review (and its workflow runs require your approval) before anything executes against your repo.
+
+So the practical hierarchy mirrors the Claude guide: **coding agent (no local access) > agent mode inside a container/Codespace (contained local access) > bare agent mode on your machine (full user access — rely on discipline and review)**.
+
+One important scope note: this isolation protects *your machine*, not *your data*. Whatever is in the repo (and whatever context you attach) still goes to GitHub and the selected model provider — so the [restricted-data guidance below](#data-privacy) applies no matter which route you use.
+:::
 
 > Official docs: [About Copilot coding agent](https://docs.github.com/en/copilot/concepts/agents/about-copilot-coding-agent) · GitHub's [Coding Agent 101](https://github.blog/ai-and-ml/github-copilot/github-copilot-coding-agent-101-getting-started-with-agentic-workflows-on-github/)
 
