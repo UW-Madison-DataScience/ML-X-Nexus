@@ -34,7 +34,7 @@ Qwen developed in parallel with other major open-weight model families:
 - **[DeepSeek-R1 (2025)](https://arxiv.org/abs/2501.12948)**: Reasoning-focused open-weight benchmark competitor.
 - **[Qwen3 (2025)](https://qwen.ai/blog?id=qwen3)**: Hybrid fast/slow reasoning modes in one family.
 
-# COMMENT: qwen 2 -> qwen3.6 -> qwen 3.8 (discuss how much bencharmk has moved in that short time period)
+Within a year, Qwen has jumped from Qwen 2 to Qwen 3.8, highlighting the robustness of open-sourced software in contrast to traditional propiterary models. When it comes to benchmarks, Qwen 3.8 improved its performance relatively to Qwen 2 involving tasks such as coding or visual reasoning. For example, with tasks involving quality assessment measuring multimodal models, Qwen 3.8 experienced an 8.1% increase in performance & accuracy compared to Qwen 2. This demonstrates how open-sourced models can develop quickly within a short time frame without relying entirely on capital investment or funding. 
 
 ## Qwen variants
 - **Qwen-Coder**: Coding-focused models tuned for software engineering and agentic coding tasks. Fairs well in comparison to other models such as Anthropic's Fable5 and Open AI's GPT5.6 Sol (max).
@@ -43,10 +43,11 @@ Qwen developed in parallel with other major open-weight model families:
 - **Qwen-QwQ**: Reasoning-oriented models optimized for multi-step problem solving by utilizing models pre-trained on real world data.
 
 ## Risks and safety context
-Reasoning improvements do not automatically eliminate jailbreak risk. Recent evaluations report that both reasoning and non-reasoning Qwen variants can still be vulnerable to classes of attacks such as prompt injection, malware-generation prompts, 
-and tree-of-attacks jailbreaks. Deployments should include external safety controls, logging, prompt hardening, and human oversight for high-risk workflows.
+Reasoning improvements do not automatically eliminate jailbreak risk. Recent evaluations report that both reasoning and non-reasoning Qwen variants can still be vulnerable to classes of attacks such as prompt injection, malware-generation prompts, and tree-of-attacks jailbreaks. Deployments should include external safety controls, logging, prompt hardening, and human oversight for high-risk workflows.
 
-# COMMENT: - what should you check when using an open-weight model? Is the training data biased? Was it filtered to remove problematic data? Can you trust the model providers? Yes, Qwen 
+To further eloborate, when we say jailbreak risk, it refers to the idea of a user gaining full access to the core of an LLM and utilizing unrestricted features for malicious reasons. Some concerns are privacy, data leakage, and violation of Qwen's terms and safety conditions. In light of these risks, according to AliBaba Cloud, problematic data and similar concerns are filtered out in the pre-training stage through automation and human-review supplementing as an additional layer of security. 
+
+However, articles & studies have shown that Qwen is prone to bias on topics surrounding geopolitics & contemporary social issues. With this in mind, the primary limitation is that these studies were conducted on the Qwen2-7B model, a much smaller model as parameters with 27B or more are generally used in the real world. This raises questions into how has Qwen improved their models going forward with Qwen3.8-Max being the latest release. 
 
 ## Model playground
 #### Tutorials and Getting Started
@@ -67,8 +68,11 @@ For those who are interested, there are some important factors to take into cons
 - [**Benchmark**: Qwen3.8-Max benchmark](https://qwen.ai/blog?id=qwen3.8#full-benchmark-table): Benchmark comparing the latest Qwen model to other LLMs.
 - [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html): Platform where Qwen model cards and checkpoints are widely hosted.
 - [**Compute**: NRP Nautilus](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html): Includes access pathways to open-weight model endpoints for research and education.
+- [**Resource**: Galinkin's Report on LLM Vulnerabilities](https://arxiv.org/html/2506.13726v1):  If interested, this report opens up about the security vulnerabilities associated with Qwen open-source model as discussed in the Risk section.
 - [**Resource**: GenAI at UW-Madison](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Institution-focused guidance on generative AI tools and services.
-- [**Resource**: Galinkin's Report on LLM Vulnerabilities](https://arxiv.org/html/2506.13726v1):  If interested, this report opens up about the security vulnerabilities associated with Qwen open-source model as discussed in the Risk section
+- [**Resource**: Report on Post-training bias](https://arxiv.org/html/2605.23825v1): Research article conducted by Duke University highlighting post-training bias surrounding Qwen models. 
+- [**Resource**: Research on Systematic Bias in LLMs](https://arxiv.org/html/2605.23825v1): In-depth study conducted by Nanyang Technological University (Singapore) exploring systematic bias within LLMs when it comes to topics surrounding politics and issues alike.  
+
 
 ## Comments 
 
