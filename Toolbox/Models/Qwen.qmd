@@ -1,0 +1,79 @@
+---
+title: "Qwen: Alibaba's Open-Weight Large Language Model Series"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+    
+date: 2026-08-10
+date-format: long
+image: "../../../images/Qwen.png"
+
+categories:
+  - Models
+  - NLP
+  - Deep learning
+  - Multimodal
+  - Language modeling
+  - Transformer
+  - GenAI
+
+---
+
+Qwen (通义千问) is a family of large language models (LLMs) developed by Alibaba Cloud, designed for both language understanding and generation tasks. First released in 2023, Qwen has grown into a comprehensive model series spanning dense transformers, mixture-of-experts (MoE) architectures, and multimodal variants. With models ranging from 0.5B to over 72B parameters — many available as open weights — Qwen has become a leading choice for practitioners seeking capable, efficient, and permissively licensed foundation models for research and production use.
+
+#### Key features
+- **Architecture**: Transformer-based decoder-only language models using grouped query attention (GQA), rotary positional embeddings (RoPE), and SwiGLU activations for improved efficiency and performance.
+- **Model scale variety**: Available in a wide range of sizes (0.5B, 1.5B, 3B, 7B, 14B, 32B, 72B, and beyond), enabling deployment across resource-constrained edge devices to high-throughput server environments.
+- **Mixture of Experts (MoE)**: The Qwen2-MoE line uses sparse MoE layers, activating only a subset of parameters per token to achieve strong performance with lower inference cost.
+- **Multimodal support**: Qwen-VL and Qwen2-VL variants process both text and images, enabling tasks like visual question answering, chart understanding, and document OCR.
+- **Long context**: Recent Qwen releases support context windows of 128K tokens, making them well-suited for long-document reasoning and retrieval-augmented generation (RAG) pipelines.
+- **Instruction and RLHF tuning**: Each base model has corresponding instruction-tuned ("Instruct") variants fine-tuned with supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF) for dialogue and instruction following.
+
+## Timeline context
+Qwen fits into the rapid progression of open-weight large language models. Below is a brief timeline situating the Qwen series alongside key contemporaries.
+
+- **[LLaMA (2023)](https://arxiv.org/abs/2302.13971)**: Meta's foundational open-weight LLM series that spurred widespread open-source LLM development.
+- **[Mistral 7B (2023)](https://arxiv.org/abs/2310.06825)**: Demonstrated that smaller models with sliding window attention could match much larger models.
+- **[Qwen (2023)](https://arxiv.org/abs/2309.16609)**: Alibaba Cloud's initial release of the Qwen series, featuring 7B and 14B models trained on over 2 trillion tokens with strong multilingual, coding, and math capabilities.
+- **[Qwen1.5 (2024)](https://qwenlm.github.io/blog/qwen1.5/)**: An expanded family (0.5B–72B) with improved instruction following, chat alignment, and long-context support up to 32K tokens.
+- **[Qwen2 (2024)](https://arxiv.org/abs/2407.10671)**: Major update with 5 dense model sizes plus a MoE variant, GQA for faster inference, 128K context support, and top benchmark scores across reasoning, coding, and math.
+- **[Qwen2.5 (2024)](https://qwenlm.github.io/blog/qwen2.5/)**: Further performance improvements, larger pretraining datasets (18 trillion tokens), and specialized variants for coding (Qwen2.5-Coder) and mathematics (Qwen2.5-Math).
+- **[QwQ and Qwen3 (2025)](https://qwenlm.github.io/blog/qwen3/)**: Reasoning-focused releases featuring hybrid thinking modes (streaming chain-of-thought) and further scaling, with Qwen3-235B-A22B as a top-tier MoE model.
+
+## Qwen variants
+- **Qwen2.5 (Dense)**: The flagship dense series in sizes 0.5B through 72B. Qwen2.5-72B-Instruct competes with models several times its size on many benchmarks.
+- **Qwen2.5-Coder**: Specialized for code generation, completion, and debugging. Achieves state-of-the-art results on HumanEval and coding benchmarks.
+- **Qwen2.5-Math**: Optimized for mathematical reasoning, outperforming many larger models on MATH and GSM8K benchmarks.
+- **Qwen2-VL / Qwen2.5-VL**: Multimodal vision-language models capable of understanding images, documents, charts, and videos alongside text.
+- **Qwen2-Audio**: Extends the Qwen architecture to audio understanding tasks including speech recognition, audio captioning, and spoken question answering.
+- **Qwen2-MoE**: A mixture-of-experts model with 57B total parameters but only ~14B activated per token, offering a strong performance-to-cost tradeoff.
+- **QwQ-32B**: A reasoning-specialized model trained with extended chain-of-thought, showing strong performance on math competition and logical reasoning tasks.
+- **Qwen3 (2025)**: The latest generation, including dense and MoE variants with improved multilingual support (119 languages), longer context (128K+), and hybrid thinking modes.
+
+## Model playground
+#### Tutorials and Getting Started Notebooks
+- **Hugging Face Hub**: All major Qwen models are available on [Hugging Face](https://huggingface.co/Qwen). Use the `transformers` library to load and run inference.
+- **Ollama**: Run Qwen models locally with a single command: `ollama run qwen2.5`. See [Ollama's model library](https://ollama.com/library/qwen2.5) for available sizes.
+- **vLLM**: For high-throughput serving, Qwen2.5 models are fully supported by [vLLM](https://docs.vllm.ai/en/latest/).
+- **Official Qwen Cookbook**: [Qwen's GitHub cookbook](https://github.com/QwenLM/Qwen/blob/main/cookbook/) provides notebooks for fine-tuning, RAG, and tool use.
+
+#### High-level tips for effective use
+- **Model size selection**: For most research tasks, Qwen2.5-7B-Instruct offers an excellent balance of capability and inference speed. Use 72B for complex reasoning or high-stakes generation.
+- **Quantization**: Quantized versions (GGUF, AWQ, GPTQ) are widely available on Hugging Face, making large Qwen models accessible on consumer hardware.
+- **Context length**: Take advantage of Qwen2+'s long context window (up to 128K tokens) for RAG, document summarization, and multi-turn conversations.
+- **System prompt tuning**: Qwen-Instruct models respond well to explicit system prompts. Define format, tone, and task constraints clearly for best results.
+- **Multilingual use**: Qwen models are trained on diverse multilingual data with particular strength in Chinese and English. Qwen3 supports 119 languages.
+- **Tool / function calling**: Qwen2.5-Instruct models support structured tool-calling APIs compatible with the OpenAI function-calling format.
+
+#### Related datasets & challenges
+- **[C-Eval](https://cevalbenchmark.com/)**: A Chinese multitask language understanding benchmark frequently used to evaluate Qwen's Chinese-language capabilities.
+- **[HumanEval](https://github.com/openai/human-eval)**: Standard code generation benchmark for evaluating Qwen-Coder variants.
+- **[MATH](https://github.com/hendrycks/math/)**: A benchmark of competition-level math problems used to evaluate Qwen-Math.
+- **[MMLU](https://github.com/hendrycks/test)**: Massive Multitask Language Understanding benchmark for general knowledge evaluation.
+
+## Related resources
+- [Qwen Official Blog](https://qwenlm.github.io/): Announcements, technical details, and release notes for all Qwen model generations.
+- [Qwen GitHub Repository](https://github.com/QwenLM/Qwen): Source code, documentation, and examples for using and fine-tuning Qwen models.
+- [Qwen2.5 Technical Report (2024)](https://arxiv.org/abs/2412.15115): Detailed description of the Qwen2.5 architecture, pretraining data, and benchmark results.
+- [Qwen2 Technical Report (2024)](https://arxiv.org/abs/2407.10671): Core technical paper describing the Qwen2 model family.
+- [LLaMA model page on Nexus](../Models/): Compare with Meta's open-weight model family.
