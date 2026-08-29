@@ -1,0 +1,73 @@
+---
+title: "Qwen: Open-Weight Large Language Models from Alibaba Cloud"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-03-20
+date-format: long
+image: "../../../images/Qwen.png"
+
+categories:
+  - Models
+  - Deep learning
+  - NLP
+  - Multimodal
+  - Language modeling
+  - Transformer
+---
+
+Qwen (Tongyi Qianwen) is a family of open-weight large language models developed by Alibaba Cloud. First released in 2023, Qwen has rapidly evolved through multiple generations, with [Qwen2.5](https://arxiv.org/abs/2501.15885) and [Qwen3](https://qwenlm.github.io/blog/qwen3/) representing the latest releases. The model family spans a wide range of sizes (0.5B to 72B+ parameters) and modalities, including text, vision, audio, code, and mathematics. Qwen models are competitive with leading open-weight alternatives like LLaMA and Mistral, and are widely available on [Hugging Face](https://huggingface.co/Qwen).
+
+#### Key features
+- **Architecture**: Dense and Mixture-of-Experts (MoE) transformer architectures with features like Group Query Attention (GQA), SwiGLU activation, and RoPE positional embeddings.
+- **Multimodal capabilities**: The Qwen family includes specialized variants for vision-language understanding (Qwen-VL), audio processing (Qwen-Audio), code generation (Qwen-Coder), and mathematical reasoning (Qwen-Math).
+- **Long context support**: Qwen2.5 models support context lengths up to 128K tokens, with some variants extending even further via YaRN-based context scaling.
+- **Multilingual**: Strong performance across 29+ languages, including English, Chinese, Japanese, Korean, French, Spanish, German, and Arabic.
+
+## Timeline context
+Qwen fits into the rapid development of open-weight large language models. Here is a timeline placing Qwen in the context of other important model families.
+
+- **[LLaMA (2023)](https://arxiv.org/abs/2302.13971)**: Meta's foundational open-weight LLM that catalyzed the open-source LLM ecosystem.
+- **[Qwen (2023)](https://arxiv.org/abs/2309.16609)**: Alibaba Cloud's first-generation open-weight LLM with strong multilingual capabilities.
+- **[Mistral 7B (2023)](https://arxiv.org/abs/2310.06825)**: Efficient open-weight model introducing sliding window attention and GQA.
+- **[LLaMA 2 (2023)](https://arxiv.org/abs/2307.09288)**: Meta's second-generation LLM with improved RLHF-based alignment.
+- **[Mixtral (2024)](https://arxiv.org/abs/2401.04088)**: Mistral's sparse MoE model achieving strong performance with efficient inference.
+- **[Qwen1.5 (2024)](https://qwenlm.github.io/blog/qwen1.5/)**: Improved alignment, expanded language support, and extended context lengths.
+- **[LLaMA 3 (2024)](https://arxiv.org/abs/2407.21783)**: Meta's third-generation LLM with a significantly larger training corpus.
+- **[Qwen2 (2024)](https://arxiv.org/abs/2407.10671)**: Major architecture improvements, including GQA across all sizes and support for 27+ languages.
+- **[Qwen2.5 (2024)](https://arxiv.org/abs/2501.15885)**: Trained on 18 trillion tokens with improved coding, math, and instruction-following capabilities.
+- **[DeepSeek-R1 (2025)](https://arxiv.org/abs/2501.12948)**: Reasoning-focused open-weight model using reinforcement learning for chain-of-thought.
+- **[Qwen3 (2025)](https://qwenlm.github.io/blog/qwen3/)**: Latest generation with hybrid thinking modes, supporting both fast responses and deep reasoning within a single model.
+
+## Qwen variants
+- **Qwen (Base/Chat)**: The core text-only language models, available in sizes from 0.5B to 72B+ parameters. Chat variants are instruction-tuned with RLHF.
+- **[Qwen-VL](https://huggingface.co/collections/Qwen/qwen25-vl-6795ffac22b334a837c0f9a5)**: Vision-language models capable of image understanding, visual question answering, OCR, and document analysis.
+- **[Qwen-Audio](https://github.com/QwenLM/Qwen-Audio)**: Audio-language models supporting speech recognition, sound understanding, and audio-based question answering.
+- **[Qwen-Coder](https://huggingface.co/collections/Qwen/qwen25-coder-66eaa22e6f99801bf65b0c2f)**: Code-specialized models trained on large-scale code corpora, competitive with dedicated coding models.
+- **[Qwen-Math](https://huggingface.co/collections/Qwen/qwen25-math-66eaa240a1b7d5ee65f1da3e)**: Math-specialized models with strong performance on mathematical reasoning benchmarks.
+- **[QwQ](https://huggingface.co/collections/Qwen/qwq-67b7cb5e68ae4e6d8bca1654)**: A reasoning-focused model that uses extended chain-of-thought for complex problem-solving tasks.
+
+## Model playground
+#### Tutorials and getting started
+- **Hugging Face**: All Qwen models are hosted on the [Qwen Hugging Face organization](https://huggingface.co/Qwen) with model cards and usage examples.
+- **Ollama**: Qwen models are available through [Ollama](https://ollama.com/library/qwen2.5) for easy local deployment.
+- **vLLM**: Qwen models are supported by [vLLM](https://docs.vllm.ai/) for high-throughput serving and inference.
+- **Official GitHub**: The [QwenLM GitHub](https://github.com/QwenLM) repositories include quickstart guides, fine-tuning scripts, and deployment documentation.
+
+#### High-level tips for effective use
+- **Quantization**: Qwen models are available in GPTQ, AWQ, and GGUF quantized formats, making it feasible to run larger models on consumer hardware.
+- **Fine-tuning**: Use frameworks like [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) or [Axolotl](https://github.com/axolotl-ai-cloud/axolotl) for efficient fine-tuning with LoRA/QLoRA.
+- **System prompts**: The chat models respond well to detailed system prompts for role-playing, structured output, and task-specific behavior.
+- **Context management**: For long-context tasks, consider using Qwen2.5 models (128K context) and be mindful of how context length affects inference speed and memory usage.
+
+#### Related benchmarks & leaderboards
+- **[Open LLM Leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard)**: Community benchmark comparing open-weight LLMs across reasoning, knowledge, and math tasks.
+- **[Chatbot Arena](https://lmarena.ai/)**: Crowdsourced blind evaluation of LLMs through head-to-head comparisons.
+
+## Related resources
+- [**Notebook**: Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html): Learn about model quantization techniques relevant to running Qwen models efficiently.
+- [**Notebook**: RAG with Romeo and Juliet](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html): A retrieval-augmented generation tutorial applicable to Qwen and other LLMs.
+- [**Video**: Exploring Generative AI: Intro to LLMs and Diffusion Models](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.html): An introductory talk covering the foundations of large language models.
+
+## Comments
