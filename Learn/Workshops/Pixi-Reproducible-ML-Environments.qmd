@@ -1,0 +1,126 @@
+---
+title: Pixi and Reproducible ML Environments
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-03-10
+date-format: long
+image: "../../../images/pixi-logo.png"
+
+categories:
+  - Workshops
+  - Reproducibility
+  - Environment management
+  - Python
+  - Code-along
+  - First-steps
+---
+
+[Pixi](https://pixi.sh/) is a modern, fast package manager built on the conda ecosystem that makes it easy to create fully reproducible computational environments. Unlike traditional tools like `conda` or `pip`, Pixi uses a **lockfile** (`pixi.lock`) to pin exact package versions across platforms, ensuring that every collaborator — and every CI run — uses the same environment, bit-for-bit. This workshop introduces Pixi and walks through best practices for managing reproducible ML environments in research projects.
+
+#### Why Pixi?
+
+- **Speed**: Pixi resolves and installs packages significantly faster than conda/mamba.
+- **Lockfile-based reproducibility**: `pixi.lock` captures the full dependency graph with exact versions, hashes, and platform-specific builds — no more "it works on my machine."
+- **Multi-platform support**: A single `pixi.toml` can define environments for Linux, macOS, and Windows.
+- **No base environment pollution**: Each project gets its own isolated environment by default.
+- **Conda + PyPI integration**: Pixi can install packages from both conda-forge and PyPI in the same environment, so you don't need to choose one or the other.
+- **Task runner built in**: Define common tasks (e.g., `pixi run train`, `pixi run test`) directly in `pixi.toml`.
+
+#### Topics covered
+
+1. Installing Pixi and creating your first project (`pixi init`, `pixi add`)
+2. Understanding `pixi.toml` and `pixi.lock`
+3. Adding conda-forge and PyPI dependencies
+4. Defining and running tasks with `pixi run`
+5. Sharing reproducible environments via version control
+6. Integrating Pixi with Jupyter notebooks and HPC environments (e.g., CHTC, Slurm)
+7. Migrating from conda/pip `environment.yml` workflows to Pixi
+
+#### Prerequisites
+- Basic familiarity with the command line (terminal/shell)
+- Basic Python programming experience. If you need a refresher, the [Intro to Python](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html) workshop materials are available for independent study.
+
+#### Estimated time to complete
+**TBD**: Use the [Improve this page](https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Workshops/Pixi-Reproducible-ML-Environments.qmd) functionality to add your own estimate!
+
+## Getting started with Pixi
+
+### Installation
+Pixi can be installed with a single command on any platform:
+
+```bash
+# Linux / macOS
+curl -fsSL https://pixi.sh/install.sh | bash
+
+# Windows (PowerShell)
+iwr -useb https://pixi.sh/install.ps1 | iex
+```
+
+### Quick start
+
+```bash
+# Create a new project
+pixi init my-ml-project
+cd my-ml-project
+
+# Add packages (from conda-forge by default)
+pixi add python numpy pandas scikit-learn matplotlib
+
+# Add a PyPI-only package
+pixi add --pypi some-pypi-package
+
+# Run Python in the managed environment
+pixi run python my_script.py
+```
+
+### Example `pixi.toml`
+
+```toml
+[project]
+name = "my-ml-project"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
+
+[dependencies]
+python = ">=3.11"
+numpy = ">=1.26"
+pandas = ">=2.1"
+scikit-learn = ">=1.4"
+matplotlib = ">=3.8"
+jupyterlab = ">=4.0"
+
+[tasks]
+lab = "jupyter lab"
+train = "python scripts/train.py"
+test = "pytest tests/"
+```
+
+### Key commands
+
+| Command | Description |
+|---------|-------------|
+| `pixi init` | Initialize a new Pixi project |
+| `pixi add <pkg>` | Add a dependency and update the lockfile |
+| `pixi remove <pkg>` | Remove a dependency |
+| `pixi install` | Install all dependencies from the lockfile |
+| `pixi run <task>` | Run a defined task or arbitrary command |
+| `pixi shell` | Activate the project environment in your shell |
+
+### Version control best practices
+
+Always commit **both** `pixi.toml` and `pixi.lock` to your repository:
+
+- `pixi.toml` — the human-readable project specification
+- `pixi.lock` — the machine-generated lockfile ensuring exact reproducibility
+
+When a collaborator clones your repo, they just run `pixi install` to recreate the exact same environment.
+
+## Related resources
+- [**Pixi documentation**](https://pixi.sh/latest/): Official Pixi documentation with tutorials and reference guides.
+- [**Video**: Reproducibility overview](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/Reproducibility-overview.html): A broader look at reproducibility in ML research.
+- [**Compute**: CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html): UW-Madison's Center for High Throughput Computing — Pixi can help manage environments on shared HPC systems.
+- [**Workshop**: Intro to Python](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html): Brush up on Python fundamentals before diving into environment management.
+
+## Comments
