@@ -1,0 +1,80 @@
+---
+title: "Qwen: Open-Weight Large Language Models from Alibaba Cloud"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-08-04
+date-format: long
+image: "../../../images/Qwen.jpg"
+
+categories:
+  - Models
+  - Deep learning
+  - NLP
+  - Language modeling
+  - LLM
+  - Transformer
+  - Multimodal
+---
+
+Qwen is a family of open-weight large language models (LLMs) developed by the Qwen team at Alibaba Cloud. Introduced in 2023 in the paper "[Qwen Technical Report](https://arxiv.org/abs/2309.16609)," Qwen has grown into one of the most widely used open-weight model families for text generation, chat, coding, math, and multimodal tasks. Its decoder-only transformer architecture — released at many scales, from sub-billion-parameter models that run on a laptop to large mixture-of-experts (MoE) models — makes it a popular choice for researchers who want strong performance with full control over local deployment and fine-tuning. Qwen models are now used across domains, from building retrieval-augmented question-answering systems to code assistants and vision-language applications.
+
+#### Key features
+- **Architecture**: Decoder-only transformer with modern refinements such as rotary position embeddings (RoPE), grouped-query attention (GQA), and long-context support (128K tokens in recent generations). The Qwen3 generation includes both dense models and sparse mixture-of-experts models that activate only a fraction of their parameters per token.
+- **Open weights at many scales**: Most Qwen models are released under the Apache 2.0 license on [Hugging Face](https://huggingface.co/Qwen), spanning tiny models (~0.5B parameters) suitable for consumer GPUs up to flagship MoE models (e.g., Qwen3-235B-A22B). This makes it easy to match model size to your compute budget.
+- **Multilingual coverage**: Qwen2.5 supports roughly 30 languages, and Qwen3 expands coverage to 100+ languages and dialects.
+- **Hybrid reasoning ("thinking") modes**: Qwen3 models can switch between a step-by-step reasoning mode for hard problems (math, code, logic) and a fast direct-answer mode for simple queries — controllable per prompt.
+
+## Timeline context
+Qwen fits into the rapid development of transformer-based language models, and particularly the wave of open-weight LLMs that followed LLaMA. Here is a timeline placing Qwen in the context of other important models.
+
+- **[Transformer (2017)](https://arxiv.org/abs/1706.03762)**: Introduced the attention-based architecture underlying all modern LLMs.
+- **[GPT-3 (2020)](https://arxiv.org/abs/2005.14165)**: Demonstrated that scaling language models unlocks few-shot, in-context learning.
+- **[LLaMA (2023)](https://arxiv.org/abs/2302.13971)**: Meta's open-weight models that kicked off the open LLM ecosystem.
+- **[Qwen (2023)](https://arxiv.org/abs/2309.16609)**: Alibaba Cloud's entry into open-weight LLMs, with strong multilingual and coding performance.
+- **[Mistral 7B (2023)](https://arxiv.org/abs/2310.06825)**: Showed that small, efficient open models can compete with much larger ones.
+- **[Qwen2 (2024)](https://arxiv.org/abs/2407.10671)**: A rebuilt model family (0.5B–72B) with grouped-query attention and improved multilingual support.
+- **[Qwen2.5 (2024)](https://arxiv.org/abs/2412.15115)**: Trained on 18 trillion tokens with 128K context support; the base for popular coder, math, and vision-language variants.
+- **[DeepSeek-R1 (2025)](https://arxiv.org/abs/2501.12948)**: A reasoning model trained with reinforcement learning; notably, several of its distilled variants use Qwen models as their base.
+- **[Qwen3 (2025)](https://arxiv.org/abs/2505.09388)**: Dense and mixture-of-experts models with hybrid thinking/non-thinking modes and 100+ language coverage.
+
+## Qwen variants
+The Qwen family includes general-purpose chat models plus specialized variants:
+
+- **[Qwen2.5 / Qwen2.5-Instruct](https://huggingface.co/collections/Qwen/qwen25-66e81a666513e518adb90d9e)**: Dense base and instruction-tuned models from 0.5B to 72B parameters — a common default for local experimentation and fine-tuning.
+- **[Qwen2.5-Coder](https://huggingface.co/collections/Qwen/qwen25-coder-66eaa22e6f99801bf65b0c2f)**: Code-specialized models for generation, completion, and repair across dozens of programming languages.
+- **[Qwen2.5-Math](https://huggingface.co/collections/Qwen/qwen25-math-66eaa240a1b7d5ee65f1da3e)**: Math-specialized models supporting chain-of-thought and tool-integrated reasoning.
+- **[Qwen2.5-VL](https://huggingface.co/collections/Qwen/qwen25-vl-6795ffac22b334a837c0f9a5)**: Vision-language models for image and video understanding, document parsing, and visual question answering.
+- **[QwQ-32B](https://huggingface.co/Qwen/QwQ-32B)**: A reasoning-focused model trained with reinforcement learning, aimed at hard math and coding problems.
+- **[Qwen3](https://huggingface.co/collections/Qwen/qwen3-67dd247413f0e2e4f653967f)**: The current generation, including dense models (0.6B–32B) and MoE models (e.g., Qwen3-30B-A3B, Qwen3-235B-A22B) with switchable thinking modes.
+- **[Qwen3-Embedding](https://huggingface.co/collections/Qwen/qwen3-embedding-6841b2055b99c44d9a4c371f)**: Text embedding and reranking models useful for retrieval-augmented generation (RAG) and semantic search pipelines.
+
+## Model playground
+#### Tutorials and Getting Started Notebooks
+- **[Qwen documentation](https://qwen.readthedocs.io/)**: Official docs covering quickstarts with Hugging Face Transformers, deployment (vLLM, SGLang, Ollama, llama.cpp), quantization, and fine-tuning.
+- **[Qwen on Hugging Face](https://huggingface.co/Qwen)**: Model cards include ready-to-run Transformers code snippets for each model.
+- **[QwenLM on GitHub](https://github.com/QwenLM)**: Source repositories, cookbooks, and example scripts for each model family.
+- **[Qwen Chat](https://chat.qwen.ai/)**: Browser-based chat interface for trying the latest Qwen models without any setup.
+- **[Qwen on Ollama](https://ollama.com/library/qwen3)**: One-line local installs of quantized Qwen models on a laptop or workstation.
+
+#### High-level tips for effective use
+- **Base vs. instruct models**: Use "-Instruct" (or Qwen3's default post-trained) models for chat and instruction following; reserve base models for continued pretraining or custom fine-tuning. Always apply the model's chat template (e.g., via `tokenizer.apply_chat_template` in Transformers).
+- **Quantization for smaller GPUs**: Official GGUF, AWQ, and GPTQ quantized checkpoints let 7B–32B models run on consumer hardware with modest accuracy loss — 4-bit quantization roughly quarters memory use relative to FP16.
+- **Parameter-efficient fine-tuning**: LoRA/QLoRA via libraries like [PEFT](https://huggingface.co/docs/peft), [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory), or [Unsloth](https://github.com/unslothai/unsloth) makes it feasible to adapt Qwen models to your domain on a single GPU.
+- **Thinking mode control (Qwen3)**: Enable thinking mode for math, code, and multi-step reasoning; disable it for simple queries to cut latency and cost. Follow the model card's recommended sampling settings (e.g., temperature) for each mode — greedy decoding is discouraged for thinking mode.
+- **Efficient serving**: For batch inference or serving many users, use [vLLM](https://github.com/vllm-project/vllm) or [SGLang](https://github.com/sgl-project/sglang) rather than plain Transformers generation.
+
+#### Related datasets & benchmarks
+- **[Open LLM Leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard)**: Compare open-weight models (including Qwen variants) on standardized benchmarks.
+- **[LMArena (Chatbot Arena)](https://lmarena.ai/)**: Crowdsourced head-to-head comparisons of chat models based on human preference.
+- **[MMLU](https://huggingface.co/datasets/cais/mmlu)**, **[GSM8K](https://huggingface.co/datasets/openai/gsm8k)**, and **[HumanEval](https://huggingface.co/datasets/openai/openai_humaneval)**: Standard benchmarks for knowledge, grade-school math, and code generation frequently reported in Qwen technical reports.
+
+## Related resources
+- [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html): Learn how FP16, INT8, and 4-bit quantization affect GPU memory — directly applicable to running Qwen models locally.
+- [**Notebook**: Exploring Fact-Based QA with RAG: Romeo and Juliet](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html): Build a retrieval-augmented QA system — a common application for open-weight LLMs and embedding models like Qwen3-Embedding.
+- [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html): The primary hub for downloading and running Qwen models with the Transformers library.
+- [**Video**: Exploring Generative AI: An Introduction to Large Language Models and Diffusion Models](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.html): Kangwook Lee introduces how LLMs and diffusion models work under the hood.
+- [**GenAI**: UW Generative AI Services & Policies](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Guidance on generative AI tools and policies at UW-Madison.
+
+## Comments
