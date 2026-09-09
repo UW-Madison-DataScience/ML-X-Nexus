@@ -1,0 +1,45 @@
+---
+title: "WattBot 2026: Investigating AI's Environmental Footprint with RAG"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-08-25
+date-format: long
+image: "../../images/WattBot.png"
+
+categories:
+  - Projects
+  - ML Marathon
+  - MLM26
+  - RAG
+  - Retrieval
+  - LLM
+  - NLP
+  - Sustainability
+  - Energy
+  - GenAI
+
+---
+
+WattBot is back for the [2026 Machine Learning Marathon (MLM26)](https://ml-marathon.wisc.edu/) -- bigger and tougher than last year. Teams build retrieval-augmented generation (RAG) systems that answer over 500 questions about AI's environmental impact from a corpus of over 100 papers and public reports, including arXiv preprints, peer-reviewed work, LBNL/IEA/GAO reporting, corporate sustainability filings, and a regional cluster on Wisconsin and the Great Lakes. Every answer needs a citation and supporting evidence, and when the corpus can't support an answer, the system must say so instead of guessing. The goal: turn scattered evidence into transparent, actionable answers for researchers, engineers, and policymakers.
+
+### Challenge design
+- **Task**: For each question, return a concise answer, a normalized answer value, the supporting document ID(s), verbatim supporting materials, and the reasoning connecting evidence to answer -- or explicitly abstain (`is_blank`) when the corpus can't answer.
+- **Question types**: Range from locating a stated fact, to reading values off figures (OCR and vision models are fair game), combining documents, attributing a company's claim as a claim, and reconciling conflicting sources.
+- **Evaluation**: The WattBot Score -- a weighted accuracy over answer correctness (0.75), citation F1 (0.20), and proper abstention on unanswerable questions (0.05). The exact scorer ships with the data so you can validate locally before submitting.
+- **Bonus track**: Teams are invited to build a chatbot application around their RAG methods -- judged informally on visible citations, speed, grounded accuracy, and completeness.
+
+### Links
+- **Kaggle challenge**: [WattBot 2026](https://www.kaggle.com/competitions/WattBot2026)
+- **Last year's edition**: [WattBot 2025](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html)
+
+## Related resources
+- [**Project**: WattBot 2025: Estimating AI Emissions with RAG](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html): The first WattBot challenge, including the winning RAG solution and deployment repos -- a natural starting point for 2026 teams.
+- [**Talk**: Deploying RAG in Bedrock vs. Local: WattBot 2025 Case Study](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html): ML+X forum where the winning WattBot 2025 RAG system was deployed in AWS Bedrock and locally with open-source models.
+- [**Talk**: AI's Environmental Footprint: Insights and Actions](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-09-09.html): The ML+X forum where WattBot was first introduced alongside LLM energy benchmarking work.
+- [**Notebook**: Exploring Fact-Based QA with RAG: Romeo and Juliet](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html): Build an end-to-end RAG pipeline from scratch -- a great starting point before tackling WattBot.
+- [**Workshop**: Intro to AWS SageMaker for Predictive ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html): Covers AWS SageMaker and Bedrock for cloud-based ML/AI workflows, including RAG deployment.
+- [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html): Learn how quantization (e.g., 4-bit) reduces model size and memory requirements -- useful for running open models locally in your pipeline.
+
+## Comments
