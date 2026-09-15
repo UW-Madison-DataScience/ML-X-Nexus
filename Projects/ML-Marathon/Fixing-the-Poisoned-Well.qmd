@@ -1,0 +1,41 @@
+---
+title: "Fixing the Poisoned Well: Reverse-Engineering a Backdoored Streamflow Model"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-07-15
+date-format: long
+image: "../../images/PoisonedWell.png"
+
+categories:
+  - Projects
+  - ML Marathon
+  - MLM26
+  - Interpretability
+  - Explainability
+  - Deep learning
+  - Earth science
+  - Hydrology
+  - AI safety
+
+---
+
+Fixing the Poisoned Well is a challenge in the [2026 Machine Learning Marathon (MLM26)](https://ml-marathon.wisc.edu/), created by Fraser King (UW-Madison). A neural network trained to predict hourly streamflow at Hancock, a small catchment in central Wisconsin, has been secretly sabotaged: someone changed some of the model weights so it produces phantom water out of thin air -- more water coming out than going in, which is physically impossible. The overall accuracy metrics barely move, so the backdoor slips past normal validation, but it quietly breaks the water budget with an annual streamflow bias of +7.6%. Your job: find the bug, fix it, and explain it.
+
+This is a mechanistic interpretability challenge posed in a physically interpretable sandbox -- a stand-in for the real threat of neural backdoors (trojans) in checkpoints downloaded from model hubs or inherited from other teams. Hydrology comes with a built-in lie detector: a real catchment must conserve water (rainfall in = streamflow + evapotranspiration + change in storage), so conservation laws are your compass for catching the model in the act. No hydrology background needed -- the basics are enough.
+
+### Challenge design
+- **Model**: A compact MLP (~20,000 weights) with 77 weather-based inputs (surface temperature, soil moisture, past 72 hours of rainfall, ...), six 56-unit ReLU hidden layers, and one output -- hourly streamflow trained on data from the Wisconet environmental mesonet. The attacker planted conspicuous-looking decoy edits in several layers; the real change is a distribution of weights woven into the model's normal features in a single layer.
+- **Task**: Submit (1) a repaired version of the affected layer's weight matrix that surgically undoes the saboteur's bias, and (2) the hidden trigger direction -- the 56-number internal feature vector the model was poisoned to fire on.
+- **Evaluation**: 100 points on a held-out test period. Part 1 (50 pts) scores how much of the leak your repair removes, whether model skill is preserved, and how surgical the edit is. Part 2 (50 pts) scores the cosine similarity between your recovered trigger direction and the true poisoned direction. A short writeup describing your XAI / mechanistic interpretability methods is required with every submission.
+
+### Links
+- **Kaggle challenge**: [Fixing the Poisoned Well](https://www.kaggle.com/competitions/fixing-the-poisoned-well)
+
+## Related resources
+- [**Workshop**: Trustworthy AI - Explainability, Bias, Fairness, and Safety](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/TrustworthyAI_Explainability-Bias-Fairness-OODdetection.html): Hands-on introduction to explainability and interpretability techniques -- the core toolkit for this challenge.
+- [**Video**: Grokking](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/Grokking.html): A window into how networks internally represent what they learn -- helpful background for mechanistic interpretability.
+- [**Workshop**: Intro to Deep Learning with PyTorch](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html): Get comfortable working directly with model weights, layers, and activations.
+
+## Comments
