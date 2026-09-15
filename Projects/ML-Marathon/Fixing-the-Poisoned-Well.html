@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Chris Endemann">
+<meta name="author" content="Fraser King">
 <meta name="dcterms.date" content="2026-07-15">
 
 <title>Fixing the Poisoned Well: Reverse-Engineering a Backdoored Streamflow Model – Nexus: Crowdsourced ML Resources</title>
@@ -364,7 +364,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+             <p>Fraser King </p>
           </div>
   </div>
     
@@ -383,7 +383,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Fixing the Poisoned Well is a challenge in the <a href="https://ml-marathon.wisc.edu/">2026 Machine Learning Marathon (MLM26)</a>, created by Fraser King (UW-Madison). A neural network trained to predict hourly streamflow at Hancock, a small catchment in central Wisconsin, has been secretly sabotaged: someone changed some of the model weights so it produces phantom water out of thin air – more water coming out than going in, which is physically impossible. The overall accuracy metrics barely move, so the backdoor slips past normal validation, but it quietly breaks the water budget with an annual streamflow bias of +7.6%. Your job: find the bug, fix it, and explain it.</p>
+<p>Fixing the Poisoned Well is a challenge in the <a href="https://ml-marathon.wisc.edu/">2026 Machine Learning Marathon (MLM26)</a>, created by <a href="https://www.aos.wisc.edu/faculty/King/">Fraser King</a>. A neural network trained to predict hourly streamflow at Hancock, a small catchment in central Wisconsin, has been secretly sabotaged: someone changed some of the model weights so it produces phantom water out of thin air – more water coming out than going in, which is physically impossible. The overall accuracy metrics barely move, so the backdoor slips past normal validation, but it quietly breaks the water budget with an annual streamflow bias of +7.6%. Your job: find the bug, fix it, and explain it.</p>
 <p>This is a mechanistic interpretability challenge posed in a physically interpretable sandbox – a stand-in for the real threat of neural backdoors (trojans) in checkpoints downloaded from model hubs or inherited from other teams. Hydrology comes with a built-in lie detector: a real catchment must conserve water (rainfall in = streamflow + evapotranspiration + change in storage), so conservation laws are your compass for catching the model in the act. No hydrology background needed – the basics are enough.</p>
 <section id="challenge-design" class="level3">
 <h3 class="anchored" data-anchor-id="challenge-design">Challenge design</h3>
