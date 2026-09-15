@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="dcterms.date" content="2026-08-15">
 
-<title>GenAI – Nexus: Crowdsourced ML Resources</title>
+<title>Snapshot Wisconsin: Oh Deer – Predicting Population Dynamics from Trail Cameras – Nexus: Crowdsourced ML Resources</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -35,10 +37,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Toolbox/Libraries/index.html" rel="next">
-<link href="../../Toolbox/Data/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -76,65 +74,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -147,7 +87,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/GenAI/index.html">GenAI</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Snapshot Wisconsin: Oh Deer – Predicting Population Dynamics from Trail Cameras</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -157,7 +97,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -351,7 +291,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Toolbox/GenAI/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GenAI</span></a>
   </div>
 </li>
@@ -387,20 +327,52 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Q29kZS1hbG9uZw==">Code-along <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVlcCUyMGxlYXJuaW5n">Deep learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Rm91bmRhdGlvbiUyMG1vZGVscw==">Foundation models <span class="quarto-category-count">(3)</span></div><div class="category" data-category="R2VtaW5p">Gemini <span class="quarto-category-count">(2)</span></div><div class="category" data-category="R2VuQUk=">GenAI <span class="quarto-category-count">(3)</span></div><div class="category" data-category="R3VpZGVz">Guides <span class="quarto-category-count">(3)</span></div><div class="category" data-category="SHVnZ2luZyUyMEZhY2U=">Hugging Face <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(4)</span></div><div class="category" data-category="TWljcm9zb2Z0JTIwQ29waWxvdA==">Microsoft Copilot <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TkxQ">NLP <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Tm90ZWJvb2tz">Notebooks <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJvbXB0JTIwZW5naW5lZXJpbmc=">Prompt engineering <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UkFH">RAG <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UmV0cmlldmFs">Retrieval <span class="quarto-category-count">(2)</span></div><div class="category" data-category="U3VtbWFyaXphdGlvbg==">Summarization <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGV4dCUyMGFuYWx5c2lz">Text analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VVctTWFkaXNvbg==">UW-Madison <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#challenge-design" id="toc-challenge-design" class="nav-link active" data-scroll-target="#challenge-design">Challenge design</a></li>
+  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
+  <li><a href="#related-resources" id="toc-related-resources" class="nav-link" data-scroll-target="#related-resources">Related resources</a></li>
+  <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Projects/ML-Marathon/Snapshot-WI-Oh-Deer.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Toolbox/index.html">Toolbox</a></li><li class="breadcrumb-item"><a href="../../Toolbox/GenAI/index.html">GenAI</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">GenAI</h1>
-</div>
+<h1 class="title">Snapshot Wisconsin: Oh Deer – Predicting Population Dynamics from Trail Cameras</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Projects</div>
+    <div class="quarto-category">ML Marathon</div>
+    <div class="quarto-category">MLM26</div>
+    <div class="quarto-category">Computer vision</div>
+    <div class="quarto-category">Camera trap</div>
+    <div class="quarto-category">Ecology</div>
+    <div class="quarto-category">Image classification</div>
+    <div class="quarto-category">Deep learning</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 15, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -410,192 +382,37 @@ window.Quarto = {
 </header>
 
 
-<p>Explore genAI tools that you can leverage for your next AI/ML project.</p>
-<p>UW–Madison faculty, staff, students, and affiliates are required to follow <a href="https://it.wisc.edu/generative-ai-uw-madison-use-policies/">campus policies relevant to AI use</a>. Uses of <a href="https://it.wisc.edu/statement-on-use-of-generative-ai/">generative AI</a> that are explicitly prohibited by policy include, but are not limited to, the following:</p>
+<p>Snapshot Wisconsin: Oh Deer is a hackathon in the <a href="https://ml-marathon.wisc.edu/">2026 Machine Learning Marathon (MLM26)</a>, hosted by Ryan Bemowski. <a href="https://www.snapshotwisconsin.org/">Snapshot Wisconsin</a> has collected over one hundred million motion-triggered trail camera photos from across the state, with volunteers worldwide classifying species and population dynamics tags – but much of the information in these images has never been converted to a structured format. This challenge asks participants to build tools that predict population dynamics tags from deer images, supporting ecological research and wildlife management.</p>
+<section id="challenge-design" class="level3">
+<h3 class="anchored" data-anchor-id="challenge-design">Challenge design</h3>
 <ul>
-<li>Entering any sensitive, restricted or otherwise protected institutional data – including hard-coded passwords – into any generative AI tool or service;</li>
-<li>Using AI-generated code for institutional IT systems or services without review by a human to verify the absence of malicious elements;</li>
-<li>Using generative AI to violate laws; institutional policies, rules or guidelines; or agreements or contracts.</li>
+<li><strong>Task</strong>: Predict two population dynamics tags for each deer image – <strong>Antlers</strong> (antlered or antlerless) and <strong>Age</strong> (adult or young). For extra credit, extract additional useful information: time of year or day, whether animals are alert or relaxed, land cover characteristics, or anything else valuable to ecologists.</li>
+<li><strong>Data</strong>: 4,880 labeled trail camera images of deer plus a ground-truth CSV including bounding box locations for each deer – provided the way you’d receive data in a real-world project: filtered and cleaned, but not perfectly organized for any particular approach.</li>
+<li><strong>Evaluation</strong>: 150 points total – F1 score on the Antlers and Age predictions (100 points) plus a usefulness rubric (50 points) covering additional predictions, inference speed, compute efficiency, and ease of use for research software engineers.</li>
 </ul>
+</section>
+<section id="links" class="level3">
+<h3 class="anchored" data-anchor-id="links">Links</h3>
+<ul>
+<li><strong>Kaggle hackathon</strong>: <a href="https://www.kaggle.com/competitions/snapshot-wi-oh-deer">Snapshot Wisconsin: Oh Deer</a></li>
+</ul>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Megadetector.html"><strong>Model</strong>: MegaDetector: Pre-Trained Animal Object Detection for Camera Trap Images</a>: A pre-trained detector purpose-built for camera trap imagery – directly relevant for localizing animals before classification.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/BioTrove.html"><strong>Data</strong>: BioTrove</a>: A large curated biodiversity image dataset with pre-trained CLIP models – a source of transfer learning material for wildlife classification.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/BioTrove-Clustering.html"><strong>Project</strong>: Clustering the BioTrove Dataset</a>: An MLM25 challenge working with wildlife imagery – useful precedent for embedding-based approaches.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: Build the foundational skills needed to train image classifiers.</li>
+</ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="R2VuQUklMkNHdWlkZXMlMkNOTFAlMkNMTE0lMkNSQUclMkNSZXRyaWV2YWwlMkNGb3VuZGF0aW9uJTIwbW9kZWxzJTJDSHVnZ2luZyUyMEZhY2U=" data-listing-date-sort="1772150400000" data-listing-file-modified-sort="1789484586343" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="849">
-<a href="../../Toolbox/GenAI/OpenScholar.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/OpenScholar.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-OpenScholar: Scientific Literature Synthesis with Retrieval-Augmented LMs
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">GenAI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3VpZGVz'); return false;">Guides</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UkFH'); return false;">RAG</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV0cmlldmFs'); return false;">Retrieval</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm91bmRhdGlvbiUyMG1vZGVscw=='); return false;">Foundation models</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SHVnZ2luZyUyMEZhY2U='); return false;">Hugging Face</div>
-
-</div>
-<div class="card-text listing-description delink">
-OpenScholar is an open-source, retrieval-augmented language model (LM) designed to help researchers navigate and synthesize scientific literature. Developed by the Allen…<em></em>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2026-02-27
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="Tm90ZWJvb2tzJTJDUkFHJTJDUmV0cmlldmFsJTJDTkxQJTJDTExNJTJDVGV4dCUyMGFuYWx5c2lzJTJDRGVlcCUyMGxlYXJuaW5nJTJDUHJvbXB0JTIwZW5naW5lZXJpbmclMkNDb2RlLWFsb25n" data-listing-date-sort="1746576000000" data-listing-file-modified-sort="1789484586339" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4904">
-<a href="../../Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/2025-05-07_RAG-Romeo-Juliet.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Exploring Fact-Based QA with RAG: Romeo and Juliet
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Tm90ZWJvb2tz'); return false;">Notebooks</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UkFH'); return false;">RAG</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV0cmlldmFs'); return false;">Retrieval</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGV4dCUyMGFuYWx5c2lz'); return false;">Text analysis</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvbXB0JTIwZW5naW5lZXJpbmc='); return false;">Prompt engineering</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
-
-</div>
-<div class="card-text listing-description delink">
-<p>Build an end-to-end RAG pipeline from scratch — covering text chunking, semantic embeddings, retrieval, and LLM-based answer generation.</p>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2025-05-07
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="R2VuQUklMkNHdWlkZXMlMkNNaWNyb3NvZnQlMjBDb3BpbG90JTJDR2VtaW5pJTJDVVctTWFkaXNvbiUyQ0xMTSUyQ0ZvdW5kYXRpb24lMjBtb2RlbHM=" data-listing-date-sort="1736208000000" data-listing-file-modified-sort="1789484586342" data-listing-date-modified-sort="1773100800000" data-listing-reading-time-sort="3" data-listing-word-count-sort="527">
-<a href="../../Toolbox/GenAI/GenAI-at-UW-Madison.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/UW-genAI-services.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-UW Generative AI Services &amp; Policies
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">GenAI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3VpZGVz'); return false;">Guides</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWljcm9zb2Z0JTIwQ29waWxvdA=='); return false;">Microsoft Copilot</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VtaW5p'); return false;">Gemini</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VVctTWFkaXNvbg=='); return false;">UW-Madison</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm91bmRhdGlvbiUyMG1vZGVscw=='); return false;">Foundation models</div>
-
-</div>
-<div class="card-text listing-description delink">
-The University of Wisconsin–‍Madison is committed to responsibly harnessing the power of generative artificial intelligence to enhance teaching, learning, research and…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2025-01-07
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="R2VuQUklMkNHdWlkZXMlMkNOTFAlMkNTdW1tYXJpemF0aW9uJTJDR2VtaW5pJTJDTExNJTJDRm91bmRhdGlvbiUyMG1vZGVscw==" data-listing-date-sort="1733702400000" data-listing-file-modified-sort="1789484586343" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="250">
-<a href="../../Toolbox/GenAI/NotebookLM.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/NotebookLM.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-NotebookLM: A GenAI Summarization Tool
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VuQUk='); return false;">GenAI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3VpZGVz'); return false;">Guides</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkxQ'); return false;">NLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U3VtbWFyaXphdGlvbg=='); return false;">Summarization</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R2VtaW5p'); return false;">Gemini</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm91bmRhdGlvbiUyMG1vZGVscw=='); return false;">Foundation models</div>
-
-</div>
-<div class="card-text listing-description delink">
-NotebookLM is a generative AI tool designed to assist with understanding dense, complex texts, including research papers in machine learning and AI. Developed by Google Labs…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-12-09
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -996,21 +813,38 @@ Chris Endemann
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Toolbox/Data/index.html" class="pagination-link" aria-label="Data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Toolbox/Libraries/index.html" class="pagination-link" aria-label="Libraries">
-        <span class="nav-page-text">Libraries</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
+<input type="hidden" id="giscus-base-theme" value="preferred-color-scheme">
+<input type="hidden" id="giscus-alt-theme" value="preferred-color-scheme">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "UW-Madison-DataScience/ML-X-Nexus";
+    script.dataset.repoId = "R_kgDOKVN_Vw";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOKVN_V84CgacK";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Toolbox/GenAI/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Projects/ML-Marathon/Snapshot-WI-Oh-Deer.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
