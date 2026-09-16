@@ -1,0 +1,130 @@
+---
+title: "Qwen: Alibaba's Open-Weight LLM Family"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-09-16
+date-format: long
+image: "../../../images/Qwen-logo.jpg"
+description: "An overview of the Qwen family of open-weight language and multimodal models — sizes, variants, licenses, and how to run them locally or via free campus-accessible endpoints."
+
+categories:
+  - Models
+  - Foundation models
+  - LLM
+  - NLP
+  - Multimodal learning
+  - Transformer
+  - Deep learning
+  - Hugging Face
+  - Model exploration
+---
+
+[Qwen](https://qwen.ai/) (short for *Tongyi Qianwen*) is a family of large language models (LLMs) and multimodal models developed by Alibaba Cloud's Qwen team. First released in August 2023 with the 7B-parameter [Qwen-7B](https://arxiv.org/abs/2309.16609), the family has grown into one of the most widely used open-weight model lineups in the world, spanning everything from sub-1B models that run on a laptop to trillion-parameter Mixture-of-Experts (MoE) systems. Most Qwen open models are released under the permissive Apache 2.0 license, which makes them a popular default for research groups that need to run, fine-tune, or deploy an LLM on their own hardware without sending data to a third-party API.
+
+For UW–Madison researchers, Qwen is worth knowing about for two practical reasons: the weights are free to download from [Hugging Face](https://huggingface.co/Qwen), and several Qwen models are hosted for free on the [National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) LLM endpoint, which UW affiliates can access with their NetID.
+
+#### Key features
+- **Open weights across a wide range of sizes**: Every generation ships dense models small enough for a single consumer GPU (e.g., 0.8B, 2B, 4B, 9B, 27B) alongside large MoE models (e.g., 35B-A3B, 122B-A10B, 397B-A17B). The "A" number in an MoE name is the number of *active* parameters per token, which is what drives inference cost.
+- **Thinking and non-thinking modes**: Since Qwen3 (April 2025), a single model can switch between a "thinking" mode that emits a chain-of-thought before answering (for math, code, and multi-step reasoning) and a fast non-thinking mode for ordinary chat. Newer releases add a tunable `reasoning_effort` setting.
+- **Native multimodality**: Starting with Qwen3.5 (February 2026), the flagship open models are trained with early-fusion vision-language data, so one checkpoint handles text, images, and video without a separate vision-language (VL) variant.
+- **Long context**: Recent models support context windows of 256K tokens (262,144), extendable to 1 million tokens for the largest models.
+- **Multilingual**: Qwen3.5 expanded coverage to 201 languages and dialects.
+- **Agentic and coding focus**: The Qwen3-Coder line and the Qwen3.6/3.8 releases are specifically trained for tool use, repository-level code reasoning, and long-horizon agent tasks, and integrate with the open-source [Qwen Code](https://qwen.ai/qwencode) terminal agent.
+- **Broad ecosystem support**: Qwen models run in Hugging Face `transformers`, vLLM, SGLang, llama.cpp/Ollama (GGUF), MLX (Apple Silicon), and Unsloth, and can be fine-tuned with LLaMA-Factory, Swift, or Unsloth.
+
+## Timeline context
+Qwen sits alongside Meta's Llama, Google's Gemma, Mistral, and DeepSeek as one of the major open-weight model families. Key milestones, drawn from the Qwen team's GitHub release notes:
+
+- **[Qwen-7B (Aug 2023)](https://github.com/QwenLM/Qwen)**: First release; 14B and 72B dense models followed later in 2023. [Technical report](https://arxiv.org/abs/2309.16609).
+- **[Qwen1.5 (Feb 2024)](https://github.com/QwenLM/Qwen1.5)**: Native `transformers` support and the first Qwen MoE model (Qwen1.5-MoE-A2.7B, March 2024).
+- **[Qwen2 (Jun 2024)](https://github.com/QwenLM/Qwen2)** and **[Qwen2-VL (Aug 2024)](https://github.com/QwenLM/Qwen3-VL)**: The vision-language line begins.
+- **[Qwen2.5 (Sep 2024)](https://github.com/QwenLM/Qwen2.5)**: Seven sizes from 0.5B to 72B; became a very common fine-tuning base. [Technical report](https://arxiv.org/abs/2412.15115).
+- **[QwQ-32B (Mar 2025)](https://github.com/QwenLM/QwQ)**: A reasoning-specialized model trained with reinforcement learning, competitive with DeepSeek-R1 at a fraction of the size.
+- **[Qwen3 (Apr 2025)](https://github.com/QwenLM/Qwen3)**: Unified thinking/non-thinking modes; dense (0.6B–32B) and MoE (30B-A3B, 235B-A22B) models. [Technical report](https://arxiv.org/abs/2505.09388). The "2507" refresh (July–Aug 2025) split these into separate Instruct and Thinking checkpoints with 256K context.
+- **Qwen3-Coder, Qwen3-Embedding, Qwen3-VL, Qwen3-Omni (mid–late 2025)**: Specialty lines for code agents, text embedding/reranking, vision-language, and any-to-any (audio, video, text) modeling. Qwen3-Next-80B-A3B (Sep 2025) introduced the hybrid-attention, ultra-sparse MoE design that later generations build on.
+- **[Qwen3.5 (Feb–Mar 2026)](https://github.com/QwenLM/Qwen3.5)**: Natively multimodal; Gated DeltaNet + sparse MoE architecture. Released as 397B-A17B, 122B-A10B, 35B-A3B, 27B, 9B, 4B, 2B, and 0.8B.
+- **Qwen3.6 (Apr 2026)**: 35B-A3B and 27B models focused on agentic coding and "thinking preservation" across turns.
+- **Qwen3.8 (Aug 2026)**: The first open release of a Qwen-Max-class model, Qwen3.8-2.4T-A95B, plus a dense Qwen3.8-27B. Note that the 2.4T flagship ships under a custom "Qwen3.8-Max" license rather than Apache 2.0, so check the license file on its model card before commercial use.
+
+## Qwen variants
+The family is large, so here is a map of which line to reach for:
+
+| Line | What it's for | Example checkpoints |
+|------|---------------|---------------------|
+| **Qwen3.5 / 3.6 / 3.8** (general) | Chat, reasoning, agents, and (from 3.5 on) image/video understanding in one model | `Qwen/Qwen3.8-27B`, `Qwen/Qwen3.6-35B-A3B`, `Qwen/Qwen3.5-9B` |
+| **Qwen3** (previous generation) | Text-only models with a huge ecosystem of fine-tunes and quantizations | `Qwen/Qwen3-8B`, `Qwen/Qwen3-30B-A3B-Instruct-2507` |
+| **Qwen3-Coder** | Agentic coding, 256K context, 358 programming languages | `Qwen/Qwen3-Coder-30B-A3B-Instruct`, `Qwen/Qwen3-Coder-480B-A35B-Instruct` |
+| **Qwen3-Embedding / Reranker** | Text embeddings and reranking for RAG and search; 0.6B, 4B, 8B; 32K context; the 8B model topped the MTEB multilingual leaderboard at release | `Qwen/Qwen3-Embedding-0.6B`, `Qwen/Qwen3-Reranker-4B` |
+| **Qwen3-VL** | Dedicated vision-language models (2B–235B-A22B) with Instruct and Thinking versions | `Qwen/Qwen3-VL-8B-Instruct` |
+| **Qwen3-Omni** | Audio, video, and text in; text and speech out; includes a low-hallucination audio captioner | `Qwen/Qwen3-Omni-30B-A3B-Instruct` |
+| **QwQ** | Reasoning-only model (superseded by Qwen3 thinking mode) | `Qwen/QwQ-32B` |
+
+Most checkpoints are also published in FP8, GGUF, and MLX formats for cheaper inference.
+
+## Model playground
+
+#### Try it without installing anything
+- **[Qwen Studio](https://chat.qwen.ai/)**: Free hosted chat interface for the latest Qwen models.
+- **[NRP LLM endpoint](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html)**: Free, OpenAI-compatible API hosting Qwen3 models (including a 397B multimodal model and the Qwen3 embedding model) for InCommon-affiliated researchers. See the Nexus NRP guide for a Python code-along. Not suitable for restricted data.
+
+#### Run it locally
+The smallest models run comfortably on a laptop or a single GPU. With [Ollama](https://ollama.com/):
+
+```bash
+ollama run qwen3.5:4b
+```
+
+With Hugging Face `transformers`, which also exposes an OpenAI-compatible server:
+
+```bash
+pip install -U transformers
+transformers serve Qwen/Qwen3.5-9B --port 8000 --continuous-batching
+```
+
+Or directly in Python:
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_name = "Qwen/Qwen3-8B"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, dtype="auto", device_map="auto")
+
+messages = [{"role": "user", "content": "Explain gradient boosting in two sentences."}]
+text = tokenizer.apply_chat_template(
+    messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
+)
+inputs = tokenizer([text], return_tensors="pt").to(model.device)
+output_ids = model.generate(**inputs, max_new_tokens=256)
+print(tokenizer.decode(output_ids[0][len(inputs.input_ids[0]):], skip_special_tokens=True))
+```
+
+For multi-GPU serving, the Qwen team recommends [vLLM](https://github.com/vllm-project/vllm) or [SGLang](https://github.com/sgl-project/sglang), e.g. `vllm serve Qwen/Qwen3.8-27B --reasoning-parser qwen3`.
+
+#### High-level tips for effective use
+- **Pick the size by memory, not by benchmark**: A rough rule is ~2 bytes per parameter in BF16, or ~0.5–0.6 bytes per parameter in 4-bit quantization. A 9B model fits on a 24 GB GPU in BF16; a 27B model needs quantization to fit on the same card. See the Nexus [quantization notebook](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html) for details.
+- **Prefer MoE for throughput**: Qwen3.5-35B-A3B has the memory footprint of a 35B model but the per-token compute of a 3B model, so it is fast once loaded.
+- **Turn thinking off for simple tasks**: Thinking mode can multiply output length. Use `enable_thinking=False` (or a non-thinking Instruct checkpoint) for classification, extraction, and short chat.
+- **Use the recommended sampling settings**: The model cards list temperature/top-p values for each mode. Greedy decoding is explicitly discouraged for thinking models and can cause repetition loops.
+- **Fine-tune with a small model first**: Qwen's 0.6B–4B models fine-tune in minutes with LoRA via [Unsloth](https://github.com/unslothai/unsloth) or [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory), which makes them a good testbed before scaling up.
+- **Check the license per checkpoint**: Most Qwen open models are Apache 2.0, but some (e.g., Qwen3.8-2.4T-A95B) carry a custom license. The license file is in each Hugging Face repository.
+
+#### GenAI use at UW-Madison
+{{< include ../../includes/genAI-disclaimer.qmd >}}
+
+#### Links
+- **Official site and blog**: [qwen.ai](https://qwen.ai/)
+- **Hugging Face organization**: [huggingface.co/Qwen](https://huggingface.co/Qwen)
+- **GitHub**: [QwenLM/Qwen3.5](https://github.com/QwenLM/Qwen3.5) (current series), [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3), [QwenLM/Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder), [QwenLM/Qwen3-Embedding](https://github.com/QwenLM/Qwen3-Embedding), [QwenLM/Qwen3-VL](https://github.com/QwenLM/Qwen3-VL), [QwenLM/Qwen3-Omni](https://github.com/QwenLM/Qwen3-Omni)
+- **Technical reports**: [Qwen (2023)](https://arxiv.org/abs/2309.16609), [Qwen2.5 (2024)](https://arxiv.org/abs/2412.15115), [Qwen3 (2025)](https://arxiv.org/abs/2505.09388), [Qwen3-VL (2025)](https://arxiv.org/abs/2511.21631), [Qwen3-Omni (2025)](https://arxiv.org/abs/2509.17765)
+
+## Related resources
+- [**Compute**: National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html): Free hosted Qwen3 endpoints and GPU compute for UW researchers, with a Python code-along.
+- [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html): The platform hosting Qwen's weights; learn about the Hub, `transformers`, and pipelines.
+- [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html): How FP16, BF16, INT8, and 4-bit formats affect the GPU memory needed to run models like Qwen.
+- [**Notebook**: RAG with Romeo and Juliet](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html): Build a retrieval-augmented generation pipeline; Qwen3-Embedding and a small Qwen chat model are natural drop-ins.
+- [**GenAI**: OpenScholar](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html): An example of a research assistant built by fine-tuning an open-weight LLM, the same workflow Qwen supports.
+
+## Comments
