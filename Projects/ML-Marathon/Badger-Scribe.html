@@ -6,8 +6,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Endemann">
+<meta name="author" content="Scott Prater">
+<meta name="author" content="Kevin Chovanec">
+<meta name="dcterms.date" content="2026-09-16">
 
-<title>Books – Nexus: Crowdsourced ML Resources</title>
+<title>Badger Scribe: Transcribing 19th-Century Handwritten Archives on a Single GPU – Nexus: Crowdsourced ML Resources</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -35,10 +39,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Learn/Guides/index.html" rel="next">
-<link href="../../Learn/index.html" rel="prev">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -76,65 +76,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -147,7 +89,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Books/index.html">Books</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Badger Scribe: Transcribing 19th-Century Handwritten Archives on a Single GPU</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -157,7 +99,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -200,7 +142,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Learn/Books/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Books</span></a>
   </div>
 </li>
@@ -387,20 +329,58 @@ window.Quarto = {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Qm9va3M=">Books <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Q2xhc3NpY2FsJTIwTUw=">Classical ML <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q2x1c3RlcmluZw==">Clustering <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29kZS1hbG9uZw==">Code-along <span class="quarto-category-count">(3)</span></div><div class="category" data-category="RGVjaXNpb24lMjB0cmVlcw==">Decision trees <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RGVlcCUyMGxlYXJuaW5n">Deep learning <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Rmlyc3Qtc3RlcHM=">First-steps <span class="quarto-category-count">(3)</span></div><div class="category" data-category="SW50ZXJwcmV0YWJpbGl0eQ==">Interpretability <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHlUb3JjaA==">PyTorch <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmVncmVzc2lvbg==">Regression <span class="quarto-category-count">(3)</span></div><div class="category" data-category="VW5zdXBlcnZpc2VkJTIwbGVhcm5pbmc=">Unsupervised learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VmlzdWFsaXphdGlvbg==">Visualization <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#challenge-design" id="toc-challenge-design" class="nav-link active" data-scroll-target="#challenge-design">Challenge design</a></li>
+  <li><a href="#approaches" id="toc-approaches" class="nav-link" data-scroll-target="#approaches">Approaches</a></li>
+  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
+  <li><a href="#related-resources" id="toc-related-resources" class="nav-link" data-scroll-target="#related-resources">Related resources</a></li>
+  <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Projects/ML-Marathon/Badger-Scribe.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Learn/index.html">Learn</a></li><li class="breadcrumb-item"><a href="../../Learn/Books/index.html">Books</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Books</h1>
-</div>
+<h1 class="title">Badger Scribe: Transcribing 19th-Century Handwritten Archives on a Single GPU</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Projects</div>
+    <div class="quarto-category">ML Marathon</div>
+    <div class="quarto-category">MLM26</div>
+    <div class="quarto-category">OCR</div>
+    <div class="quarto-category">Computer vision</div>
+    <div class="quarto-category">NLP</div>
+    <div class="quarto-category">Multilingual</div>
+    <div class="quarto-category">Text analysis</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">GenAI</div>
+    <div class="quarto-category">Deep learning</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Endemann <a href="mailto:endemann@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+             <p>Scott Prater </p>
+             <p>Kevin Chovanec </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 16, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -410,171 +390,46 @@ window.Quarto = {
 </header>
 
 
+<p>Badger Scribe is a challenge in the <a href="https://ml-marathon.wisc.edu/">2026 Machine Learning Marathon (MLM26)</a>, organized with the UW Digital Collections Center at UW–Madison Libraries. Institutional archives hold vast collections of handwritten documents that remain difficult to access at scale: without text, these materials can’t be searched, can’t be read by screen readers, and can’t be studied. Teams build pipelines that faithfully transcribe archival document images into machine-readable text, using only open-weight models on a single GPU, so that libraries and archives can actually deploy what comes out of the challenge. The evaluation data is built entirely from UW Digital Collections materials: nineteenth-century surveyors’ field notes, German immigrant correspondence in Kurrent script, and craftsmen’s account books.</p>
+<p>This is an educational, collaborative challenge with no cash prizes. The point is to surface and share transcription pipelines: share repos early, post findings to the Discussion tab, and build on each other’s approaches.</p>
+<section id="challenge-design" class="level3">
+<h3 class="anchored" data-anchor-id="challenge-design">Challenge design</h3>
+<ul>
+<li><strong>Task</strong>: Given a document image (a single page or scan), produce a faithful, verbatim transcription in natural reading order, with original spelling and punctuation preserved and no summarizing or cleanup.</li>
+<li><strong>Data</strong>: A small, curated, rights-cleared sample from three UW Digital Collections: Max Kade Institute German letters (1932–1942, Kurrent script), Dominy craftsmen account books (1810s–1840s), and Wisconsin Land Survey field notes (1830s–1860s). Split into a released train set and a hidden test set, both of which may grow through the fall as human review of the English collections completes. Each labeled row records whether its label is human-verified or an unreviewed machine draft (<code>silver_claude</code>), which matters when fine-tuning.</li>
+<li><strong>Constraints</strong>: The submitted pipeline must run end-to-end on a single GPU with at most 96 GB of VRAM using open-weight models only. No closed-weight APIs (GPT, Claude, Gemini) anywhere in the submitted run. Training, fine-tuning, and other preparation compute are unconstrained.</li>
+<li><strong>Evaluation</strong>: Character Error Rate (CER), macro-averaged across document categories, so a pipeline must perform across handwriting styles, layouts, and languages rather than acing one clean category. Characters the human transcriber could not resolve are marked <code>#</code> and never count against you.</li>
+<li><strong>Verification and writeup</strong>: A complete submission pairs leaderboard predictions with a writeup (<code>WRITEUP.md</code>) in a public repo pinned to the exact commit that produced the score. Organizers re-run the pipeline to confirm it reproduces the predictions, fits the VRAM budget, and uses only open-weight models.</li>
+</ul>
+</section>
+<section id="approaches" class="level3">
+<h3 class="anchored" data-anchor-id="approaches">Approaches</h3>
+<p>There is no consensus on what the pipeline should look like. A traditional OCR pipeline (layout detection → line segmentation → recognition), an assembly of open-source tools such as Kraken and PyLaia, a small vision-language model prompted page-by-page, or any of these fine-tuned on a curated sample are all viable, and they behave very differently across handwriting styles, languages, and layouts. Fine-tuning on the released train set is encouraged; the challenge’s <code>RESOURCES.md</code> maps public labeled datasets (Bentham, IAM, the Alfred Escher German correspondence, and more) to the UW collections. Starter notebooks covering each solution family are planned for release once vetted.</p>
+</section>
+<section id="links" class="level3">
+<h3 class="anchored" data-anchor-id="links">Links</h3>
+<ul>
+<li><strong>Kaggle challenge</strong>: <a href="https://www.kaggle.com/competitions/badger-scribe">Badger Scribe</a>: Join the challenge and download the data.</li>
+<li><strong>UW Digital Collections</strong>: <a href="https://www.library.wisc.edu/digital-collections/">UW Digital Collections Center</a>: The source of the challenge materials. Please browse the ordinary way; do not point crawlers or bulk downloaders at library catalogs.</li>
+</ul>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/PyTesseract.html"><strong>Library</strong>: Pytesseract: OCR with Tesseract (LSTM) in Python</a>: A starting point for the traditional OCR family of approaches.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: Where to find open-weight vision-language models and handwriting recognition checkpoints to fine-tune.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Understanding Quantization and Precision</a>: Quantization is allowed and encouraged; learn how it reduces model memory so larger open models fit the single-GPU budget.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html"><strong>Compute</strong>: National Research Platform (NRP)</a>: Free GPU compute for UW-Madison researchers for fine-tuning and benchmarking.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Code.html"><strong>Project</strong>: Badger Code</a>: The companion MLM26 challenge with the same open-weight, single-GPU spirit.</li>
+</ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Qm9va3MlMkNGaXJzdC1zdGVwcyUyQ1JlZ3Jlc3Npb24lMkNDbHVzdGVyaW5nJTJDQ29kZS1hbG9uZw==" data-listing-date-sort="1755475200000" data-listing-file-modified-sort="1789591669436" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="406">
-<a href="../../Learn/Books/Computational-Inferential-Thinking_AniAdhikari-JohnDeNero-DavidWagner.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/Computational_and_Inferential_Thinking.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Computational and Inferential Thinking: The Foundations of Data Science
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9va3M='); return false;">Books</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rmlyc3Qtc3RlcHM='); return false;">First-steps</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbg=='); return false;">Regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2x1c3RlcmluZw=='); return false;">Clustering</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
-
-</div>
-<div class="card-text listing-description delink">
-<p>A beginner-friendly introduction to data science, statistics, and Python programming through hands-on exercises — no prior experience assumed.</p>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Peter Cruz Parrilla
-</div>
-<div class="listing-date">
-2025-08-18
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="Qm9va3MlMkNEZWVwJTIwbGVhcm5pbmclMkNSZWdyZXNzaW9uJTJDRGVjaXNpb24lMjB0cmVlcyUyQ1Zpc3VhbGl6YXRpb24lMkNJbnRlcnByZXRhYmlsaXR5" data-listing-date-sort="1755475200000" data-listing-file-modified-sort="1789591669436" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="371">
-<a href="../../Learn/Books/Interpretable-Machine-Learning_ChristophMolnar.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/Interpretable_Machine_Learning.jpg" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Interpretable Machine Learning
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9va3M='); return false;">Books</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbg=='); return false;">Regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVjaXNpb24lMjB0cmVlcw=='); return false;">Decision trees</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VmlzdWFsaXphdGlvbg=='); return false;">Visualization</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW50ZXJwcmV0YWJpbGl0eQ=='); return false;">Interpretability</div>
-
-</div>
-<div class="card-text listing-description delink">
-<p>A comprehensive guide to understanding and explaining ML models, covering model-specific and model-agnostic interpretation methods.</p>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Peter Cruz Parrilla
-</div>
-<div class="listing-date">
-2025-08-18
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="Qm9va3MlMkNDbGFzc2ljYWwlMjBNTCUyQ1JlZ3Jlc3Npb24lMkNEZWVwJTIwbGVhcm5pbmclMkNEZWNpc2lvbiUyMHRyZWVzJTJDVW5zdXBlcnZpc2VkJTIwbGVhcm5pbmclMkNDb2RlLWFsb25nJTJDRmlyc3Qtc3RlcHM=" data-listing-date-sort="1736121600000" data-listing-file-modified-sort="1789591669436" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="370">
-<a href="../../Learn/Books/Intro-StatisticalLearning_JamesGareth-DanielaWitten-HastieTrevor-TibshiraniRob.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/IntroStatsLearning.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Introduction to Statistical Learning
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9va3M='); return false;">Books</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2xhc3NpY2FsJTIwTUw='); return false;">Classical ML</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbg=='); return false;">Regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVjaXNpb24lMjB0cmVlcw=='); return false;">Decision trees</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5zdXBlcnZpc2VkJTIwbGVhcm5pbmc='); return false;">Unsupervised learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rmlyc3Qtc3RlcHM='); return false;">First-steps</div>
-
-</div>
-<div class="card-text listing-description delink">
-<p>A foundational introduction to statistical learning covering regression, classification, tree-based methods, and deep learning with R and Python labs.</p>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2025-01-06
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="Qm9va3MlMkNEZWVwJTIwbGVhcm5pbmclMkNQeVRvcmNoJTJDQ29kZS1hbG9uZyUyQ0ZpcnN0LXN0ZXBz" data-listing-date-sort="1720915200000" data-listing-file-modified-sort="1789591669436" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="409">
-<a href="../../Learn/Books/Intro-Deeplearning_SimonJDPrince.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../../images/UnderstandingDeepLearning.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Understanding Deep Learning
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9va3M='); return false;">Books</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHlUb3JjaA=='); return false;">PyTorch</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29kZS1hbG9uZw=='); return false;">Code-along</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rmlyc3Qtc3RlcHM='); return false;">First-steps</div>
-
-</div>
-<div class="card-text listing-description delink">
-<p>A modern, theory-focused deep learning textbook covering neural networks, CNNs, transformers, generative models, and reinforcement learning with PyTorch notebooks.</p>
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Chris Endemann
-</div>
-<div class="listing-date">
-2024-07-14
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -975,21 +830,38 @@ Chris Endemann
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-      <a href="../../Learn/index.html" class="pagination-link" aria-label="Learn">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Learn</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../Learn/Guides/index.html" class="pagination-link" aria-label="Guides">
-        <span class="nav-page-text">Guides</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
+<input type="hidden" id="giscus-base-theme" value="preferred-color-scheme">
+<input type="hidden" id="giscus-alt-theme" value="preferred-color-scheme">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "UW-Madison-DataScience/ML-X-Nexus";
+    script.dataset.repoId = "R_kgDOKVN_Vw";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOKVN_V84CgacK";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
 </div> <!-- /content -->
 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Books/index.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Projects/ML-Marathon/Badger-Scribe.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></div></div></footer></body></html>

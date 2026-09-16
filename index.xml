@@ -10,7 +10,185 @@
 <atom:link href="https://uw-madison-datascience.github.io/ML-X-Nexus/index.xml" rel="self" type="application/rss+xml"/>
 <description>All new ML and AI resources from the UW-Madison ML+X community</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 25 Aug 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 16 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Intro to Agentic Coding</title>
+  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Tracy Reuter</dc:creator>
+  <dc:creator>Tejvir Mann</dc:creator>
+  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Agentic-Coding.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>The <a href="https://qualiamachine.github.io/Intro-to-Agentic-Coding/">Intro to Agentic Coding</a> workshop covers the working principles behind effective and safe agentic coding for researchers. AI coding agents (Claude Code, GitHub Copilot, Codex, Cursor, OpenCode, and their successors) can read a repository, run commands, edit multiple files, and revise their own output. They shorten the time between an idea and a result, and they shorten the time between a mistake and a misleading result by the same amount. This lesson is about principles rather than one product: limiting access, planning, specifying, verifying, and managing cost apply unchanged across tools. Where the mechanics differ, episodes give the equivalents for Claude Code and GitHub Copilot.</p>
+<p>Three principles run through the lesson:</p>
+<ol type="1">
+<li><strong>Stay in the driver’s seat.</strong> The agent writes the code. You review it, and you decide what is merged to <code>main</code>.</li>
+<li><strong>Work feature by feature, not project by project.</strong> A feature is one thing you can check. An underspecified prompt does not produce random code; it produces the statistically typical code for the average project, and research data is rarely the average case.</li>
+<li><strong>Assume nothing; verify everything.</strong> Rely on test-driven development. Good data science practice still applies in full: examine the data, know the distributions, and know what the model is responding to. Code that runs without error and scores well can still be wrong.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Pre-alpha lesson: evolving as new info and policies come out
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This lesson was developed by Chris Endemann, Tracy Reuter, and Tejvir Mann as part of the <a href="https://ml-marathon.wisc.edu/">2026 Machine Learning Marathon (MLM26)</a>, where it was delivered as a two-hour “Agentic Coding: (Developing) Best Practices” workshop. It is in the Carpentries <a href="https://docs.carpentries.org/resources/curriculum/lesson-life-cycle.html">pre-alpha phase</a>: the materials are in early development and will keep changing as tools, institutional policies, and community best practices evolve. Have feedback or suggestions? Please <a href="https://github.com/qualiaMachine/Intro-to-Agentic-Coding/issues">post an issue on the lesson’s GitHub repository</a>.</p>
+</div>
+</div>
+<section id="topics-covered" class="level3">
+<h3 class="anchored" data-anchor-id="topics-covered">Topics covered</h3>
+<ol type="1">
+<li><strong>What is agentic coding?</strong> How agents differ from chat assistants and autocomplete, and what they can access.</li>
+<li><strong>Safety and security.</strong> Limit what the agent can access: web routes and dev containers, no agents on machines holding restricted data, and keeping API keys in a password manager rather than a file.</li>
+<li><strong>Trust.</strong> Packages, models, and providers: supply-chain risks and how to vet what your agent installs and calls.</li>
+<li><strong>Planning with agents.</strong> Repository reconnaissance and plan mode before any code is written.</li>
+<li><strong>Feature-based development and good prompting.</strong> Specify one checkable feature at a time.</li>
+<li><strong>Verification and testing.</strong> No escaping good data science: tests, assertions, CI, and reviewing agent-generated analyses.</li>
+<li><strong>MCP tools and skills.</strong> Extending your agent with the Model Context Protocol (MCP) and reusable skills, including a hands-on GitHub MCP exercise.</li>
+<li><strong>Cost, context, and energy.</strong> Managing token usage, context windows, and environmental footprint.</li>
+<li><strong>Documentation.</strong> Notes to your future self (and your agent).</li>
+<li><strong>What the research shows, and where this leaves us.</strong> Evidence on agentic coding productivity and quality, and an outlook.</li>
+</ol>
+<section id="prerequisites" class="level4">
+<h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
+<p>Learners should have:</p>
+<ul>
+<li>Comfort working at a command line and with git basics (clone, branch, commit, push).</li>
+<li>Some experience writing Python and doing basic data analysis (pandas, scikit-learn, or similar). No local Python installation is needed; the agent’s sandbox runs the code.</li>
+<li>Access to at least one agentic coding tool. The <a href="https://qualiamachine.github.io/Intro-to-Agentic-Coding/index.html#setup">setup page</a> lists options, including free tiers (Claude Code, GitHub Copilot’s education tier, and the open-source OpenCode).</li>
+<li>Ideally, a small project of your own to point the agent at. The exercises work on your repository, and a fallback starter is provided where it matters.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>No agentic tools on machines holding sensitive or restricted data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The lesson’s setup page recommends a web-based route (the agent works on a cloud copy of a GitHub repository with no access to your machine) and requires a dev container for any locally run agent. If a machine stores restricted data (FERPA, HIPAA/PHI, CUI, export-controlled data, or anything under a data-use agreement), do not install or run any agentic tool on it. UW-Madison users should also review their data-privacy settings; see <a href="https://it.wisc.edu/ai/">it.wisc.edu/ai</a>.</p>
+</div>
+</div>
+</section>
+<section id="estimated-time-to-complete" class="level4">
+<h4 class="anchored" data-anchor-id="estimated-time-to-complete">Estimated time to complete</h4>
+<p>The workshop version runs about two hours and presents the main points. The full lesson (all ten episodes) is the extended reference and takes longer to work through independently. The <a href="https://qualiamachine.github.io/Intro-to-Agentic-Coding/instructor-notes.html">instructor notes</a> map workshop blocks onto episodes.</p>
+</section>
+</section>
+<section id="register-to-take-this-workshop-in-madison" class="level3">
+<h3 class="anchored" data-anchor-id="register-to-take-this-workshop-in-madison">Register to take this workshop in Madison!</h3>
+<p>This workshop is part of UW-Madison’s <a href="https://datascience.wisc.edu/uw-madison-carpentries-community/">local Carpentries community</a> efforts to develop advanced ML/AI educational materials. To stay updated about upcoming workshops, subscribe to the <a href="https://datascience.wisc.edu/newsletter/">Data Science @ UW Newsletter</a>.</p>
+</section>
+<section id="alternatively-work-through-the-materials-independently" class="level3">
+<h3 class="anchored" data-anchor-id="alternatively-work-through-the-materials-independently">Alternatively, work through the materials independently!</h3>
+<p>The full lesson is available as open-source materials (CC-BY 4.0). Visit the <a href="https://qualiamachine.github.io/Intro-to-Agentic-Coding/">lesson materials</a> to explore on your own, or read <a href="https://qualiamachine.github.io/Intro-to-Agentic-Coding/aio.html">all episodes on one page</a>. If you’re at UW-Madison, join <a href="https://datascience.wisc.edu/hub/#dropin">Coding Meetup</a> (Tue/Thur, 2:30-4:30pm) for assistance.</p>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-best-practices.html"><strong>Guide</strong>: Claude Code Best Practices</a>: A deeper dive into permissions, context management, cost, and data privacy, using Claude Code as the primary lens.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-cloud-setup.html"><strong>Guide</strong>: Claude Code Cloud Setup (Vertex AI &amp; Bedrock)</a>: Route Claude Code through your UW-Madison institutional GCP or AWS account.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/Intro-git-github.html"><strong>Video</strong>: Intro to Git and GitHub</a>: Brush up on the git basics (clone, branch, commit, push) that the exercises assume.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html"><strong>Workshop</strong>: Intro to Machine Learning with Sklearn</a>: The scikit-learn fundamentals behind the lesson’s starter project and verification exercises.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/index.html"><strong>Project</strong>: Machine Learning Marathon</a>: The MLM26 challenges this workshop was developed to support.</li>
+</ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
+
+
+</section>
+
+ ]]></description>
+  <category>Workshops</category>
+  <category>Code-along</category>
+  <category>Carpentries</category>
+  <category>MLM26</category>
+  <category>Agentic coding</category>
+  <category>GenAI</category>
+  <category>LLM</category>
+  <category>Security</category>
+  <category>Git/GitHub</category>
+  <category>Reproducibility</category>
+  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Agentic-Coding.html</guid>
+  <pubDate>Wed, 16 Sep 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/agentic-coding-workshop.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
+<item>
+  <title>Badger Scribe: Transcribing 19th-Century Handwritten Archives on a Single GPU</title>
+  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Scott Prater</dc:creator>
+  <dc:creator>Kevin Chovanec</dc:creator>
+  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Badger Scribe is a challenge in the <a href="https://ml-marathon.wisc.edu/">2026 Machine Learning Marathon (MLM26)</a>, organized with the UW Digital Collections Center at UW–Madison Libraries. Institutional archives hold vast collections of handwritten documents that remain difficult to access at scale: without text, these materials can’t be searched, can’t be read by screen readers, and can’t be studied. Teams build pipelines that faithfully transcribe archival document images into machine-readable text, using only open-weight models on a single GPU, so that libraries and archives can actually deploy what comes out of the challenge. The evaluation data is built entirely from UW Digital Collections materials: nineteenth-century surveyors’ field notes, German immigrant correspondence in Kurrent script, and craftsmen’s account books.</p>
+<p>This is an educational, collaborative challenge with no cash prizes. The point is to surface and share transcription pipelines: share repos early, post findings to the Discussion tab, and build on each other’s approaches.</p>
+<section id="challenge-design" class="level3">
+<h3 class="anchored" data-anchor-id="challenge-design">Challenge design</h3>
+<ul>
+<li><strong>Task</strong>: Given a document image (a single page or scan), produce a faithful, verbatim transcription in natural reading order, with original spelling and punctuation preserved and no summarizing or cleanup.</li>
+<li><strong>Data</strong>: A small, curated, rights-cleared sample from three UW Digital Collections: Max Kade Institute German letters (1932–1942, Kurrent script), Dominy craftsmen account books (1810s–1840s), and Wisconsin Land Survey field notes (1830s–1860s). Split into a released train set and a hidden test set, both of which may grow through the fall as human review of the English collections completes. Each labeled row records whether its label is human-verified or an unreviewed machine draft (<code>silver_claude</code>), which matters when fine-tuning.</li>
+<li><strong>Constraints</strong>: The submitted pipeline must run end-to-end on a single GPU with at most 96 GB of VRAM using open-weight models only. No closed-weight APIs (GPT, Claude, Gemini) anywhere in the submitted run. Training, fine-tuning, and other preparation compute are unconstrained.</li>
+<li><strong>Evaluation</strong>: Character Error Rate (CER), macro-averaged across document categories, so a pipeline must perform across handwriting styles, layouts, and languages rather than acing one clean category. Characters the human transcriber could not resolve are marked <code>#</code> and never count against you.</li>
+<li><strong>Verification and writeup</strong>: A complete submission pairs leaderboard predictions with a writeup (<code>WRITEUP.md</code>) in a public repo pinned to the exact commit that produced the score. Organizers re-run the pipeline to confirm it reproduces the predictions, fits the VRAM budget, and uses only open-weight models.</li>
+</ul>
+</section>
+<section id="approaches" class="level3">
+<h3 class="anchored" data-anchor-id="approaches">Approaches</h3>
+<p>There is no consensus on what the pipeline should look like. A traditional OCR pipeline (layout detection → line segmentation → recognition), an assembly of open-source tools such as Kraken and PyLaia, a small vision-language model prompted page-by-page, or any of these fine-tuned on a curated sample are all viable, and they behave very differently across handwriting styles, languages, and layouts. Fine-tuning on the released train set is encouraged; the challenge’s <code>RESOURCES.md</code> maps public labeled datasets (Bentham, IAM, the Alfred Escher German correspondence, and more) to the UW collections. Starter notebooks covering each solution family are planned for release once vetted.</p>
+</section>
+<section id="links" class="level3">
+<h3 class="anchored" data-anchor-id="links">Links</h3>
+<ul>
+<li><strong>Kaggle challenge</strong>: <a href="https://www.kaggle.com/competitions/badger-scribe">Badger Scribe</a>: Join the challenge and download the data.</li>
+<li><strong>UW Digital Collections</strong>: <a href="https://www.library.wisc.edu/digital-collections/">UW Digital Collections Center</a>: The source of the challenge materials. Please browse the ordinary way; do not point crawlers or bulk downloaders at library catalogs.</li>
+</ul>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/PyTesseract.html"><strong>Library</strong>: Pytesseract: OCR with Tesseract (LSTM) in Python</a>: A starting point for the traditional OCR family of approaches.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: Where to find open-weight vision-language models and handwriting recognition checkpoints to fine-tune.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Understanding Quantization and Precision</a>: Quantization is allowed and encouraged; learn how it reduces model memory so larger open models fit the single-GPU budget.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html"><strong>Compute</strong>: National Research Platform (NRP)</a>: Free GPU compute for UW-Madison researchers for fine-tuning and benchmarking.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Code.html"><strong>Project</strong>: Badger Code</a>: The companion MLM26 challenge with the same open-weight, single-GPU spirit.</li>
+</ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
+
+
+</section>
+
+ ]]></description>
+  <category>Projects</category>
+  <category>ML Marathon</category>
+  <category>MLM26</category>
+  <category>OCR</category>
+  <category>Computer vision</category>
+  <category>NLP</category>
+  <category>Multilingual</category>
+  <category>Text analysis</category>
+  <category>LLM</category>
+  <category>GenAI</category>
+  <category>Deep learning</category>
+  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html</guid>
+  <pubDate>Wed, 16 Sep 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/BadgerScribe.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
 <item>
   <title>Badger Code: Building a Local Coding Agent on a Single GPU</title>
   <dc:creator>Chris Endemann</dc:creator>
@@ -419,7 +597,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="4e0a5cd0" class="cell" data-execution_count="1">
+<div id="3288756e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -456,7 +634,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="eb4a1e42" class="cell" data-execution_count="2">
+<div id="c60fd4f7" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -473,7 +651,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="edea182a" class="cell" data-execution_count="3">
+<div id="51bccd01" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -513,7 +691,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="c6bb1c58" class="cell" data-execution_count="4">
+<div id="2d080ed3" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -551,7 +729,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="1c7326b5" class="cell" data-execution_count="5">
+<div id="d7d27a7b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -657,7 +835,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="91901683" class="cell" data-execution_count="6">
+<div id="b9ac3e5b" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -732,7 +910,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="c0a9c2a3" class="cell" data-execution_count="7">
+<div id="b6e794bc" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -807,7 +985,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="97b713bf" class="cell" data-execution_count="8">
+<div id="5e3ef9f5" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -941,6 +1119,19 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>New to agentic coding? Start with the workshop
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Our tool-agnostic <strong><a href="../../Learn/Workshops/Intro-Agentic-Coding.html">Intro to Agentic Coding</a></strong> workshop (developed for MLM26) covers the core principles behind this guide: limiting what the agent can access, planning, feature-based development, and verifying everything. This guide goes deeper on the Claude Code specifics.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Tip</span>UW-Madison cloud users: Get started with Claude Code + Vertex AI or Bedrock
 </div>
 </div>
@@ -949,7 +1140,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -958,7 +1149,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Much of the Claude Code-specific guidance in this post draws on Anthropic’s official documentation, including their <a href="https://code.claude.com/docs/en/best-practices">best practices guide</a>, <a href="https://code.claude.com/docs/en/permissions">permissions</a> and <a href="https://code.claude.com/docs/en/sandboxing">sandboxing</a> docs, <a href="https://code.claude.com/docs/en/memory">CLAUDE.md reference</a>, <a href="https://code.claude.com/docs/en/data-usage">data usage policy</a>, and <a href="https://code.claude.com/docs/en/costs">cost management guide</a>. GitHub Copilot sections draw on GitHub’s <a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">coding agent docs</a> and <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">changelog</a>. Where we paraphrase official documentation, we’ve linked to the source. Community perspectives and independent analyses are cited inline throughout.</p>
 </div>
@@ -1048,7 +1239,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 <h4 class="anchored" data-anchor-id="claude.ai-chat-not-claude-code">Claude.ai (Chat — not Claude Code)</h4>
 <p><a href="https://claude.ai">Claude.ai</a> is Anthropic’s general-purpose chat interface. It’s <em>not</em> an agentic coding tool — it can’t execute code, edit files, or run commands on your system. You provide context by pasting code into the conversation, and you copy the output back into your editor.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1057,7 +1248,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The <a href="https://claude.ai/download">Claude Desktop app</a> includes three tabs: <strong>Chat</strong> (standard conversation, with <a href="https://modelcontextprotocol.io/">MCP</a> support), <strong>Code</strong> (the full Claude Code agentic experience — see below), and <strong>Cowork</strong> (an autonomous agent for knowledge work — it can execute multi-step tasks on your desktop, like research, file organization, and document creation). Only the <strong>Code</strong> tab is an agentic coding tool. The Chat tab provides the same experience as <a href="https://claude.ai">claude.ai</a> in a native app.</p>
 </div>
@@ -1207,7 +1398,7 @@ font-style: inherit;">claude</span></span></code></pre></div></div>
 <li><strong>Quality on complex tasks</strong> — In a <a href="https://www.sitepoint.com/github-copilot-vs-claude-code-accuracy-speed-2026/">50-session benchmark study</a>, Claude Code produced a higher accept rate (44% vs 38%) and scored significantly better on bug-fixing context fidelity (8.5/10 vs 5.9/10). Copilot was ~15 seconds faster per task on average and excels at inline completions.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1216,7 +1407,7 @@ font-style: inherit;">claude</span></span></code></pre></div></div>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>As of <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">February 2026</a>, Claude is also available as a <strong>standalone agent</strong> on GitHub — not just a model choice within Copilot. You can assign issues directly to <code>@claude</code> (or <code>@copilot</code>, or <code>@codex</code>) on GitHub.com, and in <a href="https://code.visualstudio.com/blogs/2026/02/05/multi-agent-development">VS Code 1.109+</a> you can start Claude agent sessions that use Anthropic’s own agent harness rather than Copilot’s orchestration. In these modes, you get the same prompts, tools, and architecture as Claude Code — which should close the quality gap vs.&nbsp;using Claude as a model within Copilot. Initially available for Pro+ and Enterprise plans; <a href="https://github.blog/changelog/2026-02-26-claude-and-codex-now-available-for-copilot-business-pro-users/">expanded to Copilot Business and Pro</a> on Feb 26 at no additional cost.</p>
 </div>
@@ -2015,14 +2206,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="979eb7b3" class="cell" data-execution_count="1">
+<div id="a228cf22" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="e4f3b066" class="cell" data-execution_count="2">
+<div id="2ae43adc" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -2135,7 +2326,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="2c48ffa3" class="cell" data-execution_count="3">
+<div id="6995c3e2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2372,7 +2563,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="23d3f888" class="cell" data-execution_count="4">
+<div id="fd3a0dab" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -2400,7 +2591,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="fdf80a9f" class="cell" data-execution_count="5">
+<div id="232b2f62" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2423,7 +2614,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="2f2b2b4b" class="cell" data-execution_count="6">
+<div id="79bb703c" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -2445,7 +2636,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="c5b39a1e" class="cell" data-execution_count="7">
+<div id="eb38a77e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2568,7 +2759,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="1ff22da4" class="cell" data-execution_count="8">
+<div id="a99fc2dc" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -2598,7 +2789,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="6590e0d2" class="cell" data-execution_count="9">
+<div id="58548361" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -2643,7 +2834,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="aad338a8" class="cell" data-execution_count="10">
+<div id="f3975b33" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2879,7 +3070,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="11216750" class="cell" data-execution_count="11">
+<div id="2bc825c9" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2955,7 +3146,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="51746df6" class="cell" data-execution_count="12">
+<div id="1e26d3e6" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -3071,7 +3262,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="7c245317" class="cell" data-execution_count="13">
+<div id="01d6988f" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3317,7 +3508,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="37766745" class="cell" data-execution_count="14">
+<div id="37c0492f" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -7846,117 +8037,6 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
   <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/BioTrove.html</guid>
   <pubDate>Thu, 11 Sep 2025 00:00:00 GMT</pubDate>
   <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/Clustering-Biotrove.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Clustering the BioTrove Dataset</title>
-  <dc:creator>Chris Endemann</dc:creator>
-  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/BioTrove-Clustering.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>Clustering the BioTrove Dataset was featured in the <a href="https://ml-marathon.wisc.edu/">2025 Machine Learning Marathon (MLM25)</a>. This challenge asks participants to discover genus- and species-level structure in biodiversity images using unsupervised and self-supervised learning methods.</p>
-<section id="challenge-design" class="level3">
-<h3 class="anchored" data-anchor-id="challenge-design">Challenge design</h3>
-<ul>
-<li><strong>Task</strong>: Cluster biodiversity images to recover taxonomic structure (genus and species groupings) without explicit labels.</li>
-<li><strong>Domain</strong>: Biodiversity and ecology – automated species identification can support pest control, crop monitoring, biodiversity assessment, and environmental conservation.</li>
-<li><strong>Data</strong>: Images drawn from <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/BioTrove.html">BioTrove</a>, the largest publicly accessible biodiversity image dataset (161.9 million images, ~366K species), curated from iNaturalist with research-grade annotations.</li>
-<li><strong>Methods</strong>: Contrastive learning, autoencoders, CLIP-based embeddings, and other unsupervised/semi-supervised approaches.</li>
-</ul>
-</section>
-<section id="links" class="level3">
-<h3 class="anchored" data-anchor-id="links">Links</h3>
-<ul>
-<li><strong>Kaggle challenge</strong>: <a href="https://www.kaggle.com/competitions/biotrove-clustering/overview">Clustering the BioTrove Dataset</a></li>
-<li><strong>Winning writeup</strong>: <a href="https://www.kaggle.com/competitions/biotrove-clustering/writeups/1-it-all-depends-on-a-good-embedding">1st place: It All Depends on a Good Embedding</a></li>
-<li><strong>BioTrove project</strong>: <a href="https://baskargroup.github.io/BioTrove/">baskargroup.github.io/BioTrove</a></li>
-</ul>
-</section>
-<section id="related-resources" class="level2">
-<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
-<ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/BioTrove.html"><strong>Data</strong>: BioTrove</a>: Learn more about the BioTrove dataset, including its construction from iNaturalist and available CLIP embeddings.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/iNaturalist.html"><strong>Data</strong>: iNaturalist</a>: The citizen-science platform underlying BioTrove’s research-grade biodiversity observations.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: BioTrove-CLIP models and the dataset are hosted on Hugging Face.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: Build foundational deep learning skills relevant to contrastive learning and embedding-based clustering.</li>
-<li><strong>Paper</strong>: <a href="https://arxiv.org/abs/2406.17720">BioTrove: A Large Curated Image Dataset Enabling AI for Biodiversity (NeurIPS 2024)</a></li>
-</ul>
-</section>
-<section id="comments" class="level2">
-<h2 class="anchored" data-anchor-id="comments">Comments</h2>
-
-
-</section>
-
- ]]></description>
-  <category>Projects</category>
-  <category>ML Marathon</category>
-  <category>MLM25</category>
-  <category>Computer vision</category>
-  <category>Clustering</category>
-  <category>Unsupervised learning</category>
-  <category>Biodiversity</category>
-  <category>Image data</category>
-  <category>Deep learning</category>
-  <category>CLIP</category>
-  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/BioTrove-Clustering.html</guid>
-  <pubDate>Thu, 11 Sep 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/Clustering-Biotrove.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Brain-to-Text ’25: Decoding Speech from Neural Activity</title>
-  <dc:creator>Chris Endemann</dc:creator>
-  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Brain-to-Text.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>Brain-to-Text ’25 was featured in the <a href="https://ml-marathon.wisc.edu/">2025 Machine Learning Marathon (MLM25)</a>. This Kaggle competition challenges participants to decode intracortical neural activity during attempted speech into text – aiming to restore communication for people with paralysis.</p>
-<section id="challenge-design" class="level3">
-<h3 class="anchored" data-anchor-id="challenge-design">Challenge design</h3>
-<ul>
-<li><strong>Task</strong>: Decode neural recordings from speech-related brain regions into the words a participant is attempting to say.</li>
-<li><strong>Domain</strong>: Brain-computer interfaces and neural speech decoding.</li>
-<li><strong>Data</strong>: A new intracortical speech neuroscience dataset provided for the competition.</li>
-<li><strong>Methods</strong>: The 2024 edition’s top approaches used RNN ensembles merged with fine-tuned large language models. The baseline achieved 9.7% word error rate; the top entrant reached 5.8%.</li>
-</ul>
-</section>
-<section id="links" class="level3">
-<h3 class="anchored" data-anchor-id="links">Links</h3>
-<ul>
-<li><strong>Kaggle challenge</strong>: <a href="https://www.kaggle.com/competitions/brain-to-text-25">Brain-to-Text ’25</a></li>
-</ul>
-</section>
-<section id="related-resources" class="level2">
-<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
-<ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: Learn RNNs and sequence modeling fundamentals in PyTorch — key building blocks for neural speech decoding.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html"><strong>Workshop</strong>: Intro to Natural Language Processing (NLP)</a>: Brush up on text processing and language model basics relevant to the text decoding target.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: Top solutions fine-tuned LLMs from Hugging Face — learn how to discover and use open-source models.</li>
-</ul>
-</section>
-<section id="comments" class="level2">
-<h2 class="anchored" data-anchor-id="comments">Comments</h2>
-
-
-</section>
-
- ]]></description>
-  <category>Projects</category>
-  <category>ML Marathon</category>
-  <category>MLM25</category>
-  <category>Deep learning</category>
-  <category>Signal processing</category>
-  <category>Time-series</category>
-  <category>NLP</category>
-  <category>Neuroscience</category>
-  <category>RNN</category>
-  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Brain-to-Text.html</guid>
-  <pubDate>Thu, 11 Sep 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/Brain-to-Text25.png" medium="image" type="image/png" height="72" width="144"/>
 </item>
 </channel>
 </rss>
