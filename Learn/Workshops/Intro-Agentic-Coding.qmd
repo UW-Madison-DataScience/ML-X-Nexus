@@ -1,0 +1,79 @@
+---
+title: "Intro to Agentic Coding"
+author: 
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+  - name: Tracy Reuter
+  - name: Tejvir Mann
+date: 2026-09-16
+date-format: long
+image: "../../../images/agentic-coding-workshop.png"
+
+categories: 
+  - Workshops
+  - Code-along
+  - Carpentries
+  - MLM26
+  - Agentic coding
+  - GenAI
+  - LLM
+  - Security
+  - Git/GitHub
+  - Reproducibility
+---
+
+The [Intro to Agentic Coding](https://qualiamachine.github.io/Intro-to-Agentic-Coding/) workshop covers the working principles behind effective and safe agentic coding for researchers. AI coding agents (Claude Code, GitHub Copilot, Codex, Cursor, OpenCode, and their successors) can read a repository, run commands, edit multiple files, and revise their own output. They shorten the time between an idea and a result, and they shorten the time between a mistake and a misleading result by the same amount. This lesson is about principles rather than one product: limiting access, planning, specifying, verifying, and managing cost apply unchanged across tools. Where the mechanics differ, episodes give the equivalents for Claude Code and GitHub Copilot.
+
+Three principles run through the lesson:
+
+1. **Stay in the driver's seat.** The agent writes the code. You review it, and you decide what is merged to `main`.
+2. **Work feature by feature, not project by project.** A feature is one thing you can check. An underspecified prompt does not produce random code; it produces the statistically typical code for the average project, and research data is rarely the average case.
+3. **Assume nothing; verify everything.** Rely on test-driven development. Good data science practice still applies in full: examine the data, know the distributions, and know what the model is responding to. Code that runs without error and scores well can still be wrong.
+
+::: {.callout-note}
+## Pre-alpha lesson: evolving as new info and policies come out
+This lesson was developed by Chris Endemann, Tracy Reuter, and Tejvir Mann as part of the [2026 Machine Learning Marathon (MLM26)](https://ml-marathon.wisc.edu/), where it was delivered as a two-hour "Agentic Coding: (Developing) Best Practices" workshop. It is in the Carpentries [pre-alpha phase](https://docs.carpentries.org/resources/curriculum/lesson-life-cycle.html): the materials are in early development and will keep changing as tools, institutional policies, and community best practices evolve. Have feedback or suggestions? Please [post an issue on the lesson's GitHub repository](https://github.com/qualiaMachine/Intro-to-Agentic-Coding/issues).
+:::
+
+### Topics covered
+1. **What is agentic coding?** How agents differ from chat assistants and autocomplete, and what they can access.
+2. **Safety and security.** Limit what the agent can access: web routes and dev containers, no agents on machines holding restricted data, and keeping API keys in a password manager rather than a file.
+3. **Trust.** Packages, models, and providers: supply-chain risks and how to vet what your agent installs and calls.
+4. **Planning with agents.** Repository reconnaissance and plan mode before any code is written.
+5. **Feature-based development and good prompting.** Specify one checkable feature at a time.
+6. **Verification and testing.** No escaping good data science: tests, assertions, CI, and reviewing agent-generated analyses.
+7. **MCP tools and skills.** Extending your agent with the Model Context Protocol (MCP) and reusable skills, including a hands-on GitHub MCP exercise.
+8. **Cost, context, and energy.** Managing token usage, context windows, and environmental footprint.
+9. **Documentation.** Notes to your future self (and your agent).
+10. **What the research shows, and where this leaves us.** Evidence on agentic coding productivity and quality, and an outlook.
+
+#### Prerequisites
+Learners should have:
+
+- Comfort working at a command line and with git basics (clone, branch, commit, push).
+- Some experience writing Python and doing basic data analysis (pandas, scikit-learn, or similar). No local Python installation is needed; the agent's sandbox runs the code.
+- Access to at least one agentic coding tool. The [setup page](https://qualiamachine.github.io/Intro-to-Agentic-Coding/index.html#setup) lists options, including free tiers (Claude Code, GitHub Copilot's education tier, and the open-source OpenCode).
+- Ideally, a small project of your own to point the agent at. The exercises work on your repository, and a fallback starter is provided where it matters.
+
+::: {.callout-warning}
+## No agentic tools on machines holding sensitive or restricted data
+The lesson's setup page recommends a web-based route (the agent works on a cloud copy of a GitHub repository with no access to your machine) and requires a dev container for any locally run agent. If a machine stores restricted data (FERPA, HIPAA/PHI, CUI, export-controlled data, or anything under a data-use agreement), do not install or run any agentic tool on it. UW-Madison users should also review their data-privacy settings; see [it.wisc.edu/ai](https://it.wisc.edu/ai/).
+:::
+
+#### Estimated time to complete
+The workshop version runs about two hours and presents the main points. The full lesson (all ten episodes) is the extended reference and takes longer to work through independently. The [instructor notes](https://qualiamachine.github.io/Intro-to-Agentic-Coding/instructor-notes.html) map workshop blocks onto episodes.
+
+### Register to take this workshop in Madison!
+This workshop is part of UW-Madison's [local Carpentries community](https://datascience.wisc.edu/uw-madison-carpentries-community/) efforts to develop advanced ML/AI educational materials. To stay updated about upcoming workshops, subscribe to the [Data Science @ UW Newsletter](https://datascience.wisc.edu/newsletter/).
+
+### Alternatively, work through the materials independently!
+The full lesson is available as open-source materials (CC-BY 4.0). Visit the [lesson materials](https://qualiamachine.github.io/Intro-to-Agentic-Coding/) to explore on your own, or read [all episodes on one page](https://qualiamachine.github.io/Intro-to-Agentic-Coding/aio.html). If you're at UW-Madison, join [Coding Meetup](https://datascience.wisc.edu/hub/#dropin) (Tue/Thur, 2:30-4:30pm) for assistance.
+
+## Related resources
+- [**Guide**: Claude Code Best Practices](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-best-practices.html): A deeper dive into permissions, context management, cost, and data privacy, using Claude Code as the primary lens.
+- [**Guide**: Claude Code Cloud Setup (Vertex AI & Bedrock)](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-cloud-setup.html): Route Claude Code through your UW-Madison institutional GCP or AWS account.
+- [**Video**: Intro to Git and GitHub](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/Intro-git-github.html): Brush up on the git basics (clone, branch, commit, push) that the exercises assume.
+- [**Workshop**: Intro to Machine Learning with Sklearn](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html): The scikit-learn fundamentals behind the lesson's starter project and verification exercises.
+- [**Project**: Machine Learning Marathon](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/index.html): The MLM26 challenges this workshop was developed to support.
+
+## Comments

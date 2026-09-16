@@ -1,0 +1,53 @@
+---
+title: "Badger Scribe: Transcribing 19th-Century Handwritten Archives on a Single GPU"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+  - name: Scott Prater
+  - name: Kevin Chovanec
+
+date: 2026-09-16
+date-format: long
+image: "../../images/BadgerScribe.png"
+
+categories:
+  - Projects
+  - ML Marathon
+  - MLM26
+  - OCR
+  - Computer vision
+  - NLP
+  - Multilingual
+  - Text analysis
+  - LLM
+  - GenAI
+  - Deep learning
+
+---
+
+Badger Scribe is a challenge in the [2026 Machine Learning Marathon (MLM26)](https://ml-marathon.wisc.edu/), organized with the UW Digital Collections Center at UW–Madison Libraries. Institutional archives hold vast collections of handwritten documents that remain difficult to access at scale: without text, these materials can't be searched, can't be read by screen readers, and can't be studied. Teams build pipelines that faithfully transcribe archival document images into machine-readable text, using only open-weight models on a single GPU, so that libraries and archives can actually deploy what comes out of the challenge. The evaluation data is built entirely from UW Digital Collections materials: nineteenth-century surveyors' field notes, German immigrant correspondence in Kurrent script, and craftsmen's account books.
+
+This is an educational, collaborative challenge with no cash prizes. The point is to surface and share transcription pipelines: share repos early, post findings to the Discussion tab, and build on each other's approaches.
+
+### Challenge design
+- **Task**: Given a document image (a single page or scan), produce a faithful, verbatim transcription in natural reading order, with original spelling and punctuation preserved and no summarizing or cleanup.
+- **Data**: A small, curated, rights-cleared sample from three UW Digital Collections: Max Kade Institute German letters (1932–1942, Kurrent script), Dominy craftsmen account books (1810s–1840s), and Wisconsin Land Survey field notes (1830s–1860s). Split into a released train set and a hidden test set, both of which may grow through the fall as human review of the English collections completes. Each labeled row records whether its label is human-verified or an unreviewed machine draft (`silver_claude`), which matters when fine-tuning.
+- **Constraints**: The submitted pipeline must run end-to-end on a single GPU with at most 96 GB of VRAM using open-weight models only. No closed-weight APIs (GPT, Claude, Gemini) anywhere in the submitted run. Training, fine-tuning, and other preparation compute are unconstrained.
+- **Evaluation**: Character Error Rate (CER), macro-averaged across document categories, so a pipeline must perform across handwriting styles, layouts, and languages rather than acing one clean category. Characters the human transcriber could not resolve are marked `#` and never count against you.
+- **Verification and writeup**: A complete submission pairs leaderboard predictions with a writeup (`WRITEUP.md`) in a public repo pinned to the exact commit that produced the score. Organizers re-run the pipeline to confirm it reproduces the predictions, fits the VRAM budget, and uses only open-weight models.
+
+### Approaches
+There is no consensus on what the pipeline should look like. A traditional OCR pipeline (layout detection → line segmentation → recognition), an assembly of open-source tools such as Kraken and PyLaia, a small vision-language model prompted page-by-page, or any of these fine-tuned on a curated sample are all viable, and they behave very differently across handwriting styles, languages, and layouts. Fine-tuning on the released train set is encouraged; the challenge's `RESOURCES.md` maps public labeled datasets (Bentham, IAM, the Alfred Escher German correspondence, and more) to the UW collections. Starter notebooks covering each solution family are planned for release once vetted.
+
+### Links
+- **Kaggle challenge**: [Badger Scribe](https://www.kaggle.com/competitions/badger-scribe): Join the challenge and download the data.
+- **UW Digital Collections**: [UW Digital Collections Center](https://www.library.wisc.edu/digital-collections/): The source of the challenge materials. Please browse the ordinary way; do not point crawlers or bulk downloaders at library catalogs.
+
+## Related resources
+- [**Library**: Pytesseract: OCR with Tesseract (LSTM) in Python](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/PyTesseract.html): A starting point for the traditional OCR family of approaches.
+- [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html): Where to find open-weight vision-language models and handwriting recognition checkpoints to fine-tune.
+- [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html): Quantization is allowed and encouraged; learn how it reduces model memory so larger open models fit the single-GPU budget.
+- [**Compute**: National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html): Free GPU compute for UW-Madison researchers for fine-tuning and benchmarking.
+- [**Project**: Badger Code](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Code.html): The companion MLM26 challenge with the same open-weight, single-GPU spirit.
+
+## Comments
