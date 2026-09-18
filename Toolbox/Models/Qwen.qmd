@@ -48,15 +48,17 @@ Qwen fits into the wave of open-weight large language models that followed Llama
 Within a year Qwen moved from Qwen2 to Qwen3.8, and the benchmark gains came with it. For example, on quality-assessment benchmarks for multimodal models, Qwen3.8 improved about 8 points over Qwen2. That pace shows how open-weight families can iterate quickly without the release cycles of proprietary models.
 
 ## How a 27B model competes with frontier models
-The headline of the past year is not that Qwen's biggest model is large. It is that a mid-size Qwen model now lands within a few points of frontier proprietary models that are probably one to two orders of magnitude larger. The table below shows Qwen3.8-27B (27B dense, one GPU) against the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
+The headline of the past year is not that Qwen's biggest model is large. It is that a mid-size Qwen model now lands within a few points of frontier proprietary models that are probably one to two orders of magnitude larger. The figure below compares Qwen3.8-27B (27B dense, fits on one GPU) with the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
 
-| Benchmark | What it measures | Qwen3.8-27B | Claude Opus 4.6 Max |
-|---|---|---:|---:|
-| Terminal-Bench 2.1 | Agent tasks in a real terminal | 73.0 | 78.2 |
-| GPQA Diamond | Graduate-level science questions | 89.2 | 91.3 |
-| Humanity's Last Exam | Expert questions across many fields | 30.8 | 40.0 |
-| CharXiv (reasoning) | Reasoning over scientific charts and figures | 83.7 | 66.0 |
-| OmniDocBench 1.5 | Parsing PDF pages: text, tables, formulas | 91.1 | 86.6 |
+![Benchmark scores for Qwen3.8-27B and Claude Opus 4.6 Max across five benchmarks. Qwen leads on the two document and figure benchmarks and trails on the three general reasoning and agent benchmarks.](../../../images/Qwen-benchmarks.svg){fig-alt="Grouped horizontal bar chart comparing Qwen3.8-27B with Claude Opus 4.6 Max on five benchmarks. Qwen3.8-27B leads on CharXiv reasoning (83.7 vs 66.0) and OmniDocBench 1.5 (91.1 vs 86.6), and trails on GPQA Diamond (89.2 vs 91.3), Terminal-Bench 2.1 (73.0 vs 78.2), and Humanity's Last Exam (30.8 vs 40.0)."}
+
+| Benchmark | What it measures | Qwen3.8-27B | Claude Opus 4.6 Max | Difference |
+|---|---|---:|---:|---:|
+| CharXiv (reasoning) | Reasoning over scientific charts and figures | 83.7 | 66.0 | +17.7 |
+| OmniDocBench 1.5 | Parsing PDF pages: text, tables, formulas | 91.1 | 86.6 | +4.5 |
+| GPQA Diamond | Graduate-level science questions | 89.2 | 91.3 | -2.1 |
+| Terminal-Bench 2.1 | Agent tasks in a real terminal | 73.0 | 78.2 | -5.2 |
+| Humanity's Last Exam | Expert questions across many fields | 30.8 | 40.0 | -9.2 |
 
 Source: [Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B). Notice the pattern: the losses are on general reasoning and long-horizon agent tasks, while the wins are on visual and document work, which happens to be the most common ask from campus researchers.
 
