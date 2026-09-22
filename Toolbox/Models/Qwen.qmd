@@ -90,21 +90,17 @@ The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in F
 | Model (dense unless noted) | Parameters | FP16 / BF16 | 8-bit | 4-bit |
 |---|---:|---:|---:|---:|
 | Qwen3-0.6B | 0.6B | ~1.2 GB | ~0.6 GB | ~0.4 GB |
-| Qwen3-4B | 4B | ~8 GB | ~4 GB | ~2.5 GB |
 | Qwen3-8B | 8B | ~16 GB | ~8 GB | ~5 GB |
-| Qwen3-14B | 14B | ~28 GB | ~14 GB | ~8 GB |
-| Qwen3.8-27B | 27B | ~56 GB | ~28 GB | ~16 GB |
-| Qwen3-32B | 32B | ~64 GB | ~32 GB | ~18 GB |
-| Qwen2.5-72B | 72B | ~144 GB | ~72 GB | ~40 GB |
+| **Qwen3.8-27B** | **27B** | **~56 GB** | **~28 GB** | **~16 GB** |
 | Qwen3-30B-A3B (MoE) | 30B total, 3B active | ~60 GB | ~30 GB | ~17 GB |
 | Qwen3-235B-A22B (MoE) | 235B total, 22B active | ~470 GB | ~235 GB | ~130 GB |
 
-A few practical takeaways:
+**Qwen3.8-27B is the best value on this list.** It is the largest model that still runs on a single GPU, and it is the one in the benchmark comparison above, so you get near-frontier quality without a multi-GPU deployment. In BF16 it needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss. This is also the size class campus RAG evaluations found competitive with commercial APIs.
 
-- **0.6B to 4B**: Laptops, edge devices, and latency-critical tasks. Good for classification, extraction, and reformatting; fine for drafting and summarization.
-- **8B to 14B**: The sweet spot for a single consumer GPU (16 to 24 GB). Strong general reasoning at manageable cost, and a good default for prototyping.
-- **27B to 32B**: Near-frontier quality on one workstation or server GPU. In BF16, Qwen3.8-27B needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss. This is the class that campus RAG evaluations found competitive with commercial APIs.
-- **72B and MoE flagships**: Multi-GPU territory at full precision. For MoE models, total parameters set the memory you need to buy; active parameters set the speed you get once it's loaded.
+The rest of the ladder:
+
+- **Under 8B**: Laptops, edge devices, and latency-critical work. Good for classification, extraction, reformatting, drafting, and summarization, and the right place to prototype before committing hardware.
+- **Mixture-of-experts models**: Total parameters set the memory you have to buy; active parameters set the speed you get once it is loaded. Qwen3-30B-A3B costs about the same memory as the 27B but runs considerably faster, while the 235B flagship is multi-GPU territory at full precision.
 
 #### Hands-on: measure memory yourself
 You can profile the actual GPU footprint of any Qwen model with the snippet below. Swap model names and precisions to see how parameter count and quantization change memory use. See the [Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html) notebook for a deeper walkthrough.
@@ -193,7 +189,7 @@ Studies have also shown that Qwen models exhibit bias on topics surrounding geop
 - [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html): The primary hub for downloading and running Qwen checkpoints with the Transformers library.
 - [**Video**: Exploring Generative AI: An Introduction to LLMs and Diffusion Models](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.html): Kangwook Lee introduces how LLMs work under the hood.
 - [**GenAI**: UW Generative AI Services & Policies](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Institution-focused guidance on generative AI tools and policies at UW-Madison.
-- [**Paper**: Qwen3 Technical Report](https://arxiv.org/abs/2505.09388) and [Qwen2.5 Technical Report](https://arxiv.org/abs/2412.15115): Architecture, training data, and evaluation details for the two most recent major generations.
+- [**Paper**: Qwen3 Technical Report](https://arxiv.org/abs/2505.09388): Architecture, training data, and evaluation details for the generation the current models build on.
 - [**Paper**: LLM security vulnerabilities (Galinkin et al.)](https://arxiv.org/html/2506.13726v1): Evaluates jailbreak and prompt-injection vulnerabilities across open-weight models, including Qwen, as discussed in the risks section.
 - [**Paper**: Post-training bias in Qwen models](https://arxiv.org/html/2605.23825v1): Duke University study of how post-training shapes political and social bias in Qwen models.
 - [**Paper**: Systematic bias in LLMs on political topics](https://arxiv.org/html/2512.15792v2): Nanyang Technological University study of systematic bias across LLMs on politics and related issues.
