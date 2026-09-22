@@ -162,8 +162,19 @@ Qwen models carry measurable bias on geopolitics and contemporary social issues,
 
 Two caveats before generalizing from either. The published work mostly tests small models such as Qwen2-7B, while real deployments run 27B and up. And post-training choices shift these behaviors, including any fine-tuning you do yourself.
 
-#### What open weights buy you here
-The bias does not go away because you host the model, but it becomes inspectable. You can probe it, measure it on your own prompts, and correct it with fine-tuning or a system prompt, none of which is possible behind a closed API. Evaluating bias on your own use case is due diligence for any model, Qwen included.
+#### How that bias is measured
+The instruments are blunt but repeatable, which is what makes them worth knowing. The common approach poses a fixed battery of politically sensitive items, often adapted from survey instruments such as the Political Compass or the World Values Survey, and scores the model's forced choices against a reference. Variants ask the same question in several languages to expose shifts that only appear outside English, measure refusal rates across topic sets rather than answer content, or put an identical prompt to several models and compare the spread.
+
+The useful thing about these methods is how cheap they are to reproduce: a few hundred prompts, a fixed rubric, and a scoring pass. If bias matters for your work, running a small version against your own prompts will tell you more than any published number, because the published numbers describe a different model size and a different prompt set than yours.
+
+#### Why open weights are the better bet on bias
+Every model carries bias, closed ones included. The difference is what you are able to do about it.
+
+With open weights you can measure it against the exact checkpoint you deploy, change it by fine-tuning on your own data, and wrap it in a governance layer, filters, and logging that you control. Just as important, the weights do not move under you. The checkpoint you evaluated is the checkpoint you serve, for as long as you choose to serve it.
+
+Behind a closed API you get none of that. The bias is whatever the vendor decided it should be, and it can shift between model versions without notice, so an evaluation you ran last quarter may not describe the model answering your users today. You cannot inspect the training data or the alignment policy, and your only real lever is the system prompt. You are also trusting that commercial and political pressure never shapes what the model will and will not say, which is a large thing to take on faith.
+
+None of this makes Qwen unbiased. It makes the bias yours to find, measure, and correct, which for most research use is the better trade.
 
 ## Model playground
 #### Tutorials and getting started
