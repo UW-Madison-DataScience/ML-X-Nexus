@@ -2,6 +2,8 @@
 title: "Qwen: Open-Weight Language and Multimodal Models from Alibaba Cloud"
 author:
   - name: Zain Waseem
+  - name: Chris Endemann
+    email: endemann@wisc.edu
 
 date: 2026-09-18
 date-format: long
@@ -47,7 +49,7 @@ Qwen fits into the wave of open-weight large language models that followed Llama
 
 Within a year Qwen moved from Qwen2 to Qwen3.8, and the benchmark gains came with it. For example, on quality-assessment benchmarks for multimodal models, Qwen3.8 improved about 8 points over Qwen2. That pace shows how open-weight families can iterate quickly without the release cycles of proprietary models.
 
-## How a 27B model competes with frontier models
+## How these models keep shrinking and still competing
 The headline of the past year is not that Qwen's biggest model is large. It is that a mid-size Qwen model now lands within a few points of frontier proprietary models that are probably one to two orders of magnitude larger. The figure below compares Qwen3.8-27B (27B dense, fits on one GPU) with the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
 
 ![Benchmark scores for Qwen3.8-27B and Claude Opus 4.6 Max across five benchmarks. Qwen leads on the two document and figure benchmarks and trails on the three general reasoning and agent benchmarks.](../../../images/Qwen-benchmarks.svg){fig-alt="Grouped horizontal bar chart comparing Qwen3.8-27B with Claude Opus 4.6 Max on five benchmarks. Qwen3.8-27B leads on CharXiv reasoning (83.7 vs 66.0) and OmniDocBench 1.5 (91.1 vs 86.6), and trails on GPQA Diamond (89.2 vs 91.3), Terminal-Bench 2.1 (73.0 vs 78.2), and Humanity's Last Exam (30.8 vs 40.0)."}
@@ -74,12 +76,12 @@ Where the gap is still real: long-horizon agentic reliability over many steps, r
 The same logic extends further down. The narrower your task, the smaller your model can be. On OmniDocBench 1.5, [GLM-OCR](https://arxiv.org/abs/2603.10910), a 0.9B specialized document parser, scores 94.6 versus 89.2 for Qwen3-VL-235B, at about 1/260th the size. A Qwen3.8-27B adapted to a law firm's corpus has been reported to pass more tasks than a frontier model at roughly a tenth of the per-query cost. The pattern points toward fleets of small, specialized open models rather than one big general one, and Qwen's size ladder and permissive license make it a natural base for that kind of fine-tuning.
 
 ## Qwen variants
+One family covers most jobs. Pick the variant by the task, then pick the size by your hardware.
+
 - **[Qwen3 / Qwen3.x (chat and reasoning)](https://huggingface.co/collections/Qwen/qwen3-67dd247413f0e2e4f653967f)**: The current general-purpose generation, in dense sizes (0.6B to 32B, plus the Qwen3.8-27B) and MoE sizes (30B-A3B, 235B-A22B, up to the Max models) with switchable thinking modes.
-- **[Qwen2.5 / Qwen2.5-Instruct](https://huggingface.co/collections/Qwen/qwen25-66e81a666513e518adb90d9e)**: The previous dense generation (0.5B to 72B). Still a common default for local experimentation and fine-tuning, and the models many published RAG systems were built on.
 - **[Qwen-Coder](https://github.com/QwenLM/Qwen3-Coder)**: Code-specialized models for generation, completion, repair, and agentic coding across dozens of languages. Qwen3-Coder ranges from small local models up to a 480B MoE and holds its own against proprietary coding assistants.
 - **[Qwen-VL](https://github.com/QwenLM/Qwen3-VL)**: Vision-language models for image and video understanding, OCR, document parsing, chart reading, and visual question answering. Trained with supervised fine-tuning on long chain-of-thought data plus reinforcement learning. Qwen3-VL-32B powers a validated OCR pipeline at UW-Madison.
 - **[Qwen-Omni, Qwen-Audio, and Qwen3-TTS](https://github.com/QwenLM/Qwen3-Omni)**: Speech and audio understanding, transcription, and text-to-speech. Omni models accept text, image, audio, and video in one model.
-- **[Qwen-Math](https://huggingface.co/collections/Qwen/qwen25-math-66eaa240a1b7d5ee65f1da3e)** and **[QwQ](https://huggingface.co/Qwen/QwQ-32B)**: Math-specialized and reasoning-specialized models trained with extended chain-of-thought and reinforcement learning; largely folded into Qwen3's thinking mode.
 - **[Qwen3-Embedding and Qwen3-Reranker](https://huggingface.co/collections/Qwen/qwen3-embedding-6841b2055b99c44d9a4c371f)**: Text embedding and reranking models (0.6B to 8B) for semantic search and RAG pipelines. Pairing them with a Qwen chat model gives you a full RAG stack from one family.
 
 ## Choosing a model size (and what it costs in GPU memory)
