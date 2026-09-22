@@ -164,46 +164,18 @@
 <td style="text-align: right;">~0.4 GB</td>
 </tr>
 <tr class="even">
-<td>Qwen3-4B</td>
-<td style="text-align: right;">4B</td>
-<td style="text-align: right;">~8 GB</td>
-<td style="text-align: right;">~4 GB</td>
-<td style="text-align: right;">~2.5 GB</td>
-</tr>
-<tr class="odd">
 <td>Qwen3-8B</td>
 <td style="text-align: right;">8B</td>
 <td style="text-align: right;">~16 GB</td>
 <td style="text-align: right;">~8 GB</td>
 <td style="text-align: right;">~5 GB</td>
 </tr>
-<tr class="even">
-<td>Qwen3-14B</td>
-<td style="text-align: right;">14B</td>
-<td style="text-align: right;">~28 GB</td>
-<td style="text-align: right;">~14 GB</td>
-<td style="text-align: right;">~8 GB</td>
-</tr>
 <tr class="odd">
-<td>Qwen3.8-27B</td>
-<td style="text-align: right;">27B</td>
-<td style="text-align: right;">~56 GB</td>
-<td style="text-align: right;">~28 GB</td>
-<td style="text-align: right;">~16 GB</td>
-</tr>
-<tr class="even">
-<td>Qwen3-32B</td>
-<td style="text-align: right;">32B</td>
-<td style="text-align: right;">~64 GB</td>
-<td style="text-align: right;">~32 GB</td>
-<td style="text-align: right;">~18 GB</td>
-</tr>
-<tr class="odd">
-<td>Qwen2.5-72B</td>
-<td style="text-align: right;">72B</td>
-<td style="text-align: right;">~144 GB</td>
-<td style="text-align: right;">~72 GB</td>
-<td style="text-align: right;">~40 GB</td>
+<td><strong>Qwen3.8-27B</strong></td>
+<td style="text-align: right;"><strong>27B</strong></td>
+<td style="text-align: right;"><strong>~56 GB</strong></td>
+<td style="text-align: right;"><strong>~28 GB</strong></td>
+<td style="text-align: right;"><strong>~16 GB</strong></td>
 </tr>
 <tr class="even">
 <td>Qwen3-30B-A3B (MoE)</td>
@@ -221,12 +193,11 @@
 </tr>
 </tbody>
 </table>
-<p>A few practical takeaways:</p>
+<p><strong>Qwen3.8-27B is the best value on this list.</strong> It is the largest model that still runs on a single GPU, and it is the one in the benchmark comparison above, so you get near-frontier quality without a multi-GPU deployment. In BF16 it needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss. This is also the size class campus RAG evaluations found competitive with commercial APIs.</p>
+<p>The rest of the ladder:</p>
 <ul>
-<li><strong>0.6B to 4B</strong>: Laptops, edge devices, and latency-critical tasks. Good for classification, extraction, and reformatting; fine for drafting and summarization.</li>
-<li><strong>8B to 14B</strong>: The sweet spot for a single consumer GPU (16 to 24 GB). Strong general reasoning at manageable cost, and a good default for prototyping.</li>
-<li><strong>27B to 32B</strong>: Near-frontier quality on one workstation or server GPU. In BF16, Qwen3.8-27B needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss. This is the class that campus RAG evaluations found competitive with commercial APIs.</li>
-<li><strong>72B and MoE flagships</strong>: Multi-GPU territory at full precision. For MoE models, total parameters set the memory you need to buy; active parameters set the speed you get once it’s loaded.</li>
+<li><strong>Under 8B</strong>: Laptops, edge devices, and latency-critical work. Good for classification, extraction, reformatting, drafting, and summarization, and the right place to prototype before committing hardware.</li>
+<li><strong>Mixture-of-experts models</strong>: Total parameters set the memory you have to buy; active parameters set the speed you get once it is loaded. Qwen3-30B-A3B costs about the same memory as the 27B but runs considerably faster, while the 235B flagship is multi-GPU territory at full precision.</li>
 </ul>
 <section id="hands-on-measure-memory-yourself" class="level4">
 <h4 class="anchored" data-anchor-id="hands-on-measure-memory-yourself">Hands-on: measure memory yourself</h4>
@@ -427,13 +398,28 @@ font-style: inherit;">True</span>))</span></code></pre></div></div>
 <ul>
 <li><strong>NRP hosted LLMs</strong>: The free <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP) Nautilus</a> endpoint serves <code>qwen3</code> (a large VL model), <code>qwen3-small</code> (27B), and <code>qwen3-embedding</code> through an OpenAI-compatible API. It’s the fastest way to try Qwen with no hardware at all.</li>
 <li><strong>WattBot RAG deployments</strong>: When the winning <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html">WattBot 2025</a> RAG system was <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html">replicated locally</a> on campus hardware, Qwen models from 7B up to 72B were compared against a commercial cloud deployment. Qwen at 32B and above was competitive with the commercial APIs on the WattBot task, while the largest model tested (Qwen1.5-110B) was not the best performer, a reminder that generation matters more than raw size.</li>
-<li><strong>Campus-hosted model pilot</strong>: DoIT’s Research Cyberinfrastructure office is piloting campus-hosted models behind a shared gateway. The catalog is built largely around the Qwen3 family (chat and reasoning, VL for OCR, coder, embeddings, and rerankers) because one family with open weights, strong per-size performance, and a fast release cadence covers most use cases. Qwen3.8-27B was running on campus within days of release with no procurement or contract. The gateway abstracts the model name, so it is a curated default rather than a lock-in; Kimi, DeepSeek, Llama, and gpt-oss are all fair game as the frontier moves.</li>
+<li><strong>Campus-hosted model pilot</strong>: DoIT’s Research Cyberinfrastructure office is piloting campus-hosted models behind a shared gateway. The catalog is built largely around the Qwen3 family (chat and reasoning, VL for OCR, coder, embeddings, and rerankers) because one family with open weights, strong per-size performance, and a fast release cadence covers most use cases. Qwen3.8-27B was running on campus within days of release with no procurement or contract, which is the practical argument for open weights.</li>
 </ul>
 </section>
 <section id="risks-safety-and-bias" class="level2">
 <h2 class="anchored" data-anchor-id="risks-safety-and-bias">Risks, safety, and bias</h2>
-<p>Reasoning improvements do not automatically eliminate jailbreak risk. Recent evaluations report that both reasoning and non-reasoning Qwen variants can still be vulnerable to attacks such as prompt injection, malware-generation prompts, and tree-of-attacks jailbreaks. Deployments should include external safety controls, logging, prompt hardening, and human oversight for high-risk workflows. Alibaba Cloud states that problematic data is filtered out during pre-training through automated filters supplemented by human review, but that is a layer of defense, not a guarantee.</p>
-<p>Studies have also shown that Qwen models exhibit bias on topics surrounding geopolitics and contemporary social issues, with responses on some politically sensitive questions differing from those of Western-trained models and varying by language. Two caveats: most published studies were conducted on small models such as Qwen2-7B, whereas real deployments typically use 27B or larger, and post-training choices (including any fine-tuning you do) shift these behaviors. The upside of open weights is that this bias is inspectable: you can probe it, measure it on your own prompts, and correct it with fine-tuning or system prompts, none of which is possible with a closed API. Treat evaluating bias on your own use case as part of due diligence before relying on any model, Qwen included.</p>
+<section id="prompt-injection-is-not-a-qwen-problem" class="level4">
+<h4 class="anchored" data-anchor-id="prompt-injection-is-not-a-qwen-problem">Prompt injection is not a Qwen problem</h4>
+<p>Prompt injection is unsolved for every language model in production today. Any model that reads untrusted text, whether a retrieved document, a web page, or a user upload, can have that text act on it as instructions, and no current model is immune. Design around it rather than waiting for a fix: give tools the least privilege that still does the job, and keep a human in the loop on consequential actions.</p>
+</section>
+<section id="jailbreak-resistance" class="level4">
+<h4 class="anchored" data-anchor-id="jailbreak-resistance">Jailbreak resistance</h4>
+<p>What does vary between models is how readily they can be talked into harmful output, and reasoning ability by itself buys none. <a href="https://arxiv.org/html/2506.13726v1">Galinkin and colleagues</a> evaluate open-weight models against prompt injection, malware-generation prompts, and tree-of-attacks jailbreaks, and report that both reasoning and non-reasoning Qwen variants remain vulnerable. Alibaba Cloud states that problematic data is filtered out during pre-training through automated filters supplemented by human review, but that is one layer of defense rather than a guarantee. High-risk workflows still want external safety controls, logging, and human oversight.</p>
+</section>
+<section id="political-and-geopolitical-bias" class="level4">
+<h4 class="anchored" data-anchor-id="political-and-geopolitical-bias">Political and geopolitical bias</h4>
+<p>Qwen models carry measurable bias on geopolitics and contemporary social issues, with answers to politically sensitive questions differing from Western-trained models and shifting with the language of the prompt. A <a href="https://arxiv.org/html/2605.23825v1">Duke University study</a> examines how much of this arrives in post-training rather than pre-training, and a <a href="https://arxiv.org/html/2512.15792v2">Nanyang Technological University study</a> finds systematic political bias across large language models generally, not Qwen alone.</p>
+<p>Two caveats before generalizing from either. The published work mostly tests small models such as Qwen2-7B, while real deployments run 27B and up. And post-training choices shift these behaviors, including any fine-tuning you do yourself.</p>
+</section>
+<section id="what-open-weights-buy-you-here" class="level4">
+<h4 class="anchored" data-anchor-id="what-open-weights-buy-you-here">What open weights buy you here</h4>
+<p>The bias does not go away because you host the model, but it becomes inspectable. You can probe it, measure it on your own prompts, and correct it with fine-tuning or a system prompt, none of which is possible behind a closed API. Evaluating bias on your own use case is due diligence for any model, Qwen included.</p>
+</section>
 </section>
 <section id="model-playground" class="level2">
 <h2 class="anchored" data-anchor-id="model-playground">Model playground</h2>
@@ -483,7 +469,7 @@ font-style: inherit;">True</span>))</span></code></pre></div></div>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: The primary hub for downloading and running Qwen checkpoints with the Transformers library.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.html"><strong>Video</strong>: Exploring Generative AI: An Introduction to LLMs and Diffusion Models</a>: Kangwook Lee introduces how LLMs work under the hood.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: UW Generative AI Services &amp; Policies</a>: Institution-focused guidance on generative AI tools and policies at UW-Madison.</li>
-<li><a href="https://arxiv.org/abs/2505.09388"><strong>Paper</strong>: Qwen3 Technical Report</a> and <a href="https://arxiv.org/abs/2412.15115">Qwen2.5 Technical Report</a>: Architecture, training data, and evaluation details for the two most recent major generations.</li>
+<li><a href="https://arxiv.org/abs/2505.09388"><strong>Paper</strong>: Qwen3 Technical Report</a>: Architecture, training data, and evaluation details for the generation the current models build on.</li>
 <li><a href="https://arxiv.org/html/2506.13726v1"><strong>Paper</strong>: LLM security vulnerabilities (Galinkin et al.)</a>: Evaluates jailbreak and prompt-injection vulnerabilities across open-weight models, including Qwen, as discussed in the risks section.</li>
 <li><a href="https://arxiv.org/html/2605.23825v1"><strong>Paper</strong>: Post-training bias in Qwen models</a>: Duke University study of how post-training shapes political and social bias in Qwen models.</li>
 <li><a href="https://arxiv.org/html/2512.15792v2"><strong>Paper</strong>: Systematic bias in LLMs on political topics</a>: Nanyang Technological University study of systematic bias across LLMs on politics and related issues.</li>
@@ -702,7 +688,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="1796205b" class="cell" data-execution_count="1">
+<div id="50630ce9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -739,7 +725,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="671d83d9" class="cell" data-execution_count="2">
+<div id="e20d6ad9" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -756,7 +742,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="4938da66" class="cell" data-execution_count="3">
+<div id="e6f13495" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -796,7 +782,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="c0ab2840" class="cell" data-execution_count="4">
+<div id="91dfe9d0" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -834,7 +820,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="fa6566a1" class="cell" data-execution_count="5">
+<div id="b6a65de4" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -940,7 +926,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="05347bbd" class="cell" data-execution_count="6">
+<div id="39e4f38f" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -1015,7 +1001,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="e42a5726" class="cell" data-execution_count="7">
+<div id="c8250510" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -1090,7 +1076,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="413a9124" class="cell" data-execution_count="8">
+<div id="f6f0d85f" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1221,14 +1207,14 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="569e4fe6" class="cell" data-execution_count="1">
+<div id="eb0451c5" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="4bcd92ca" class="cell" data-execution_count="2">
+<div id="f5045e7b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1341,7 +1327,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="a11180ec" class="cell" data-execution_count="3">
+<div id="52734505" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1578,7 +1564,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="c2d75d9c" class="cell" data-execution_count="4">
+<div id="9862eaed" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1606,7 +1592,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="0dd8601d" class="cell" data-execution_count="5">
+<div id="60bfedb0" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1629,7 +1615,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="a4312331" class="cell" data-execution_count="6">
+<div id="be2effe6" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1651,7 +1637,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="03c14e34" class="cell" data-execution_count="7">
+<div id="1707ef3b" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1774,7 +1760,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="fcea0937" class="cell" data-execution_count="8">
+<div id="7e682fae" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1804,7 +1790,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="eb062cb6" class="cell" data-execution_count="9">
+<div id="027aea88" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1849,7 +1835,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="dab35f28" class="cell" data-execution_count="10">
+<div id="b67b414e" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -2085,7 +2071,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="2d40334d" class="cell" data-execution_count="11">
+<div id="709fa3a3" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2161,7 +2147,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="9dfeebe6" class="cell" data-execution_count="12">
+<div id="d06c2619" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2277,7 +2263,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="c64d9107" class="cell" data-execution_count="13">
+<div id="6bc91149" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2523,7 +2509,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="0599e351" class="cell" data-execution_count="14">
+<div id="d058bb3e" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
