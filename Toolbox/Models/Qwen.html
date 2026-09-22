@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-6e6b365da65fd7dadc390981f8a479ae.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-9f2604e6e8e194c3bb1d80da547e5fa1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -672,9 +672,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Qwen models carry measurable bias on geopolitics and contemporary social issues, with answers to politically sensitive questions differing from Western-trained models and shifting with the language of the prompt. A <a href="https://arxiv.org/html/2605.23825v1">Duke University study</a> examines how much of this arrives in post-training rather than pre-training, and a <a href="https://arxiv.org/html/2512.15792v2">Nanyang Technological University study</a> finds systematic political bias across large language models generally, not Qwen alone.</p>
 <p>Two caveats before generalizing from either. The published work mostly tests small models such as Qwen2-7B, while real deployments run 27B and up. And post-training choices shift these behaviors, including any fine-tuning you do yourself.</p>
 </section>
-<section id="what-open-weights-buy-you-here" class="level4">
-<h4 class="anchored" data-anchor-id="what-open-weights-buy-you-here">What open weights buy you here</h4>
-<p>The bias does not go away because you host the model, but it becomes inspectable. You can probe it, measure it on your own prompts, and correct it with fine-tuning or a system prompt, none of which is possible behind a closed API. Evaluating bias on your own use case is due diligence for any model, Qwen included.</p>
+<section id="how-that-bias-is-measured" class="level4">
+<h4 class="anchored" data-anchor-id="how-that-bias-is-measured">How that bias is measured</h4>
+<p>The instruments are blunt but repeatable, which is what makes them worth knowing. The common approach poses a fixed battery of politically sensitive items, often adapted from survey instruments such as the Political Compass or the World Values Survey, and scores the model’s forced choices against a reference. Variants ask the same question in several languages to expose shifts that only appear outside English, measure refusal rates across topic sets rather than answer content, or put an identical prompt to several models and compare the spread.</p>
+<p>The useful thing about these methods is how cheap they are to reproduce: a few hundred prompts, a fixed rubric, and a scoring pass. If bias matters for your work, running a small version against your own prompts will tell you more than any published number, because the published numbers describe a different model size and a different prompt set than yours.</p>
+</section>
+<section id="why-open-weights-are-the-better-bet-on-bias" class="level4">
+<h4 class="anchored" data-anchor-id="why-open-weights-are-the-better-bet-on-bias">Why open weights are the better bet on bias</h4>
+<p>Every model carries bias, closed ones included. The difference is what you are able to do about it.</p>
+<p>With open weights you can measure it against the exact checkpoint you deploy, change it by fine-tuning on your own data, and wrap it in a governance layer, filters, and logging that you control. Just as important, the weights do not move under you. The checkpoint you evaluated is the checkpoint you serve, for as long as you choose to serve it.</p>
+<p>Behind a closed API you get none of that. The bias is whatever the vendor decided it should be, and it can shift between model versions without notice, so an evaluation you ran last quarter may not describe the model answering your users today. You cannot inspect the training data or the alignment policy, and your only real lever is the system prompt. You are also trusting that commercial and political pressure never shapes what the model will and will not say, which is a large thing to take on faith.</p>
+<p>None of this makes Qwen unbiased. It makes the bias yours to find, measure, and correct, which for most research use is the better trade.</p>
 </section>
 </section>
 <section id="model-playground" class="level2">
@@ -682,12 +690,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="tutorials-and-getting-started" class="level4">
 <h4 class="anchored" data-anchor-id="tutorials-and-getting-started">Tutorials and getting started</h4>
 <ul>
-<li><strong><a href="https://qwen.readthedocs.io/">Qwen documentation</a></strong>: Official docs covering quickstarts with Hugging Face Transformers, deployment (vLLM, SGLang, Ollama, llama.cpp), <a href="https://qwen.readthedocs.io/en/latest/quantization/">quantization</a>, and fine-tuning.</li>
-<li><strong><a href="https://huggingface.co/Qwen">Qwen on Hugging Face</a></strong>: Model cards with ready-to-run Transformers snippets and reported benchmarks for every model.</li>
-<li><strong><a href="https://github.com/QwenLM">QwenLM on GitHub</a></strong>: Source repositories, cookbooks, and example scripts for each model family.</li>
-<li><strong><a href="https://chat.qwen.ai/">Qwen Chat</a></strong>: Browser-based chat interface for trying the latest Qwen models with no setup.</li>
-<li><strong><a href="https://ollama.com/library/qwen3">Qwen on Ollama</a></strong>: One-line local installs of quantized Qwen models on a laptop or workstation (<code>ollama run qwen3</code>).</li>
-<li><strong><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">NRP Nautilus</a></strong>: Free hosted Qwen3 endpoints for UW-Madison researchers.</li>
+<li><strong>Official docs</strong>: <a href="https://qwen.readthedocs.io/">Qwen documentation</a>: Official docs covering quickstarts with Hugging Face Transformers, deployment (vLLM, SGLang, Ollama, llama.cpp), <a href="https://qwen.readthedocs.io/en/latest/quantization/">quantization</a>, and fine-tuning.</li>
+<li><strong>Model hub</strong>: <a href="https://huggingface.co/Qwen">Qwen on Hugging Face</a>: Model cards with ready-to-run Transformers snippets and reported benchmarks for every model.</li>
+<li><strong>Source</strong>: <a href="https://github.com/QwenLM">QwenLM on GitHub</a>: Source repositories, cookbooks, and example scripts for each model family.</li>
+<li><strong>Try it online</strong>: <a href="https://chat.qwen.ai/">Qwen Chat</a>: Browser-based chat interface for trying the latest Qwen models with no setup.</li>
+<li><strong>Run locally</strong>: <a href="https://ollama.com/library/qwen3">Qwen on Ollama</a>: One-line local installs of quantized Qwen models on a laptop or workstation (<code>ollama run qwen3</code>).</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html"><strong>Compute</strong>: NRP Nautilus</a>: Free hosted Qwen3 endpoints for UW-Madison researchers.</li>
 </ul>
 </section>
 <section id="high-level-tips-for-effective-use" class="level4">
@@ -707,11 +715,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="related-benchmarks-and-leaderboards" class="level4">
 <h4 class="anchored" data-anchor-id="related-benchmarks-and-leaderboards">Related benchmarks and leaderboards</h4>
 <ul>
-<li><strong><a href="https://qwen.ai/blog?id=qwen3.8#full-benchmark-table">Qwen3.8 full benchmark table</a></strong>: Alibaba’s reported comparison of the latest Qwen models to other LLMs.</li>
-<li><strong><a href="https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard">Open LLM Leaderboard</a></strong> and <strong><a href="https://lmarena.ai/">LMArena</a></strong>: Standardized and crowdsourced comparisons of open-weight and proprietary models.</li>
-<li><strong><a href="https://www.tbench.ai/leaderboard/terminal-bench/2.1">Terminal-Bench</a></strong>, <strong><a href="https://arxiv.org/abs/2311.12022">GPQA</a></strong>, <strong><a href="https://lastexam.ai">Humanity’s Last Exam</a></strong>: Agentic coding, graduate-level science, and expert-knowledge benchmarks used in the comparison above.</li>
-<li><strong><a href="https://github.com/opendatalab/OmniDocBench">OmniDocBench</a></strong> and <strong><a href="https://charxiv.github.io">CharXiv</a></strong>: Document-parsing and scientific-chart benchmarks that matter for OCR and figure-understanding work.</li>
-<li><strong><a href="https://huggingface.co/datasets/cais/mmlu">MMLU</a></strong>, <strong><a href="https://huggingface.co/datasets/openai/gsm8k">GSM8K</a></strong>, <strong><a href="https://huggingface.co/datasets/openai/openai_humaneval">HumanEval</a></strong>: Classic knowledge, math, and code benchmarks reported in Qwen technical reports.</li>
+<li><strong>Vendor benchmarks</strong>: <a href="https://qwen.ai/blog?id=qwen3.8#full-benchmark-table">Qwen3.8 full benchmark table</a>: Alibaba’s reported comparison of the latest Qwen models to other LLMs.</li>
+<li><strong>Leaderboards</strong>: <a href="https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard">Open LLM Leaderboard</a> and <a href="https://lmarena.ai/">LMArena</a>: Standardized and crowdsourced comparisons of open-weight and proprietary models.</li>
+<li><strong>Benchmarks in the figure above</strong>: <a href="https://www.tbench.ai/leaderboard/terminal-bench/2.1">Terminal-Bench</a>, <a href="https://arxiv.org/abs/2311.12022">GPQA</a>, and <a href="https://lastexam.ai">Humanity’s Last Exam</a>: Agentic coding, graduate-level science, and expert-knowledge benchmarks used in the comparison above.</li>
+<li><strong>Document and figure benchmarks</strong>: <a href="https://github.com/opendatalab/OmniDocBench">OmniDocBench</a> and <a href="https://charxiv.github.io">CharXiv</a>: Document-parsing and scientific-chart benchmarks that matter for OCR and figure-understanding work.</li>
+<li><strong>Classic benchmarks</strong>: <a href="https://huggingface.co/datasets/cais/mmlu">MMLU</a>, <a href="https://huggingface.co/datasets/openai/gsm8k">GSM8K</a>, and <a href="https://huggingface.co/datasets/openai/openai_humaneval">HumanEval</a>: Classic knowledge, math, and code benchmarks reported in Qwen technical reports.</li>
 </ul>
 </section>
 </section>
@@ -725,10 +733,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: The primary hub for downloading and running Qwen checkpoints with the Transformers library.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.html"><strong>Video</strong>: Exploring Generative AI: An Introduction to LLMs and Diffusion Models</a>: Kangwook Lee introduces how LLMs work under the hood.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: UW Generative AI Services &amp; Policies</a>: Institution-focused guidance on generative AI tools and policies at UW-Madison.</li>
-<li><a href="https://arxiv.org/abs/2505.09388"><strong>Paper</strong>: Qwen3 Technical Report</a>: Architecture, training data, and evaluation details for the generation the current models build on.</li>
-<li><a href="https://arxiv.org/html/2506.13726v1"><strong>Paper</strong>: LLM security vulnerabilities (Galinkin et al.)</a>: Evaluates jailbreak and prompt-injection vulnerabilities across open-weight models, including Qwen, as discussed in the risks section.</li>
-<li><a href="https://arxiv.org/html/2605.23825v1"><strong>Paper</strong>: Post-training bias in Qwen models</a>: Duke University study of how post-training shapes political and social bias in Qwen models.</li>
-<li><a href="https://arxiv.org/html/2512.15792v2"><strong>Paper</strong>: Systematic bias in LLMs on political topics</a>: Nanyang Technological University study of systematic bias across LLMs on politics and related issues.</li>
+<li><strong>Paper</strong>: <a href="https://arxiv.org/abs/2505.09388">Qwen3 Technical Report</a>: Architecture, training data, and evaluation details for the generation the current models build on.</li>
+<li><strong>Paper</strong>: <a href="https://arxiv.org/html/2506.13726v1">LLM security vulnerabilities (Galinkin et al.)</a>: Evaluates jailbreak and prompt-injection vulnerabilities across open-weight models, including Qwen, as discussed in the risks section.</li>
+<li><strong>Paper</strong>: <a href="https://arxiv.org/html/2605.23825v1">Post-training bias in Qwen models</a>: Duke University study of how post-training shapes political and social bias in Qwen models.</li>
+<li><strong>Paper</strong>: <a href="https://arxiv.org/html/2512.15792v2">Systematic bias in LLMs on political topics</a>: Nanyang Technological University study of systematic bias across LLMs on politics and related issues.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
