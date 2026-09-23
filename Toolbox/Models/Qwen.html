@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-6e6b365da65fd7dadc390981f8a479ae.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-9f2604e6e8e194c3bb1d80da547e5fa1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -598,13 +598,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="risks-safety-and-bias" class="level2">
 <h2 class="anchored" data-anchor-id="risks-safety-and-bias">Risks, safety, and bias</h2>
-<section id="prompt-injection" class="level4">
-<h4 class="anchored" data-anchor-id="prompt-injection">Prompt injection</h4>
-<p>Prompt injection is unsolved for every language model in production, not a Qwen-specific weakness. Any model that reads untrusted text, such as a retrieved document, a web page, or a user upload, can have that text act on it as instructions. Give tools the least privilege that does the job, and keep a human on consequential actions.</p>
-</section>
-<section id="jailbreaks" class="level4">
-<h4 class="anchored" data-anchor-id="jailbreaks">Jailbreaks</h4>
-<p>Reasoning ability buys no extra safety. <a href="https://arxiv.org/html/2506.13726v1">Galinkin and colleagues</a> test open-weight models against prompt injection, malware-generation prompts, and tree-of-attacks jailbreaks, and find both reasoning and non-reasoning Qwen variants vulnerable. Alibaba Cloud filters problematic data during pre-training, but that is one layer. High-risk workflows need external controls, logging, and human oversight.</p>
+<section id="security" class="level4">
+<h4 class="anchored" data-anchor-id="security">Security</h4>
+<p>Prompt injection is unsolved for every language model in production, not a Qwen-specific weakness. Any model that reads untrusted text, such as a retrieved document, a web page, or a user upload, can have that text act on it as instructions. <a href="https://arxiv.org/html/2506.13726v1">Galinkin and colleagues</a> test open-weight models against injection, malware-generation prompts, and tree-of-attacks jailbreaks, and find both reasoning and non-reasoning Qwen variants vulnerable, so reasoning ability buys no extra safety. Alibaba Cloud filters problematic data during pre-training, but that is one layer.</p>
+<p>The model’s own safety training is not a control you can rely on. Give tools the least privilege that does the job, keep a human on consequential actions, and add external controls and logging for high-risk workflows.</p>
 </section>
 <section id="political-bias" class="level4">
 <h4 class="anchored" data-anchor-id="political-bias">Political bias</h4>
