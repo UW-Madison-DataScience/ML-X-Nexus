@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9f2604e6e8e194c3bb1d80da547e5fa1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-6e6b365da65fd7dadc390981f8a479ae.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -467,66 +467,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../images/Qwen-benchmarks.svg" class="img-fluid figure-img" alt="Grouped horizontal bar chart comparing Qwen3.8-27B with Claude Opus 4.6 Max on five benchmarks. Qwen3.8-27B leads on CharXiv reasoning (83.7 vs 66.0) and OmniDocBench 1.5 (91.1 vs 86.6), and trails on GPQA Diamond (89.2 vs 91.3), Terminal-Bench 2.1 (73.0 vs 78.2), and Humanity's Last Exam (30.8 vs 40.0)."></p>
-<figcaption>Benchmark scores for Qwen3.8-27B and Claude Opus 4.6 Max across five benchmarks. Qwen leads on the two document and figure benchmarks and trails on the three general reasoning and agent benchmarks.</figcaption>
+<figcaption>Qwen3.8-27B against Claude Opus 4.6 Max on five benchmarks, as reported on the Qwen model card.</figcaption>
 </figure>
 </div>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 22%">
-<col style="width: 22%">
-<col style="width: 22%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Benchmark</th>
-<th>What it measures</th>
-<th style="text-align: right;">Qwen3.8-27B</th>
-<th style="text-align: right;">Claude Opus 4.6 Max</th>
-<th style="text-align: right;">Difference</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>CharXiv (reasoning)</td>
-<td>Reasoning over scientific charts and figures</td>
-<td style="text-align: right;">83.7</td>
-<td style="text-align: right;">66.0</td>
-<td style="text-align: right;">+17.7</td>
-</tr>
-<tr class="even">
-<td>OmniDocBench 1.5</td>
-<td>Parsing PDF pages: text, tables, formulas</td>
-<td style="text-align: right;">91.1</td>
-<td style="text-align: right;">86.6</td>
-<td style="text-align: right;">+4.5</td>
-</tr>
-<tr class="odd">
-<td>GPQA Diamond</td>
-<td>Graduate-level science questions</td>
-<td style="text-align: right;">89.2</td>
-<td style="text-align: right;">91.3</td>
-<td style="text-align: right;">-2.1</td>
-</tr>
-<tr class="even">
-<td>Terminal-Bench 2.1</td>
-<td>Agent tasks in a real terminal</td>
-<td style="text-align: right;">73.0</td>
-<td style="text-align: right;">78.2</td>
-<td style="text-align: right;">-5.2</td>
-</tr>
-<tr class="odd">
-<td>Humanity’s Last Exam</td>
-<td>Expert questions across many fields</td>
-<td style="text-align: right;">30.8</td>
-<td style="text-align: right;">40.0</td>
-<td style="text-align: right;">-9.2</td>
-</tr>
-</tbody>
-</table>
 <p>Source: <a href="https://huggingface.co/Qwen/Qwen3.8-27B">Qwen3.8-27B model card</a>. The losses are on general reasoning and long-horizon agent tasks. The wins are on visual and document work, which is the most common ask from campus researchers.</p>
-<p>Four things drive this:</p>
+<p>How a 27B keeps up:</p>
 <ol type="1">
 <li><strong>Distillation</strong>. Small models are trained on the outputs and reasoning traces of much larger ones, so capability moves “down-market” with a lag of roughly 6 to 12 months. This is the single biggest reason open weights keep closing the gap, and it means frontier labs are, in effect, subsidizing the open models everyone else hosts.</li>
 <li><strong>Post-training on verifiable tasks</strong>. Code, math, and tool use can be graded automatically, so reinforcement learning on those domains is cheap to scale and delivers most of the benchmark score. Three of the five rows above are that kind of task.</li>
@@ -647,7 +592,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Qwen is the default open-weight family in several campus efforts, so there is existing work here to reuse.</p>
 <ul>
 <li><strong>NRP hosted LLMs</strong>: The free <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP) Nautilus</a> endpoint serves <code>qwen3</code> (a large VL model), <code>qwen3-small</code> (27B), and <code>qwen3-embedding</code> through an OpenAI-compatible API. It’s the fastest way to try Qwen with no hardware at all.</li>
-<li><strong>WattBot RAG deployments</strong>: When the winning <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html">WattBot 2025</a> RAG system was <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html">replicated locally</a> on campus hardware, Qwen models from 7B up to 72B were compared against a commercial cloud deployment. Qwen at 32B and above was competitive with the commercial APIs on the WattBot task, while the largest model tested (Qwen1.5-110B) was not the best performer, a reminder that generation matters more than raw size.</li>
+<li><strong>WattBot RAG deployments</strong>: The winning <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html">WattBot 2025</a> RAG system was rebuilt on campus hardware and compared against a commercial cloud deployment, testing Qwen from 7B up to 72B. Qwen at 32B and above matched the commercial APIs on the task. The largest model tested, Qwen1.5-110B, was not the best performer: generation matters more than raw size. Full walkthrough in the ML+X forum talk, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html">Deploying RAG in Bedrock vs.&nbsp;Local</a>.</li>
 <li><strong>Campus-hosted model pilot</strong>: DoIT’s Research Cyberinfrastructure office is piloting campus-hosted models behind a shared gateway. The catalog is built largely around the Qwen3 family (chat and reasoning, VL for OCR, coder, embeddings, and rerankers) because one family with open weights, strong per-size performance, and a fast release cadence covers most use cases. Qwen3.8-27B was running on campus within days of release with no procurement or contract, which is the practical argument for open weights.</li>
 </ul>
 </section>
