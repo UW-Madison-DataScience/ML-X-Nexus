@@ -89,17 +89,18 @@ The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in F
 
 | Model (dense unless noted) | Parameters | FP16 / BF16 | 8-bit | 4-bit |
 |---|---:|---:|---:|---:|
-| Qwen3-0.6B | 0.6B | ~1.2 GB | ~0.6 GB | ~0.4 GB |
 | Qwen3-8B | 8B | ~16 GB | ~8 GB | ~5 GB |
 | **Qwen3.8-27B** | **27B** | **~56 GB** | **~28 GB** | **~16 GB** |
 | Qwen3-30B-A3B (MoE) | 30B total, 3B active | ~60 GB | ~30 GB | ~17 GB |
 | Qwen3-235B-A22B (MoE) | 235B total, 22B active | ~470 GB | ~235 GB | ~130 GB |
 
-**Qwen3.8-27B is the best value on this list.** It is the largest model that still runs on a single GPU, and it is the one in the benchmark comparison above, so you get near-frontier quality without a multi-GPU deployment. In BF16 it needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss. This is also the size class campus RAG evaluations found competitive with commercial APIs.
+**Qwen3.8-27B is the best value on this list.** It is the largest model that still runs on a single GPU, and it is the one in the benchmark comparison above, so you get near-frontier quality without a multi-GPU deployment. In BF16 it needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss.
+
+**For most real applications, 20B to 30B is currently the floor.** Smaller models demo well and then fall short on the actual task. The campus WattBot RAG comparison is consistent with this: Qwen was competitive with commercial APIs only at 32B and above. Treat anything below that range as a prototyping step, not the model you deploy.
 
 The other sizes:
 
-- **Under 8B**: Laptops, edge devices, and latency-critical work. Good for classification, extraction, reformatting, drafting, and summarization, and the right place to prototype before committing hardware.
+- **Qwen3-8B**: Runs on a 16 GB consumer GPU, or an 8 GB one at 4-bit. Useful for classification, extraction, summarization, and working out your pipeline before you commit to bigger hardware.
 - **Mixture-of-experts models**: Total parameters set the memory you have to buy; active parameters set the speed you get once it is loaded. Qwen3-30B-A3B costs about the same memory as the 27B but runs considerably faster, while the 235B flagship is multi-GPU territory at full precision.
 
 #### Hands-on: measure memory yourself
@@ -110,7 +111,7 @@ You can profile the actual GPU footprint of any Qwen model with the snippet belo
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model_name = "Qwen/Qwen3-0.6B"  # Try: Qwen3-1.7B, Qwen3-4B, Qwen3-8B, ...
+model_name = "Qwen/Qwen3-4B"  # Try: Qwen3-8B, Qwen3-14B, Qwen3.8-27B, ...
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(
