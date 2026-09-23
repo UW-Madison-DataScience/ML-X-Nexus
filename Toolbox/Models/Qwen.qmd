@@ -50,7 +50,7 @@ Qwen fits into the wave of open-weight large language models that followed Llama
 Within a year Qwen moved from Qwen2 to Qwen3.8, and the benchmark gains came with it. For example, on quality-assessment benchmarks for multimodal models, Qwen3.8 improved about 8 points over Qwen2. That pace shows how open-weight families can iterate quickly without the release cycles of proprietary models.
 
 ## How these models keep shrinking and still competing
-The headline of the past year is not that Qwen's biggest model is large. It is that a mid-size Qwen model now lands within a few points of frontier proprietary models that are probably one to two orders of magnitude larger. The figure below compares Qwen3.8-27B (27B dense, fits on one GPU) with the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
+Qwen3.8-27B is a 27B dense model that fits on one GPU, and it lands within a few points of frontier proprietary models one to two orders of magnitude larger. The figure below compares it with the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
 
 ![Benchmark scores for Qwen3.8-27B and Claude Opus 4.6 Max across five benchmarks. Qwen leads on the two document and figure benchmarks and trails on the three general reasoning and agent benchmarks.](../../images/Qwen-benchmarks.svg){fig-alt="Grouped horizontal bar chart comparing Qwen3.8-27B with Claude Opus 4.6 Max on five benchmarks. Qwen3.8-27B leads on CharXiv reasoning (83.7 vs 66.0) and OmniDocBench 1.5 (91.1 vs 86.6), and trails on GPQA Diamond (89.2 vs 91.3), Terminal-Bench 2.1 (73.0 vs 78.2), and Humanity's Last Exam (30.8 vs 40.0)."}
 
@@ -62,30 +62,30 @@ The headline of the past year is not that Qwen's biggest model is large. It is t
 | Terminal-Bench 2.1 | Agent tasks in a real terminal | 73.0 | 78.2 | -5.2 |
 | Humanity's Last Exam | Expert questions across many fields | 30.8 | 40.0 | -9.2 |
 
-Source: [Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B). Notice the pattern: the losses are on general reasoning and long-horizon agent tasks, while the wins are on visual and document work, which happens to be the most common ask from campus researchers.
+Source: [Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B). The losses are on general reasoning and long-horizon agent tasks. The wins are on visual and document work, which is the most common ask from campus researchers.
 
-Four things do most of the work in letting small models shrink and still compete:
+Four things drive this:
 
 1. **Distillation**. Small models are trained on the outputs and reasoning traces of much larger ones, so capability moves "down-market" with a lag of roughly 6 to 12 months. This is the single biggest reason open weights keep closing the gap, and it means frontier labs are, in effect, subsidizing the open models everyone else hosts.
 2. **Post-training on verifiable tasks**. Code, math, and tool use can be graded automatically, so reinforcement learning on those domains is cheap to scale and delivers most of the benchmark score. Three of the five rows above are that kind of task.
 3. **Test-time compute**. Qwen3.x spends many tokens reasoning before it answers; the traces are long and heavily structured. The parameter count understates the compute per query, which is also why latency, not model size, tends to be the real serving constraint.
 4. **Better data per parameter**. Curated and synthetic training data has improved faster than model size has grown, so a 2026 27B model is not the same object as a 2024 27B model.
 
-Where the gap is still real: long-horizon agentic reliability over many steps, rare and long-tail domain knowledge, very long contexts, robustness to sloppy prompts, and non-English work. Benchmarks measure single dense tasks; they do not measure staying coherent across a two-hour agent session.
+Qwen3.8-27B still trails on long-horizon agentic reliability, rare and long-tail domain knowledge, very long contexts, robustness to sloppy prompts, and non-English work. Benchmarks measure single dense tasks, not whether an agent stays coherent across a two-hour session.
 
-The same logic extends further down. The narrower your task, the smaller your model can be. On OmniDocBench 1.5, [GLM-OCR](https://arxiv.org/abs/2603.10910), a 0.9B specialized document parser, scores 94.6 versus 89.2 for Qwen3-VL-235B, at about 1/260th the size. A Qwen3.8-27B adapted to a law firm's corpus has been reported to pass more tasks than a frontier model at roughly a tenth of the per-query cost. The pattern points toward fleets of small, specialized open models rather than one big general one, and Qwen's size ladder and permissive license make it a natural base for that kind of fine-tuning.
+The narrower the task, the smaller the model can be. On OmniDocBench 1.5, [GLM-OCR](https://arxiv.org/abs/2603.10910), a 0.9B specialized document parser, scores 94.6 versus 89.2 for Qwen3-VL-235B, at about 1/260th the size. A Qwen3.8-27B adapted to a law firm's corpus has been reported to pass more tasks than a frontier model at roughly a tenth of the per-query cost. For a narrow enough task, a fleet of small fine-tuned models beats one big general one. Qwen's size ladder and Apache 2.0 license make it a common base for that.
 
 ## Qwen variants: what still needs its own model
-The general-purpose models have absorbed most of what the specialized lines used to be for. One mid-size Qwen3.x model now handles chat, reasoning, agentic coding, OCR, and document parsing, and on the document and figure benchmarks above it beats the frontier comparator outright. Two jobs still need a model of their own.
+One mid-size Qwen3.x model now handles chat, reasoning, agentic coding, OCR, and document parsing, and on the document and figure benchmarks above it beats the frontier comparator outright. Two jobs still need a model of their own.
 
 - **[Qwen3 / Qwen3.x](https://huggingface.co/collections/Qwen/qwen3-67dd247413f0e2e4f653967f)**: The default, and the right starting point for almost everything. Dense sizes from 0.6B to 32B, plus the Qwen3.8-27B and MoE models up to the Max variants. Handles text, code, images, and documents in one model, with switchable thinking modes.
 - **[Qwen3-Omni](https://github.com/QwenLM/Qwen3-Omni)**: Speech and audio. Transcription, audio understanding, and text-to-speech. The general models do not accept audio input, so this is a separate deployment rather than a swap.
 - **[Qwen3-Embedding and Qwen3-Reranker](https://huggingface.co/collections/Qwen/qwen3-embedding-6841b2055b99c44d9a4c371f)**: Retrieval. Embedding and reranking models from 0.6B to 8B for semantic search and RAG. A chat model cannot do this job, and these are small enough to run alongside one.
 
-The specialized lines still ship and still win when the task is narrow enough. [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) scales to a 480B mixture-of-experts model for large agentic coding workloads, and [Qwen3-VL](https://github.com/QwenLM/Qwen3-VL) offers dedicated vision-language models up to 235B; Qwen3-VL-32B powers a validated OCR pipeline at UW-Madison. Reach for either when the general model falls short on your specific task, but neither is the default starting point it was a year ago.
+The specialized lines are still worth it for narrow tasks. [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) scales to a 480B mixture-of-experts model for large agentic coding workloads, and [Qwen3-VL](https://github.com/QwenLM/Qwen3-VL) offers dedicated vision-language models up to 235B; Qwen3-VL-32B powers a validated OCR pipeline at UW-Madison. Reach for either when the general model falls short on your specific task, but neither is the default starting point it was a year ago.
 
 ## Choosing a model size (and what it costs in GPU memory)
-The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in FP16/BF16**, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference.
+The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in FP16/BF16**, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference, because you hold gradients and optimizer state alongside the weights (Adam keeps two extra values per parameter) plus the activations saved for the backward pass. LoRA and QLoRA avoid most of that by freezing the base weights and training small adapters, which is what makes single-GPU fine-tuning practical.
 
 | Model (dense unless noted) | Parameters | FP16 / BF16 | 8-bit | 4-bit |
 |---|---:|---:|---:|---:|
@@ -97,7 +97,7 @@ The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in F
 
 **Qwen3.8-27B is the best value on this list.** It is the largest model that still runs on a single GPU, and it is the one in the benchmark comparison above, so you get near-frontier quality without a multi-GPU deployment. In BF16 it needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss. This is also the size class campus RAG evaluations found competitive with commercial APIs.
 
-The rest of the ladder:
+The other sizes:
 
 - **Under 8B**: Laptops, edge devices, and latency-critical work. Good for classification, extraction, reformatting, drafting, and summarization, and the right place to prototype before committing hardware.
 - **Mixture-of-experts models**: Total parameters set the memory you have to buy; active parameters set the speed you get once it is loaded. Qwen3-30B-A3B costs about the same memory as the 27B but runs considerably faster, while the 235B flagship is multi-GPU territory at full precision.
@@ -143,7 +143,7 @@ print(tokenizer.decode(output[0][inputs.input_ids.shape[1]:], skip_special_token
 To see 4-bit quantization in action, load a larger model with `BitsAndBytesConfig(load_in_4bit=True)` (requires `bitsandbytes`) and compare: an 8B model drops from about 16 GB to about 5 GB.
 
 ## Qwen at UW-Madison
-Qwen has become the default open-weight family in several campus efforts, which makes it a practical choice if you want to reuse what others here have already validated.
+Qwen is the default open-weight family in several campus efforts, so there is existing work here to reuse.
 
 - **NRP hosted LLMs**: The free [National Research Platform (NRP) Nautilus](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) endpoint serves `qwen3` (a large VL model), `qwen3-small` (27B), and `qwen3-embedding` through an OpenAI-compatible API. It's the fastest way to try Qwen with no hardware at all.
 - **WattBot RAG deployments**: When the winning [WattBot 2025](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html) RAG system was [replicated locally](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html) on campus hardware, Qwen models from 7B up to 72B were compared against a commercial cloud deployment. Qwen at 32B and above was competitive with the commercial APIs on the WattBot task, while the largest model tested (Qwen1.5-110B) was not the best performer, a reminder that generation matters more than raw size.
@@ -162,7 +162,7 @@ Qwen answers on politically sensitive topics differ from Western-trained models 
 
 Measurement is usually a fixed battery of politically sensitive items, often drawn from the Political Compass or the World Values Survey, scored on the model's forced choices. Variants repeat the same prompts across languages or compare refusal rates. These are cheap to reproduce, a few hundred prompts and a rubric, and running one on your own prompts beats citing a published number for a different model size and prompt set.
 
-Open weights do not remove the bias, they make it yours. You can measure the checkpoint you actually deploy, fine-tune it, and wrap it in your own governance layer, and the weights do not change under you. Behind a closed API the bias is the vendor's, it can shift between versions without notice, and the system prompt is your only lever.
+Hosting open weights does not remove the bias, but it puts it under your control. You can measure the checkpoint you actually deploy, fine-tune it, and wrap it in your own governance layer, and the weights do not change under you. Behind a closed API the bias is the vendor's, it can shift between versions without notice, and the system prompt is your only lever.
 
 ## Model playground
 #### Tutorials and getting started
