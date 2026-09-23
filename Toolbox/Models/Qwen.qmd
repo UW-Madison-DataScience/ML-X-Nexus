@@ -52,19 +52,11 @@ Within a year Qwen moved from Qwen2 to Qwen3.8, and the benchmark gains came wit
 ## How these models keep shrinking and still competing
 Qwen3.8-27B is a 27B dense model that fits on one GPU, and it lands within a few points of frontier proprietary models one to two orders of magnitude larger. The figure below compares it with the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
 
-![Benchmark scores for Qwen3.8-27B and Claude Opus 4.6 Max across five benchmarks. Qwen leads on the two document and figure benchmarks and trails on the three general reasoning and agent benchmarks.](../../images/Qwen-benchmarks.svg){fig-alt="Grouped horizontal bar chart comparing Qwen3.8-27B with Claude Opus 4.6 Max on five benchmarks. Qwen3.8-27B leads on CharXiv reasoning (83.7 vs 66.0) and OmniDocBench 1.5 (91.1 vs 86.6), and trails on GPQA Diamond (89.2 vs 91.3), Terminal-Bench 2.1 (73.0 vs 78.2), and Humanity's Last Exam (30.8 vs 40.0)."}
-
-| Benchmark | What it measures | Qwen3.8-27B | Claude Opus 4.6 Max | Difference |
-|---|---|---:|---:|---:|
-| CharXiv (reasoning) | Reasoning over scientific charts and figures | 83.7 | 66.0 | +17.7 |
-| OmniDocBench 1.5 | Parsing PDF pages: text, tables, formulas | 91.1 | 86.6 | +4.5 |
-| GPQA Diamond | Graduate-level science questions | 89.2 | 91.3 | -2.1 |
-| Terminal-Bench 2.1 | Agent tasks in a real terminal | 73.0 | 78.2 | -5.2 |
-| Humanity's Last Exam | Expert questions across many fields | 30.8 | 40.0 | -9.2 |
+![Qwen3.8-27B against Claude Opus 4.6 Max on five benchmarks, as reported on the Qwen model card.](../../images/Qwen-benchmarks.svg){fig-alt="Grouped horizontal bar chart comparing Qwen3.8-27B with Claude Opus 4.6 Max on five benchmarks. Qwen3.8-27B leads on CharXiv reasoning (83.7 vs 66.0) and OmniDocBench 1.5 (91.1 vs 86.6), and trails on GPQA Diamond (89.2 vs 91.3), Terminal-Bench 2.1 (73.0 vs 78.2), and Humanity's Last Exam (30.8 vs 40.0)."}
 
 Source: [Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B). The losses are on general reasoning and long-horizon agent tasks. The wins are on visual and document work, which is the most common ask from campus researchers.
 
-Four things drive this:
+How a 27B keeps up:
 
 1. **Distillation**. Small models are trained on the outputs and reasoning traces of much larger ones, so capability moves "down-market" with a lag of roughly 6 to 12 months. This is the single biggest reason open weights keep closing the gap, and it means frontier labs are, in effect, subsidizing the open models everyone else hosts.
 2. **Post-training on verifiable tasks**. Code, math, and tool use can be graded automatically, so reinforcement learning on those domains is cheap to scale and delivers most of the benchmark score. Three of the five rows above are that kind of task.
