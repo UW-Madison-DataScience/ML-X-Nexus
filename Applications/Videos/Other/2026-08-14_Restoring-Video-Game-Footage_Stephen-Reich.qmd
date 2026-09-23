@@ -1,0 +1,42 @@
+---
+title: "Restoring Video Game Footage with Machine Learning"
+author: "Stephen Reich"
+date: 2026-08-14
+image: "https://img.youtube.com/vi/PSpzvpuMnyc/maxresdefault.jpg"
+language:
+  title-block-author-single: "Presenter"
+  title-block-published: "Date"
+categories:
+  - Videos
+  - Computer vision
+  - Image data
+  - Image restoration
+  - Super-resolution
+  - Deep learning
+  - CNN
+  - GPU
+---
+In this talk from the 2026 Midwest Gaming Classic (MGC) in Milwaukee (recorded April 2026, posted August 2026), software engineer Stephen Reich shows how he trains image restoration models to clean up old video game footage, such as VHS tapes of games shown at trade shows. That footage can be the only record of a game that was never released or changed a lot before release. Restoring it helps people tell whether a detail was really in the game or was just damage from the tape.
+
+Reich uses supervised learning on paired images. The same game frame is captured twice: once from a clean RGB signal (the ground truth) and once through a lower-quality path such as composite, RF, or a round trip through a VHS recorder. To get matching frames without replaying the game by hand, he records each game's attract mode, the self-playing demo that arcade and console games show when idle. He then aligns the two captures pixel by pixel and trains a 1x restoration model, which cleans the image without changing its resolution. He has trained one model for the NES/Famicom, which removes the jagged "teething" along colored edges, and one for the Sega Genesis, which removes the faint vertical "jail bars" from some hardware revisions.
+
+The talk is aimed at a general audience. It introduces convolutions with an image-editing analogy, explains the difference between an architecture (ESRGAN, OmniSR, PLKSR) and a trained model, and walks through a basic [chaiNNer](https://github.com/chaiNNer-org/chaiNNer) pipeline for running models from the [OpenModelDB](https://openmodeldb.info/) on video frame by frame. Reich also points out why general-purpose commercial upscalers work poorly on game footage: they are trained on live-action video and animation, not on the artifacts of particular consoles and cables.
+
+{{< video https://www.youtube.com/watch?v=PSpzvpuMnyc >}}
+
+## Research applications and broader implications
+The problem in this talk (paired degraded and clean images, a known way the image gets degraded, and a small model trained for one domain) shows up across many research fields. Some lessons carry over directly.
+
+- **Getting paired data is the hard part.** Reich uses attract modes to get the same frames twice. Scientists do the same kind of thing when they image a sample twice, once in a fast or low-dose mode and once in a slow, high-quality mode. [Content-aware image restoration (CARE)](https://doi.org/10.1038/s41592-018-0216-7) trains fluorescence microscopy denoisers on low- and high-signal-to-noise images of the same sample, which allows gentler imaging of live cells. Low-dose CT denoising, accelerated MRI reconstruction, and satellite image super-resolution all follow the same pattern. When clean ground truth cannot be collected, self-supervised methods such as [Noise2Noise](https://arxiv.org/abs/1803.04189) and [Noise2Void](https://arxiv.org/abs/1811.10980) learn from noisy data alone.
+- **Models trained on your own domain beat general-purpose tools.** A model trained on one console's artifacts does better than a commercial upscaler trained on everything. Likewise, a restoration model trained on your own microscope, scanner, or sensor usually beats a general one, because it learns that instrument's specific noise and blur.
+- **Real degradations vs. simulated ones.** Reich captures real hardware degradations instead of simulating them. That is more work, but the model trains on the artifacts it will actually see. Many research pipelines add blur or noise synthetically instead, which is easy to scale up but may not match real data. Checking how closely your simulated degradations match the real ones is worth doing.
+- **Restored images can show details that were never there.** A restoration model fills in detail based on what it saw in training, so its output can look convincing and still be wrong. This matters most for evidence, which is Reich's own motivating case: deciding whether a prototype game really differed from the release. In research, a hallucinated cell edge, lesion, or structure can change a conclusion. Keep the raw data, report exactly what processing you applied, validate on held-out pairs and on the analysis the images will be used for (not only on image-quality scores like PSNR/SSIM), and be careful with inputs that don't look like the training data. A model trained on one console, cable, or microscope can fail quietly on another.
+- **Preserving archives.** Libraries, archives, and digital humanities projects hold decades of analog video, film, and scanned documents. The approach in this talk (capture paired examples, train a small model for that one source, run it on the whole collection) could help clean up these collections, provided the restored versions are clearly labeled and the originals are kept.
+
+## Related resources
+- [**OpenModelDB**](https://openmodeldb.info/): A community database of trained upscaling and restoration models, including models for specific consoles, TV shows, and media types.
+- [**chaiNNer**](https://github.com/chaiNNer-org/chaiNNer): A node-based, cross-platform app for running image and video upscaling models. It supports most major super-resolution architectures.
+- [**PLKSR paper**](https://arxiv.org/abs/2404.11848): The efficient CNN super-resolution architecture Reich used for his newer models.
+- [**Real-ESRGAN**](https://github.com/xinntao/Real-ESRGAN): A widely used GAN-based restoration model trained on synthetic degradations. It is a useful contrast to training on captured hardware pairs.
+- [**CARE (Weigert et al., 2018)**](https://doi.org/10.1038/s41592-018-0216-7): Content-aware image restoration for fluorescence microscopy, a research example of the same paired-data approach.
+- [**Learn: Out-of-distribution detection**](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html): Background on recognizing when a model is given inputs unlike its training data, a key risk when you apply a restoration model to a new source.
