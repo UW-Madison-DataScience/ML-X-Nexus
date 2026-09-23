@@ -144,11 +144,10 @@ Qwen is the default open-weight family in several campus efforts, so there is ex
 
 ## Risks, safety, and bias
 
-#### Prompt injection
-Prompt injection is unsolved for every language model in production, not a Qwen-specific weakness. Any model that reads untrusted text, such as a retrieved document, a web page, or a user upload, can have that text act on it as instructions. Give tools the least privilege that does the job, and keep a human on consequential actions.
+#### Security
+Prompt injection is unsolved for every language model in production, not a Qwen-specific weakness. Any model that reads untrusted text, such as a retrieved document, a web page, or a user upload, can have that text act on it as instructions. [Galinkin and colleagues](https://arxiv.org/html/2506.13726v1) test open-weight models against injection, malware-generation prompts, and tree-of-attacks jailbreaks, and find both reasoning and non-reasoning Qwen variants vulnerable, so reasoning ability buys no extra safety. Alibaba Cloud filters problematic data during pre-training, but that is one layer.
 
-#### Jailbreaks
-Reasoning ability buys no extra safety. [Galinkin and colleagues](https://arxiv.org/html/2506.13726v1) test open-weight models against prompt injection, malware-generation prompts, and tree-of-attacks jailbreaks, and find both reasoning and non-reasoning Qwen variants vulnerable. Alibaba Cloud filters problematic data during pre-training, but that is one layer. High-risk workflows need external controls, logging, and human oversight.
+The model's own safety training is not a control you can rely on. Give tools the least privilege that does the job, keep a human on consequential actions, and add external controls and logging for high-risk workflows.
 
 #### Political bias
 Qwen answers on politically sensitive topics differ from Western-trained models and shift with the prompt's language. A [Duke University study](https://arxiv.org/html/2605.23825v1) examines how much of this arrives in post-training; a [Nanyang Technological University study](https://arxiv.org/html/2512.15792v2) finds systematic political bias across language models generally. Both mostly test small models such as Qwen2-7B, while real deployments run 27B and up.
