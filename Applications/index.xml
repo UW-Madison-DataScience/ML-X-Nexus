@@ -10,7 +10,52 @@
 <atom:link href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/index.xml" rel="self" type="application/rss+xml"/>
 <description>ML and AI application stories from the UW-Madison ML+X community</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 17 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 14 Aug 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Restoring Video Game Footage with Machine Learning</title>
+  <dc:creator>Stephen Reich</dc:creator>
+  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Other/2026-08-14_Restoring-Video-Game-Footage_Stephen-Reich.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>In this talk from the 2026 Midwest Gaming Classic in Milwaukee, software engineer Stephen Reich shows how he trains models to clean up old video game footage, such as VHS tapes of games shown at trade shows. That footage is sometimes the only record of a game that was never released or changed before release, so cleaning it up helps people tell real differences from tape damage.</p>
+<p>Reich captures each frame twice: once from a clean RGB signal and once through composite, RF, or a VHS recorder. To get matching frames, he records each game’s self-playing demo mode. He then trains small 1x restoration models (using the PLKSR architecture) for the NES and the Sega Genesis. The talk is aimed at a general audience and ends with how to run models like his using <a href="https://github.com/chaiNNer-org/chaiNNer">chaiNNer</a> and the <a href="https://openmodeldb.info/">OpenModelDB</a>.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/PSpzvpuMnyc" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<section id="research-applications" class="level2">
+<h2 class="anchored" data-anchor-id="research-applications">Research applications</h2>
+<p>The same recipe (pair degraded and clean images of the same thing, then train a model for that one source) is used across science:</p>
+<ul>
+<li><strong>Microscopy and medical imaging.</strong> <a href="https://doi.org/10.1038/s41592-018-0216-7">CARE</a> trains denoisers on paired low- and high-quality microscope images, so live cells can be imaged more gently. Low-dose CT and faster MRI work the same way. When clean images can’t be collected, methods like <a href="https://arxiv.org/abs/1803.04189">Noise2Noise</a> learn from noisy data alone.</li>
+<li><strong>Archives.</strong> Libraries and digital humanities projects hold decades of analog video and film that could be cleaned up this way, as long as the originals are kept.</li>
+<li><strong>A caution.</strong> Restoration models fill in detail they expect to see, so a result can look convincing and still be wrong. If restored images will be used as evidence (Reich’s own motivating case), keep the raw data, report your processing, and validate on held-out pairs. A model trained on one camera, microscope, or console can fail quietly on another.</li>
+</ul>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://openmodeldb.info/"><strong>OpenModelDB</strong></a>: A community database of trained upscaling and restoration models.</li>
+<li><a href="https://arxiv.org/abs/2404.11848"><strong>PLKSR paper</strong></a>: The efficient super-resolution architecture Reich used.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html"><strong>Learn: Out-of-distribution detection</strong></a>: Recognizing when a model sees inputs unlike its training data.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>Videos</category>
+  <category>Computer vision</category>
+  <category>Image data</category>
+  <category>Image restoration</category>
+  <category>Super-resolution</category>
+  <category>Deep learning</category>
+  <category>CNN</category>
+  <category>GPU</category>
+  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Other/2026-08-14_Restoring-Video-Game-Footage_Stephen-Reich.html</guid>
+  <pubDate>Fri, 14 Aug 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://img.youtube.com/vi/PSpzvpuMnyc/maxresdefault.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Deploying RAG in Bedrock vs. Local: WattBot 2025 Case Study</title>
   <dc:creator>Nils Matteson</dc:creator>
@@ -1026,40 +1071,6 @@
   <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2024-02-13.html</guid>
   <pubDate>Tue, 13 Feb 2024 00:00:00 GMT</pubDate>
   <media:content url="https://img.youtube.com/vi/LmKMhNiu5Fw/hqdefault.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Exploring Science Communication and Drug Synergy Analysis using GPT</title>
-  <dc:creator>Ben Rush</dc:creator>
-  <dc:creator>Jack Freeman</dc:creator>
-  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2023-12-12.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<ol type="1">
-<li>GPT for Science Communication: User-Interface and Developer Pipeline Approaches — Ben Rush, PhD</li>
-<li>Advancing Biomedical Research with GPT-4: A Novel Approach to Drug Synergy Analysis using Text Mining and Classification — Jack Freeman</li>
-</ol>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/7Xcsr0mKj4A" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<section id="comments" class="level2">
-<h2 class="anchored" data-anchor-id="comments">Comments</h2>
-
-
-</section>
-
- ]]></description>
-  <category>Videos</category>
-  <category>ML+X</category>
-  <category>UW-Madison</category>
-  <category>Science communication</category>
-  <category>Healthcare</category>
-  <category>LLM</category>
-  <category>Text analysis</category>
-  <category>NLP</category>
-  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2023-12-12.html</guid>
-  <pubDate>Tue, 12 Dec 2023 00:00:00 GMT</pubDate>
-  <media:content url="https://img.youtube.com/vi/7Xcsr0mKj4A/maxresdefault.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

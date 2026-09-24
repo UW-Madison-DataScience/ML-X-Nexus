@@ -770,6 +770,51 @@ font-style: inherit;">True</span>))</span></code></pre></div></div>
   <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/SnapshotWI-OhDeer.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
+  <title>Restoring Video Game Footage with Machine Learning</title>
+  <dc:creator>Stephen Reich</dc:creator>
+  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Other/2026-08-14_Restoring-Video-Game-Footage_Stephen-Reich.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>In this talk from the 2026 Midwest Gaming Classic in Milwaukee, software engineer Stephen Reich shows how he trains models to clean up old video game footage, such as VHS tapes of games shown at trade shows. That footage is sometimes the only record of a game that was never released or changed before release, so cleaning it up helps people tell real differences from tape damage.</p>
+<p>Reich captures each frame twice: once from a clean RGB signal and once through composite, RF, or a VHS recorder. To get matching frames, he records each game’s self-playing demo mode. He then trains small 1x restoration models (using the PLKSR architecture) for the NES and the Sega Genesis. The talk is aimed at a general audience and ends with how to run models like his using <a href="https://github.com/chaiNNer-org/chaiNNer">chaiNNer</a> and the <a href="https://openmodeldb.info/">OpenModelDB</a>.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/PSpzvpuMnyc" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<section id="research-applications" class="level2">
+<h2 class="anchored" data-anchor-id="research-applications">Research applications</h2>
+<p>The same recipe (pair degraded and clean images of the same thing, then train a model for that one source) is used across science:</p>
+<ul>
+<li><strong>Microscopy and medical imaging.</strong> <a href="https://doi.org/10.1038/s41592-018-0216-7">CARE</a> trains denoisers on paired low- and high-quality microscope images, so live cells can be imaged more gently. Low-dose CT and faster MRI work the same way. When clean images can’t be collected, methods like <a href="https://arxiv.org/abs/1803.04189">Noise2Noise</a> learn from noisy data alone.</li>
+<li><strong>Archives.</strong> Libraries and digital humanities projects hold decades of analog video and film that could be cleaned up this way, as long as the originals are kept.</li>
+<li><strong>A caution.</strong> Restoration models fill in detail they expect to see, so a result can look convincing and still be wrong. If restored images will be used as evidence (Reich’s own motivating case), keep the raw data, report your processing, and validate on held-out pairs. A model trained on one camera, microscope, or console can fail quietly on another.</li>
+</ul>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://openmodeldb.info/"><strong>OpenModelDB</strong></a>: A community database of trained upscaling and restoration models.</li>
+<li><a href="https://arxiv.org/abs/2404.11848"><strong>PLKSR paper</strong></a>: The efficient super-resolution architecture Reich used.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html"><strong>Learn: Out-of-distribution detection</strong></a>: Recognizing when a model sees inputs unlike its training data.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>Videos</category>
+  <category>Computer vision</category>
+  <category>Image data</category>
+  <category>Image restoration</category>
+  <category>Super-resolution</category>
+  <category>Deep learning</category>
+  <category>CNN</category>
+  <category>GPU</category>
+  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Other/2026-08-14_Restoring-Video-Game-Footage_Stephen-Reich.html</guid>
+  <pubDate>Fri, 14 Aug 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://img.youtube.com/vi/PSpzvpuMnyc/maxresdefault.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
   <title>Fixing the Poisoned Well: Reverse-Engineering a Backdoored Streamflow Model</title>
   <dc:creator>Fraser King</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Fixing-the-Poisoned-Well.html</link>
@@ -1014,7 +1059,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="f316898f" class="cell" data-execution_count="1">
+<div id="8029407e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -1051,7 +1096,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="1417307f" class="cell" data-execution_count="2">
+<div id="8d135d42" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1068,7 +1113,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="272b4e7f" class="cell" data-execution_count="3">
+<div id="51638f2e" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1108,7 +1153,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="fd936dd1" class="cell" data-execution_count="4">
+<div id="2f37cdc8" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1146,7 +1191,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="a5f8fa64" class="cell" data-execution_count="5">
+<div id="e4d7dcc3" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -1252,7 +1297,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="8659c39d" class="cell" data-execution_count="6">
+<div id="d5183e27" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -1327,7 +1372,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="024ea6c7" class="cell" data-execution_count="7">
+<div id="9190e3a6" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -1402,7 +1447,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="286e9345" class="cell" data-execution_count="8">
+<div id="8a07cd32" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -2623,14 +2668,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="593b30f3" class="cell" data-execution_count="1">
+<div id="997d182e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="fb2c985b" class="cell" data-execution_count="2">
+<div id="94de1b78" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -2743,7 +2788,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="61e7d45e" class="cell" data-execution_count="3">
+<div id="107570c2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2980,7 +3025,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="31ca219a" class="cell" data-execution_count="4">
+<div id="4b6d8cae" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -3008,7 +3053,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="4fe780dc" class="cell" data-execution_count="5">
+<div id="78d2c749" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -3031,7 +3076,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="9607819a" class="cell" data-execution_count="6">
+<div id="956a1282" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -3053,7 +3098,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="19f773f8" class="cell" data-execution_count="7">
+<div id="4a7a8d49" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -3176,7 +3221,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="2322b430" class="cell" data-execution_count="8">
+<div id="5dcd4745" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -3206,7 +3251,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="0d1dff37" class="cell" data-execution_count="9">
+<div id="015cf846" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -3251,7 +3296,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="222f4122" class="cell" data-execution_count="10">
+<div id="f48ceff5" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -3487,7 +3532,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="d9c634fb" class="cell" data-execution_count="11">
+<div id="b457a01f" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -3563,7 +3608,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="b2893e5a" class="cell" data-execution_count="12">
+<div id="b178fba4" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -3679,7 +3724,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="a3c67833" class="cell" data-execution_count="13">
+<div id="d4da26f0" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3925,7 +3970,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="21761aed" class="cell" data-execution_count="14">
+<div id="5662c047" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -8257,113 +8302,6 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
   <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html</guid>
   <pubDate>Fri, 26 Sep 2025 00:00:00 GMT</pubDate>
   <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/GoogleColab.png" medium="image" type="image/png" height="89" width="144"/>
-</item>
-<item>
-  <title>BadgerCompute</title>
-  <dc:creator>Chris Endemann</dc:creator>
-  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p><a href="https://badgercompute.wisc.edu/">BadgerCompute</a> is UW–Madison’s browser-based interactive computing service built on JupyterHub. It provides on-demand access to CPUs, memory, and GPUs without requiring any local software installation or server setup. Researchers, instructors, and students at UW-Madison can write and run code, visualize data, and develop workflows directly from their web browser using only a NetID.</p>
-<p>BadgerCompute is similar in spirit to Google Colab: both offer hosted Jupyter notebook environments for writing and executing code interactively. However, BadgerCompute is campus-supported, requires NetID authentication, and is subject to UW data policies. It is free to use for UW affiliates, but it also comes with runtime limits (4 hours), limited storage (20 GB), and fewer GPU guarantees.</p>
-<section id="gpu-access-and-runtime-limits" class="level2">
-<h2 class="anchored" data-anchor-id="gpu-access-and-runtime-limits">GPU access and runtime limits</h2>
-<p>GPU availability is limited and not guaranteed, but when available it is often sufficient for small to medium deep learning tasks, accelerated data analysis, or exploratory workflows. Each session runs in a containerized environment with common data science tools already installed. Sessions have the following limitations:</p>
-<ul>
-<li>Maximum runtime is four hours.</li>
-<li>Sessions without an active browser connection shut down automatically after ten minutes.</li>
-<li>The service can support roughly 80–100 concurrent users.</li>
-<li>GPU capacity is shared and may not be available during peak usage times.</li>
-</ul>
-</section>
-<section id="data-storage-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="data-storage-limitations">Data storage limitations</h2>
-<p>BadgerCompute is designed for interactive computing, not data storage. Its storage model is deliberately minimal and ephemeral:</p>
-<ul>
-<li>Each BadgerCompute user is allocated 20 GB of persistent storage. However, this storage is retained only for 30 days after your last login. If you do not log into BadgerCompute within 30 days, your data will be automatically deleted.
-<ul>
-<li>As an alternative, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html">Google Colab</a> provides persistent storage via integrations with Google Drive.</li>
-</ul></li>
-<li>In addition, the default folder when you log into BadgerCompute is NOT persistent. You will need to put files in a particular folder to save them between sessions. See our <a href="https://badgercompute.wisc.edu/docs">documentation</a> for more details.</li>
-<li>BadgerCompute is NOT suitable for work with restricted data.</li>
-</ul>
-</section>
-<section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
-<p>To use BadgerCompute, you must:</p>
-<ol type="1">
-<li>Have an active UW–Madison NetID.</li>
-<li>Complete the <a href="https://canvas.wisc.edu/enroll/JR887K">BadgerCompute Certification Course</a> on Canvas and wait 24 hours for access.</li>
-</ol>
-</section>
-<section id="working-in-jupyterlab" class="level2">
-<h2 class="anchored" data-anchor-id="working-in-jupyterlab">Working in JupyterLab</h2>
-<p>When your session launches, you will see the standard JupyterLab interface:</p>
-<ul>
-<li>A file browser for navigating directories and uploading or downloading files</li>
-<li>A launcher for creating new notebooks, terminals, or text files</li>
-<li>A notebook interface for writing and running code interactively</li>
-<li>A terminal for executing shell commands directly</li>
-</ul>
-<p>Only the <code>~/work</code> directory is persistent. Any files saved elsewhere are deleted when the session ends.</p>
-</section>
-<section id="best-practices-and-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="best-practices-and-limitations">Best practices and limitations</h2>
-<p>Because BadgerCompute is a shared resource with limited capacity, plan your workflows with the following in mind:</p>
-<ul>
-<li>Sessions end automatically after four hours and cannot be extended.</li>
-<li>Sessions without an active browser connection end after ten minutes.</li>
-<li>GPU access depends on demand and may not be available.</li>
-<li>Storage is temporary and limited. As an alternative, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html">Google Colab</a> provides persistent storage via integrations with Google Drive.</li>
-<li>Availability is not guaranteed for classes or large workshops. For larger courses, coordinate in advance or consider alternatives.</li>
-</ul>
-</section>
-<section id="when-to-use-badgercompute-vs.-other-platforms" class="level2">
-<h2 class="anchored" data-anchor-id="when-to-use-badgercompute-vs.-other-platforms">When to use BadgerCompute vs.&nbsp;other platforms</h2>
-<p>BadgerCompute is most useful for:</p>
-<ul>
-<li>Rapid prototyping of data analysis or machine learning workflows</li>
-<li>Teaching and demonstrations without requiring software installation</li>
-<li>Exploratory data analysis and small-scale model development</li>
-<li>Short tasks that benefit from GPU acceleration</li>
-</ul>
-<p>For more intensive work — such as training large models, running distributed jobs, executing long-running tasks, or hosting large datasets — platforms like <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">CHTC</a>, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html">AWS</a>, GCP, or local HPC clusters are more appropriate. Users may choose to start exploratory work in BadgerCompute (or Google Colab) and transition to these systems when needed.</p>
-</section>
-<section id="learn-more-and-get-help" class="level2">
-<h2 class="anchored" data-anchor-id="learn-more-and-get-help">Learn more and get help</h2>
-<ul>
-<li><strong>Documentation</strong>: <a href="https://badgercompute.wisc.edu/docs/">badgercompute.wisc.edu/docs/</a><br>
-</li>
-<li><strong>Community forum</strong>: <a href="https://badgercompute.wisc.edu/docs/get-help/">badgercompute.wisc.edu/docs/get-help/</a></li>
-</ul>
-<p>BadgerCompute is supported by DoIT, CHTC, and the Data Science Institute (DSI) as part of UW–Madison’s research computing ecosystem.</p>
-</section>
-<section id="related-resources" class="level2">
-<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
-<ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Compute</strong>: Intro to AWS for ML/AI</a>. Learn how to launch and scale machine learning workflows in the cloud using AWS SageMaker.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> - Learn how to use Google Colab for machine learning workflows.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
-</ul>
-</section>
-<section id="comments" class="level2">
-<h2 class="anchored" data-anchor-id="comments">Comments</h2>
-
-
-</section>
-
- ]]></description>
-  <category>Compute</category>
-  <category>Guides</category>
-  <category>UW-Madison</category>
-  <category>GPU</category>
-  <category>Jupyter</category>
-  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html</guid>
-  <pubDate>Wed, 24 Sep 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/BadgerCompute.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
