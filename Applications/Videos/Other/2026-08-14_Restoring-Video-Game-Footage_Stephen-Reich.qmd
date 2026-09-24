@@ -1,0 +1,37 @@
+---
+title: "Restoring Video Game Footage with Machine Learning"
+author: "Stephen Reich"
+date: 2026-08-14
+image: "https://img.youtube.com/vi/PSpzvpuMnyc/maxresdefault.jpg"
+language:
+  title-block-author-single: "Presenter"
+  title-block-published: "Date"
+categories:
+  - Videos
+  - Computer vision
+  - Image data
+  - Image restoration
+  - Super-resolution
+  - Deep learning
+  - CNN
+  - GPU
+---
+In this talk from the 2026 Midwest Gaming Classic in Milwaukee, software engineer Stephen Reich shows how he trains models to clean up old video game footage, such as VHS tapes of games shown at trade shows. That footage is sometimes the only record of a game that was never released or changed before release, so cleaning it up helps people tell real differences from tape damage.
+
+Reich captures each frame twice: once from a clean RGB signal and once through composite, RF, or a VHS recorder. To get matching frames, he records each game's self-playing demo mode. He then trains small 1x restoration models (using the PLKSR architecture) for the NES and the Sega Genesis. The talk is aimed at a general audience and ends with how to run models like his using [chaiNNer](https://github.com/chaiNNer-org/chaiNNer) and the [OpenModelDB](https://openmodeldb.info/).
+
+**Contact**: Stephen Reich ([pokepress@gmail.com](mailto:pokepress@gmail.com)) is happy to hear from people working in video restoration or production, or anyone interested in training models like these.
+
+{{< video https://www.youtube.com/watch?v=PSpzvpuMnyc >}}
+
+## Research applications
+The same recipe (pair degraded and clean images of the same thing, then train a model for that one source) is used across science:
+
+- **Microscopy and medical imaging.** [CARE](https://doi.org/10.1038/s41592-018-0216-7) trains denoisers on paired low- and high-quality microscope images, so live cells can be imaged more gently. Low-dose CT and faster MRI work the same way. When clean images can't be collected, methods like [Noise2Noise](https://arxiv.org/abs/1803.04189) learn from noisy data alone.
+- **Archives.** Libraries and digital humanities projects hold decades of analog video and film that could be cleaned up this way, as long as the originals are kept.
+- **A caution.** Restoration models fill in detail they expect to see, so a result can look convincing and still be wrong. If restored images will be used as evidence (Reich's own motivating case), keep the raw data, report your processing, and validate on held-out pairs. A model trained on one camera, microscope, or console can fail quietly on another.
+
+## Related resources
+- [**OpenModelDB**](https://openmodeldb.info/): A community database of trained upscaling and restoration models.
+- [**PLKSR paper**](https://arxiv.org/abs/2404.11848): The efficient super-resolution architecture Reich used.
+- [**Learn: Out-of-distribution detection**](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html): Recognizing when a model sees inputs unlike its training data.
