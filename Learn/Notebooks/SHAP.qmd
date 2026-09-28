@@ -1,0 +1,274 @@
+---
+title: "Explaining Model Predictions with SHAP"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-03-09
+date-format: long
+image: "../../../images/shap-logo.png"
+description: "A hands-on introduction to SHAP (SHapley Additive exPlanations) — learn how to explain individual predictions and understand global feature importance for any ML model."
+
+categories:
+  - Notebooks
+  - Code-along
+  - Explainability
+  - Interpretability
+  - Trustworthy AI
+  - Tabular
+  - Sklearn
+  - XGBoost
+  - Visualization
+
+jupyter: python3
+execute:
+  echo: true
+  eval: false
+
+---
+
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Learn/Notebooks/SHAP.ipynb)
+
+Understanding *why* a model makes a particular prediction is often just as important as the prediction itself. [SHAP (SHapley Additive exPlanations)](https://shap.readthedocs.io/en/latest/) provides a mathematically rigorous way to answer this question. Grounded in [Shapley values](https://en.wikipedia.org/wiki/Shapley_value) from cooperative game theory, SHAP assigns each feature an importance score for every individual prediction — telling you exactly how much each feature pushed the prediction higher or lower relative to the average.
+
+In this notebook, you'll learn to:
+
+1. Train a gradient-boosted tree model on a real dataset
+2. Compute SHAP values using the optimized `TreeExplainer`
+3. Interpret individual predictions with waterfall and force plots
+4. Understand global model behavior with summary and dependence plots
+5. Use the model-agnostic `KernelExplainer` to explain any model
+
+#### Prerequisites
+- Basic Python and scikit-learn experience
+- Familiarity with classification tasks (train/test splits, accuracy)
+
+## Setup
+
+```{python}
+!pip install -q shap xgboost scikit-learn matplotlib
+```
+
+```{python}
+import shap
+import xgboost as xgb
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Initialize SHAP's JS visualizations (for force plots in notebooks)
+shap.initjs()
+
+print(f"SHAP version: {shap.__version__}")
+```
+
+## Part 1: What are SHAP values?
+
+Imagine a group of players (features) working together in a game (making a prediction). Shapley values — from game theory — provide a fair way to distribute the total "payout" (the prediction) among the players based on their individual contributions. The key idea is: a feature's contribution is measured by comparing predictions *with* and *without* that feature, averaged over all possible combinations of other features.
+
+SHAP values have several desirable properties that distinguish them from other feature importance methods:
+
+- **Local accuracy**: The SHAP values for a prediction sum up to the difference between the model's output and the average prediction. Nothing is lost or unaccounted for.
+- **Consistency**: If a model is changed so that a feature has a larger impact, its SHAP value will never decrease.
+- **Missingness**: Features that are not present in the model receive a SHAP value of zero.
+
+Unlike global feature importance (e.g., sklearn's `feature_importances_`), SHAP provides *per-prediction* explanations — you can see exactly why the model made a specific decision for a specific input.
+
+## Part 2: Train a model
+
+We'll use the [UCI Adult Income dataset](https://archive.ics.uci.edu/dataset/2/adult) (also known as "Census Income"), which predicts whether an individual earns more than $50K/year based on demographic features. This is a classic dataset for exploring model explainability because the features are intuitive and the predictions have real-world fairness implications.
+
+```{python}
+# Load the Adult Income dataset bundled with SHAP
+X, y = shap.datasets.adult()
+
+print(f"Dataset shape: {X.shape}")
+print(f"Features: {list(X.columns)}")
+print(f"\nClass distribution:")
+print(f"  <=50K: {(y == 0).sum()} ({(y == 0).mean():.1%})")
+print(f"  >50K:  {(y == 1).sum()} ({(y == 1).mean():.1%})")
+X.head()
+```
+
+```{python}
+# Split into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train an XGBoost classifier
+model = xgb.XGBClassifier(
+    n_estimators=200,
+    max_depth=4,
+    learning_rate=0.1,
+    random_state=42,
+    eval_metric="logloss"
+)
+model.fit(X_train, y_train)
+
+# Evaluate
+y_pred = model.predict(X_test)
+print(f"Test accuracy: {accuracy_score(y_test, y_pred):.3f}")
+```
+
+## Part 3: Computing SHAP values with TreeExplainer
+
+SHAP provides specialized explainers optimized for different model types. For tree-based models (XGBoost, LightGBM, Random Forest, etc.), `TreeExplainer` computes *exact* SHAP values in polynomial time — making it fast even on large datasets.
+
+```{python}
+# Create a TreeExplainer for our XGBoost model
+explainer = shap.TreeExplainer(model)
+
+# Compute SHAP values for the test set
+shap_values = explainer(X_test)
+
+print(f"SHAP values shape: {shap_values.shape}")
+print(f"Base value (average prediction in log-odds): {shap_values.base_values[0]:.4f}")
+```
+
+The `shap_values` object contains:
+
+- `.values`: The SHAP value for each feature for each sample — how much that feature pushed the prediction up or down
+- `.base_values`: The model's average output (the prediction you'd make with no feature information)
+- `.data`: The actual feature values for each sample
+
+For any single prediction: `base_value + sum(shap_values) = model_output`. This is the **local accuracy** property in action.
+
+## Part 4: Explaining individual predictions
+
+### Waterfall plot
+
+The waterfall plot shows how each feature contributes to a single prediction, starting from the base value (average) and building up to the final model output.
+
+```{python}
+# Explain the first test sample
+shap.plots.waterfall(shap_values[0])
+```
+
+Reading this plot:
+
+- The bottom shows the base value (E[f(x)]) — the model's average prediction
+- Each row shows a feature's contribution: red bars push the prediction higher (toward >$50K), blue bars push it lower
+- The top shows the final model output (f(x))
+- Features are ordered by the magnitude of their SHAP value for this specific prediction
+
+### Force plot
+
+The force plot is an alternative visualization that shows the same information in a compact horizontal format.
+
+```{python}
+# Force plot for a single prediction
+shap.plots.force(shap_values[0])
+```
+
+```{python}
+# Force plot for multiple predictions — reveals patterns across samples
+shap.plots.force(shap_values[:100])
+```
+
+## Part 5: Understanding global model behavior
+
+While individual explanations are powerful for debugging or auditing specific predictions, we also want to understand how features influence the model *overall*.
+
+### Summary plot (beeswarm)
+
+The beeswarm plot shows the SHAP value distribution for every feature across all samples. Each dot is one sample; the x-axis shows the SHAP value (impact on prediction), and the color shows the feature value (red = high, blue = low).
+
+```{python}
+shap.plots.beeswarm(shap_values)
+```
+
+Reading this plot:
+
+- Features are ordered by overall importance (top = most important)
+- The horizontal spread shows how much impact a feature has across different samples
+- Color patterns reveal the *direction* of each feature's effect — e.g., if high values of "Age" (red dots) tend to have positive SHAP values, then being older increases the predicted probability of earning >$50K
+
+### Bar plot (mean absolute SHAP values)
+
+For a simpler global view, the bar plot shows the mean absolute SHAP value for each feature — this is a principled measure of overall feature importance.
+
+```{python}
+shap.plots.bar(shap_values)
+```
+
+Unlike sklearn's built-in `feature_importances_` (which measures how much each feature reduces impurity during training), SHAP-based importance reflects each feature's actual impact on predictions. The two can disagree — especially when features are correlated.
+
+### Dependence plot
+
+Dependence plots reveal how a single feature's effect on the prediction changes across its range, and whether interactions with other features modulate that effect.
+
+```{python}
+# How does age affect predictions?
+# SHAP automatically picks an interacting feature for the color axis
+shap.plots.scatter(shap_values[:, "Age"])
+```
+
+```{python}
+# How do hours worked per week affect predictions?
+shap.plots.scatter(shap_values[:, "Hours per week"])
+```
+
+## Part 6: Model-agnostic explanations with KernelExplainer
+
+`TreeExplainer` is fast but only works with tree-based models. For any other model — neural networks, SVMs, custom models — SHAP provides `KernelExplainer`. It treats the model as a black box, only requiring a predict function.
+
+The tradeoff: `KernelExplainer` is much slower because it must sample many feature coalitions, so we'll use a small background dataset and explain a handful of samples.
+
+```{python}
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+
+# Train a logistic regression model for comparison
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+lr_model = LogisticRegression(max_iter=1000, random_state=42)
+lr_model.fit(X_train_scaled, y_train)
+
+print(f"Logistic regression test accuracy: {accuracy_score(y_test, lr_model.predict(X_test_scaled)):.3f}")
+```
+
+```{python}
+# Use a small background dataset (KernelExplainer samples from this)
+background = shap.sample(pd.DataFrame(X_train_scaled, columns=X.columns), 100)
+
+# Create KernelExplainer
+kernel_explainer = shap.KernelExplainer(lr_model.predict_proba, background)
+
+# Explain a small subset (KernelExplainer is slow — this may take a minute)
+X_explain = pd.DataFrame(X_test_scaled[:20], columns=X.columns)
+shap_values_kernel = kernel_explainer.shap_values(X_explain)
+
+# shap_values_kernel is a list of arrays (one per class for multi-class/binary)
+# For binary classification, index [1] gives SHAP values for the positive class
+shap.summary_plot(shap_values_kernel[1], X_explain)
+```
+
+This lets you compare explanations between the XGBoost and logistic regression models — differences in SHAP values reveal where the models are making different assumptions about the data.
+
+## Summary
+
+| Concept | What it tells you |
+|---------|-------------------|
+| **SHAP values** | Per-feature, per-prediction contribution to the model output |
+| **Base value** | The model's average prediction (what you'd predict with no information) |
+| **Waterfall/force plots** | Why the model made *this specific* prediction |
+| **Beeswarm/bar plots** | Which features matter most *overall* and in what direction |
+| **Dependence plots** | How a feature's effect varies across its range (and interactions) |
+| **TreeExplainer** | Fast, exact SHAP values for tree-based models |
+| **KernelExplainer** | Model-agnostic SHAP values for any model (slower) |
+
+SHAP provides a unified, theoretically grounded framework for model explainability. Whether you're debugging a model, communicating results to stakeholders, auditing for bias, or selecting features, SHAP values give you a reliable lens into model behavior.
+
+## Related resources
+- [**SHAP documentation**](https://shap.readthedocs.io/en/latest/): Official API reference and example gallery.
+- [**Original paper**: "A Unified Approach to Interpreting Model Predictions"](https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html): Lundberg & Lee, NeurIPS 2017.
+- [**Book**: Interpretable Machine Learning](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Books/Interpretable-Machine-Learning_ChristophMolnar.html): A comprehensive guide covering SHAP and other model interpretation methods in depth.
+- [**Workshop**: Trustworthy AI: Explainability, Bias, Fairness, and Safety](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/TrustworthyAI_Explainability-Bias-Fairness-OODdetection.html): Hands-on workshop covering explainability, bias mitigation, and model safety.
+- [**Library**: AI Fairness 360 (AIF360)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/AI-Fairness-360.html): Complementary library for detecting and mitigating bias — pair with SHAP for a comprehensive trustworthy AI workflow.
+- [**Notebook**: Exploring the Titanic Dataset](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Titanic-Dataset.html): Practice EDA and feature engineering on tabular data, then come back to explain your model with SHAP.
+
+## Comments
