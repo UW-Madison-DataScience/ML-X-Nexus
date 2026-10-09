@@ -1,0 +1,199 @@
+---
+title: "Qwen: Open-Weight Language and Multimodal Models from Alibaba Cloud"
+author:
+  - name: Zain Waseem
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-09-18
+date-format: long
+image: "../../../images/Qwen.png"
+description: "An overview of the Qwen model family: what it includes, why a 27B model can keep up with frontier models, how to pick a size for your GPU, where it runs at UW-Madison, and what to watch for on safety and bias."
+
+categories:
+  - Models
+  - Deep learning
+  - NLP
+  - LLM
+  - GenAI
+  - Foundation models
+  - Multimodal learning
+  - Transformer
+  - Hugging Face
+  - Trustworthy AI
+---
+
+Qwen (Tongyi Qianwen) is a family of open-weight large language models developed by Alibaba Cloud. Introduced in 2023 in the "[Qwen Technical Report](https://arxiv.org/abs/2309.16609)," Qwen has grown into one of the most widely used open-weight model families for chat, reasoning, coding, math, vision, audio, and retrieval tasks. The family spans sizes from small models that run on one consumer GPU to mixture-of-experts (MoE) flagships with trillions of total parameters, most released under the Apache 2.0 license on [Hugging Face](https://huggingface.co/Qwen). Qwen is competitive with other open-weight families such as Llama, Mistral, Gemma, and DeepSeek, and in the past year it has become powerful enough to run on a single GPU while landing within a few points of frontier models on many benchmarks. That combination is why Qwen shows up in more and more research and campus work, from retrieval-augmented generation (RAG) pipelines to document OCR and coding agents. The latest generation at the time of writing is Qwen3.8, released in August 2026.
+
+#### Key features
+- **Decoder-only transformer, dense and MoE**: Qwen uses a decoder-only transformer with grouped-query attention (GQA), rotary position embeddings (RoPE), and SwiGLU activations. Newer generations ship both dense models and sparse MoE models that activate only a fraction of their parameters per token (for example, Qwen3-30B-A3B has 30B total parameters but only 3B active). Rule of thumb: total parameters determine what hardware you need to load the model, active parameters determine how fast it runs.
+- **Open weights at many scales**: One family spans dense models up to 32B and MoE models past 2T total parameters, so you can match model size to your compute budget without switching tokenizers, prompt formats, or documentation. Most checkpoints are Apache 2.0, which permits local inference, fine-tuning, and commercial use.
+- **One family, many modalities**: Chat and reasoning, vision-language (Qwen-VL), coding (Qwen-Coder), audio and speech (Qwen-Audio, Qwen-Omni, Qwen3-TTS), and embedding and reranking models for retrieval all share a common lineage and similar behavior across sizes.
+- **Hybrid reasoning ("thinking") modes**: Since Qwen3, models can switch between a step-by-step reasoning mode for hard problems (math, code, logic) and a fast direct-answer mode for simple queries, controllable per prompt.
+- **Long context and multilingual coverage**: Recent generations support 128K-token contexts (and longer with context scaling), and Qwen3 covers 100+ languages and dialects, with particular strength in Chinese and English.
+- **Release cadence**: New Qwen generations and variants arrive every few weeks to months. Within about a year the family moved from Qwen2.5 through Qwen3, Qwen3.5, Qwen3.6, and Qwen3.8, which is a big part of why open weights keep closing the gap with proprietary models.
+
+## Timeline context
+Qwen fits into the wave of open-weight large language models that followed Llama. Here is a timeline placing Qwen alongside other important model families.
+
+- **[Transformer (2017)](https://arxiv.org/abs/1706.03762)**: Introduced the attention-based architecture underlying all modern LLMs.
+- **[Llama (2023)](https://arxiv.org/abs/2302.13971)**: Meta's open-weight models that kicked off the open LLM ecosystem.
+- **[Qwen (2023)](https://arxiv.org/abs/2309.16609)**: Alibaba Cloud's first open-weight LLM line (7B and 14B), with strong multilingual, coding, and math performance.
+- **[Mistral 7B (2023)](https://arxiv.org/abs/2310.06825)**: Showed that small, efficient open models can compete with much larger ones.
+- **[Qwen1.5 (2024)](https://qwen.ai/blog?id=qwen1.5)**: Expanded size ladder (0.5B to 72B) with better instruction following, chat alignment, and 32K context.
+- **[Qwen2 (2024)](https://arxiv.org/abs/2407.10671)**: Rebuilt family with GQA across all sizes, a first MoE variant, and 128K context.
+- **[Qwen2.5 (2024)](https://arxiv.org/abs/2412.15115)**: Trained on 18 trillion tokens; the base for the popular Coder, Math, and VL variants that many campus RAG projects still use.
+- **[DeepSeek-R1 (2025)](https://arxiv.org/abs/2501.12948)**: A reasoning model trained with reinforcement learning. Several of its distilled variants use Qwen models as their base, an early example of frontier capability being distilled down into small open models.
+- **[Qwen3 (2025)](https://arxiv.org/abs/2505.09388)**: Dense (0.6B to 32B) and MoE (30B-A3B, 235B-A22B) models with hybrid thinking modes and 119-language coverage, followed by Qwen3-Coder, Qwen3-VL, Qwen3-Omni, and Qwen3-Embedding.
+- **[Qwen3.5 through Qwen3.8 (2026)](https://qwen.ai/blog?id=qwen3.8)**: Rapid iteration on the Qwen3 recipe. Qwen3.8 includes a 27B dense model that fits on one GPU and a Max MoE variant (about 2.4T total parameters, roughly 95B active) at the top of the family.
+
+Within a year Qwen moved from Qwen2 to Qwen3.8, and the benchmark gains came with it. For example, on quality-assessment benchmarks for multimodal models, Qwen3.8 improved about 8 points over Qwen2. That pace shows how open-weight families can iterate quickly without the release cycles of proprietary models.
+
+## How these models keep shrinking and still competing
+Qwen3.8-27B is a 27B dense model that fits on one GPU, and it lands within a few points of frontier proprietary models one to two orders of magnitude larger. The figure below compares it with the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
+
+![Qwen3.8-27B against Claude Opus 4.6 Max on five benchmarks, as reported on the Qwen model card.](../../images/Qwen-benchmarks.svg){fig-alt="Grouped horizontal bar chart comparing Qwen3.8-27B with Claude Opus 4.6 Max on five benchmarks. Qwen3.8-27B leads on CharXiv reasoning (83.7 vs 66.0) and OmniDocBench 1.5 (91.1 vs 86.6), and trails on GPQA Diamond (89.2 vs 91.3), Terminal-Bench 2.1 (73.0 vs 78.2), and Humanity's Last Exam (30.8 vs 40.0)."}
+
+Source: [Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B). The losses are on general reasoning and long-horizon agent tasks. The wins are on visual and document work, which is the most common ask from campus researchers.
+
+How a 27B keeps up:
+
+1. **Distillation**. Small models are trained on the outputs and reasoning traces of much larger ones, so capability moves "down-market" with a lag of roughly 6 to 12 months. This is the single biggest reason open weights keep closing the gap, and it means frontier labs are, in effect, subsidizing the open models everyone else hosts.
+2. **Post-training on verifiable tasks**. Code, math, and tool use can be graded automatically, so reinforcement learning on those domains is cheap to scale and delivers most of the benchmark score. Three of the five benchmarks above are that kind of task.
+3. **Test-time compute**. Qwen3.x spends many tokens reasoning before it answers; the traces are long and heavily structured. The parameter count understates the compute per query, which is also why latency, not model size, tends to be the real serving constraint.
+4. **Better data per parameter**. Curated and synthetic training data has improved faster than model size has grown, so a 2026 27B model is not the same object as a 2024 27B model.
+
+Qwen3.8-27B still trails on long-horizon agentic reliability, rare and long-tail domain knowledge, very long contexts, robustness to sloppy prompts, and non-English work. Benchmarks measure single dense tasks, not whether an agent stays coherent across a two-hour session.
+
+The narrower the task, the smaller the model can be. On OmniDocBench 1.5, [GLM-OCR](https://arxiv.org/abs/2603.10910), a 0.9B specialized document parser, scores 94.6 versus 89.2 for Qwen3-VL-235B, at about 1/260th the size. A Qwen3.8-27B adapted to a law firm's corpus has been reported to pass more tasks than a frontier model at roughly a tenth of the per-query cost. For a narrow enough task, a fleet of small fine-tuned models beats one big general one. Qwen's size ladder and Apache 2.0 license make it a common base for that.
+
+## Qwen variants: what still needs its own model
+One mid-size Qwen3.x model now handles chat, reasoning, agentic coding, OCR, and document parsing, and on the document and figure benchmarks above it beats the frontier comparator outright. Two jobs still need a model of their own.
+
+- **[Qwen3 / Qwen3.x](https://huggingface.co/collections/Qwen/qwen3-67dd247413f0e2e4f653967f)**: The default, and the right starting point for almost everything. Dense sizes from 0.6B to 32B, plus the Qwen3.8-27B and MoE models up to the Max variants. Handles text, code, images, and documents in one model, with switchable thinking modes.
+- **[Qwen3-Omni](https://github.com/QwenLM/Qwen3-Omni)**: Speech and audio. Transcription, audio understanding, and text-to-speech. The general models do not accept audio input, so this is a separate deployment rather than a swap.
+- **[Qwen3-Embedding and Qwen3-Reranker](https://huggingface.co/collections/Qwen/qwen3-embedding-6841b2055b99c44d9a4c371f)**: Retrieval. Embedding and reranking models from 0.6B to 8B for semantic search and RAG. A chat model cannot do this job, and these are small enough to run alongside one.
+
+The specialized lines are still worth it for narrow tasks. [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) scales to a 480B mixture-of-experts model for large agentic coding workloads, and [Qwen3-VL](https://github.com/QwenLM/Qwen3-VL) offers dedicated vision-language models up to 235B; Qwen3-VL-32B powers a validated OCR pipeline at UW-Madison. Reach for either when the general model falls short on your specific task, but neither is the default starting point it was a year ago.
+
+## Choosing a model size (and what it costs in GPU memory)
+The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in FP16/BF16**, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference, because you hold gradients and optimizer state alongside the weights (Adam keeps two extra values per parameter) plus the activations saved for the backward pass. LoRA and QLoRA avoid most of that by freezing the base weights and training small adapters, which is what makes single-GPU fine-tuning practical.
+
+| Model (dense unless noted) | Parameters | FP16 / BF16 | 8-bit | 4-bit |
+|---|---:|---:|---:|---:|
+| Qwen3-8B | 8B | ~16 GB | ~8 GB | ~5 GB |
+| **Qwen3.8-27B** | **27B** | **~56 GB** | **~28 GB** | **~16 GB** |
+| Qwen3-30B-A3B (MoE) | 30B total, 3B active | ~60 GB | ~30 GB | ~17 GB |
+| Qwen3-235B-A22B (MoE) | 235B total, 22B active | ~470 GB | ~235 GB | ~130 GB |
+
+**Qwen3.8-27B is the best value on this list.** It is the largest dense model that still runs on a single GPU, and it is the one in the benchmark comparison above, so you get near-frontier quality without a multi-GPU deployment. In BF16 it needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss.
+
+**For most real applications, 20B to 30B is currently the floor.** Smaller models demo well and then fall short on the actual task. The campus WattBot RAG comparison is consistent with this: Qwen was competitive with commercial APIs only at 32B and above. Treat anything below that range as a prototyping step, not the model you deploy.
+
+The other sizes:
+
+- **Qwen3-8B**: Runs on a 16 GB consumer GPU, or an 8 GB one at 4-bit. Useful for classification, extraction, summarization, and working out your pipeline before you commit to bigger hardware.
+- **Mixture-of-experts models**: Total parameters set the memory you have to buy; active parameters set the speed you get once it is loaded. Qwen3-30B-A3B costs about the same memory as the 27B but runs considerably faster, while the 235B flagship is multi-GPU territory at full precision.
+
+#### Hands-on: measure memory yourself
+You can profile the actual GPU footprint of any Qwen model with the snippet below. Swap model names and precisions to see how parameter count and quantization change memory use. See the [Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html) notebook for a deeper walkthrough.
+
+```python
+# Requires: pip install transformers torch accelerate
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_name = "Qwen/Qwen3-4B"  # Try: Qwen3-8B, Qwen3-14B, Qwen3.8-27B, ...
+
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    torch_dtype=torch.bfloat16,  # Change to torch.float32 to compare
+    device_map="auto",           # Uses the GPU if one is available
+)
+
+n_params = sum(p.numel() for p in model.parameters()) / 1e9
+print(f"Model: {model_name}  ({n_params:.2f}B parameters)")
+if torch.cuda.is_available():
+    print(f"GPU memory after load: {torch.cuda.memory_allocated() / 1e9:.2f} GB")
+
+# Chat template + thinking mode toggle (Qwen3 and later)
+messages = [{"role": "user", "content": "Explain gradient descent in one paragraph."}]
+text = tokenizer.apply_chat_template(
+    messages, tokenize=False, add_generation_prompt=True,
+    enable_thinking=False,  # True = step-by-step reasoning mode (slower, better on hard problems)
+)
+inputs = tokenizer(text, return_tensors="pt").to(model.device)
+
+with torch.no_grad():
+    output = model.generate(**inputs, max_new_tokens=150)
+
+if torch.cuda.is_available():
+    print(f"Peak GPU memory during generation: {torch.cuda.max_memory_allocated() / 1e9:.2f} GB")
+print(tokenizer.decode(output[0][inputs.input_ids.shape[1]:], skip_special_tokens=True))
+```
+
+To see 4-bit quantization in action, load a larger model with `BitsAndBytesConfig(load_in_4bit=True)` (requires `bitsandbytes`) and compare: an 8B model drops from about 16 GB to about 5 GB.
+
+## Qwen at UW-Madison
+Qwen is the default open-weight family in several campus efforts, so there is existing work here to reuse.
+
+- **NRP hosted LLMs**: The free [National Research Platform (NRP) Nautilus](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) endpoint serves `qwen3` (a large VL model), `qwen3-small` (27B), and `qwen3-embedding` through an OpenAI-compatible API. It's the fastest way to try Qwen with no hardware at all.
+- **WattBot RAG deployments**: The winning [WattBot 2025](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html) RAG system was rebuilt on campus hardware and compared against a commercial cloud deployment, testing Qwen from 7B up to 72B. Qwen at 32B and above matched the commercial APIs on the task. The largest model tested, Qwen1.5-110B, was not the best performer: generation matters more than raw size. Full walkthrough in the ML+X forum talk, [Deploying RAG in Bedrock vs. Local](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html).
+- **BadgerBrain (campus-hosted model pilot)**: DoIT's Research Cyberinfrastructure office is piloting [BadgerBrain](https://github.com/qualiaMachine/BadgerBrain), campus-hosted models behind a shared OpenAI-compatible gateway. Anyone with a UW-Madison NetID can request an API key through the [BadgerBrain access form](https://forms.gle/vkcLzApNrX7KbkTP9); access requires the campus VPN, and the pilot is for public data only (see the [usage policy](https://github.com/qualiaMachine/BadgerBrain/blob/main/docs/usage-policy.md)). The catalog is built largely around the Qwen3 family (chat and reasoning, VL for OCR, coder, embeddings, and rerankers) because one family with open weights, strong per-size performance, and a fast release cadence covers most use cases. Qwen3.8-27B was running on campus within days of release with no procurement or contract, which is the practical argument for open weights.
+
+## Risks, safety, and bias
+
+#### Security
+Prompt injection is unsolved for every language model in production, not a Qwen-specific weakness. Any model that reads untrusted text, such as a retrieved document, a web page, or a user upload, can have that text act on it as instructions. [Galinkin and colleagues](https://arxiv.org/html/2506.13726v1) test open-weight models against injection, malware-generation prompts, and tree-of-attacks jailbreaks, and find both reasoning and non-reasoning Qwen variants vulnerable, so reasoning ability buys no extra safety. Alibaba Cloud filters problematic data during pre-training, but that is one layer.
+
+The model's own safety training is not a control you can rely on. Give tools the least privilege that does the job, keep a human on consequential actions, and add external controls and logging for high-risk workflows.
+
+#### Political bias
+Qwen answers on politically sensitive topics differ from Western-trained models and shift with the prompt's language. A [Duke University study](https://arxiv.org/html/2605.23825v1) examines how much of this arrives in post-training; a [Nanyang Technological University study](https://arxiv.org/html/2512.15792v2) finds systematic political bias across language models generally. Both mostly test small models such as Qwen2-7B, while real deployments run 27B and up.
+
+Measurement is usually a fixed battery of politically sensitive items, often drawn from the Political Compass or the World Values Survey, scored on the model's forced choices. Variants repeat the same prompts across languages or compare refusal rates. These are cheap to reproduce, a few hundred prompts and a rubric, and running one on your own prompts beats citing a published number for a different model size and prompt set.
+
+Hosting open weights does not remove the bias, but it puts it under your control. You can measure the checkpoint you actually deploy, fine-tune it, and wrap it in your own governance layer, and the weights do not change under you. Behind a closed API the bias is the vendor's, it can shift between versions without notice, and the system prompt is your only lever.
+
+## Model playground
+#### Tutorials and getting started
+- **Official docs**: [Qwen documentation](https://qwen.readthedocs.io/): Quickstarts with Hugging Face Transformers, deployment (vLLM, SGLang, Ollama, llama.cpp), [quantization](https://qwen.readthedocs.io/en/latest/quantization/), and fine-tuning.
+- **Model hub**: [Qwen on Hugging Face](https://huggingface.co/Qwen): Model cards with ready-to-run Transformers snippets and reported benchmarks for every model.
+- **Source**: [QwenLM on GitHub](https://github.com/QwenLM): Source repositories, cookbooks, and example scripts for each model family.
+- **Try it online**: [Qwen Chat](https://chat.qwen.ai/): Browser-based chat interface for trying the latest Qwen models with no setup.
+- **Run locally**: [Qwen on Ollama](https://ollama.com/library/qwen3): One-line local installs of quantized Qwen models on a laptop or workstation (`ollama run qwen3`).
+
+#### High-level tips for effective use
+- **Choose size by task and hardware**: Use 8B and below to prototype, and for narrow jobs like classification and extraction. Most production work needs 20B to 30B, which means a 24 GB card at 4-bit or a 96 GB card in BF16.
+- **Base vs. instruct models**: Use instruction-tuned checkpoints ("-Instruct", or Qwen3's default post-trained models) for chat and tool use; reserve base models for continued pretraining or custom fine-tuning. Always apply the model's chat template (`tokenizer.apply_chat_template`) to preserve roles and control tokens.
+- **Control thinking mode**: Enable thinking for math, code, and multi-step reasoning; disable it for simple queries to cut latency. Follow the model card's recommended sampling settings for each mode (greedy decoding is discouraged in thinking mode). Reasoning traces can be long, so budget `max_new_tokens` accordingly.
+- **Quantize when memory is tight**: Official GGUF, AWQ, and GPTQ checkpoints let 7B to 32B models run on consumer hardware. Four-bit quantization roughly quarters memory relative to FP16 with modest accuracy loss.
+- **Fine-tune efficiently**: LoRA/QLoRA via [PEFT](https://huggingface.co/docs/peft), [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory), or [Unsloth](https://github.com/unslothai/unsloth) adapts a Qwen model to your domain on a single GPU. Small specialized models routinely beat larger general ones on in-domain tasks.
+- **Serve with vLLM or SGLang**: For batch inference or multiple users, use [vLLM](https://github.com/vllm-project/vllm) or [SGLang](https://github.com/sgl-project/sglang) rather than plain Transformers generation. Both expose an OpenAI-compatible API, so your code stays portable across Qwen sizes and other models.
+- **Use task-specific prompting and tool calling**: Detailed system prompts improve structure and reliability. Qwen instruct models support structured tool calling compatible with the OpenAI function-calling format.
+- **Plan context budgets**: Long contexts improve retrieval-heavy tasks but increase memory and latency. For RAG, pair a chat model with Qwen3-Embedding and Qwen3-Reranker rather than stuffing everything into the prompt.
+- **Evaluate before you deploy**: Test prompts, languages, safety behavior, bias on your topic, and latency against the intended use case before relying on a model in production.
+
+#### Related benchmarks and leaderboards
+- **Vendor benchmarks**: [Qwen3.8 full benchmark table](https://qwen.ai/blog?id=qwen3.8#full-benchmark-table): Alibaba's reported comparison of the latest Qwen models to other LLMs.
+- **Leaderboards**: [Open LLM Leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard) and [LMArena](https://lmarena.ai/): Standardized and crowdsourced comparisons of open-weight and proprietary models.
+- **Benchmarks in the figure above**: [Terminal-Bench](https://www.tbench.ai/leaderboard/terminal-bench/2.1), [GPQA](https://arxiv.org/abs/2311.12022), and [Humanity's Last Exam](https://lastexam.ai): Agentic coding, graduate-level science, and expert-knowledge benchmarks used in the comparison above.
+- **Document and figure benchmarks**: [OmniDocBench](https://github.com/opendatalab/OmniDocBench) and [CharXiv](https://charxiv.github.io): Document-parsing and scientific-chart benchmarks that matter for OCR and figure-understanding work.
+- **Classic benchmarks**: [MMLU](https://huggingface.co/datasets/cais/mmlu), [GSM8K](https://huggingface.co/datasets/openai/gsm8k), and [HumanEval](https://huggingface.co/datasets/openai/openai_humaneval): Knowledge, math, and code, reported in every Qwen technical report.
+
+## Related resources
+- [**Compute**: NRP Nautilus](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html): Free hosted Qwen3, Qwen3-embedding, and other open-weight endpoints for research and education.
+- [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html): How FP16, INT8, and 4-bit quantization affect GPU memory, directly applicable to running Qwen locally.
+- [**Notebook**: Exploring Fact-Based QA with RAG: Romeo and Juliet](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html): Build a retrieval-augmented QA system, a common application for Qwen chat and embedding models.
+- [**Talk**: Deploying RAG in Bedrock vs. Local: WattBot 2025 Case Study](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html): The campus deployment where Qwen models were compared head-to-head with a commercial cloud RAG stack.
+- [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html): The primary hub for downloading and running Qwen checkpoints with the Transformers library.
+- [**Video**: Exploring Generative AI: An Introduction to LLMs and Diffusion Models](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2023-09-11_Exploring-Generative-AI-An-Intro-to-LLMs-and-Diffusion-Models_Kangwook-Lee.html): Kangwook Lee introduces how LLMs work under the hood.
+- [**BadgerBrain**](https://github.com/qualiaMachine/BadgerBrain): UW-Madison's pilot service for campus-hosted open-weight models (largely Qwen), with a quickstart, example OCR and RAG apps, and the [access form](https://forms.gle/vkcLzApNrX7KbkTP9).
+- [**GenAI**: UW Generative AI Services & Policies](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Institution-focused guidance on generative AI tools and policies at UW-Madison.
+- **Paper**: [Qwen3 Technical Report](https://arxiv.org/abs/2505.09388): Architecture, training data, and evaluation details for the generation the current models build on.
+- **Paper**: [LLM security vulnerabilities (Galinkin et al.)](https://arxiv.org/html/2506.13726v1): Evaluates jailbreak and prompt-injection vulnerabilities across open-weight models, including Qwen, as discussed in the risks section.
+- **Paper**: [Post-training bias in Qwen models](https://arxiv.org/html/2605.23825v1): Duke University study of how post-training shapes political and social bias in Qwen models.
+- **Paper**: [Systematic bias in LLMs on political topics](https://arxiv.org/html/2512.15792v2): Nanyang Technological University study of systematic bias across LLMs on politics and related issues.
+
+## Comments
