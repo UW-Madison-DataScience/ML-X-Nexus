@@ -81,23 +81,37 @@ The Colab version runs on a 16 GB T4. To fit the model, it loads the frozen weig
 
 The [National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) is another GPU option for UW-Madison researchers, with notebook-based access. There isn't a separate NRP version of this exercise yet.
 
-## Before you start
+#### Prerequisites
 
-Whichever version you run, you should be comfortable with basic Python and with the ideas behind model training and evaluation. These resources provide a refresher if needed:
+Whichever version you run, you should be comfortable with basic Python and with the ideas behind model training and evaluation:
 
-- [Intro to Machine Learning](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html) and [Basic Python Programming](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html)
-- [Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html), for the 4-bit model loading the Colab version uses
+- [**Workshop**: Intro to Machine Learning](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html)
+- [**Workshop**: Basic Python Programming](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html)
+- Recommended: [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html), for the 4-bit model loading the Colab version uses
 
-Each platform also has its own requirements:
+Each platform also has its own access requirements:
 
-- **Colab**: a Google account, for Colab and for Google Drive, where checkpoints are saved. Allow **2–3 hours**, including roughly 1.5 hours of GPU work.
-- **CHTC**: a CHTC account, which needs a NetID and a faculty sponsor, plus GPU Lab access and a `/staging` directory (ask for both when you request the account). You'll work from the command line over SSH, on the campus network or VPN. Allow a few days of calendar time for the account, an afternoon for the first container build and model staging, and about 20 minutes of GPU time per run plus its wait in the queue.
-- **AWS SageMaker**: an AWS account with a payment method or credits, and the setup from the earlier episodes of the [Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) workshop (SageMaker notebook, S3 bucket, IAM role). The training job itself runs about 33 minutes and costs about $0.75.
+- **Colab**: a Google account, for Colab and for Google Drive, where checkpoints are saved.
+- **CHTC**: a CHTC account, which needs a NetID and a faculty sponsor, plus GPU Lab access and a `/staging` directory (ask for both when you request the account). You'll work from the command line over SSH, on the campus network or VPN.
+- **AWS SageMaker**: an AWS account with a payment method or credits, and the setup from the earlier episodes of the [Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) workshop (SageMaker notebook, S3 bucket, IAM role).
 
-## Further reading and source materials
+#### Estimated time to complete
 
-All three versions, along with their shared training code, live in the [ML on AWS lesson repository](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras). For issues or improvements, [open a GitHub issue](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues) there.
+- **Colab**: **2–3 hours**, including roughly 1.5 hours of GPU work.
+- **CHTC**: a few days of calendar time for the account, an afternoon for the first container build and model staging, then about 20 minutes of GPU time per run plus its wait in the queue.
+- **AWS SageMaker**: the training job runs about 33 minutes and costs about $0.75.
 
-For background on the model and technique, see the [CHURRO paper](https://arxiv.org/abs/2509.19768), the [original LoRA paper](https://arxiv.org/abs/2106.09685), and the [Hugging Face guide](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html). For more on the computing environments, consult the Nexus guides to [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html), [Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html), and [NRP](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html).
+## Related resources
+- [ML on AWS lesson repository: finetune_extras](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras) – All three versions of this exercise and their shared training code. Open issues there.
+- [**Workshop**: Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) – The parent lesson. Its fine-tuning episode is the SageMaker version of this exercise.
+- [**Compute**: Center for High Throughput Computing (CHTC)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) – Free campus GPUs, job time limits, and which model sizes fit which GPU.
+- [**Compute**: Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html) – Plans, runtime limits, and mounting Google Drive for checkpoints.
+- [**Compute**: National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) – Free notebook-based GPU access for UW-Madison researchers.
+- [**Compute**: UW-Madison Cloud Services (AWS, GCP, Azure)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) – UW-provisioned cloud accounts with institutional pricing and data protections.
+- [**Project**: Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) – The MLM26 challenge whose Kurrent-script letters this exercise trains on.
+- [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html) – FP16, BF16, INT8, and 4-bit formats and what they do to GPU memory.
+- [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html) – Where CHURRO-3B lives; the exercise uses `transformers`, `peft`, and `bitsandbytes`.
+- [LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)](https://arxiv.org/abs/2106.09685) – The original paper.
+- [CHURRO: Making History Readable with an Open-Weight Large Vision-Language Model (EMNLP 2025)](https://arxiv.org/abs/2509.19768) – The model being fine-tuned.
 
 ## Comments
