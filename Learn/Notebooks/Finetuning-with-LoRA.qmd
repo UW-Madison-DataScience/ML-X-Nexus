@@ -58,7 +58,15 @@ This is what makes LoRA practical for research groups: take an open-weight model
 
 ## What you'll do
 
-The notebook opens with the memory arithmetic above in more detail, then you'll run a 20-page test to check the setup before fine-tuning on the larger training set for two epochs. The exercise saves checkpoints and evaluates the model on held-out pages before and after training, using character error rate (CER) to measure whether the transcription improved. You can also use the resulting adapter to transcribe unlabeled pages from the competition. The CHTC and SageMaker versions run the same script on larger GPUs; what changes is how the job is described and paid for.
+The data is 295 labeled pages from the Anna Seifert correspondence, letters written in Kurrent between 1932 and 1942 and transcribed by the Max Kade Institute. The training script holds about 15% of the pages out and trains on the rest, with the human transcriptions as targets. In order, you will:
+
+1. Check the GPU, install `transformers`, `peft`, and `bitsandbytes`, and download the data.
+2. Measure how many tokens a page is, which sets the training time, and work out from the model's config file how many parameters the LoRA adapter will train.
+3. Run a two-minute smoke test on 20 pages, then the full two-epoch fine-tune, with a checkpoint at the end of each epoch.
+4. Score the model before and after on the same held-out pages, using character error rate (CER), the competition's own metric, and read the learning curve to judge whether two epochs was the right amount.
+5. Optionally, use the adapter to transcribe the 141 unlabeled test pages.
+
+The CHTC and SageMaker versions run the same training script on larger GPUs. What changes is who provides the GPU and how the job is described.
 
 ## Choose where to run it
 
