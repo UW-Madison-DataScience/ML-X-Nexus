@@ -48,7 +48,7 @@ CHURRO illustrates why this works. Its developers adapted a Qwen vision-language
 
 ![Three specialist models compared with larger general-purpose models on their respective benchmarks. Sources: [CHURRO](https://arxiv.org/abs/2509.19768), [Goedel-Prover-V2](https://arxiv.org/abs/2508.03613), [MedGemma](https://arxiv.org/abs/2507.05201).](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/specialists-vs-large-models.png)
 
-For this exercise, we're taking the idea one step further. CHURRO already recognizes historical documents, but we'll adapt it to the particular handwriting found in the Badger Scribe dataset. The challenge is doing so with the GPU resources available to an individual researcher.
+For this exercise, we're taking the idea one step further. CHURRO already recognizes historical documents, but we'll adapt it to the particular handwriting found in the Badger Scribe dataset. The question is how much GPU memory that takes.
 
 **Full fine-tuning** updates every model parameter. With a conventional mixed-precision Adam setup, that means storing weights, gradients, a full-precision copy of the weights, and optimizer state. Together, these require roughly 16 bytes per parameter. For CHURRO's 3.75 billion parameters, that's approximately 60 GB before accounting for activations and other overhead.
 
