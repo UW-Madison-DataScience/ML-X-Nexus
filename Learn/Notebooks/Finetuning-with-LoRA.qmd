@@ -30,7 +30,7 @@ edit the description and resource links here. With no Python cells, this page
 is skipped by the qmd-to-ipynb GitHub Action.
 -->
 
-[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb)
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb) &nbsp;|&nbsp; [CHTC guide](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc) (in development) &nbsp;|&nbsp; [AWS SageMaker episode](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html)
 
 In this exercise, you'll use LoRA (low-rank adaptation) to fine-tune [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), a vision-language model for historical documents, on handwritten German letters from the [Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) challenge. The letters use Kurrent, a historical script that's difficult even for models that already recognize other kinds of handwriting.
 
@@ -58,15 +58,15 @@ This is what makes LoRA practical for research groups: take an open-weight model
 
 ## What you'll do
 
-The data is 295 labeled pages from the Anna Seifert correspondence, letters written in Kurrent between 1932 and 1942 and transcribed by the Max Kade Institute. The training script holds about 15% of the pages out and trains on the rest, with the human transcriptions as targets. In order, you will:
+The data is 295 labeled pages from the Anna Seifert correspondence, letters written in Kurrent between 1932 and 1942 and transcribed by the Max Kade Institute. All three versions run the same training script with the same settings: 15% of the pages held out with a fixed seed, a LoRA adapter of rank 16, two passes over the remaining 251 pages, and a checkpoint at the end of each pass. Whichever version you run, the job:
 
-1. Check the GPU, install `transformers`, `peft`, and `bitsandbytes`, and download the data.
-2. Measure how many tokens a page is, which sets the training time, and work out from the model's config file how many parameters the LoRA adapter will train.
-3. Run a two-minute smoke test on 20 pages, then the full two-epoch fine-tune, with a checkpoint at the end of each epoch.
-4. Score the model before and after on the same held-out pages, using character error rate (CER), the competition's own metric, and read the learning curve to judge whether two epochs was the right amount.
-5. Optionally, use the adapter to transcribe the 141 unlabeled test pages.
+1. Scores the base model on 15 held-out pages using character error rate (CER), the competition's own metric.
+2. Trains the adapter for two epochs, scoring 8 of the held-out pages after each pass to build a learning curve.
+3. Scores the fine-tuned model on the same 15 pages and saves the adapter, about 100 MB, along with the per-page scores, the loss and CER curves, and a summary.
 
-The CHTC and SageMaker versions run the same training script on larger GPUs. What changes is who provides the GPU and how the job is described.
+Reading the results is also the same everywhere. The before-and-after CER on the same pages is the effect of the fine-tune and nothing else, and the held-out CER curve, not the training loss, says whether two passes was the right amount. Optionally, the adapter can transcribe the 141 unlabeled test pages with the lesson's batch transcriber.
+
+What differs is the work around the script. In Colab you install three libraries, count tokens per page and adapter parameters by hand, and run a 20-page test before the full run. On CHTC you build a container, stage the model weights, and describe the job in an HTCondor submit file. On SageMaker you estimate the cost, launch a training job, tag it, and check the billable time afterward.
 
 ## Choose where to run it
 
