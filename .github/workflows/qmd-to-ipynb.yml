@@ -28,6 +28,8 @@ jobs:
           for file in Learn/Notebooks/**/*.qmd Toolbox/Compute/NRP-Nautilus.qmd; do
             [[ ! -f "$file" ]] && continue
             [[ "$(basename "$file")" == "index.qmd" ]] && continue
+            # Skip tile pages for externally hosted notebooks (no Python cells, nothing to convert)
+            if ! grep -q '^```{python' "$file"; then echo "Skipping $file (no Python cells)"; continue; fi
             echo "Converting $file"
             quarto convert "$file" -o "${file%.qmd}.ipynb"
           done
