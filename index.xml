@@ -27,13 +27,13 @@ edit the description and resource links here. With no Python cells, this page
 is skipped by the qmd-to-ipynb GitHub Action.
 -->
 <p><a href="https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
-<p>This exercise shows how to fine-tune a vision-language model for a specialized research task without needing expensive GPU hardware. We’ll use <a href="https://huggingface.co/stanford-oval/churro-3B">CHURRO-3B</a>, an open-weight model for historical document transcription, and adapt it to handwritten German letters from the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html">Badger Scribe</a> challenge.</p>
-<p>We’ll use LoRA (low-rank adaptation) to train a small set of additional parameters rather than updating the entire model, making the exercise practical on a single GPU. We’ll then compare transcription accuracy before and after fine-tuning to see whether the adaptation helped.</p>
-<p>You can run the exercise in <a href="https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb">Google Colab</a>, on UW-Madison’s <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC</a>, or through <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">AWS SageMaker</a>. The same training workflow is available in all three environments. <strong>Start with the Colab notebook</strong> if you want to follow along without setting up research computing access. We’ll compare the platforms and their requirements below.</p>
+<p>This exercise shows how to fine-tune a vision-language model for a specialized research task efficiently, on one GPU. We’ll use <a href="https://huggingface.co/stanford-oval/churro-3B">CHURRO-3B</a>, an open-weight model for historical document transcription, and adapt it to handwritten German letters from the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html">Badger Scribe</a> challenge.</p>
+<p>We’ll use LoRA (low-rank adaptation), which trains a small set of additional parameters and leaves the model’s own weights frozen, so the whole job fits on a single GPU. We’ll then compare transcription accuracy before and after fine-tuning to see whether the adaptation helped.</p>
+<p>You can run the exercise in <a href="https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb">Google Colab</a>, on UW-Madison’s <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC</a>, or through <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">AWS SageMaker</a>. The same training workflow is available in all three environments. <strong>Start with the Colab notebook</strong>, which needs only a Google account and keeps the focus on the fine-tuning itself. Then try the other two; we compare the platforms and their requirements below.</p>
 <section id="why-fine-tune-and-why-lora" class="level2">
 <h2 class="anchored" data-anchor-id="why-fine-tune-and-why-lora">Why fine-tune, and why LoRA?</h2>
 <p>Large vision-language models learn general capabilities from enormous training datasets, but they won’t necessarily perform well on every specialized task. Historical handwriting is a good example. German Kurrent uses letterforms that differ substantially from modern handwriting, and even models trained for document recognition can struggle with it.</p>
-<p>One approach would be to train a new model from scratch, but that would require enormous amounts of data and compute. Instead, we can start with an existing model and fine-tune it on examples of the handwriting we want it to recognize.</p>
+<p>One approach would be to train a new model from scratch, but a model with billions of weights takes thousands of GPUs running for months and an enormous dataset. Instead, we can start with an existing model and fine-tune it on examples of the handwriting we want it to recognize, and a few hundred labeled pages do what millions would from scratch.</p>
 <p>CHURRO illustrates why this works. Its developers adapted a Qwen vision-language model using roughly 100,000 historical document pages. They report that the resulting specialist model outperforms Gemini 2.5 Pro on historical text recognition at substantially lower inference cost (<a href="https://arxiv.org/abs/2509.19768">paper</a>). Similar results have been reported in other domains, where smaller models adapted to specific tasks can outperform much larger general-purpose models.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -50,8 +50,15 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <figcaption>Full fine-tuning updates the model weights; LoRA freezes them and trains two smaller matrices.</figcaption>
 </figure>
 </div>
-<p>For CHURRO, the LoRA training setup uses approximately 12 GB of GPU memory, compared with roughly 60 GB in parameter states alone for full fine-tuning. This makes it possible to run the exercise on a single GPU instead of requiring a much larger machine.</p>
-<p>The Colab version goes one step further. Its free NVIDIA T4 has 16 GB of memory, so we load CHURRO’s frozen weights in 4-bit precision rather than 16-bit. This is called <strong>QLoRA</strong>, and reduces the estimated memory requirement for this training setup to about 6 GB.</p>
+<p>For CHURRO, the LoRA training setup uses approximately 12 GB of GPU memory, compared with roughly 60 GB in parameter states alone for full fine-tuning. This makes it possible to run the exercise on a single GPU.</p>
+<p>The Colab version goes one step further. Its free NVIDIA T4 has 16 GB of memory, so we load CHURRO’s frozen weights in 4-bit precision. This is called <strong>QLoRA</strong>, and reduces the estimated memory requirement for this training setup to about 6 GB.</p>
+<p>The GPU-hours put the three approaches on one scale: training from scratch at the top, the full fine-tune that made CHURRO in the middle, and this lesson’s LoRA run at the bottom.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/pretrain-finetune-lora.svg" class="img-fluid figure-img"></p>
+<figcaption>GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.</figcaption>
+</figure>
+</div>
 <p>The distinction matters beyond this exercise. Researchers can adapt open-weight models to their own data, evaluate whether the adaptation improves performance, and save small adapters for reuse, without the cost of retraining or fully fine-tuning billions of parameters.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -59,6 +66,42 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <figcaption>GPU memory requirements for inference, LoRA fine-tuning, and full fine-tuning.</figcaption>
 </figure>
 </div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>What you are doing with the model</th>
+<th>Bytes per parameter</th>
+<th>What has to be in memory for each parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Inference, FP8</td>
+<td>1</td>
+<td>the weight, quantized</td>
+</tr>
+<tr class="even">
+<td>Inference, bf16</td>
+<td>2</td>
+<td>the weight</td>
+</tr>
+<tr class="odd">
+<td>LoRA fine-tune</td>
+<td>~2.5</td>
+<td>the frozen 16-bit weight, plus a share of the adapter with its gradients and optimizer state</td>
+</tr>
+<tr class="even">
+<td>Full fine-tune, mixed precision</td>
+<td>16</td>
+<td>the 16-bit weight (2), its gradient (2), a 32-bit copy of the weight (4), Adam’s two running averages (8)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="what-youll-do" class="level2">
 <h2 class="anchored" data-anchor-id="what-youll-do">What you’ll do</h2>
@@ -122,7 +165,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </tbody>
 </table>
 <p><strong>Colab</strong> needs no research computing access, and it is a place to learn fine-tuning, not to do it for a project. The free tier gives a GPU when one is free, ends a session after a few hours of use or 90 minutes idle, and cuts back after heavy days. That is enough for this exercise. It is a poor fit for a research project, where runs repeat, data grows and results have to be reproducible months later. The notebook saves checkpoints to Google Drive, so a dropped session costs one epoch and not the run. A dataset ten times larger would outrun the session before the first checkpoint. Take what the notebook teaches to CHTC, or to the cloud when CHTC cannot do the job.</p>
-<p><strong>CHTC</strong> is the first choice for UW-Madison researchers. It is free, its GPUs are large, and the queue is the only price. The work has to be packaged as a batch job rather than run from a notebook. <strong>The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC guide</a> is still in development and has not been run end to end.</strong> If you try it, <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues">report problems</a> with the job’s <code>.log</code> and <code>.err</code> files.</p>
+<p><strong>CHTC</strong> is the first choice for UW-Madison researchers. It is free, its GPUs are large, and the queue is the only price. The work runs as a batch job, not from a notebook. <strong>The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC guide</a> is still in development and has not been run end to end.</strong> If you try it, <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues">report problems</a> with the job’s <code>.log</code> and <code>.err</code> files.</p>
 <p><strong>SageMaker</strong> is for learning managed cloud training, or for a project that needs AWS. The <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">episode</a> is part of the workshop and assumes its setup: the bucket, the controller notebook and the IAM role from episodes 1 to 4, and the data already staged in S3. Its compute is billed while the job runs, so the episode estimates the cost before launching, caps the run time, tags the job, and compares the estimate with the billable minutes afterward. For research use, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services</a> covers UW-provisioned accounts.</p>
 <p>The <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP)</a> is another free GPU option for UW-Madison researchers, through a hosted JupyterHub. There is no NRP version of this exercise yet.</p>
 <section id="prerequisites" class="level4">
@@ -1044,7 +1087,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="c72933bd" class="cell" data-execution_count="1">
+<div id="bfa428ae" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -1081,7 +1124,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="3bbf80d4" class="cell" data-execution_count="2">
+<div id="951f5f4d" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1098,7 +1141,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="0c627587" class="cell" data-execution_count="3">
+<div id="6de2dba8" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1138,7 +1181,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="7fe05b34" class="cell" data-execution_count="4">
+<div id="ee2f1660" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1176,7 +1219,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="9ee3da57" class="cell" data-execution_count="5">
+<div id="16a0811b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -1282,7 +1325,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="90fe833e" class="cell" data-execution_count="6">
+<div id="3a11b286" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -1357,7 +1400,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="ae096510" class="cell" data-execution_count="7">
+<div id="2e83fcf0" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -1432,7 +1475,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="b9f06ed2" class="cell" data-execution_count="8">
+<div id="c5605888" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -2653,14 +2696,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="1d8331cd" class="cell" data-execution_count="1">
+<div id="067ae557" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="f114cc4c" class="cell" data-execution_count="2">
+<div id="20c63379" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -2773,7 +2816,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="5275c6f5" class="cell" data-execution_count="3">
+<div id="03c675e0" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3010,7 +3053,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="9a047957" class="cell" data-execution_count="4">
+<div id="02e2551f" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -3038,7 +3081,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="e9c95626" class="cell" data-execution_count="5">
+<div id="b9190def" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -3061,7 +3104,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="b99cad38" class="cell" data-execution_count="6">
+<div id="d4269fc4" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -3083,7 +3126,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="e1ae59e0" class="cell" data-execution_count="7">
+<div id="f4801e30" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -3206,7 +3249,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="77536ac1" class="cell" data-execution_count="8">
+<div id="b9a849eb" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -3236,7 +3279,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="a09ae71a" class="cell" data-execution_count="9">
+<div id="e20e3920" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -3281,7 +3324,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="15249de2" class="cell" data-execution_count="10">
+<div id="6514c791" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -3517,7 +3560,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="36ed820d" class="cell" data-execution_count="11">
+<div id="a752df7f" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -3593,7 +3636,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="78cedf57" class="cell" data-execution_count="12">
+<div id="6d2157f9" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -3709,7 +3752,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="9a4a2691" class="cell" data-execution_count="13">
+<div id="df4cb420" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3955,7 +3998,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="4516aa4e" class="cell" data-execution_count="14">
+<div id="3b5a6fd6" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
