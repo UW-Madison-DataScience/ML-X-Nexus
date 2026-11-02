@@ -400,7 +400,6 @@ ML_with_AWS_SageMaker repository. Edit notebooks and scripts upstream;
 edit the description and resource links here. With no Python cells, this page
 is skipped by the qmd-to-ipynb GitHub Action.
 -->
-<p><a href="https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p>Fine-tuning lets us adapt an existing model to a specialized task without training a new one from scratch. In this exercise, we’ll fine-tune <a href="https://huggingface.co/stanford-oval/churro-3B">CHURRO-3B</a>, a vision-language model for historical documents, to transcribe handwritten German letters from the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html">Badger Scribe</a> challenge. The letters are written in Kurrent, a historical form of German handwriting that can be difficult for even specialized handwriting recognition models.</p>
 <p>We’ll use LoRA (low-rank adaptation), which freezes the original model and trains a small adapter beside it. For this model, that cuts the GPU memory needed from about 60 GB to about 12 GB, so the fine-tune runs on a single GPU. On a GPU as small as Colab’s free 16 GB T4, the frozen weights are loaded in 4-bit, a variant called QLoRA, which brings the run to about 6 GB.</p>
 <section id="what-youll-do" class="level2">
