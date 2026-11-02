@@ -68,12 +68,10 @@ Qwen3.8-27B still trails on long-horizon agentic reliability, rare and long-tail
 The narrower the task, the smaller the model can be. On OmniDocBench 1.5, [GLM-OCR](https://arxiv.org/abs/2603.10910), a 0.9B specialized document parser, scores 94.6 versus 89.2 for Qwen3-VL-235B, at about 1/260th the size. A Qwen3.8-27B adapted to a law firm's corpus has been reported to pass more tasks than a frontier model at roughly a tenth of the per-query cost. For a narrow enough task, a fleet of small fine-tuned models beats one big general one. Qwen's size ladder and Apache 2.0 license make it a common base for that.
 
 ## Qwen variants: what still needs its own model
-One mid-size Qwen3.x model now handles chat, reasoning, agentic coding, OCR, and document parsing, and on the document and figure benchmarks above it beats the frontier comparator outright. Two jobs still need a model of their own.
+One mid-size Qwen3.x model now handles chat, reasoning, agentic coding, OCR, and document parsing, and on the document and figure benchmarks above it beats the frontier comparator outright. At least two jobs still need a model of their own.
 
-- **[Qwen3-Omni](https://github.com/QwenLM/Qwen3-Omni)**: Speech and audio. Transcription, audio understanding, and text-to-speech. The general models do not accept audio input, so this is a separate deployment rather than a swap.
+- **[Qwen3-Omni](https://github.com/QwenLM/Qwen3-Omni)**: Speech and audio. Transcription, audio understanding, and text-to-speech. The general models do not accept audio input
 - **[Qwen3-Embedding and Qwen3-Reranker](https://huggingface.co/collections/Qwen/qwen3-embedding-6841b2055b99c44d9a4c371f)**: Retrieval. Embedding and reranking models from 0.6B to 8B for semantic search and RAG. A chat model cannot do this job, and these are small enough to run alongside one.
-
-The specialized lines are still worth it for narrow tasks. [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) scales to a 480B mixture-of-experts model for large agentic coding workloads, and [Qwen3-VL](https://github.com/QwenLM/Qwen3-VL) offers dedicated vision-language models up to 235B; Qwen3-VL-32B powers a validated OCR pipeline at UW-Madison. Reach for either when the general model falls short on your specific task, but neither is the default starting point it was a year ago.
 
 ## Choosing a model size (and what it costs in GPU memory)
 The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in FP16/BF16**, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference, because you hold gradients and optimizer state alongside the weights (Adam keeps two extra values per parameter) plus the activations saved for the backward pass. LoRA and QLoRA avoid most of that by freezing the base weights and training small adapters, which is what makes single-GPU fine-tuning practical.
@@ -87,52 +85,12 @@ The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in F
 
 **Qwen3.8-27B is the best value on this list.** It is the largest dense model that still runs on a single GPU, and it is the one in the benchmark comparison above, so you get near-frontier quality without a multi-GPU deployment. In BF16 it needs about 56 GB, so it wants a 96 GB card; at 4-bit it fits a 24 GB card with modest accuracy loss.
 
-**For most real applications, 20B to 30B is currently the floor.** Smaller models demo well and then fall short on the actual task. The campus WattBot RAG comparison is consistent with this: Qwen was competitive with commercial APIs only at 32B and above. Treat anything below that range as a prototyping step, not the model you deploy.
+**For most applications, 20B to 30B is currently the floor for performance.** Smaller models demo well and then fall short. The campus WattBot RAG comparison is consistent with this: Qwen was competitive with commercial APIs only at 32B and above. Treat anything below that range as a prototyping step.
 
 The other sizes:
 
 - **Qwen3-8B**: Runs on a 16 GB consumer GPU, or an 8 GB one at 4-bit. Useful for classification, extraction, summarization, and working out your pipeline before you commit to bigger hardware.
 - **Mixture-of-experts models**: Total parameters set the memory you have to buy; active parameters set the speed you get once it is loaded. Qwen3-30B-A3B costs about the same memory as the 27B but runs considerably faster, while the 235B flagship is multi-GPU territory at full precision.
-
-#### Hands-on: measure memory yourself
-You can profile the actual GPU footprint of any Qwen model with the snippet below. Swap model names and precisions to see how parameter count and quantization change memory use. See the [Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html) notebook for a deeper walkthrough.
-
-```python
-# Requires: pip install transformers torch accelerate
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
-model_name = "Qwen/Qwen3-4B"  # Try: Qwen3-8B, Qwen3-14B, Qwen3.8-27B, ...
-
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(
-    model_name,
-    torch_dtype=torch.bfloat16,  # Change to torch.float32 to compare
-    device_map="auto",           # Uses the GPU if one is available
-)
-
-n_params = sum(p.numel() for p in model.parameters()) / 1e9
-print(f"Model: {model_name}  ({n_params:.2f}B parameters)")
-if torch.cuda.is_available():
-    print(f"GPU memory after load: {torch.cuda.memory_allocated() / 1e9:.2f} GB")
-
-# Chat template + thinking mode toggle (Qwen3 and later)
-messages = [{"role": "user", "content": "Explain gradient descent in one paragraph."}]
-text = tokenizer.apply_chat_template(
-    messages, tokenize=False, add_generation_prompt=True,
-    enable_thinking=False,  # True = step-by-step reasoning mode (slower, better on hard problems)
-)
-inputs = tokenizer(text, return_tensors="pt").to(model.device)
-
-with torch.no_grad():
-    output = model.generate(**inputs, max_new_tokens=150)
-
-if torch.cuda.is_available():
-    print(f"Peak GPU memory during generation: {torch.cuda.max_memory_allocated() / 1e9:.2f} GB")
-print(tokenizer.decode(output[0][inputs.input_ids.shape[1]:], skip_special_tokens=True))
-```
-
-To see 4-bit quantization in action, load a larger model with `BitsAndBytesConfig(load_in_4bit=True)` (requires `bitsandbytes`) and compare: an 8B model drops from about 16 GB to about 5 GB.
 
 ## Qwen at UW-Madison
 Qwen is the default open-weight family in several campus efforts, so there is existing work here to reuse.
