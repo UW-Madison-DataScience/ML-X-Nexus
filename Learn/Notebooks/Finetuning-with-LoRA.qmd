@@ -6,7 +6,7 @@ author:
 date: 2026-11-02
 date-format: long
 image: "../../../images/LoRA-finetuning_tile.png"
-description: "Fine-tune a vision-language model to transcribe historical handwriting. Start with a free Colab notebook, or run the same exercise on CHTC or AWS SageMaker."
+description: "LoRA fine-tuning of a vision-language model for historical handwriting, with the same exercise runnable on Google Colab, UW-Madison's CHTC, or AWS SageMaker."
 categories:
   - Notebooks
   - Code-along
@@ -32,9 +32,9 @@ is skipped by the qmd-to-ipynb GitHub Action.
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb)
 
-In this exercise, you'll use LoRA (low-rank adaptation) to fine-tune [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), a vision-language model for historical documents, on handwritten German letters from the [Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) challenge. The letters use Kurrent, a historical script that's difficult even for models that already recognize other kinds of handwriting.
+LoRA (low-rank adaptation) is the standard way to fine-tune a large pretrained model on a single GPU. This resource teaches it by adapting [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), a vision-language model for historical documents, to handwritten German letters from the [Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) challenge. The letters are in Kurrent, a historical script that defeats even models that read other handwriting well, which makes them a clear test of whether fine-tuning helps.
 
-The same exercise runs in three places: a free Google Colab notebook, UW-Madison's CHTC, and AWS SageMaker. **Start with the Colab notebook** to learn the workflow, then see [where to run it](#choose-where-to-run-it) for the other two.
+The exercise comes in three versions that share one training script: a Google Colab notebook, an HTCondor job for UW-Madison's CHTC, and a SageMaker training job from the Intro to AWS workshop. Each is a vehicle for the same fine-tune; what changes is who provides the GPU and how the job is described. The Colab version needs nothing but a Google account, and [Choose where to run it](#choose-where-to-run-it) compares all three.
 
 ## Why fine-tune, and why LoRA?
 
@@ -46,17 +46,17 @@ CHURRO itself is an example. It is a 3-billion-parameter model that Stanford res
 
 Fine-tuning a model this way is limited by GPU memory. **Full fine-tuning** updates every weight, and training needs far more memory than running a model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO's 3.75 billion parameters that is about 60 GB before activations and other overhead: more than any 24 GB card, so the lesson sizes it as a four-GPU instance on AWS, and on CHTC it needs one of the 80 GB or larger cards.
 
-**LoRA** leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. **QLoRA** is LoRA with the frozen weights stored in 4-bit, which is how this run fits a free 16 GB T4.
+**LoRA** leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. **QLoRA** is LoRA with the frozen weights stored in 4-bit, which brings the whole run under 8 GB and onto the smallest GPUs.
 
 ![GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.](../../images/pretrain-finetune-lora.svg)
 
-| How CHURRO's 3.75B parameters are used | Bytes per parameter | GPU memory with activations | Fits a 16 GB T4? |
+| How CHURRO's 3.75B parameters are used | Bytes per parameter | GPU memory with activations | Where it fits |
 |---|---|---|---|
-| **Full fine-tune**, every weight updated | 16 | about 60 GB | No |
-| **LoRA**, weights frozen in 16-bit | 2, plus the adapter | about 12 GB | Only just |
-| **QLoRA**, weights frozen in 4-bit | 0.5, plus the adapter | about 6 GB | Yes, with room |
+| **Full fine-tune**, every weight updated | 16 | about 60 GB | A four-GPU cloud instance, or an 80 GB or larger CHTC card |
+| **LoRA**, weights frozen in 16-bit | 2, plus the adapter | about 12 GB | One 24 GB card (the lesson's AWS GPU) or any CHTC GPU; a 16 GB T4 only just, and without bf16 |
+| **QLoRA**, weights frozen in 4-bit | 0.5, plus the adapter | about 6 GB | Any of them, including Colab's free 16 GB T4 |
 
-This is what makes LoRA practical for research groups: take an open-weight model, adapt it to your own data, measure whether it helped, and keep the adapter, all on a single GPU. On campus that means a fine-tune that fits one CHTC GPU, or, as here, a free Colab T4.
+This is what makes LoRA practical for research groups: take an open-weight model, adapt it to your own data, measure whether it helped, and keep the adapter, all on a single GPU. On campus that means a fine-tune that fits one CHTC GPU, one cloud GPU, or even a free Colab T4.
 
 ## What you'll do
 
@@ -95,7 +95,7 @@ Whichever version you run, you should be comfortable with basic Python and with 
 
 - [**Workshop**: Intro to Machine Learning](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html)
 - [**Workshop**: Basic Python Programming](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html)
-- Recommended: [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html), for the 4-bit model loading the Colab version uses
+- Recommended: [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html), for the 4-bit (QLoRA) loading used when the GPU is small
 
 Each platform also has its own access requirements:
 
