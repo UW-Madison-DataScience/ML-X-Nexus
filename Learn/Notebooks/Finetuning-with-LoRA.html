@@ -8,7 +8,7 @@
 
 <meta name="author" content="Chris Endemann">
 <meta name="dcterms.date" content="2026-11-02">
-<meta name="description" content="LoRA fine-tuning of a vision-language model for historical handwriting, with the same exercise runnable on Google Colab, UW-Madison’s CHTC, or AWS SageMaker.">
+<meta name="description" content="Fine-tune a vision-language model with LoRA to read historical handwriting. One exercise, three places to run it: Google Colab, UW-Madison’s CHTC, or AWS SageMaker.">
 
 <title>Fine-tuning with LoRA: Colab, CHTC, or AWS – Nexus: Crowdsourced ML Resources</title>
 <style>
@@ -366,7 +366,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div>
   <div class="description">
-    LoRA fine-tuning of a vision-language model for historical handwriting, with the same exercise runnable on Google Colab, UW-Madison’s CHTC, or AWS SageMaker.
+    Fine-tune a vision-language model with LoRA to read historical handwriting. One exercise, three places to run it: Google Colab, UW-Madison’s CHTC, or AWS SageMaker.
   </div>
 </div>
 
@@ -402,8 +402,8 @@ edit the description and resource links here. With no Python cells, this page
 is skipped by the qmd-to-ipynb GitHub Action.
 -->
 <p><a href="https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
-<p>LoRA (low-rank adaptation) is the standard way to fine-tune a large pretrained model on a single GPU. This resource teaches it by adapting <a href="https://huggingface.co/stanford-oval/churro-3B">CHURRO-3B</a>, a vision-language model for historical documents, to handwritten German letters from the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html">Badger Scribe</a> challenge. The letters are in Kurrent, a historical script that defeats even models that read other handwriting well, which makes them a clear test of whether fine-tuning helps.</p>
-<p>The exercise comes in three versions that share one training script: a Google Colab notebook, an HTCondor job for UW-Madison’s CHTC, and a SageMaker training job from the Intro to AWS workshop. Each is a vehicle for the same fine-tune; what changes is who provides the GPU and how the job is described. The Colab version needs nothing but a Google account, and <a href="#choose-where-to-run-it">Choose where to run it</a> compares all three.</p>
+<p>LoRA (low-rank adaptation) is how most research groups fine-tune a large pretrained model on one GPU. This lesson teaches it on a real task. We take <a href="https://huggingface.co/stanford-oval/churro-3B">CHURRO-3B</a>, a vision-language model for historical documents, and adapt it to handwritten German letters from the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html">Badger Scribe</a> challenge. The letters are written in Kurrent, a historical script whose letterforms differ substantially from modern cursive. Even a model trained on historical documents struggles with it, which makes it a useful test of whether more fine-tuning helps.</p>
+<p>The same fine-tune, with the same model, data and training script, runs in three places: a Google Colab notebook, an HTCondor job on UW-Madison’s CHTC, and a SageMaker training job in the Intro to AWS workshop. What changes is who provides the GPU and how a job is described. The Colab version needs nothing but a Google account, and it is the recommended starting point to focus on learning fine-tuning concepts. Try the other versions after. The <a href="#choose-where-to-run-it">comparison below</a> says when each of the three makes sense.</p>
 <section id="why-fine-tune-and-why-lora" class="level2">
 <h2 class="anchored" data-anchor-id="why-fine-tune-and-why-lora">Why fine-tune, and why LoRA?</h2>
 <p>Training a model with billions of weights from scratch takes thousands of GPUs running for months. Pretrained models already know how to interpret images and language, and fine-tuning trains them a little further on examples from your own task, so a few hundred labeled pages do what millions would from scratch. Better prompting helps only so far: there are limits to what instructions can do when the model has never learned to recognize the writing itself.</p>
@@ -414,8 +414,8 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <figcaption>Three specialist models against much larger general ones, on each task’s own benchmark. Sources: <a href="https://arxiv.org/abs/2509.19768">CHURRO</a>, <a href="https://arxiv.org/abs/2508.03613">Goedel-Prover-V2</a>, <a href="https://arxiv.org/abs/2507.05201">MedGemma</a>.</figcaption>
 </figure>
 </div>
-<p>Fine-tuning a model this way is limited by GPU memory. <strong>Full fine-tuning</strong> updates every weight, and training needs far more memory than running a model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO’s 3.75 billion parameters that is about 60 GB before activations and other overhead: more than any 24 GB card, so the lesson sizes it as a four-GPU instance on AWS, and on CHTC it needs one of the 80 GB or larger cards.</p>
-<p><strong>LoRA</strong> leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. <strong>QLoRA</strong> is LoRA with the frozen weights stored in 4-bit, which brings the run to about 6 GB and onto the smallest GPUs.</p>
+<p><strong>Full fine-tuning</strong> updates every weight, and training needs far more GPU memory than running the model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO’s 3.75 billion parameters that is about 60 GB before activations and other overhead: more than any 24 GB card, so the lesson sizes it as a four-GPU instance on AWS, and on CHTC it needs one of the 80 GB or larger cards.</p>
+<p><strong>LoRA</strong> leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. <strong>QLoRA</strong> is LoRA with the frozen weights stored in 4-bit. Nothing about what the model learns changes; the frozen weights are read from a compressed copy, and the run needs about 6 GB.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../images/pretrain-finetune-lora.svg" class="img-fluid figure-img"></p>
@@ -458,7 +458,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </tr>
 </tbody>
 </table>
-<p>This is what makes LoRA practical for research groups: take an open-weight model, adapt it to your own data, measure whether it helped, and keep the adapter, all on a single GPU. On campus that means a fine-tune that fits one CHTC GPU, one cloud GPU, or even a free Colab T4.</p>
+<p>This is what makes LoRA useful for research groups. You can take an existing open-weight model, adapt it to your own data, check whether the adaptation helped, and keep the result, without the expense of full fine-tuning. On campus that is one CHTC GPU, one cloud GPU, or a free Colab T4.</p>
 </section>
 <section id="what-youll-do" class="level2">
 <h2 class="anchored" data-anchor-id="what-youll-do">What you’ll do</h2>
@@ -468,7 +468,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <li>Trains the adapter for two epochs, scoring 8 of the held-out pages after each pass to build a learning curve.</li>
 <li>Scores the fine-tuned model on the same 15 pages and saves the adapter, about 100 MB, along with the per-page scores, the loss and CER curves, and a summary.</li>
 </ol>
-<p>Reading the results is also the same everywhere. The before-and-after CER on the same held-out pages isolates the effect of the fine-tune, and the held-out CER curve, not the training loss, is what tells you whether more passes would have helped. Optionally, the adapter can transcribe the 141 unlabeled test pages with the lesson’s batch transcriber.</p>
+<p>The results are read the same way on all three. Before and after, on the same pages, says whether the fine-tune helped. The held-out CER curve, not the training loss, says whether more passes would have helped. If you want, the adapter can then transcribe the 141 unlabeled test pages with the lesson’s batch transcriber.</p>
 <p>What differs is the work around the script. In Colab you install three libraries, count tokens per page and adapter parameters by hand, and run a 20-page test before the full run. On CHTC you build a container, stage the model weights, and describe the job in an HTCondor submit file. On SageMaker you estimate the cost, launch a training job, tag it, and check the billable time afterward.</p>
 </section>
 <section id="choose-where-to-run-it" class="level2">
@@ -521,10 +521,10 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </tr>
 </tbody>
 </table>
-<p><strong>Colab</strong> is the easiest way to follow along without setting up research computing access, and it is a place to learn fine-tuning, not to do it for a project. The free tier hands out a GPU only when one is available, ends a session after a few hours of use or 90 minutes idle, and throttles accounts after heavy days. That is fine for this exercise, but a research project needs runs that repeat, data that grows, and results that are reproducible months later, and Colab offers none of that reliably. The notebook saves checkpoints to Google Drive so a dropped session costs one epoch rather than the whole run; a dataset ten times larger would outrun the session before the first checkpoint. Take what the notebook teaches to CHTC, or to the cloud when CHTC cannot do the job.</p>
-<p><strong>CHTC</strong> is where a UW-Madison research fine-tune should go first: it is free, its GPUs are large, and the only price is time in the queue. The work has to be packaged as a batch job rather than run interactively. <strong>The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC guide</a> is still in development and has not yet been tested end to end.</strong> If you try it, please <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues">report problems</a> and include the job’s <code>.log</code> and <code>.err</code> files.</p>
-<p><strong>SageMaker</strong> is useful when you want to learn managed cloud training or need AWS resources for a research project. The episode is written for someone working through the workshop: it assumes the bucket, controller notebook and IAM role from episodes 1 to 4, and data already staged in S3, so it is not a cold start the way the Colab notebook is. Unlike Colab or CHTC, its compute is billed while the job runs, so the <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">fine-tuning episode</a> launches the job from a small controller notebook, estimates and caps its cost, tags it, and compares the estimate with the billable time afterward. For institutional research, see <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services</a> for UW-provisioned accounts.</p>
-<p>The <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP)</a> is another GPU option for UW-Madison researchers, with notebook-based access. There isn’t a separate NRP version of this exercise yet.</p>
+<p><strong>Colab</strong> needs no research computing access, and it is a place to learn fine-tuning, not to do it for a project. The free tier gives a GPU when one is free, ends a session after a few hours of use or 90 minutes idle, and cuts back after heavy days. That is enough for this exercise. It is a poor fit for a research project, where runs repeat, data grows and results have to be reproducible months later. The notebook saves checkpoints to Google Drive, so a dropped session costs one epoch and not the run. A dataset ten times larger would outrun the session before the first checkpoint. Take what the notebook teaches to CHTC, or to the cloud when CHTC cannot do the job.</p>
+<p><strong>CHTC</strong> is the first choice for a UW-Madison research fine-tune. It is free, its GPUs are large, and the queue is the only price. The work has to be packaged as a batch job rather than run from a notebook. <strong>The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC guide</a> is still in development and has not been run end to end.</strong> If you try it, <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues">report problems</a> with the job’s <code>.log</code> and <code>.err</code> files.</p>
+<p><strong>SageMaker</strong> is for learning managed cloud training, or for a project that needs AWS. The <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">episode</a> is part of the workshop and assumes its setup: the bucket, the controller notebook and the IAM role from episodes 1 to 4, and the data already staged in S3. Its compute is billed while the job runs, so the episode estimates the cost before launching, caps the run time, tags the job, and compares the estimate with the billable minutes afterward. For research use, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services</a> covers UW-provisioned accounts.</p>
+<p>The <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP)</a> is another free GPU option for UW-Madison researchers, through a hosted JupyterHub. There is no NRP version of this exercise yet.</p>
 <section id="prerequisites" class="level4">
 <h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
 <p>Whichever version you run, you should be comfortable with basic Python and with the ideas behind model training and evaluation:</p>
@@ -537,7 +537,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <ul>
 <li><strong>Colab</strong>: a Google account, for Colab and for Google Drive, where checkpoints are saved.</li>
 <li><strong>CHTC</strong>: a CHTC account, which needs a NetID and a faculty sponsor, plus GPU Lab access and a <code>/staging</code> directory (ask for both when you request the account). You’ll work from the command line over SSH, on the campus network or VPN.</li>
-<li><strong>AWS SageMaker</strong>: the episode assumes the lesson’s own setup. Episodes 1 to 4 of the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html">Intro to AWS for ML/AI</a> workshop create the S3 bucket and the small CPU notebook instance that launches the job, and the job runs as the lesson’s <code>ml-sagemaker-use</code> IAM role. In the workshop’s shared UW-Madison account the instructors stage the Badger Scribe data and the CHURRO-3B weights in S3 and have the GPU quota in place. On an account of your own, you do that yourself: a paid-plan account, a GPU quota request filed three to four weeks ahead, the IAM role, and the data and model staged in your bucket. The lesson’s <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/index.html#setup">setup page</a> has the steps.</li>
+<li><strong>AWS SageMaker</strong>: the workshop’s setup. Episodes 1 to 4 of <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html">Intro to AWS for ML/AI</a> create the S3 bucket and the small CPU notebook that launches the job, which runs as the lesson’s <code>ml-sagemaker-use</code> role. In the shared UW-Madison workshop account the instructors stage the Badger Scribe data and the CHURRO-3B weights and hold the GPU quota. On your own account that is your job: a paid-plan account, a GPU quota request three to four weeks ahead, the role, and the data and model in your bucket. The <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/index.html#setup">setup page</a> has the steps.</li>
 </ul>
 </section>
 <section id="estimated-time-to-complete" class="level4">
@@ -545,7 +545,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <ul>
 <li><strong>Colab</strong>: <strong>2–3 hours</strong>, including roughly 1.5 hours of GPU work once a GPU is available.</li>
 <li><strong>CHTC</strong>: a few days of calendar time for the account, an afternoon for the first container build and model staging, then about 20 minutes of GPU time per run plus its wait in the queue.</li>
-<li><strong>AWS SageMaker</strong>: the training job runs about 33 minutes; allow an hour with launch and reading the bill, on top of the workshop’s setup episodes. On an account of your own, GPU quota approval can take weeks.</li>
+<li><strong>AWS SageMaker</strong>: the job runs about 33 minutes. Allow an hour to launch it and read the bill, after the setup episodes. On your own account, GPU quota approval takes weeks.</li>
 </ul>
 </section>
 </section>
