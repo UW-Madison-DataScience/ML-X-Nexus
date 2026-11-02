@@ -5,7 +5,7 @@ author:
     email: endemann@wisc.edu
 
 date: 2026-03-02
-date-modified: 2026-03-02
+date-modified: 2026-11-02
 date-format: long
 image: "../../../images/uw-logo-vertical-color-web-digital.png"
 categories:
@@ -26,39 +26,43 @@ Using a UW-provisioned cloud account — rather than a personal one — gives yo
 
 ## Why run ML/AI in the cloud?
 
-You have ML/AI code that works on your laptop. But at some point you need more — a bigger GPU (or several), a dataset that won't fit on disk, or the ability to run dozens of training experiments overnight. You could invest in local hardware or compete for time on a shared HPC cluster, but cloud platforms let you rent exactly the hardware you need, for exactly as long as you need it, and then shut it down.
+You have ML/AI code that works on your laptop. At some point you need more: a bigger GPU or several, a dataset that won't fit on disk, or dozens of training runs overnight. At UW-Madison the first place to look is [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html), which gives researchers free GPUs through a batch scheduler. The cloud is for the jobs CHTC cannot take: it rents exactly the hardware you need, for as long as you need it, billed by the hour.
 
-### Cloud vs. university HPC clusters
+### Cloud vs. CHTC
 
-Most universities offer shared HPC clusters with GPUs. These are excellent resources — but they have tradeoffs worth understanding:
+CHTC is free to UW-Madison researchers and should be the first place a campus project looks for a GPU. The tradeoffs:
 
-| Factor | University HPC | Cloud (AWS, GCP, Azure) |
-|--------|---------------|-------------|
-| **Cost** | Free or subsidized | Pay per hour |
-| **GPU availability** | Shared queue; wait times during peak periods and per-job runtime limits (often 24–72 hrs) that may require checkpointing long training runs | On-demand (subject to quota); jobs run as long as needed |
-| **Hardware variety** | Fixed hardware refresh cycle (3–5 years) | Latest GPUs available immediately (A100, H100, B200) |
-| **Scaling** | Limited by cluster size | Spin up hundreds of jobs in parallel |
-| **Multi-GPU / NVLink** | Sometimes available, depends on cluster | Available on demand — essential for training, fine-tuning, or serving large LLMs that don't fit in a single GPU's memory |
-| **Job orchestration** | Writing scheduler scripts, packaging environments, and wiring up parallel job arrays can take significant refactoring | Managed ML platforms (Vertex AI, SageMaker, Azure ML) handle provisioning, parallelism, and teardown |
-| **Software environment** | Module system; some clusters support containers — research computing staff can often help with setup | Prebuilt containers for common ML frameworks (PyTorch, TensorFlow, XGBoost); bring your own Docker image for full control |
+| Factor | CHTC | Cloud (AWS, GCP, Azure) |
+|--------|------|-------------|
+| **Cost** | Free, funded institutionally | Pay per hour. AWS list prices run from `$0.74`/h for a 16 GB T4 and `$1.41`/h for a 24 GB A10G to `$25`/h for eight A100s and `$63`/h for eight H100s |
+| **GPUs** | As of late 2026: 34 H200s (141 GB), 8 H100s and 24 A100s (80 or 40 GB), 12 RTX PRO 6000s (96 GB), 49 L40 and L40S (48 GB), plus older 11–24 GB cards, and a larger backfill pool of group-owned GPUs for jobs that can be interrupted | Whatever you pay for, on demand: T4, L4, A10G, L40S, A100, H100, H200, B200 |
+| **Waiting** | A shared queue: minutes at quiet times, hours when the lab is busy | Starts in about a minute, subject to your account's GPU quota, which can take weeks to raise on a new account |
+| **Run length** | Job lanes: short (under 12 h) may use two thirds of the GPU Lab's cards, medium (under 24 h) one third, long (up to 7 days) at most four GPUs per user. Checkpoint anything longer | No limit; you set your own cap |
+| **Multi-GPU** | The A100, H100 and H200 servers share NVLink within the server; the L40S and RTX PRO 6000 servers share PCIe only. No multi-node training | NVLink nodes on demand (8 × A100, 8 × H100), and multi-node clusters for frontier-scale training |
+| **Persistent services** | Batch jobs only. No model endpoints or always-on applications | Model endpoints, RAG applications, dashboards, databases |
+| **Interactive use** | 4-hour interactive GPU jobs for testing; everything else is batch | Jupyter, VS Code, persistent VMs |
+| **Software** | Apptainer or Docker containers you build | Prebuilt ML containers, or your own; managed platforms (SageMaker, Vertex AI, Azure ML) handle provisioning and teardown |
+| **Data compliance** | On-campus infrastructure | [Risk assessment](https://kb.wisc.edu/115296) required for sensitive or restricted data |
 
-**The short version:** use your university cluster when it has the hardware you need and the queue isn't blocking you. Use the cloud when you need hardware your cluster doesn't have, need to scale beyond what the queue allows, or need a specific software environment you can't easily get on-campus. Many researchers use both — start on campus HPC, then scale to cloud for large experiments or specialized hardware.
+**The short version:** use CHTC when the job fits one of its cards and can run as a batch job, which covers most training, fine-tuning and batch inference. Use the cloud when you need more GPUs than one server holds, a service that stays up, a hard deadline the queue cannot meet, or hardware CHTC does not have (TPUs, B200s). Many researchers use both: develop and test on CHTC, then move the one run that needs it to the cloud.
 
 ### When does model size justify cloud compute?
 
-Not every model needs cloud hardware. Here's a rough guide:
+The lesson's memory rule decides most cases: inference needs about 2 bytes per parameter in bf16 (1 in FP8, 0.5 in 4-bit), a LoRA fine-tune about 2.5 (about 1 with the frozen weights in 4-bit), and a full fine-tune 16, plus a few gigabytes for activations. Measured against CHTC's cards and AWS list prices:
 
-| Model scale | Parameters | Example models | Where to run |
-|-------------|-----------|----------------|--------------|
-| Small | < 10M | Logistic regression, small CNNs, XGBoost | Laptop — HPC cloud adds overhead without much benefit |
-| Medium | 10M–500M | ResNets, BERT-base, mid-sized transformers | HPC with a single GPU (RTX 2080 Ti, L40) or cloud (T4, L4) |
-| Large | 500M–10B | GPT-2, LLaMA-7B, fine-tuning large transformers | HPC with A100 (40/80 GB) or cloud — both work well |
-| Very large | 10B–70B | LLaMA-70B, Mixtral | HPC with H100/H200 (80–141 GB) or cloud |
-| Frontier | 70B+ | GPT-4-scale, multi-expert models | Cloud — requires multi-node NVLink clusters beyond what most HPC queues offer |
+| Task | GPU memory | On CHTC | On the cloud |
+|------|-----------|---------|--------------|
+| Inference, up to 7B in bf16 | up to ~14 GB | Any GPU Lab card | T4 `$0.74`/h, L4 `$1.13`/h, A10G `$1.41`/h |
+| Inference, 27B in FP8 or 70B in 4-bit | 27–35 GB | L40S (48 GB) or any larger card | L40S `$2.61`/h |
+| LoRA fine-tune, 3B | ~12 GB | Any GPU Lab card; the [fine-tuning exercise](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) runs in about 20 minutes | A10G `$1.41`/h; the same run takes 33 minutes and costs about `$0.75` |
+| LoRA fine-tune, 7B–27B | 22–72 GB | One 80 GB card; up to about 50B on an H200 | A10G for 7B; 4 × A10G `$7.09`/h for 27B |
+| LoRA fine-tune, 70B | ~70 GB in 4-bit, 179 GB in bf16 | One 80 GB card in 4-bit; the H200 server's cards in bf16 | 4 × L40S `$13`/h in bf16 |
+| Full fine-tune, 3B | 52–60 GB | An 80 GB card, just; an H200 easily | 4 × A10G `$7.09`/h |
+| Full fine-tune, 7B | ~116 GB | Two 80 GB cards or one H200, sharded | 4 × L40S `$13`/h |
+| Full fine-tune, 27B–70B | 436–1,124 GB | The H100 or H200 servers' cards, sharded; a 70B is at the edge | 8 × H100 `$63`/h; two of them, `$127`/h, for a 70B |
+| Training from scratch, >1B | Many servers | Not on CHTC | Multi-node NVLink clusters; this is where five-figure bills come from |
 
-**CHTC's [GPU Lab](https://chtc.cs.wisc.edu/uw-research-computing/gpu-lab) covers more than you might think.** The GPU Lab includes A100s (40 and 80 GB), H100s (80 GB), and H200s (141 GB) — enough VRAM to run inference on models up to ~70B parameters with quantization, or to fine-tune smaller models on a single high-memory GPU. For many UW researchers, this hardware handles "large model" workloads without needing cloud. Note that CHTC GPUs are not NVLink-connected, so multi-GPU parallelism is limited to methods that don't require fast inter-GPU communication. Jobs have time limits (12 hrs for short, 24 hrs for medium, 7 days for long jobs), so plan your runs accordingly.
-
-Cloud becomes the clear choice when you need NVLink multi-GPU or multi-node setups for frontier-scale training or inference, long-running services like RAG applications or model endpoints that need to stay up beyond HPC job time limits, or when queue wait times are blocking a deadline.
+Almost every fine-tune a research group runs fits one CHTC card. The cloud is the choice for multi-node training, for services that stay up past a job lane, and for a deadline the queue cannot meet. Prices are AWS SageMaker list prices from the [Intro to AWS workshop's instance guide](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html); GCP and Azure are in the same range.
 
 ### LLM APIs: skip the infrastructure entirely
 
@@ -69,14 +73,14 @@ For many GenAI tasks, you don't need to provision GPUs at all. Services like the
 Cloud computing is not free, but it's worth putting costs in context:
 
 - **Hardware is expensive and ages fast.** A single A100 GPU costs ~$15,000 and is outdated within a few years. Cloud lets you rent the latest hardware by the hour.
-- **You pay only for what you use.** Stop a VM and the meter stops — valuable for bursty research workloads. A single T4 GPU instance runs ~$1–3/hr. Fine-tuning a small model on a moderate dataset might cost $10–50.
+- **You pay only for what you use.** Stop a VM and the meter stops. A 24 GB A10G instance is `$1.41`/h on AWS. The workshop's LoRA fine-tune of a 3B model costs about `$0.75`; a 7B full fine-tune on 50,000 documents about `$140`; a 70B LoRA for a day about `$600`.
 - **Managed services save development time.** You don't have to write scheduling logic, package custom containers, or maintain orchestration infrastructure — managed ML platforms handle that plumbing so you can focus on the ML.
 - **Budgets and alerts keep you safe.** All three platforms offer billing dashboards and budget alerts to prevent surprise bills.
 
 The key habit: choose the right machine size, stop resources when idle, and monitor spending.
 
 ::: {.callout-note}
-Cloud isn't the right fit for every workload. If you want to avoid cloud costs, UW's [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) offers free GPU access for batch jobs (though jobs are queued and have runtime limits). Many researchers use a mix of both.
+Cloud isn't the right fit for every workload. [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) offers free GPUs up to the 141 GB H200 for batch jobs, with a queue and job lanes of 12 hours to 7 days. Many researchers use both.
 :::
 
 ::: {.callout-tip}
@@ -196,6 +200,7 @@ Key compliance resources:
 - [**Workshop/Compute**: Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) – Workshop covering ML workflows in AWS SageMaker.
 - [**Compute**: Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html) – Free cloud-based Jupyter notebooks with GPU access.
 - [**Compute**: Center for High Throughput Computing (CHTC)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) – Free on-campus HPC/HTC resources for UW researchers.
+- [**Notebook**: Fine-tuning with LoRA: Colab, CHTC, or AWS](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) – The same 3B fine-tune run on Colab, CHTC and SageMaker, with measured times and costs.
 - [**Compute**: BadgerCompute](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html) – UW-Madison's lightweight, NetID-authenticated Jupyter service.
 - [**GenAI**: UW Generative AI Services & Policies](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html) – Overview of UW-vetted AI tools including pay-as-you-go cloud AI services.
 
