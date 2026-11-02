@@ -6,9 +6,8 @@
 
 ## Writing Rules
 
-Site copy is read by researchers. Write it the way the Carpentries lessons linked from this site are written: short declarative sentences, concrete numbers, and no filler.
 
-- **Never use the word "real"** as an intensifier ("a real task", "real research", "real-world"). Say what the thing is instead.
+- Never use the word "real" as an intensifier ("a real task", "real research", "real-world"). Say what the thing is instead.
 - No colloquial openers or hedging adverbs ("surprisingly", "simply", "the trick is"). State the fact.
 - Maintainer notes go in an HTML comment at the top of the file, never in reader-facing text.
 - Tile pages for externally hosted material follow the same sections as the other tiles: Prerequisites, Estimated time to complete, Related resources (bulleted, with bold type prefixes), Comments.
