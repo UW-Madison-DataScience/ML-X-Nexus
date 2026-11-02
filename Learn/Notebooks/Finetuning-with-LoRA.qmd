@@ -32,40 +32,37 @@ is skipped by the qmd-to-ipynb GitHub Action.
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb)
 
-This lesson fine-tunes [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), a vision-language model for historical documents, to transcribe handwritten German letters from the 1930s. The data consists of 295 pages from the [Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) challenge, written in Kurrent script (a historical form of German handwriting whose letterforms differ substantially from modern cursive). We use LoRA (low-rank adaptation) to fine-tune the model on a single GPU, then compare its transcription accuracy before and after training on held-out pages.
+This exercise shows how to fine-tune a vision-language model for a specialized research task without needing expensive GPU hardware. We'll use [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), an open-weight model for historical document transcription, and adapt it to handwritten German letters from the [Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) challenge.
 
-The exercise can be run in three environments: a Google Colab notebook, an HTCondor batch job on UW-Madison's CHTC, or a SageMaker training job in the Intro to AWS workshop. All three use the same model, dataset, and core training workflow, but differ in how GPU resources are accessed and jobs are managed. **Start with Colab**, which requires only a Google account and lets you focus on fine-tuning before dealing with the setup required by the other platforms. The [comparison below](#choose-where-to-run-it) explains when to use each option.
+We'll use LoRA (low-rank adaptation) to train a small set of additional parameters rather than updating the entire model, making the exercise practical on a single GPU. We'll then compare transcription accuracy before and after fine-tuning to see whether the adaptation helped.
+
+You can run the exercise in [Google Colab](https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb), on UW-Madison's [CHTC](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc), or through [AWS SageMaker](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html). The same training workflow is available in all three environments. **Start with the Colab notebook** if you want to follow along without setting up research computing access. We'll compare the platforms and their requirements below.
 
 ## Why fine-tune, and why LoRA?
 
-Training a model with billions of weights from scratch takes thousands of GPUs running for months. Pretrained models already know how to interpret images and language, and fine-tuning trains them a little further on examples from your own task, so a few hundred labeled pages do what millions would from scratch. Better prompting helps only so far: there are limits to what instructions can do when the model has never learned to recognize the writing itself.
+Large vision-language models learn general capabilities from enormous training datasets, but they won't necessarily perform well on every specialized task. Historical handwriting is a good example. German Kurrent uses letterforms that differ substantially from modern handwriting, and even models trained for document recognition can struggle with it.
 
-CHURRO is a 3-billion-parameter vision-language model developed for historical text recognition. Its researchers fine-tuned an existing Qwen model on roughly 100,000 historical document pages and reported better transcription accuracy than Gemini 2.5 Pro at substantially lower inference cost ([paper](https://arxiv.org/abs/2509.19768)). The same pattern, a small specialist beating a much larger generalist on the task it was trained for, shows up in many places, including theorem proving and medical question answering.
+One approach would be to train a new model from scratch, but that would require enormous amounts of data and compute. Instead, we can start with an existing model and fine-tune it on examples of the handwriting we want it to recognize.
 
-![Three specialist models against much larger general ones, on each task's own benchmark. Sources: [CHURRO](https://arxiv.org/abs/2509.19768), [Goedel-Prover-V2](https://arxiv.org/abs/2508.03613), [MedGemma](https://arxiv.org/abs/2507.05201).](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/specialists-vs-large-models.png)
+CHURRO illustrates why this works. Its developers adapted a Qwen vision-language model using roughly 100,000 historical document pages. They report that the resulting specialist model outperforms Gemini 2.5 Pro on historical text recognition at substantially lower inference cost ([paper](https://arxiv.org/abs/2509.19768)). Similar results have been reported in other domains, where smaller models adapted to specific tasks can outperform much larger general-purpose models.
 
-**Full fine-tuning** updates every weight, and training needs far more GPU memory than running the model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO's 3.75 billion parameters that is about 60 GB before activations and other overhead: more than any 24 GB card, so the lesson sizes it as a four-GPU instance on AWS, and on CHTC it needs one of the 80 GB or larger cards.
+![Three specialist models compared with larger general-purpose models on their respective benchmarks. Sources: [CHURRO](https://arxiv.org/abs/2509.19768), [Goedel-Prover-V2](https://arxiv.org/abs/2508.03613), [MedGemma](https://arxiv.org/abs/2507.05201).](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/specialists-vs-large-models.png)
 
-**LoRA** leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. The whole run fits in about 12 GB, which is one 24 GB card on AWS or any CHTC GPU. On a GPU too small for that, such as Colab's 16 GB T4, the notebook stores the frozen weights in 4-bit instead, a variant called QLoRA. The adapter and the arithmetic are the same, and the run needs about 6 GB.
+For this exercise, we're taking the idea one step further. CHURRO already recognizes historical documents, but we'll adapt it to the particular handwriting found in the Badger Scribe dataset. The challenge is doing so with the GPU resources available to an individual researcher.
 
-![Full fine-tuning updates the whole weight matrix; LoRA freezes it and trains two thin matrices beside it.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/lora.svg)
+**Full fine-tuning** updates every model parameter. With a conventional mixed-precision Adam setup, that means storing weights, gradients, a full-precision copy of the weights, and optimizer state. Together, these require roughly 16 bytes per parameter. For CHURRO's 3.75 billion parameters, that's approximately 60 GB before accounting for activations and other overhead.
 
-The GPU-hours put the three on one scale. Training from scratch is at the top, the full fine-tune that made CHURRO in the middle, and this lesson's LoRA run at the bottom.
+**LoRA** reduces that requirement by leaving the pretrained weights frozen and training small additional matrices in selected layers. The resulting adapter contains less than 1% of the original model's parameters and can be saved separately, then loaded alongside the original weights for inference.
 
-![GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/pretrain-finetune-lora.svg)
+![Full fine-tuning updates the model weights; LoRA freezes them and trains two smaller matrices.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/lora.svg)
 
-Per parameter, the memory works out as follows. Running the model needs only the weight. A full fine-tune needs the weight, its gradient, a 32-bit copy and the optimizer's two averages. LoRA needs the frozen weight plus a small share of the adapter.
+For CHURRO, the LoRA training setup uses approximately 12 GB of GPU memory, compared with roughly 60 GB in parameter states alone for full fine-tuning. This makes it possible to run the exercise on a single GPU instead of requiring a much larger machine.
 
-![GPU memory per parameter: inference, a LoRA fine-tune, and a full fine-tune.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/memory-per-parameter.svg)
+The Colab version goes one step further. Its free NVIDIA T4 has 16 GB of memory, so we load CHURRO's frozen weights in 4-bit precision rather than 16-bit. This is called **QLoRA**, and reduces the estimated memory requirement for this training setup to about 6 GB.
 
-| What you are doing with the model | Bytes per parameter | What has to be in memory for each parameter |
-|---|---|---|
-| Inference, FP8 | 1 | the weight, quantized |
-| Inference, bf16 | 2 | the weight |
-| LoRA fine-tune | ~2.5 | the frozen 16-bit weight, plus a share of the adapter with its gradients and optimizer state |
-| Full fine-tune, mixed precision | 16 | the 16-bit weight (2), its gradient (2), a 32-bit copy of the weight (4), Adam's two running averages (8) |
+The distinction matters beyond this exercise. Researchers can adapt open-weight models to their own data, evaluate whether the adaptation improves performance, and save small adapters for reuse, without the cost of retraining or fully fine-tuning billions of parameters.
 
-This is what makes LoRA useful for research groups. You can take an existing open-weight model, adapt it to your own data, check whether the adaptation helped, and keep the result, without the expense of full fine-tuning. On campus that is one CHTC GPU, one cloud GPU, or a free Colab T4.
+![GPU memory requirements for inference, LoRA fine-tuning, and full fine-tuning.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/memory-per-parameter.svg)
 
 ## What you'll do
 
