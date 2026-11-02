@@ -416,7 +416,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <figcaption>Three specialist models compared with larger general-purpose models on their respective benchmarks. Sources: <a href="https://arxiv.org/abs/2509.19768">CHURRO</a>, <a href="https://arxiv.org/abs/2508.03613">Goedel-Prover-V2</a>, <a href="https://arxiv.org/abs/2507.05201">MedGemma</a>.</figcaption>
 </figure>
 </div>
-<p>For this exercise, we’re taking the idea one step further. CHURRO already recognizes historical documents, but we’ll adapt it to the particular handwriting found in the Badger Scribe dataset. The challenge is doing so with the GPU resources available to an individual researcher.</p>
+<p>For this exercise, we’re taking the idea one step further. CHURRO already recognizes historical documents, but we’ll adapt it to the particular handwriting found in the Badger Scribe dataset. The question is how much GPU memory that takes.</p>
 <p><strong>Full fine-tuning</strong> updates every model parameter. With a conventional mixed-precision Adam setup, that means storing weights, gradients, a full-precision copy of the weights, and optimizer state. Together, these require roughly 16 bytes per parameter. For CHURRO’s 3.75 billion parameters, that’s approximately 60 GB before accounting for activations and other overhead.</p>
 <p><strong>LoRA</strong> reduces that requirement by leaving the pretrained weights frozen and training small additional matrices in selected layers. The resulting adapter contains less than 1% of the original model’s parameters and can be saved separately, then loaded alongside the original weights for inference.</p>
 <div class="quarto-figure quarto-figure-center">
