@@ -403,58 +403,64 @@ is skipped by the qmd-to-ipynb GitHub Action.
 -->
 <p><a href="https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p>LoRA (low-rank adaptation) is how most research groups fine-tune a large pretrained model on one GPU. This lesson teaches it on a real task. We take <a href="https://huggingface.co/stanford-oval/churro-3B">CHURRO-3B</a>, a vision-language model for historical documents, and adapt it to handwritten German letters from the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html">Badger Scribe</a> challenge. The letters are written in Kurrent, a historical script whose letterforms differ substantially from modern cursive. Even a model trained on historical documents struggles with it, which makes it a useful test of whether more fine-tuning helps.</p>
-<p>The same fine-tune, with the same model, data and training script, runs in three places: a Google Colab notebook, an HTCondor job on UW-Madison’s CHTC, and a SageMaker training job in the Intro to AWS workshop. What changes is who provides the GPU and how a job is described. The Colab version needs nothing but a Google account, and it is the recommended starting point to focus on learning fine-tuning concepts. Try the other versions after. The <a href="#choose-where-to-run-it">comparison below</a> says when each of the three makes sense.</p>
+<p>The same fine-tune, with the same model, data and training script, runs in three places: a Google Colab notebook, an HTCondor job on UW-Madison’s CHTC, and a SageMaker training job in the Intro to AWS workshop. What changes is who provides the GPU and how a job is described. Start with the Colab version. It needs nothing but a Google account, so the attention goes to the fine-tuning itself rather than the platform. Once that makes sense, try the other two; the <a href="#choose-where-to-run-it">comparison below</a> says when each is the right choice.</p>
 <section id="why-fine-tune-and-why-lora" class="level2">
 <h2 class="anchored" data-anchor-id="why-fine-tune-and-why-lora">Why fine-tune, and why LoRA?</h2>
 <p>Training a model with billions of weights from scratch takes thousands of GPUs running for months. Pretrained models already know how to interpret images and language, and fine-tuning trains them a little further on examples from your own task, so a few hundred labeled pages do what millions would from scratch. Better prompting helps only so far: there are limits to what instructions can do when the model has never learned to recognize the writing itself.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/pretrain-finetune-lora.svg" class="img-fluid figure-img"></p>
+<figcaption>GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.</figcaption>
+</figure>
+</div>
 <p>CHURRO itself is an example. It is a 3-billion-parameter model that Stanford researchers fine-tuned from Qwen on roughly 100,000 historical document pages, and its authors report better transcription accuracy than Gemini 2.5 Pro at substantially lower inference cost (<a href="https://arxiv.org/abs/2509.19768">paper</a>). The same pattern, a small specialist beating a much larger generalist on the task it was trained for, shows up in many places, including theorem proving and medical question answering.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../../images/specialists-vs-large-models.png" class="img-fluid figure-img"></p>
+<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/specialists-vs-large-models.png" class="img-fluid figure-img"></p>
 <figcaption>Three specialist models against much larger general ones, on each task’s own benchmark. Sources: <a href="https://arxiv.org/abs/2509.19768">CHURRO</a>, <a href="https://arxiv.org/abs/2508.03613">Goedel-Prover-V2</a>, <a href="https://arxiv.org/abs/2507.05201">MedGemma</a>.</figcaption>
 </figure>
 </div>
 <p><strong>Full fine-tuning</strong> updates every weight, and training needs far more GPU memory than running the model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO’s 3.75 billion parameters that is about 60 GB before activations and other overhead: more than any 24 GB card, so the lesson sizes it as a four-GPU instance on AWS, and on CHTC it needs one of the 80 GB or larger cards.</p>
-<p><strong>LoRA</strong> leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. <strong>QLoRA</strong> is LoRA with the frozen weights stored in 4-bit. Nothing about what the model learns changes; the frozen weights are read from a compressed copy, and the run needs about 6 GB.</p>
+<p><strong>LoRA</strong> leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. The whole run fits in about 12 GB, which is one 24 GB card on AWS or any CHTC GPU. On a GPU too small for that, such as Colab’s 16 GB T4, the notebook stores the frozen weights in 4-bit instead, a variant called QLoRA. The adapter and the arithmetic are the same, and the run needs about 6 GB.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../../images/pretrain-finetune-lora.svg" class="img-fluid figure-img"></p>
-<figcaption>GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.</figcaption>
+<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/memory-per-parameter.svg" class="img-fluid figure-img"></p>
+<figcaption>GPU memory per parameter: inference, a LoRA fine-tune, and a full fine-tune.</figcaption>
 </figure>
 </div>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>How CHURRO’s 3.75B parameters are used</th>
+<th>What you are doing with the model</th>
 <th>Bytes per parameter</th>
-<th>GPU memory with activations</th>
-<th>Where it fits</th>
+<th>What has to be in memory for each parameter</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Full fine-tune</strong>, every weight updated</td>
-<td>16</td>
-<td>about 60 GB</td>
-<td>A four-GPU cloud instance, or an 80 GB or larger CHTC card</td>
+<td>Inference, FP8</td>
+<td>1</td>
+<td>the weight, quantized</td>
 </tr>
 <tr class="even">
-<td><strong>LoRA</strong>, weights frozen in 16-bit</td>
-<td>2, plus the adapter</td>
-<td>about 12 GB</td>
-<td>One 24 GB card (the lesson’s AWS GPU) or any CHTC GPU; a 16 GB T4 only just, and without bf16</td>
+<td>Inference, bf16</td>
+<td>2</td>
+<td>the weight</td>
 </tr>
 <tr class="odd">
-<td><strong>QLoRA</strong>, weights frozen in 4-bit</td>
-<td>0.5, plus the adapter</td>
-<td>about 6 GB</td>
-<td>Any of them, including Colab’s free 16 GB T4</td>
+<td>LoRA fine-tune</td>
+<td>~2.5</td>
+<td>the frozen 16-bit weight, plus a share of the adapter with its gradients and optimizer state</td>
+</tr>
+<tr class="even">
+<td>Full fine-tune, mixed precision</td>
+<td>16</td>
+<td>the 16-bit weight (2), its gradient (2), a 32-bit copy of the weight (4), Adam’s two running averages (8)</td>
 </tr>
 </tbody>
 </table>
@@ -522,7 +528,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </tbody>
 </table>
 <p><strong>Colab</strong> needs no research computing access, and it is a place to learn fine-tuning, not to do it for a project. The free tier gives a GPU when one is free, ends a session after a few hours of use or 90 minutes idle, and cuts back after heavy days. That is enough for this exercise. It is a poor fit for a research project, where runs repeat, data grows and results have to be reproducible months later. The notebook saves checkpoints to Google Drive, so a dropped session costs one epoch and not the run. A dataset ten times larger would outrun the session before the first checkpoint. Take what the notebook teaches to CHTC, or to the cloud when CHTC cannot do the job.</p>
-<p><strong>CHTC</strong> is the first choice for a UW-Madison research fine-tune. It is free, its GPUs are large, and the queue is the only price. The work has to be packaged as a batch job rather than run from a notebook. <strong>The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC guide</a> is still in development and has not been run end to end.</strong> If you try it, <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues">report problems</a> with the job’s <code>.log</code> and <code>.err</code> files.</p>
+<p><strong>CHTC</strong> is the first choice for UW-Madison researchers. It is free, its GPUs are large, and the queue is the only price. The work has to be packaged as a batch job rather than run from a notebook. <strong>The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">CHTC guide</a> is still in development and has not been run end to end.</strong> If you try it, <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues">report problems</a> with the job’s <code>.log</code> and <code>.err</code> files.</p>
 <p><strong>SageMaker</strong> is for learning managed cloud training, or for a project that needs AWS. The <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">episode</a> is part of the workshop and assumes its setup: the bucket, the controller notebook and the IAM role from episodes 1 to 4, and the data already staged in S3. Its compute is billed while the job runs, so the episode estimates the cost before launching, caps the run time, tags the job, and compares the estimate with the billable minutes afterward. For research use, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services</a> covers UW-provisioned accounts.</p>
 <p>The <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP)</a> is another free GPU option for UW-Madison researchers, through a hosted JupyterHub. There is no NRP version of this exercise yet.</p>
 <section id="prerequisites" class="level4">
