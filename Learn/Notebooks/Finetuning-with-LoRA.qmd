@@ -1,5 +1,5 @@
 ---
-title: "LoRA Fine-tuning on a Free GPU"
+title: "Fine-tuning with LoRA: Colab, CHTC, or AWS"
 author:
   - name: Chris Endemann
     email: endemann@wisc.edu
@@ -7,7 +7,7 @@ author:
 date: 2026-11-02
 date-format: long
 image: "../../../images/LoRA-finetuning.png"
-description: "Fine-tune CHURRO-3B, a vision-language model, to read 1930s German handwriting on Google Colab's free T4 — and see how the same fine-tune runs on AWS SageMaker and CHTC."
+description: "One LoRA fine-tune of a 3B vision-language model, runnable three ways: Google Colab's free T4 (notebook), UW–Madison's CHTC (guide, in development), or AWS SageMaker (lesson episode). Pick by what you have and what you want to learn."
 
 categories:
   - Notebooks
@@ -27,31 +27,36 @@ categories:
 
 ---
 <!-- MARKDOWN COMMENT:
-This page is a Nexus tile for a notebook that lives in the Carpentries lesson repo.
-The notebook is NOT copied into Nexus. Edit the notebook upstream; edit only the
+This page is a Nexus tile for fine-tuning materials that live in the Carpentries
+ML_with_AWS_SageMaker lesson repo (Colab notebook, CHTC guide, AWS episode).
+Nothing is copied into Nexus. Edit the notebook upstream; edit only the
 summary, prerequisites, and related resources here. Because this file has no Python
 cells, the qmd-to-ipynb GitHub Action skips it.
 -->
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb)
 
-This notebook fine-tunes [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), a vision-language model specialized for historical documents, to transcribe handwritten German letters from the 1930s — on the free T4 GPU that Google Colab provides. It costs nothing, and the whole run, with the model scored before and after, takes about an hour and a half.
+One fine-tune, three places to run it. This lesson fine-tunes [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), a vision-language model specialized for historical documents, to transcribe handwritten German letters from the 1930s using LoRA (low-rank adaptation). The same model, data, and training script run in three settings that together cover the main GPU routes open to a UW–Madison researcher:
 
-It is the fine-tuning episode of the [Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) workshop with the cloud account taken out. The data, the model, and the training script are the same. The GPU is smaller (16 GB, no bf16 support), so the frozen base weights are loaded in 4-bit and only the LoRA adapter trains in 16-bit. Along the way you will:
+- **Google Colab** (the notebook linked above) – free, nothing to set up, about an hour and a half on a T4. Start here.
+- **CHTC** ([guide](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc), in development) – UW–Madison's free campus GPUs, as an HTCondor batch job.
+- **AWS SageMaker** ([lesson episode](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html)) – the pay-per-hour cloud, as a SageMaker training job, from the [Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) workshop.
+
+The Colab notebook is the fine-tuning episode with the cloud account taken out. Its GPU is smaller (16 GB, no bf16 support), so the frozen base weights are loaded in 4-bit and only the LoRA adapter trains in 16-bit. Whichever version you run, you will:
 
 1. See why fine-tuning beats training from scratch, and why LoRA beats full fine-tuning on a small GPU, with the memory arithmetic to back it up.
-2. Run a 20-page smoke test, then a two-epoch LoRA fine-tune with checkpoints saved to Google Drive so a dropped session costs one epoch, not the run.
+2. Run a 20-page smoke test, then a two-epoch LoRA fine-tune that checkpoints at the end of every epoch (to Google Drive on Colab), so a dropped session or an expired job costs one epoch, not the run.
 3. Compare character error rate (CER) before and after on the same held-out pages, and read the learning curve to decide how many passes were worth it.
 4. Optionally transcribe the unlabeled pages with the batch transcriber from the [Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) challenge.
 
 ::: {.callout-note}
-## Where this notebook lives
-The notebook is maintained in the [ML on AWS lesson repository](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras) alongside the training scripts it clones at runtime. This Nexus page is the entry point, not a copy — open the notebook with the Colab badge above, and report problems by [opening an issue](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues) on the lesson.
+## Where these materials live
+All three versions are maintained in the [ML on AWS lesson repository](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras) alongside the training scripts they share. This Nexus page is the entry point, not a copy — open the notebook with the Colab badge above, and report problems by [opening an issue](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues) on the lesson.
 :::
 
 ## Three places to run this fine-tune
 
-The same fine-tune — same model, data, and scripts — runs in three places. Together they cover the main GPU routes available to a UW–Madison researcher: a free notebook, free campus compute, and the pay-per-hour cloud.
+How the three versions compare, condensed from the lesson. The full table, including the largest *full* fine-tune each platform can handle, is in the notebook's opening section.
 
 | | [Google Colab](https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb) | [CHTC](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc) | [AWS SageMaker](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html) |
 |---|---|---|---|
@@ -64,7 +69,7 @@ The same fine-tune — same model, data, and scripts — runs in three places. T
 | What you learn beyond the fine-tune | Fitting a model into a small GPU | Describing a job for a scheduler, containers, staging data | Estimating and reading a bill, tags, job guard rails |
 | Nexus guide to the platform | [Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html) | [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) | [UW Cloud Services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) |
 
-For fine-tuning, **CHTC is the first choice for UW–Madison researchers**: it is free, its GPUs are large, and the queue is the only price. Colab is for practicing LoRA with nothing to set up. The cloud has the newest and fastest GPUs, and a fine-tune on a large dataset sometimes needs them, but it bills by the hour, so it is the choice when the other two cannot do the job, not the default. The full comparison, including the largest *full* fine-tune each platform can handle, is in the notebook's opening section.
+For fine-tuning, **CHTC is the first choice for UW–Madison researchers**: it is free, its GPUs are large, and the queue is the only price. Colab is for practicing LoRA with nothing to set up. The cloud has the newest and fastest GPUs, and a fine-tune on a large dataset sometimes needs them, but it bills by the hour, so it is the choice when the other two cannot do the job, not the default.
 
 ::: {.callout-warning}
 ## Colab is a place to study fine-tuning, not to do it for a project
