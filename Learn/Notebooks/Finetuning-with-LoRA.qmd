@@ -55,9 +55,9 @@ The Colab version runs on a 16 GB T4. To fit the model, it loads the frozen weig
 
 **Colab** is the easiest way to follow along without setting up research computing access. Its free GPU availability and session length vary, so it is less suitable for repeated or long-running research experiments. The notebook saves checkpoints to Google Drive in case the session ends early.
 
-**CHTC** is the first place UW-Madison researchers should look for fine-tuning: it is free, its GPUs are large, and the only cost is time in the queue. Work needs to be packaged as a batch job rather than run interactively. **The [CHTC guide](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc) is still in development and has not yet been tested end to end.** If you try it, please [report problems](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues) and include the job's `.log` and `.err` files.
+**CHTC** is a strong option for UW-Madison research projects that can run as batch jobs, particularly when larger GPUs would help. The trade-off is that jobs may wait in a queue. **The [CHTC guide](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc) is still in development and has not yet been tested end to end.** If you try it, please [report problems](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues) and include the job's `.log` and `.err` files.
 
-**SageMaker** is useful when you want to learn managed cloud training or need AWS resources for a research project. Unlike Colab or CHTC, its compute is billed while the job runs, so the [fine-tuning lesson](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html) includes a cost estimate, runtime cap, resource tags and a check of actual billable time. The lesson's guidance is to reach for the cloud when Colab and CHTC cannot do the job, not by default. For institutional research, see [UW Cloud Services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) for UW-provisioned accounts.
+**SageMaker** is useful when you want to learn managed cloud training or need AWS resources for a research project. Unlike Colab or CHTC, its compute is billed while the job runs, so the [fine-tuning lesson](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html) includes a cost estimate, runtime cap, resource tags and a check of actual billable time. For institutional research, see [UW Cloud Services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) for UW-provisioned accounts.
 
 The [National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) is another GPU option for UW-Madison researchers, with notebook-based access. There isn't a separate NRP version of this exercise yet.
 
@@ -68,20 +68,10 @@ Allow **2–3 hours** for the Colab notebook, including roughly 1.5 hours of GPU
 - [Intro to Machine Learning](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html) and [Basic Python Programming](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html)
 - [Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html) for the 4-bit model loading used in Colab
 
-## Source materials
+## Further reading and source materials
 
 All three versions, along with their shared training code, live in the [ML on AWS lesson repository](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras). This Nexus page is an entry point rather than a separate copy of the exercise. For issues or improvements, [open a GitHub issue](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues).
 
-## Related resources
-- [**Workshop**: Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) – The parent lesson. Its fine-tuning episode is the SageMaker version of this exercise.
-- [**Compute**: Center for High Throughput Computing (CHTC)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) – Free campus GPUs, job time limits, and which model sizes fit which GPU.
-- [**Compute**: Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html) – Plans, runtime limits, and mounting Google Drive for checkpoints.
-- [**Compute**: National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) – Free notebook-based GPU access for UW-Madison researchers.
-- [**Compute**: UW-Madison Cloud Services (AWS, GCP, Azure)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) – UW-provisioned cloud accounts with institutional pricing and data protections.
-- [**Project**: Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) – The MLM26 challenge whose Kurrent-script letters this exercise trains on.
-- [**Notebook**: Understanding Quantization and Precision](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html) – The 4-bit loading the Colab version relies on.
-- [**Library**: Hugging Face](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html) – Where CHURRO-3B lives; the exercise uses `transformers`, `peft`, and `bitsandbytes`.
-- [LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)](https://arxiv.org/abs/2106.09685) – The original paper.
-- [CHURRO: Making History Readable with an Open-Weight Large Vision-Language Model (EMNLP 2025)](https://arxiv.org/abs/2509.19768) – The model being fine-tuned.
+For background on the model and technique, see the [CHURRO paper](https://arxiv.org/abs/2509.19768), the [original LoRA paper](https://arxiv.org/abs/2106.09685), and the [Hugging Face guide](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html). For more on the computing environments, consult the Nexus guides to [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html), [Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html), and [NRP](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html).
 
 ## Comments
