@@ -92,8 +92,8 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </tbody>
 </table>
 <p><strong>Google Colab</strong> is the easiest starting point and needs only a Google account. It is a place to learn fine-tuning, not to run a project: free GPU availability varies, sessions end after a few hours of use or 90 minutes idle, and the notebook saves checkpoints to Google Drive so a dropped session costs one epoch.</p>
-<p><strong>CHTC</strong> is the first choice for UW-Madison researchers. It is free, it has GPUs with 48 to 141 GB of memory, and the queue is the only price. The CHTC version packages the job in a container and submits it through HTCondor. The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">guide</a> is still in development and has not been tested end to end.</p>
-<p><strong>AWS SageMaker</strong> runs the same exercise as a managed training job. The <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">fine-tuning episode</a> is part of the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html">Intro to AWS for ML/AI</a> workshop and covers estimating costs, setting runtime limits, launching jobs and tracking spending. UW researchers can use <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services</a> for institutional AWS accounts.</p>
+<p><strong>CHTC</strong> is the first choice for UW-Madison researchers. It is free, it has GPUs with 48 to 141 GB of memory, and the queue is the only price. The CHTC version packages the job in a container and submits it through HTCondor; you need a CHTC account with a faculty sponsor, GPU Lab access and a <code>/staging</code> directory. The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc">guide</a> is still in development and has not been tested end to end.</p>
+<p><strong>AWS SageMaker</strong> runs the same exercise as a managed training job. The <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">fine-tuning episode</a> is part of the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html">Intro to AWS for ML/AI</a> workshop and covers estimating costs, setting runtime limits, launching jobs and tracking spending. It assumes the SageMaker setup and GPU quota from the workshop’s <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/index.html#setup">earlier episodes</a>; on an account of your own, a GPU quota request can take weeks. UW researchers can use <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services</a> for institutional AWS accounts.</p>
 <p>The <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP)</a> also offers free GPU resources, including notebook-based access, although a separate version of this exercise is not yet available.</p>
 <section id="prerequisites" class="level4">
 <h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
@@ -103,7 +103,6 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html"><strong>Workshop</strong>: Intro to Machine Learning</a></li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Understanding Quantization and Precision</a>, recommended for understanding the 4-bit loading used on Colab</li>
 </ul>
-<p>You’ll also need access to your chosen platform: a Google account for Colab, a CHTC account with GPU Lab access and <code>/staging</code> storage for CHTC, or an AWS account with the SageMaker setup and GPU quota from the workshop’s <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/index.html#setup">earlier episodes</a>.</p>
 </section>
 <section id="estimated-time-to-complete" class="level4">
 <h4 class="anchored" data-anchor-id="estimated-time-to-complete">Estimated time to complete</h4>
@@ -1009,7 +1008,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="b3b14fe0" class="cell" data-execution_count="1">
+<div id="7d53e725" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -1046,7 +1045,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="64771885" class="cell" data-execution_count="2">
+<div id="90d53d7c" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1063,7 +1062,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="66b6291a" class="cell" data-execution_count="3">
+<div id="678c06a0" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1103,7 +1102,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="5121cee6" class="cell" data-execution_count="4">
+<div id="0dd2d7fd" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1141,7 +1140,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="15094baa" class="cell" data-execution_count="5">
+<div id="e37ff62d" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -1247,7 +1246,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="0b5eeb3b" class="cell" data-execution_count="6">
+<div id="b70c092d" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -1322,7 +1321,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="7788bf6e" class="cell" data-execution_count="7">
+<div id="a880eaa0" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -1397,7 +1396,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="cb9aa4bd" class="cell" data-execution_count="8">
+<div id="84e0aeae" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -2618,14 +2617,14 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="b6022618" class="cell" data-execution_count="1">
+<div id="dcbd7c18" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="3f7c0bbf" class="cell" data-execution_count="2">
+<div id="348883a4" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -2738,7 +2737,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="55973de2" class="cell" data-execution_count="3">
+<div id="6edf48e5" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2975,7 +2974,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="d037da44" class="cell" data-execution_count="4">
+<div id="723c62a9" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -3003,7 +3002,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="ee851d52" class="cell" data-execution_count="5">
+<div id="f34c79ca" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -3026,7 +3025,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="1ac1cbf2" class="cell" data-execution_count="6">
+<div id="7c43e898" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -3048,7 +3047,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="5e39ee45" class="cell" data-execution_count="7">
+<div id="aa501934" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -3171,7 +3170,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="0ae051a1" class="cell" data-execution_count="8">
+<div id="31dde19b" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -3201,7 +3200,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="a51aca95" class="cell" data-execution_count="9">
+<div id="e883d71b" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -3246,7 +3245,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="5ecbf8af" class="cell" data-execution_count="10">
+<div id="000a5def" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -3482,7 +3481,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="feaeec3c" class="cell" data-execution_count="11">
+<div id="a78f6a75" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -3558,7 +3557,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="045d821b" class="cell" data-execution_count="12">
+<div id="1791a1e5" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -3674,7 +3673,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="a836e525" class="cell" data-execution_count="13">
+<div id="ae18430c" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3920,7 +3919,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="1e935278" class="cell" data-execution_count="14">
+<div id="36ee6b06" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -4050,116 +4049,138 @@ font-style: inherit;">"GPU memory cleared."</span>)</span></code></pre></div></d
 <p>Using a UW-provisioned cloud account — rather than a personal one — gives you access to institutional pricing discounts, lower overhead on grants, data protection agreements, security monitoring, and dedicated support. If you’re doing any research or university work in the cloud, start here.</p>
 <section id="why-run-mlai-in-the-cloud" class="level2">
 <h2 class="anchored" data-anchor-id="why-run-mlai-in-the-cloud">Why run ML/AI in the cloud?</h2>
-<p>You have ML/AI code that works on your laptop. But at some point you need more — a bigger GPU (or several), a dataset that won’t fit on disk, or the ability to run dozens of training experiments overnight. You could invest in local hardware or compete for time on a shared HPC cluster, but cloud platforms let you rent exactly the hardware you need, for exactly as long as you need it, and then shut it down.</p>
-<section id="cloud-vs.-university-hpc-clusters" class="level3">
-<h3 class="anchored" data-anchor-id="cloud-vs.-university-hpc-clusters">Cloud vs.&nbsp;university HPC clusters</h3>
-<p>Most universities offer shared HPC clusters with GPUs. These are excellent resources — but they have tradeoffs worth understanding:</p>
+<p>You have ML/AI code that works on your laptop. At some point you need more: a bigger GPU or several, a dataset that won’t fit on disk, or dozens of training runs overnight. At UW-Madison the first place to look is <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">CHTC</a>, which gives researchers free GPUs through a batch scheduler. The cloud is for the jobs CHTC cannot take: it rents exactly the hardware you need, for as long as you need it, billed by the hour.</p>
+<section id="cloud-vs.-chtc" class="level3">
+<h3 class="anchored" data-anchor-id="cloud-vs.-chtc">Cloud vs.&nbsp;CHTC</h3>
+<p>CHTC is free to UW-Madison researchers and should be the first place a campus project looks for a GPU. The tradeoffs:</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 22%">
-<col style="width: 41%">
-<col style="width: 36%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Factor</th>
-<th>University HPC</th>
+<th>CHTC</th>
 <th>Cloud (AWS, GCP, Azure)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Cost</strong></td>
-<td>Free or subsidized</td>
-<td>Pay per hour</td>
+<td>Free, funded institutionally</td>
+<td>Pay per hour. AWS list prices run from <code>$0.74</code>/h for a 16 GB T4 and <code>$1.41</code>/h for a 24 GB A10G to <code>$25</code>/h for eight A100s and <code>$63</code>/h for eight H100s</td>
 </tr>
 <tr class="even">
-<td><strong>GPU availability</strong></td>
-<td>Shared queue; wait times during peak periods and per-job runtime limits (often 24–72 hrs) that may require checkpointing long training runs</td>
-<td>On-demand (subject to quota); jobs run as long as needed</td>
+<td><strong>GPUs</strong></td>
+<td>As of late 2026: 34 H200s (141 GB), 8 H100s and 24 A100s (80 or 40 GB), 12 RTX PRO 6000s (96 GB), 49 L40 and L40S (48 GB), plus older 11–24 GB cards, and a larger backfill pool of group-owned GPUs for jobs that can be interrupted</td>
+<td>Whatever you pay for, on demand: T4, L4, A10G, L40S, A100, H100, H200, B200</td>
 </tr>
 <tr class="odd">
-<td><strong>Hardware variety</strong></td>
-<td>Fixed hardware refresh cycle (3–5 years)</td>
-<td>Latest GPUs available immediately (A100, H100, B200)</td>
+<td><strong>Waiting</strong></td>
+<td>A shared queue: minutes at quiet times, hours when the lab is busy</td>
+<td>Starts in about a minute, subject to your account’s GPU quota, which can take weeks to raise on a new account</td>
 </tr>
 <tr class="even">
-<td><strong>Scaling</strong></td>
-<td>Limited by cluster size</td>
-<td>Spin up hundreds of jobs in parallel</td>
+<td><strong>Run length</strong></td>
+<td>Job lanes: short (under 12 h) may use two thirds of the GPU Lab’s cards, medium (under 24 h) one third, long (up to 7 days) at most four GPUs per user. Checkpoint anything longer</td>
+<td>No limit; you set your own cap</td>
 </tr>
 <tr class="odd">
-<td><strong>Multi-GPU / NVLink</strong></td>
-<td>Sometimes available, depends on cluster</td>
-<td>Available on demand — essential for training, fine-tuning, or serving large LLMs that don’t fit in a single GPU’s memory</td>
+<td><strong>Multi-GPU</strong></td>
+<td>The A100, H100 and H200 servers share NVLink within the server; the L40S and RTX PRO 6000 servers share PCIe only. No multi-node training</td>
+<td>NVLink nodes on demand (8 × A100, 8 × H100), and multi-node clusters for frontier-scale training</td>
 </tr>
 <tr class="even">
-<td><strong>Job orchestration</strong></td>
-<td>Writing scheduler scripts, packaging environments, and wiring up parallel job arrays can take significant refactoring</td>
-<td>Managed ML platforms (Vertex AI, SageMaker, Azure ML) handle provisioning, parallelism, and teardown</td>
+<td><strong>Persistent services</strong></td>
+<td>Batch jobs only. No model endpoints or always-on applications</td>
+<td>Model endpoints, RAG applications, dashboards, databases</td>
 </tr>
 <tr class="odd">
-<td><strong>Software environment</strong></td>
-<td>Module system; some clusters support containers — research computing staff can often help with setup</td>
-<td>Prebuilt containers for common ML frameworks (PyTorch, TensorFlow, XGBoost); bring your own Docker image for full control</td>
+<td><strong>Interactive use</strong></td>
+<td>4-hour interactive GPU jobs for testing; everything else is batch</td>
+<td>Jupyter, VS Code, persistent VMs</td>
+</tr>
+<tr class="even">
+<td><strong>Software</strong></td>
+<td>Apptainer or Docker containers you build</td>
+<td>Prebuilt ML containers, or your own; managed platforms (SageMaker, Vertex AI, Azure ML) handle provisioning and teardown</td>
+</tr>
+<tr class="odd">
+<td><strong>Data compliance</strong></td>
+<td>On-campus infrastructure</td>
+<td><a href="https://kb.wisc.edu/115296">Risk assessment</a> required for sensitive or restricted data</td>
 </tr>
 </tbody>
 </table>
-<p><strong>The short version:</strong> use your university cluster when it has the hardware you need and the queue isn’t blocking you. Use the cloud when you need hardware your cluster doesn’t have, need to scale beyond what the queue allows, or need a specific software environment you can’t easily get on-campus. Many researchers use both — start on campus HPC, then scale to cloud for large experiments or specialized hardware.</p>
+<p><strong>The short version:</strong> use CHTC when the job fits one of its cards and can run as a batch job, which covers most training, fine-tuning and batch inference. Use the cloud when you need more GPUs than one server holds, a service that stays up, a hard deadline the queue cannot meet, or hardware CHTC does not have (TPUs, B200s). Many researchers use both: develop and test on CHTC, then move the one run that needs it to the cloud.</p>
 </section>
 <section id="when-does-model-size-justify-cloud-compute" class="level3">
 <h3 class="anchored" data-anchor-id="when-does-model-size-justify-cloud-compute">When does model size justify cloud compute?</h3>
-<p>Not every model needs cloud hardware. Here’s a rough guide:</p>
+<p>The lesson’s memory rule decides most cases: inference needs about 2 bytes per parameter in bf16 (1 in FP8, 0.5 in 4-bit), a LoRA fine-tune about 2.5 (about 1 with the frozen weights in 4-bit), and a full fine-tune 16, plus a few gigabytes for activations. Measured against CHTC’s cards and AWS list prices:</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 24%">
-<col style="width: 20%">
-<col style="width: 29%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>Model scale</th>
-<th>Parameters</th>
-<th>Example models</th>
-<th>Where to run</th>
+<th>Task</th>
+<th>GPU memory</th>
+<th>On CHTC</th>
+<th>On the cloud</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Small</td>
-<td>&lt; 10M</td>
-<td>Logistic regression, small CNNs, XGBoost</td>
-<td>Laptop — HPC cloud adds overhead without much benefit</td>
+<td>Inference, up to 7B in bf16</td>
+<td>up to ~14 GB</td>
+<td>Any GPU Lab card</td>
+<td>T4 <code>$0.74</code>/h, L4 <code>$1.13</code>/h, A10G <code>$1.41</code>/h</td>
 </tr>
 <tr class="even">
-<td>Medium</td>
-<td>10M–500M</td>
-<td>ResNets, BERT-base, mid-sized transformers</td>
-<td>HPC with a single GPU (RTX 2080 Ti, L40) or cloud (T4, L4)</td>
+<td>Inference, 27B in FP8 or 70B in 4-bit</td>
+<td>27–35 GB</td>
+<td>L40S (48 GB) or any larger card</td>
+<td>L40S <code>$2.61</code>/h</td>
 </tr>
 <tr class="odd">
-<td>Large</td>
-<td>500M–10B</td>
-<td>GPT-2, LLaMA-7B, fine-tuning large transformers</td>
-<td>HPC with A100 (40/80 GB) or cloud — both work well</td>
+<td>LoRA fine-tune, 3B</td>
+<td>~12 GB</td>
+<td>Any GPU Lab card; the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html">fine-tuning exercise</a> runs in about 20 minutes</td>
+<td>A10G <code>$1.41</code>/h; the same run takes 33 minutes and costs about <code>$0.75</code></td>
 </tr>
 <tr class="even">
-<td>Very large</td>
-<td>10B–70B</td>
-<td>LLaMA-70B, Mixtral</td>
-<td>HPC with H100/H200 (80–141 GB) or cloud</td>
+<td>LoRA fine-tune, 7B–27B</td>
+<td>22–72 GB</td>
+<td>One 80 GB card; up to about 50B on an H200</td>
+<td>A10G for 7B; 4 × A10G <code>$7.09</code>/h for 27B</td>
 </tr>
 <tr class="odd">
-<td>Frontier</td>
-<td>70B+</td>
-<td>GPT-4-scale, multi-expert models</td>
-<td>Cloud — requires multi-node NVLink clusters beyond what most HPC queues offer</td>
+<td>LoRA fine-tune, 70B</td>
+<td>~70 GB in 4-bit, 179 GB in bf16</td>
+<td>One 80 GB card in 4-bit; the H200 server’s cards in bf16</td>
+<td>4 × L40S <code>$13</code>/h in bf16</td>
+</tr>
+<tr class="even">
+<td>Full fine-tune, 3B</td>
+<td>52–60 GB</td>
+<td>An 80 GB card, just; an H200 easily</td>
+<td>4 × A10G <code>$7.09</code>/h</td>
+</tr>
+<tr class="odd">
+<td>Full fine-tune, 7B</td>
+<td>~116 GB</td>
+<td>Two 80 GB cards or one H200, sharded</td>
+<td>4 × L40S <code>$13</code>/h</td>
+</tr>
+<tr class="even">
+<td>Full fine-tune, 27B–70B</td>
+<td>436–1,124 GB</td>
+<td>The H100 or H200 servers’ cards, sharded; a 70B is at the edge</td>
+<td>8 × H100 <code>$63</code>/h; two of them, <code>$127</code>/h, for a 70B</td>
+</tr>
+<tr class="odd">
+<td>Training from scratch, &gt;1B</td>
+<td>Many servers</td>
+<td>Not on CHTC</td>
+<td>Multi-node NVLink clusters; this is where five-figure bills come from</td>
 </tr>
 </tbody>
 </table>
-<p><strong>CHTC’s <a href="https://chtc.cs.wisc.edu/uw-research-computing/gpu-lab">GPU Lab</a> covers more than you might think.</strong> The GPU Lab includes A100s (40 and 80 GB), H100s (80 GB), and H200s (141 GB) — enough VRAM to run inference on models up to ~70B parameters with quantization, or to fine-tune smaller models on a single high-memory GPU. For many UW researchers, this hardware handles “large model” workloads without needing cloud. Note that CHTC GPUs are not NVLink-connected, so multi-GPU parallelism is limited to methods that don’t require fast inter-GPU communication. Jobs have time limits (12 hrs for short, 24 hrs for medium, 7 days for long jobs), so plan your runs accordingly.</p>
-<p>Cloud becomes the clear choice when you need NVLink multi-GPU or multi-node setups for frontier-scale training or inference, long-running services like RAG applications or model endpoints that need to stay up beyond HPC job time limits, or when queue wait times are blocking a deadline.</p>
+<p>Almost every fine-tune a research group runs fits one CHTC card. The cloud is the choice for multi-node training, for services that stay up past a job lane, and for a deadline the queue cannot meet. Prices are AWS SageMaker list prices from the <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html">Intro to AWS workshop’s instance guide</a>; GCP and Azure are in the same range.</p>
 </section>
 <section id="llm-apis-skip-the-infrastructure-entirely" class="level3">
 <h3 class="anchored" data-anchor-id="llm-apis-skip-the-infrastructure-entirely">LLM APIs: skip the infrastructure entirely</h3>
@@ -4170,7 +4191,7 @@ font-style: inherit;">"GPU memory cleared."</span>)</span></code></pre></div></d
 <p>Cloud computing is not free, but it’s worth putting costs in context:</p>
 <ul>
 <li><strong>Hardware is expensive and ages fast.</strong> A single A100 GPU costs ~$15,000 and is outdated within a few years. Cloud lets you rent the latest hardware by the hour.</li>
-<li><strong>You pay only for what you use.</strong> Stop a VM and the meter stops — valuable for bursty research workloads. A single T4 GPU instance runs ~$1–3/hr. Fine-tuning a small model on a moderate dataset might cost $10–50.</li>
+<li><strong>You pay only for what you use.</strong> Stop a VM and the meter stops. A 24 GB A10G instance is <code>$1.41</code>/h on AWS. The workshop’s LoRA fine-tune of a 3B model costs about <code>$0.75</code>; a 7B full fine-tune on 50,000 documents about <code>$140</code>; a 70B LoRA for a day about <code>$600</code>.</li>
 <li><strong>Managed services save development time.</strong> You don’t have to write scheduling logic, package custom containers, or maintain orchestration infrastructure — managed ML platforms handle that plumbing so you can focus on the ML.</li>
 <li><strong>Budgets and alerts keep you safe.</strong> All three platforms offer billing dashboards and budget alerts to prevent surprise bills.</li>
 </ul>
@@ -4185,7 +4206,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Cloud isn’t the right fit for every workload. If you want to avoid cloud costs, UW’s <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">CHTC</a> offers free GPU access for batch jobs (though jobs are queued and have runtime limits). Many researchers use a mix of both.</p>
+<p>Cloud isn’t the right fit for every workload. <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">CHTC</a> offers free GPUs up to the 141 GB H200 for batch jobs, with a queue and job lanes of 12 hours to 7 days. Many researchers use both.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -4373,6 +4394,7 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Workshop/Compute</strong>: Intro to AWS for ML/AI</a> – Workshop covering ML workflows in AWS SageMaker.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> – Free cloud-based Jupyter notebooks with GPU access.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> – Free on-campus HPC/HTC resources for UW researchers.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html"><strong>Notebook</strong>: Fine-tuning with LoRA: Colab, CHTC, or AWS</a> – The same 3B fine-tune run on Colab, CHTC and SageMaker, with measured times and costs.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html"><strong>Compute</strong>: BadgerCompute</a> – UW-Madison’s lightweight, NetID-authenticated Jupyter service.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: UW Generative AI Services &amp; Policies</a> – Overview of UW-vetted AI tools including pay-as-you-go cloud AI services.</li>
 </ul>
