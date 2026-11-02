@@ -407,12 +407,6 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <section id="why-fine-tune-and-why-lora" class="level2">
 <h2 class="anchored" data-anchor-id="why-fine-tune-and-why-lora">Why fine-tune, and why LoRA?</h2>
 <p>Training a model with billions of weights from scratch takes thousands of GPUs running for months. Pretrained models already know how to interpret images and language, and fine-tuning trains them a little further on examples from your own task, so a few hundred labeled pages do what millions would from scratch. Better prompting helps only so far: there are limits to what instructions can do when the model has never learned to recognize the writing itself.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/pretrain-finetune-lora.svg" class="img-fluid figure-img"></p>
-<figcaption>GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.</figcaption>
-</figure>
-</div>
 <p>CHURRO is a 3-billion-parameter vision-language model developed for historical text recognition. Its researchers fine-tuned an existing Qwen model on roughly 100,000 historical document pages and reported better transcription accuracy than Gemini 2.5 Pro at substantially lower inference cost (<a href="https://arxiv.org/abs/2509.19768">paper</a>). The same pattern, a small specialist beating a much larger generalist on the task it was trained for, shows up in many places, including theorem proving and medical question answering.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -422,6 +416,20 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </div>
 <p><strong>Full fine-tuning</strong> updates every weight, and training needs far more GPU memory than running the model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO’s 3.75 billion parameters that is about 60 GB before activations and other overhead: more than any 24 GB card, so the lesson sizes it as a four-GPU instance on AWS, and on CHTC it needs one of the 80 GB or larger cards.</p>
 <p><strong>LoRA</strong> leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. The whole run fits in about 12 GB, which is one 24 GB card on AWS or any CHTC GPU. On a GPU too small for that, such as Colab’s 16 GB T4, the notebook stores the frozen weights in 4-bit instead, a variant called QLoRA. The adapter and the arithmetic are the same, and the run needs about 6 GB.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/lora.svg" class="img-fluid figure-img"></p>
+<figcaption>Full fine-tuning updates the whole weight matrix; LoRA freezes it and trains two thin matrices beside it.</figcaption>
+</figure>
+</div>
+<p>The GPU-hours put the three on one scale. Training from scratch is at the top, the full fine-tune that made CHURRO in the middle, and this lesson’s LoRA run at the bottom.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/pretrain-finetune-lora.svg" class="img-fluid figure-img"></p>
+<figcaption>GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.</figcaption>
+</figure>
+</div>
+<p>Per parameter, the memory works out as follows. Running the model needs only the weight. A full fine-tune needs the weight, its gradient, a 32-bit copy and the optimizer’s two averages. LoRA needs the frozen weight plus a small share of the adapter.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/memory-per-parameter.svg" class="img-fluid figure-img"></p>
