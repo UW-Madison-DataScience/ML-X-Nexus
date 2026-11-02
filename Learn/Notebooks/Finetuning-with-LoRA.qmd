@@ -36,6 +36,10 @@ This exercise fine-tunes [CHURRO-3B](https://huggingface.co/stanford-oval/churro
 
 LoRA is what makes the job fit one GPU. A full fine-tune keeps about 16 bytes per parameter in memory, about 60 GB for CHURRO's 3.75 billion parameters before activations. LoRA keeps the frozen weights at 2 bytes each and trains an adapter under one percent of the model, about 12 GB in all, or about 6 GB with the frozen weights in 4-bit (QLoRA). CHURRO itself was made the same way: its authors fine-tuned a Qwen model on roughly 100,000 historical pages and report better accuracy than Gemini 2.5 Pro at substantially lower inference cost. The lesson's [fine-tuning episode](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html) has the full explanation and the memory arithmetic.
 
+## What you'll do
+
+The data is 295 labeled pages from the Anna Seifert letters, transcribed by the Max Kade Institute. Whichever version you run, the job holds 15% of the pages out, scores the base model on 15 of them with character error rate (CER), trains a rank-16 LoRA adapter for two passes over the remaining 251 pages with a checkpoint after each, scores the fine-tuned model on the same 15 pages, and saves the adapter, about 100 MB, with the scores and curves. The held-out CER curve, not the training loss, says whether more passes would have helped. Optionally, the adapter then transcribes the 141 unlabeled test pages. What differs is the work around the script: in Colab, installing three libraries and a 20-page test run; on CHTC, a container, staged weights and an HTCondor submit file; on SageMaker, a cost estimate, a launched training job, tags and the bill.
+
 ## Where to run it
 
 The same fine-tune, with the same model, data and training script, runs in three places. What changes is who provides the GPU and how the job is described. **Start with the Colab notebook**, which needs only a Google account and keeps the focus on the fine-tuning itself. Then try the other two.
