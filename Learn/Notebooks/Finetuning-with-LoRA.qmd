@@ -34,7 +34,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 
 In this exercise, you'll use LoRA (low-rank adaptation) to fine-tune [CHURRO-3B](https://huggingface.co/stanford-oval/churro-3B), a vision-language model for historical documents, on handwritten German letters from the [Badger Scribe](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html) challenge. The letters use Kurrent, a historical script that's difficult even for models that already recognize other kinds of handwriting.
 
-You can follow the exercise in a free Google Colab notebook, submit it as a batch job on UW-Madison's CHTC, or launch it as a training job on AWS SageMaker. **The Colab notebook is the easiest place to start.** The [platform comparison](#choose-where-to-run-it) below explains the alternatives; the CHTC guide is still in development.
+The same exercise runs in three places: a free Google Colab notebook, UW-Madison's CHTC, and AWS SageMaker. **Start with the Colab notebook** to learn the workflow, then see [where to run it](#choose-where-to-run-it) for the other two.
 
 ## Why fine-tune, and why LoRA?
 
@@ -44,7 +44,7 @@ CHURRO itself is an example. It is a 3-billion-parameter model that Stanford res
 
 ![Three specialist models against much larger general ones, on each task's own benchmark. Sources: [CHURRO](https://arxiv.org/abs/2509.19768), [Goedel-Prover-V2](https://arxiv.org/abs/2508.03613), [MedGemma](https://arxiv.org/abs/2507.05201).](../../images/specialists-vs-large-models.png)
 
-Fine-tuning a model this way is limited by GPU memory. **Full fine-tuning** updates every weight, and training needs far more memory than running a model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO's 3.75 billion parameters that is about 60 GB before activations and other overhead, which means several GPUs.
+Fine-tuning a model this way is limited by GPU memory. **Full fine-tuning** updates every weight, and training needs far more memory than running a model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO's 3.75 billion parameters that is about 60 GB before activations and other overhead, which is a four-GPU machine.
 
 **LoRA** leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. **QLoRA** is LoRA with the frozen weights stored in 4-bit, which is how this run fits a free 16 GB T4.
 
@@ -56,8 +56,6 @@ Fine-tuning a model this way is limited by GPU memory. **Full fine-tuning** upda
 | **LoRA**, weights frozen in 16-bit | 2, plus the adapter | about 12 GB | Only just |
 | **QLoRA**, weights frozen in 4-bit | 0.5, plus the adapter | about 6 GB | Yes, with room |
 
-These are the lesson's estimates for this model and run; actual use depends on sequence length, batch size, and implementation.
-
 This is what makes LoRA practical for research groups: take an open-weight model, adapt it to your own data, measure whether it helped, and keep the adapter, all on a single GPU. On campus that means a fine-tune that fits one CHTC GPU, or, as here, a free Colab T4.
 
 ## What you'll do
@@ -68,7 +66,7 @@ The data is 295 labeled pages from the Anna Seifert correspondence, letters writ
 2. Trains the adapter for two epochs, scoring 8 of the held-out pages after each pass to build a learning curve.
 3. Scores the fine-tuned model on the same 15 pages and saves the adapter, about 100 MB, along with the per-page scores, the loss and CER curves, and a summary.
 
-Reading the results is also the same everywhere. Because the before and after scores come from the same held-out pages, the difference between them is attributable to the fine-tune. The held-out CER curve, not the training loss, is the guide to whether more passes would help; with 8 pages per point, read it for the trend rather than the decimals. Optionally, the adapter can transcribe the 141 unlabeled test pages with the lesson's batch transcriber.
+Reading the results is also the same everywhere. The before-and-after CER on the same pages is the effect of the fine-tune and nothing else, and the held-out CER curve, not the training loss, says whether two passes was the right amount. Optionally, the adapter can transcribe the 141 unlabeled test pages with the lesson's batch transcriber.
 
 What differs is the work around the script. In Colab you install three libraries, count tokens per page and adapter parameters by hand, and run a 20-page test before the full run. On CHTC you build a container, stage the model weights, and describe the job in an HTCondor submit file. On SageMaker you estimate the cost, launch a training job, tag it, and check the billable time afterward.
 
