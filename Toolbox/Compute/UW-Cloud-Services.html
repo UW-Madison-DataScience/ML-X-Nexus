@@ -433,7 +433,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><strong>GPUs</strong></td>
-<td>As of late 2026: 34 H200s (141 GB), 8 H100s and 24 A100s (80 or 40 GB), 12 RTX PRO 6000s (96 GB), 49 L40 and L40S (48 GB), plus older 11–24 GB cards, and a larger backfill pool of group-owned GPUs for jobs that can be interrupted</td>
+<td>Open-capacity pool, from CHTC’s <a href="https://chtc.cs.wisc.edu/uw-research-computing/gpu-jobs">GPU table</a> (late 2026): 34 H200s (141 GB), 8 H100s (80 GB), 24 A100s (80 or 40 GB) plus 8 A100 MIG slices, 12 RTX PRO 6000s (96 GB), 27 L40s and 22 L40Ss (48 GB). Backfill on research-group-owned cards brings the total to 429 GPUs, and the OSPool adds about 275 more on average</td>
 <td>Whatever you pay for, on demand: T4, L4, A10G, L40S, A100, H100, H200, B200</td>
 </tr>
 <tr class="odd">
@@ -448,7 +448,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td><strong>Multi-GPU</strong></td>
-<td>The A100, H100 and H200 servers share NVLink within the server; the L40S and RTX PRO 6000 servers share PCIe only. No multi-node training</td>
+<td>Within one server only: the A100 servers hold 4 cards each (SXM4 form factor), the H100 and H200 servers 8 each. CHTC’s pages do not document the interconnect between cards, so ask a facilitator before planning a sharded job. No multi-node training</td>
 <td>NVLink nodes on demand (8 × A100, 8 × H100), and multi-node clusters for frontier-scale training</td>
 </tr>
 <tr class="even">
@@ -458,7 +458,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td><strong>Interactive use</strong></td>
-<td>4-hour interactive GPU jobs for testing; everything else is batch</td>
+<td>Limited. Since April 2026 interactive GPU work runs in a dedicated A100 slot; everything else is batch</td>
 <td>Jupyter, VS Code, persistent VMs</td>
 </tr>
 <tr class="even">
@@ -473,7 +473,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p><strong>The short version:</strong> use CHTC when the job fits one of its cards and can run as a batch job, which covers most training, fine-tuning and batch inference. Use the cloud when you need more GPUs than one server holds, a service that stays up, a hard deadline the queue cannot meet, or hardware CHTC does not have (TPUs, B200s). Many researchers use both: develop and test on CHTC, then move the one run that needs it to the cloud.</p>
+<p><strong>The short version:</strong> use CHTC when the job fits one of its cards and can run as a batch job, which covers most training, fine-tuning and batch inference. Use the cloud when you need more GPUs than one CHTC server holds, a service that stays up, a hard deadline the queue cannot meet, or hardware CHTC does not have (TPUs, B200s). Many researchers use both: develop and test on CHTC, then move the one run that needs it to the cloud.</p>
 </section>
 <section id="when-does-model-size-justify-cloud-compute" class="level3">
 <h3 class="anchored" data-anchor-id="when-does-model-size-justify-cloud-compute">When does model size justify cloud compute?</h3>
@@ -527,13 +527,13 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>Full fine-tune, 7B</td>
 <td>~116 GB</td>
-<td>Two 80 GB cards or one H200, sharded</td>
+<td>One H200, or two 80 GB cards in the same server, sharded</td>
 <td>4 × L40S <code>$13</code>/h</td>
 </tr>
 <tr class="even">
 <td>Full fine-tune, 27B–70B</td>
 <td>436–1,124 GB</td>
-<td>The H100 or H200 servers’ cards, sharded; a 70B is at the edge</td>
+<td>All 8 cards of an H100 or H200 server, sharded; a 70B does not fit one server</td>
 <td>8 × H100 <code>$63</code>/h; two of them, <code>$127</code>/h, for a 70B</td>
 </tr>
 <tr class="odd">
