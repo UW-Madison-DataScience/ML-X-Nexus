@@ -85,7 +85,7 @@ What differs is the work around the script. In Colab you install three libraries
 
 **CHTC** is where a UW-Madison research fine-tune should go first: it is free, its GPUs are large, and the only price is time in the queue. The work has to be packaged as a batch job rather than run interactively. **The [CHTC guide](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras/chtc) is still in development and has not yet been tested end to end.** If you try it, please [report problems](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/issues) and include the job's `.log` and `.err` files.
 
-**SageMaker** is useful when you want to learn managed cloud training or need AWS resources for a research project. Unlike Colab or CHTC, its compute is billed while the job runs, so the [fine-tuning episode](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html) launches the job from a small controller notebook, estimates and caps its cost, tags it, and compares the estimate with the billable time afterward. For institutional research, see [UW Cloud Services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) for UW-provisioned accounts.
+**SageMaker** is useful when you want to learn managed cloud training or need AWS resources for a research project. The episode is written for someone working through the workshop: it assumes the bucket, controller notebook and IAM role from episodes 1 to 4, and data already staged in S3, so it is not a cold start the way the Colab notebook is. Unlike Colab or CHTC, its compute is billed while the job runs, so the [fine-tuning episode](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html) launches the job from a small controller notebook, estimates and caps its cost, tags it, and compares the estimate with the billable time afterward. For institutional research, see [UW Cloud Services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) for UW-provisioned accounts.
 
 The [National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html) is another GPU option for UW-Madison researchers, with notebook-based access. There isn't a separate NRP version of this exercise yet.
 
@@ -101,13 +101,13 @@ Each platform also has its own access requirements:
 
 - **Colab**: a Google account, for Colab and for Google Drive, where checkpoints are saved.
 - **CHTC**: a CHTC account, which needs a NetID and a faculty sponsor, plus GPU Lab access and a `/staging` directory (ask for both when you request the account). You'll work from the command line over SSH, on the campus network or VPN.
-- **AWS SageMaker**: an AWS account with a payment method or credits, and the setup from the earlier episodes of the [Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) workshop (SageMaker notebook, S3 bucket, IAM role).
+- **AWS SageMaker**: the episode assumes the lesson's own setup. Episodes 1 to 4 of the [Intro to AWS for ML/AI](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html) workshop create the S3 bucket and the small CPU notebook instance that launches the job, and the job runs as the lesson's `ml-sagemaker-use` IAM role. In the workshop's shared UW-Madison account the instructors stage the Badger Scribe data and the CHURRO-3B weights in S3 and have the GPU quota in place. On an account of your own, you do that yourself: a paid-plan account, a GPU quota request filed three to four weeks ahead, the IAM role, and the data and model staged in your bucket. The lesson's [setup page](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/index.html#setup) has the steps.
 
 #### Estimated time to complete
 
 - **Colab**: **2–3 hours**, including roughly 1.5 hours of GPU work once a GPU is available.
 - **CHTC**: a few days of calendar time for the account, an afternoon for the first container build and model staging, then about 20 minutes of GPU time per run plus its wait in the queue.
-- **AWS SageMaker**: the training job runs about 33 minutes; allow an hour with setup and reading the bill.
+- **AWS SageMaker**: the training job runs about 33 minutes; allow an hour with launch and reading the bill, on top of the workshop's setup episodes. On an account of your own, GPU quota approval can take weeks.
 
 ## Related resources
 - [ML on AWS lesson repository: finetune_extras](https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/tree/main/finetune_extras) – All three versions of this exercise and their shared training code. Open issues there.
