@@ -40,21 +40,24 @@ The same fine-tune, with the same model, data and training script, runs in three
 
 Training a model with billions of weights from scratch takes thousands of GPUs running for months. Pretrained models already know how to interpret images and language, and fine-tuning trains them a little further on examples from your own task, so a few hundred labeled pages do what millions would from scratch. Better prompting helps only so far: there are limits to what instructions can do when the model has never learned to recognize the writing itself.
 
+![GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.](../../images/pretrain-finetune-lora.svg)
+
 CHURRO itself is an example. It is a 3-billion-parameter model that Stanford researchers fine-tuned from Qwen on roughly 100,000 historical document pages, and its authors report better transcription accuracy than Gemini 2.5 Pro at substantially lower inference cost ([paper](https://arxiv.org/abs/2509.19768)). The same pattern, a small specialist beating a much larger generalist on the task it was trained for, shows up in many places, including theorem proving and medical question answering.
 
 ![Three specialist models against much larger general ones, on each task's own benchmark. Sources: [CHURRO](https://arxiv.org/abs/2509.19768), [Goedel-Prover-V2](https://arxiv.org/abs/2508.03613), [MedGemma](https://arxiv.org/abs/2507.05201).](../../images/specialists-vs-large-models.png)
 
 **Full fine-tuning** updates every weight, and training needs far more GPU memory than running the model does: the weight, its gradient, a 32-bit master copy, and two optimizer averages, about 16 bytes per parameter. For CHURRO's 3.75 billion parameters that is about 60 GB before activations and other overhead: more than any 24 GB card, so the lesson sizes it as a four-GPU instance on AWS, and on CHTC it needs one of the 80 GB or larger cards.
 
-**LoRA** leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. **QLoRA** is LoRA with the frozen weights stored in 4-bit. Nothing about what the model learns changes; the frozen weights are read from a compressed copy, and the run needs about 6 GB.
+**LoRA** leaves the pretrained weights frozen, at 2 bytes each with nothing else to store, and trains two thin matrices beside selected layers, under one percent of the model. The output is an adapter of about 100 MB that you save separately and load on top of the base model. The whole run fits in about 12 GB, which is one 24 GB card on AWS or any CHTC GPU. On a GPU too small for that, such as Colab's 16 GB T4, the notebook stores the frozen weights in 4-bit instead, a variant called QLoRA. The adapter and the arithmetic are the same, and the run needs about 6 GB.
 
-![GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.](../../images/pretrain-finetune-lora.svg)
+![GPU memory per parameter: inference, a LoRA fine-tune, and a full fine-tune.](../../images/memory-per-parameter.svg)
 
-| How CHURRO's 3.75B parameters are used | Bytes per parameter | GPU memory with activations | Where it fits |
-|---|---|---|---|
-| **Full fine-tune**, every weight updated | 16 | about 60 GB | A four-GPU cloud instance, or an 80 GB or larger CHTC card |
-| **LoRA**, weights frozen in 16-bit | 2, plus the adapter | about 12 GB | One 24 GB card (the lesson's AWS GPU) or any CHTC GPU; a 16 GB T4 only just, and without bf16 |
-| **QLoRA**, weights frozen in 4-bit | 0.5, plus the adapter | about 6 GB | Any of them, including Colab's free 16 GB T4 |
+| What you are doing with the model | Bytes per parameter | What has to be in memory for each parameter |
+|---|---|---|
+| Inference, FP8 | 1 | the weight, quantized |
+| Inference, bf16 | 2 | the weight |
+| LoRA fine-tune | ~2.5 | the frozen 16-bit weight, plus a share of the adapter with its gradients and optimizer state |
+| Full fine-tune, mixed precision | 16 | the 16-bit weight (2), its gradient (2), a 32-bit copy of the weight (4), Adam's two running averages (8) |
 
 This is what makes LoRA useful for research groups. You can take an existing open-weight model, adapt it to your own data, check whether the adaptation helped, and keep the result, without the expense of full fine-tuning. On campus that is one CHTC GPU, one cloud GPU, or a free Colab T4.
 

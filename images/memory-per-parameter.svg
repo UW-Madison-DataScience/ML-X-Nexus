@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="540" viewBox="0 0 1080 540" font-family="Helvetica, Arial, sans-serif" font-size="16">
+  <rect width="1080" height="540" fill="#ffffff"/>
+  <text x="540" y="34" text-anchor="middle" font-weight="bold" font-size="22">GPU memory per model parameter</text>
+  <text x="540" y="58" text-anchor="middle" font-size="15" fill="#555">bytes per parameter; activations not shown; 1 bar unit = 1 byte</text>
+
+  <!-- baseline at y=440; 18 px per byte -->
+  <line x1="60" y1="440" x2="700" y2="440" stroke="#888"/>
+
+  <!-- Inference FP8: 1 byte = 18 px -->
+  <rect x="80" y="422" width="110" height="18" fill="#9ecae1" stroke="#444"/>
+  <text x="135" y="412" text-anchor="middle" font-size="14">weights</text>
+  <text x="135" y="468" text-anchor="middle">Inference, FP8</text>
+  <text x="135" y="490" text-anchor="middle" font-weight="bold">1 byte</text>
+
+  <!-- Inference bf16: 2 bytes = 36 px -->
+  <rect x="230" y="404" width="110" height="36" fill="#9ecae1" stroke="#444"/>
+  <text x="285" y="394" text-anchor="middle" font-size="14">weights</text>
+  <text x="285" y="468" text-anchor="middle">Inference, bf16</text>
+  <text x="285" y="490" text-anchor="middle" font-weight="bold">2 bytes</text>
+
+  <!-- LoRA: 2 + ~0.5 -->
+  <rect x="380" y="404" width="110" height="36" fill="#9ecae1" stroke="#444"/>
+  <rect x="380" y="395" width="110" height="9" fill="#fdae6b" stroke="#444"/>
+  <text x="435" y="370" text-anchor="middle" font-size="14">frozen bf16 weights</text>
+  <text x="435" y="386" text-anchor="middle" font-size="14">+ adapter and its state</text>
+  <text x="435" y="468" text-anchor="middle">LoRA fine-tune</text>
+  <text x="435" y="490" text-anchor="middle" font-weight="bold">~2.5 bytes</text>
+
+  <!-- Full fine-tune: 16 bytes = 288 px, stacked 2 + 2 + 4 + 8 -->
+  <rect x="530" y="404" width="150" height="36" fill="#9ecae1" stroke="#444"/>
+  <text x="605" y="427" text-anchor="middle" font-size="14">bf16 weights: 2</text>
+  <rect x="530" y="368" width="150" height="36" fill="#fdd0a2" stroke="#444"/>
+  <text x="605" y="391" text-anchor="middle" font-size="14">bf16 gradients: 2</text>
+  <rect x="530" y="296" width="150" height="72" fill="#fdae6b" stroke="#444"/>
+  <text x="605" y="327" text-anchor="middle" font-size="14">32-bit copy of</text>
+  <text x="605" y="345" text-anchor="middle" font-size="14">the weight: 4</text>
+  <rect x="530" y="152" width="150" height="144" fill="#e6550d" stroke="#444"/>
+  <text x="605" y="216" text-anchor="middle" font-size="14" fill="#fff">Adam's two running</text>
+  <text x="605" y="234" text-anchor="middle" font-size="14" fill="#fff">averages: 8</text>
+  <text x="605" y="468" text-anchor="middle">Full fine-tune</text>
+  <text x="605" y="490" text-anchor="middle" font-weight="bold">16 bytes</text>
+
+  <!-- side notes -->
+  <g font-size="15" fill="#222">
+    <text x="730" y="170" font-weight="bold">Why training costs 16 bytes, not 2</text>
+    <text x="730" y="194">Each step's update is too small for</text>
+    <text x="730" y="214">8-bit or 4-bit numbers to hold, so every</text>
+    <text x="730" y="234">trained weight keeps a 32-bit copy plus</text>
+    <text x="730" y="254">the two averages Adam uses to size its step.</text>
+
+    <text x="730" y="296" font-weight="bold">Rule of thumb</text>
+    <text x="730" y="320">bytes per parameter × parameter count,</text>
+    <text x="730" y="340">plus a few GB for activations, against</text>
+    <text x="730" y="360">the instance's GPU memory.</text>
+
+    <text x="730" y="402" font-weight="bold">27B model</text>
+    <text x="730" y="426">× 1 byte = 27 GB: one 48 GB GPU serves it.</text>
+    <text x="730" y="446">× 16 bytes = 430 GB: a full fine-tune</text>
+    <text x="730" y="466">needs an 8-GPU node with sharding.</text>
+  </g>
+</svg>
