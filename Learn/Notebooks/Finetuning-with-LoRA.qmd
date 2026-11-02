@@ -50,7 +50,11 @@ CHURRO is a 3-billion-parameter vision-language model developed for historical t
 
 ![Full fine-tuning updates the whole weight matrix; LoRA freezes it and trains two thin matrices beside it.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/lora.svg)
 
+The GPU-hours put the three on one scale. Training from scratch is at the top, the full fine-tune that made CHURRO in the middle, and this lesson's LoRA run at the bottom.
+
 ![GPU-hours, on a log scale, to train a 3B model from scratch, to fully fine-tune it, and to LoRA fine-tune it.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/pretrain-finetune-lora.svg)
+
+Per parameter, the memory works out as follows. Running the model needs only the weight. A full fine-tune needs the weight, its gradient, a 32-bit copy and the optimizer's two averages. LoRA needs the frozen weight plus a small share of the adapter.
 
 ![GPU memory per parameter: inference, a LoRA fine-tune, and a full fine-tune.](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/memory-per-parameter.svg)
 
