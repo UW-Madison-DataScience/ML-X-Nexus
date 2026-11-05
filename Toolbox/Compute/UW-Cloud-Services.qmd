@@ -44,11 +44,11 @@ CHTC is free to UW-Madison researchers and should be the first place a campus pr
 | **Software** | Apptainer or Docker containers you build | Prebuilt ML containers, or your own; managed platforms (SageMaker, Vertex AI, Azure ML) handle provisioning and teardown |
 | **Sensitive data** | Not permitted. CHTC's [policies](https://chtc.cs.wisc.edu/uw-research-computing/user-expectations/) state it is not HIPAA- or CUI-compliant; keep PHI and other restricted data off its systems. Storage is not backed up | Permitted with a [risk assessment](https://kb.wisc.edu/115296); UW's contracts include a BAA for HIPAA data, and restricted data also needs risk-executive approval |
 
-**The short version:** use CHTC when the job fits one of its cards and can run as a batch job, which covers most training, fine-tuning and batch inference. Use the cloud when you need more GPUs than one CHTC server holds, a service that stays up, a hard deadline the queue cannot meet, or hardware CHTC does not have (TPUs, B200s). Many researchers use both: develop and test on CHTC, then move the one run that needs it to the cloud.
+**The short version:** use CHTC when the job fits one of its cards and can run as a batch job, which covers most training, fine-tuning and batch inference. Use the cloud when you need more GPUs than one CHTC server holds, a service that stays up, a hard deadline the queue cannot meet, or hardware CHTC does not have (TPUs, B200s). Many researchers use both: CHTC for most of their training, fine-tuning and inference, and the cloud for the specific job that needs more than one server, a service that stays up, or hardware CHTC does not have.
 
 ### When does model size justify cloud compute?
 
-The lesson's memory rule decides most cases: inference needs about 2 bytes per parameter in bf16 (1 in FP8, 0.5 in 4-bit), a LoRA fine-tune about 2.5 (about 1 with the frozen weights in 4-bit), and a full fine-tune 16, plus a few gigabytes for activations. Measured against CHTC's cards and AWS list prices:
+A memory rule of thumb decides most cases: inference needs about 2 bytes per parameter in bf16 (1 in FP8, 0.5 in 4-bit), a LoRA fine-tune about 2.5 (about 1 with the frozen weights in 4-bit), and a full fine-tune 16, plus a few gigabytes for activations. Measured against CHTC's cards and AWS list prices:
 
 | Task | GPU memory | On CHTC | On the cloud |
 |------|-----------|---------|--------------|
