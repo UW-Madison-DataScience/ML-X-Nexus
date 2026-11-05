@@ -52,6 +52,8 @@ A memory rule of thumb decides most cases: inference needs about 2 bytes per par
 
 | Task | GPU memory | On CHTC | On the cloud |
 |------|-----------|---------|--------------|
+| Training from scratch, up to ~1B parameters (CNNs, ResNets, BERT-scale models, most research models) | 16 bytes per parameter plus activations: ~2 GB for a 100M model, ~16 GB for 1B | Any GPU Lab card; several cards in one server for large batches | T4 `$0.74`/h to A10G `$1.41`/h; 4 × A10G `$7.09`/h |
+| Many runs: hyperparameter sweeps, cross-validation, batch inference | One card per run | CHTC's strength: submit hundreds or thousands of jobs from one submit file | Each run billed; managed sweeps on SageMaker and Vertex AI |
 | Inference, up to 7B in bf16 | up to ~14 GB | Any GPU Lab card | T4 `$0.74`/h, L4 `$1.13`/h, A10G `$1.41`/h |
 | Inference, 27B in FP8 or 70B in 4-bit | 27–35 GB | L40S (48 GB) or any larger card | L40S `$2.61`/h |
 | LoRA fine-tune, 3B | ~12 GB | Any GPU Lab card; the [fine-tuning exercise](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) runs in about 20 minutes | A10G `$1.41`/h; the same run takes 33 minutes and costs about `$0.75` |
@@ -60,9 +62,9 @@ A memory rule of thumb decides most cases: inference needs about 2 bytes per par
 | Full fine-tune, 3B | 52–60 GB | An 80 GB card, just; an H200 easily | 4 × A10G `$7.09`/h |
 | Full fine-tune, 7B | ~116 GB | One H200, or two 80 GB cards in the same server, sharded | 4 × L40S `$13`/h |
 | Full fine-tune, 27B–70B | 436–1,124 GB | All 8 cards of an H100 or H200 server, sharded; a 70B does not fit one server | 8 × H100 `$63`/h; two of them, `$127`/h, for a 70B |
-| Training from scratch, >1B | Many servers | Not on CHTC | Multi-node NVLink clusters; this is where five-figure bills come from |
+| Pretraining a multi-billion-parameter LLM | Hundreds of GB to TB across many servers | Beyond one server, so not on CHTC | Multi-node NVLink clusters; this is where five-figure bills come from |
 
-Almost every fine-tune a research group runs fits one CHTC card. The cloud is the choice for multi-node training, for services that stay up past a job lane, and for a deadline the queue cannot meet. Prices are AWS SageMaker list prices from the [Intro to AWS workshop's instance guide](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html); GCP and Azure are in the same range.
+Almost everything a research group trains, from scratch or by fine-tuning, fits one CHTC card. The cloud is the choice for multi-node training, for services that stay up past a job lane, and for a deadline the queue cannot meet. Prices are AWS SageMaker list prices from the [Intro to AWS workshop's instance guide](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html); GCP and Azure are in the same range.
 
 ### LLM APIs: skip the infrastructure entirely
 
