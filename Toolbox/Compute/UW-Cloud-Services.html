@@ -443,7 +443,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><strong>Run length</strong></td>
-<td>Job lanes: short (under 12 h) may use two thirds of the GPU Lab’s cards, medium (under 24 h) one third, long (up to 7 days) at most four GPUs per user. Checkpoint anything longer</td>
+<td>Jobs under 12 hours may use two thirds of the GPU Lab’s cards, jobs under 24 hours one third, and jobs up to 7 days at most four GPUs per user. Checkpoint anything longer</td>
 <td>No limit; you set your own cap</td>
 </tr>
 <tr class="odd">
@@ -489,6 +489,18 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
+<td>Training from scratch, up to ~1B parameters (CNNs, ResNets, BERT-scale models, most research models)</td>
+<td>16 bytes per parameter plus activations: ~2 GB for a 100M model, ~16 GB for 1B</td>
+<td>Any GPU Lab card; several cards in one server for large batches</td>
+<td>T4 <code>$0.74</code>/h to A10G <code>$1.41</code>/h; 4 × A10G <code>$7.09</code>/h</td>
+</tr>
+<tr class="even">
+<td>Many runs: hyperparameter sweeps, cross-validation, batch inference</td>
+<td>One card per run</td>
+<td>CHTC’s strength: submit hundreds or thousands of jobs from one submit file</td>
+<td>Each run billed; managed sweeps on SageMaker and Vertex AI</td>
+</tr>
+<tr class="odd">
 <td>Inference, up to 7B in bf16</td>
 <td>up to ~14 GB</td>
 <td>Any GPU Lab card</td>
@@ -503,7 +515,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>LoRA fine-tune, 3B</td>
 <td>~12 GB</td>
-<td>Any GPU Lab card; the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html">fine-tuning exercise</a> runs in about 20 minutes</td>
+<td>Any GPU Lab card; a <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html">3B LoRA fine-tune on 295 pages</a> runs in about 20 minutes</td>
 <td>A10G <code>$1.41</code>/h; the same run takes 33 minutes and costs about <code>$0.75</code></td>
 </tr>
 <tr class="even">
@@ -537,25 +549,25 @@ ul.task-list li input[type="checkbox"] {
 <td>8 × H100 <code>$63</code>/h; two of them, <code>$127</code>/h, for a 70B</td>
 </tr>
 <tr class="odd">
-<td>Training from scratch, &gt;1B</td>
-<td>Many servers</td>
-<td>Not on CHTC</td>
+<td>Pretraining a multi-billion-parameter LLM</td>
+<td>Hundreds of GB to TB across many servers</td>
+<td>Beyond one server, so not on CHTC</td>
 <td>Multi-node NVLink clusters; this is where five-figure bills come from</td>
 </tr>
 </tbody>
 </table>
-<p>Almost every fine-tune a research group runs fits one CHTC card. The cloud is the choice for multi-node training, for services that stay up past a job lane, and for a deadline the queue cannot meet. Prices are AWS SageMaker list prices from the <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html">Intro to AWS workshop’s instance guide</a>; GCP and Azure are in the same range.</p>
+<p>Use CHTC for anything that fits its GPU hardware. Use the cloud for larger jobs that need many GPUs at once for longer than CHTC’s job limits allow. Prices are AWS SageMaker list prices, from this <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html">instance guide</a>; GCP and Azure are in the same range.</p>
 </section>
 <section id="llm-apis-skip-the-infrastructure-entirely" class="level3">
 <h3 class="anchored" data-anchor-id="llm-apis-skip-the-infrastructure-entirely">LLM APIs: skip the infrastructure entirely</h3>
-<p>For many GenAI tasks, you don’t need to provision GPUs at all. Services like the OpenAI API, Google’s Vertex AI, and Amazon Bedrock let you call frontier models (GPT-4o, Gemini, Claude, etc.) with a simple API request — no GPU provisioning, no model hosting. LLM API calls cost fractions of a cent each and are often the fastest, most cost-effective path. See <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html">GenAI at UW-Madison</a> for available services.</p>
+<p>For many GenAI tasks you don’t need a GPU at all. Each of the three platforms hosts frontier and open-weight models behind an API: Amazon Bedrock on AWS, Vertex AI on GCP, and Azure OpenAI on Azure. You pay per token, usually fractions of a cent per call, with no GPU to provision and no model to host, and a UW-provisioned account covers these services under the same contracts and data protections as the rest of the platform. See <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html">GenAI at UW-Madison</a> for the services UW has vetted.</p>
 </section>
 <section id="a-note-on-cloud-costs" class="level3">
 <h3 class="anchored" data-anchor-id="a-note-on-cloud-costs">A note on cloud costs</h3>
 <p>Cloud computing is not free, but it’s worth putting costs in context:</p>
 <ul>
 <li><strong>Hardware is expensive and ages fast.</strong> A single A100 GPU costs ~$15,000 and is outdated within a few years. Cloud lets you rent the latest hardware by the hour.</li>
-<li><strong>You pay only for what you use.</strong> Stop a VM and the meter stops. A 24 GB A10G instance is <code>$1.41</code>/h on AWS. The workshop’s LoRA fine-tune of a 3B model costs about <code>$0.75</code>; a 7B full fine-tune on 50,000 documents about <code>$140</code>; a 70B LoRA for a day about <code>$600</code>.</li>
+<li><strong>You pay only for what you use.</strong> Stop a VM and the meter stops. A 24 GB A10G instance is <code>$1.41</code>/h on AWS. A LoRA fine-tune of a 3B model on 295 pages costs about <code>$0.75</code>; a 7B full fine-tune on 50,000 documents about <code>$140</code>; a 70B LoRA for a day about <code>$600</code>.</li>
 <li><strong>Managed services save development time.</strong> You don’t have to write scheduling logic, package custom containers, or maintain orchestration infrastructure — managed ML platforms handle that plumbing so you can focus on the ML.</li>
 <li><strong>Budgets and alerts keep you safe.</strong> All three platforms offer billing dashboards and budget alerts to prevent surprise bills.</li>
 </ul>
@@ -570,7 +582,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Cloud isn’t the right fit for every workload. <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">CHTC</a> offers free GPUs up to the 141 GB H200 for batch jobs, with a queue and job lanes of 12 hours to 7 days. Many researchers use both.</p>
+<p>Cloud isn’t the right fit for every workload. <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html">CHTC</a> offers free GPUs up to the 141 GB H200 for batch jobs, with a queue and job limits of 12 hours to 7 days. Many researchers use both.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -583,7 +595,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>There is a learning curve, as with any new tool. But UW-developed workshop materials are available to help you get started — see the <a href="#related-resources">Related resources</a> at the bottom of this page.</p>
+<p>There is a learning curve, as with any new tool. The UW-developed workshops under <a href="#related-resources">Related resources</a> walk through AWS and GCP for ML/AI step by step.</p>
 </div>
 </div>
 </section>
