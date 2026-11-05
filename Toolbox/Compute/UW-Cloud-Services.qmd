@@ -56,7 +56,7 @@ A memory rule of thumb decides most cases: inference needs about 2 bytes per par
 | Many runs: hyperparameter sweeps, cross-validation, batch inference | One card per run | CHTC's strength: submit hundreds or thousands of jobs from one submit file | Each run billed; managed sweeps on SageMaker and Vertex AI |
 | Inference, up to 7B in bf16 | up to ~14 GB | Any GPU Lab card | T4 `$0.74`/h, L4 `$1.13`/h, A10G `$1.41`/h |
 | Inference, 27B in FP8 or 70B in 4-bit | 27–35 GB | L40S (48 GB) or any larger card | L40S `$2.61`/h |
-| LoRA fine-tune, 3B | ~12 GB | Any GPU Lab card; the [fine-tuning exercise](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) runs in about 20 minutes | A10G `$1.41`/h; the same run takes 33 minutes and costs about `$0.75` |
+| LoRA fine-tune, 3B | ~12 GB | Any GPU Lab card; a [3B LoRA fine-tune on 295 pages](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) runs in about 20 minutes | A10G `$1.41`/h; the same run takes 33 minutes and costs about `$0.75` |
 | LoRA fine-tune, 7B–27B | 22–72 GB | One 80 GB card; up to about 50B on an H200 | A10G for 7B; 4 × A10G `$7.09`/h for 27B |
 | LoRA fine-tune, 70B | ~70 GB in 4-bit, 179 GB in bf16 | One 80 GB card in 4-bit; the H200 server's cards in bf16 | 4 × L40S `$13`/h in bf16 |
 | Full fine-tune, 3B | 52–60 GB | An 80 GB card, just; an H200 easily | 4 × A10G `$7.09`/h |
@@ -64,7 +64,7 @@ A memory rule of thumb decides most cases: inference needs about 2 bytes per par
 | Full fine-tune, 27B–70B | 436–1,124 GB | All 8 cards of an H100 or H200 server, sharded; a 70B does not fit one server | 8 × H100 `$63`/h; two of them, `$127`/h, for a 70B |
 | Pretraining a multi-billion-parameter LLM | Hundreds of GB to TB across many servers | Beyond one server, so not on CHTC | Multi-node NVLink clusters; this is where five-figure bills come from |
 
-Use CHTC for anything that fits its GPU hardware. Use the cloud for larger jobs that need many GPUs at once for longer than CHTC's job limits allow. Prices are AWS SageMaker list prices from the [Intro to AWS workshop's instance guide](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html); GCP and Azure are in the same range.
+Use CHTC for anything that fits its GPU hardware. Use the cloud for larger jobs that need many GPUs at once for longer than CHTC's job limits allow. Prices are AWS SageMaker list prices, from this [instance guide](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html); GCP and Azure are in the same range.
 
 ### LLM APIs: skip the infrastructure entirely
 
@@ -75,7 +75,7 @@ For many GenAI tasks you don't need a GPU at all. Each of the three platforms ho
 Cloud computing is not free, but it's worth putting costs in context:
 
 - **Hardware is expensive and ages fast.** A single A100 GPU costs ~$15,000 and is outdated within a few years. Cloud lets you rent the latest hardware by the hour.
-- **You pay only for what you use.** Stop a VM and the meter stops. A 24 GB A10G instance is `$1.41`/h on AWS. The workshop's LoRA fine-tune of a 3B model costs about `$0.75`; a 7B full fine-tune on 50,000 documents about `$140`; a 70B LoRA for a day about `$600`.
+- **You pay only for what you use.** Stop a VM and the meter stops. A 24 GB A10G instance is `$1.41`/h on AWS. A LoRA fine-tune of a 3B model on 295 pages costs about `$0.75`; a 7B full fine-tune on 50,000 documents about `$140`; a 70B LoRA for a day about `$600`.
 - **Managed services save development time.** You don't have to write scheduling logic, package custom containers, or maintain orchestration infrastructure — managed ML platforms handle that plumbing so you can focus on the ML.
 - **Budgets and alerts keep you safe.** All three platforms offer billing dashboards and budget alerts to prevent surprise bills.
 
@@ -86,7 +86,7 @@ Cloud isn't the right fit for every workload. [CHTC](https://uw-madison-datascie
 :::
 
 ::: {.callout-tip}
-There is a learning curve, as with any new tool. But UW-developed workshop materials are available to help you get started — see the [Related resources](#related-resources) at the bottom of this page.
+There is a learning curve, as with any new tool. The UW-developed workshops under [Related resources](#related-resources) walk through AWS and GCP for ML/AI step by step.
 :::
 
 ## Why use a UW-provisioned account?
