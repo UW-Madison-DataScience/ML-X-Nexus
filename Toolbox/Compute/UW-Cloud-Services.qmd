@@ -37,7 +37,7 @@ CHTC is free to UW-Madison researchers and should be the first place a campus pr
 | **Cost** | Free, funded institutionally | Pay per hour. AWS list prices run from `$0.74`/h for a 16 GB T4 and `$1.41`/h for a 24 GB A10G to `$25`/h for eight A100s and `$63`/h for eight H100s |
 | **GPUs** | Open-capacity pool, from CHTC's [GPU table](https://chtc.cs.wisc.edu/uw-research-computing/gpu-jobs) (late 2026): 34 H200s (141 GB), 8 H100s (80 GB), 24 A100s (80 or 40 GB) plus 8 A100 MIG slices, 12 RTX PRO 6000s (96 GB), 27 L40s and 22 L40Ss (48 GB). Backfill on research-group-owned cards brings the total to 429 GPUs, and the OSPool adds about 275 more on average | Whatever you pay for, on demand: T4, L4, A10G, L40S, A100, H100, H200, B200 |
 | **Waiting** | A shared queue: minutes at quiet times, hours when the lab is busy | Starts in about a minute, subject to your account's GPU quota, which can take weeks to raise on a new account |
-| **Run length** | Job lanes: short (under 12 h) may use two thirds of the GPU Lab's cards, medium (under 24 h) one third, long (up to 7 days) at most four GPUs per user. Checkpoint anything longer | No limit; you set your own cap |
+| **Run length** | Jobs under 12 hours may use two thirds of the GPU Lab's cards, jobs under 24 hours one third, and jobs up to 7 days at most four GPUs per user. Checkpoint anything longer | No limit; you set your own cap |
 | **Multi-GPU** | Within one server only: the A100 servers hold 4 cards each (SXM4 form factor), the H100 and H200 servers 8 each. CHTC's pages do not document the interconnect between cards, so ask a facilitator before planning a sharded job. No multi-node training | NVLink nodes on demand (8 × A100, 8 × H100), and multi-node clusters for frontier-scale training |
 | **Persistent services** | Batch jobs only. No model endpoints or always-on applications | Model endpoints, RAG applications, dashboards, databases |
 | **Interactive use** | Limited. Since April 2026 interactive GPU work runs in a dedicated A100 slot; everything else is batch | Jupyter, VS Code, persistent VMs |
@@ -64,7 +64,7 @@ A memory rule of thumb decides most cases: inference needs about 2 bytes per par
 | Full fine-tune, 27B–70B | 436–1,124 GB | All 8 cards of an H100 or H200 server, sharded; a 70B does not fit one server | 8 × H100 `$63`/h; two of them, `$127`/h, for a 70B |
 | Pretraining a multi-billion-parameter LLM | Hundreds of GB to TB across many servers | Beyond one server, so not on CHTC | Multi-node NVLink clusters; this is where five-figure bills come from |
 
-Almost everything a research group trains, from scratch or by fine-tuning, fits one CHTC card. The cloud is the choice for multi-node training, for services that stay up past a job lane, and for a deadline the queue cannot meet. Prices are AWS SageMaker list prices from the [Intro to AWS workshop's instance guide](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html); GCP and Azure are in the same range.
+Use CHTC for anything that fits its GPU hardware. Use the cloud for larger jobs that need many GPUs at once for longer than CHTC's job limits allow. Prices are AWS SageMaker list prices from the [Intro to AWS workshop's instance guide](https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/instances-for-ML.html); GCP and Azure are in the same range.
 
 ### LLM APIs: skip the infrastructure entirely
 
@@ -82,7 +82,7 @@ Cloud computing is not free, but it's worth putting costs in context:
 The key habit: choose the right machine size, stop resources when idle, and monitor spending.
 
 ::: {.callout-note}
-Cloud isn't the right fit for every workload. [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) offers free GPUs up to the 141 GB H200 for batch jobs, with a queue and job lanes of 12 hours to 7 days. Many researchers use both.
+Cloud isn't the right fit for every workload. [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html) offers free GPUs up to the 141 GB H200 for batch jobs, with a queue and job limits of 12 hours to 7 days. Many researchers use both.
 :::
 
 ::: {.callout-tip}
