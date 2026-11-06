@@ -53,7 +53,13 @@ jobs:
         with:
           # URL to start crawling from — in this case, the homepage of your GitHub Pages site
           website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
-          verbose: true
+          # Log only warnings and errors; every successful fetch used to print a line.
+          verbose: warning
+          # Fail fast on dead or slow hosts. Defaults are 4 retries, 60 s timeout, 30 s backoff,
+          # so a single unresponsive link could hold the job for several minutes.
+          max_retries: 1
+          max_retry_time: 5
+          timeout: 20
           # Using full URLs to "whitelist" these
           exclude_url_prefix: >
             mailto:,
@@ -97,5 +103,6 @@ jobs:
             https://profile.wisc.edu/,
             https://www.cursor.com/,
             https://engineering.wisc.edu/directory/,
+            https://hastie.su.domains/,
             http://inquire-demo.csail.mit.edu/
           exclude_url_suffix: '.qmd'
