@@ -57,9 +57,11 @@ jobs:
           verbose: warning
           # Fail fast on dead or slow hosts. Defaults are 4 retries and 30 s backoff,
           # so a single unresponsive link could hold the job for several minutes.
-          max_retries: 1
-          max_retry_time: 5
+          max_retries: 2
+          max_retry_time: 10
           timeout: 45
+          # GitHub rate-limits (429) when hit with 10 parallel connections; 3 is enough.
+          connect_limit_per_host: 3
           # Skip in-page anchors (#comments, #cb3-1, ...). They point at pages the crawler
           # has already fetched, and checking thousands of them queued up behind the
           # per-host connection limit and tripped the timeout.
