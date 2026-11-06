@@ -55,11 +55,15 @@ jobs:
           website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
           # Log only warnings and errors; every successful fetch used to print a line.
           verbose: warning
-          # Fail fast on dead or slow hosts. Defaults are 4 retries, 60 s timeout, 30 s backoff,
+          # Fail fast on dead or slow hosts. Defaults are 4 retries and 30 s backoff,
           # so a single unresponsive link could hold the job for several minutes.
           max_retries: 1
           max_retry_time: 5
-          timeout: 20
+          timeout: 45
+          # Skip in-page anchors (#comments, #cb3-1, ...). They point at pages the crawler
+          # has already fetched, and checking thousands of them queued up behind the
+          # per-host connection limit and tripped the timeout.
+          exclude_url_contained: '#'
           # Using full URLs to "whitelist" these
           exclude_url_prefix: >
             mailto:,
