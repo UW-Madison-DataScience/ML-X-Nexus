@@ -399,10 +399,10 @@ This creates a practical consideration:
 
 ### How low can you go?
 
-Research suggests **4-bit is the practical sweet spot** for inference:
+**8-bit is the usual target: it is effectively lossless and halves the memory of FP16. 4-bit is the sweet spot only when memory is the binding constraint**, because it lets you run a larger model than 8-bit would allow:
 
-- [Dettmers & Zettlemoyer (2023)](https://arxiv.org/abs/2212.09720) ran over 35,000 quantization experiments and found that 4-bit precision is nearly universally optimal when trading off total model bits against zero-shot accuracy. At 3-bit, quality degrades sharply.
-- 8-bit quantization (via [LLM.int8()](https://arxiv.org/abs/2208.07339)) is effectively lossless for most models — it's a safe default when memory is tight but you don't want to risk any quality loss.
+- 8-bit quantization (via [LLM.int8()](https://arxiv.org/abs/2208.07339)) is effectively lossless for most models. If the model fits at 8-bit, there is little reason to go lower.
+- [Dettmers & Zettlemoyer (2023)](https://arxiv.org/abs/2212.09720) ran over 35,000 quantization experiments and found that for a fixed total number of bits, a larger model at 4-bit beats a smaller model at higher precision on zero-shot accuracy. That is a statement about memory budgets, not about 4-bit being free: a given model loses some quality at 4-bit, and at 3-bit quality degrades sharply.
 - [GPTQ](https://arxiv.org/abs/2210.17323) (Frantar et al., 2023) demonstrated that one-shot weight quantization to 3-4 bits is feasible even for 175B-parameter models with negligible accuracy loss, enabling single-GPU inference for models that otherwise require multiple GPUs.
 
 A recent study on [Scaling Laws for Precision](https://arxiv.org/abs/2411.04330) (Kumar, Ankner et al., 2024) adds important nuance: **the quality degradation from post-training quantization grows as models are trained on more data.** A model trained to its full data budget may be more sensitive to aggressive quantization than one that was undertrained. This means the "safe" bit-width may shift upward as foundation models continue to scale their training data.
