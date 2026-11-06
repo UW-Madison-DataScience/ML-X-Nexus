@@ -31,23 +31,20 @@ Qwen (Tongyi Qianwen) is a family of open-weight large language models developed
 - **One family, many modalities**: Chat and reasoning, vision-language (Qwen-VL), coding (Qwen-Coder), audio and speech (Qwen-Audio, Qwen-Omni, Qwen3-TTS), and embedding and reranking models for retrieval all share a common lineage and similar behavior across sizes.
 - **Hybrid reasoning ("thinking") modes**: Since Qwen3, models can switch between a step-by-step reasoning mode for hard problems (math, code, logic) and a fast direct-answer mode for simple queries, controllable per prompt.
 - **Long context and multilingual coverage**: Recent generations support 128K-token contexts (and longer with context scaling), and Qwen3 covers 100+ languages and dialects, with particular strength in Chinese and English.
-- **Release cadence**: New Qwen generations and variants arrive every few weeks to months. Within about a year the family moved from Qwen2.5 through Qwen3, Qwen3.5, Qwen3.6, and Qwen3.8, which is a big part of why open weights keep closing the gap with proprietary models.
+- **Release cadence**: New Qwen generations and variants arrive every few weeks to months. Within about a year the family moved from Qwen3 through Qwen3.5, Qwen3.6, and Qwen3.8, which is a big part of why open weights keep closing the gap with proprietary models.
 
 ## Timeline context
 Qwen fits into the wave of open-weight large language models that followed Llama. Here is a timeline placing Qwen alongside other important model families.
 
 - **[Transformer (2017)](https://arxiv.org/abs/1706.03762)**: Introduced the attention-based architecture underlying all modern LLMs.
 - **[Llama (2023)](https://arxiv.org/abs/2302.13971)**: Meta's open-weight models that kicked off the open LLM ecosystem.
-- **[Qwen (2023)](https://arxiv.org/abs/2309.16609)**: Alibaba Cloud's first open-weight LLM line (7B and 14B), with strong multilingual, coding, and math performance.
 - **[Mistral 7B (2023)](https://arxiv.org/abs/2310.06825)**: Showed that small, efficient open models can compete with much larger ones.
-- **[Qwen1.5 (2024)](https://qwen.ai/blog?id=qwen1.5)**: Expanded range of sizes (0.5B to 72B) with better instruction following, chat alignment, and 32K context.
-- **[Qwen2 (2024)](https://arxiv.org/abs/2407.10671)**: Rebuilt family with GQA across all sizes, a first MoE variant, and 128K context.
-- **[Qwen2.5 (2024)](https://arxiv.org/abs/2412.15115)**: Trained on 18 trillion tokens; the base for the popular Coder, Math, and VL variants that many campus RAG projects still use.
+- **Qwen through Qwen2.5 (2023–2024)**: Alibaba Cloud's earlier open-weight generations, superseded by Qwen3.
 - **[DeepSeek-R1 (2025)](https://arxiv.org/abs/2501.12948)**: A reasoning model trained with reinforcement learning. Several of its distilled variants use Qwen models as their base, an early example of frontier capability being distilled down into small open models.
 - **[Qwen3 (2025)](https://arxiv.org/abs/2505.09388)**: Dense (0.6B to 32B) and MoE (30B-A3B, 235B-A22B) models with hybrid thinking modes and 119-language coverage, followed by Qwen3-Coder, Qwen3-VL, Qwen3-Omni, and Qwen3-Embedding.
 - **[Qwen3.5 through Qwen3.8 (2026)](https://qwen.ai/blog?id=qwen3.8)**: Rapid iteration on the Qwen3 recipe. Qwen3.8 includes a 27B dense model that fits on one GPU and a Max MoE variant (about 2.4T total parameters, roughly 95B active) at the top of the family.
 
-Within a year Qwen moved from Qwen2 to Qwen3.8, and the benchmark gains came with it. For example, on quality-assessment benchmarks for multimodal models, Qwen3.8 improved about 8 points over Qwen2. That pace shows how open-weight families can iterate quickly without the release cycles of proprietary models.
+Within about a year Qwen moved from Qwen3 to Qwen3.8, with benchmark gains at each step. That pace shows how open-weight families can iterate without the release cycles of proprietary models.
 
 ## How these models keep shrinking and still competing
 Qwen3.8-27B is a 27B dense model that fits on one GPU, and it lands within a few points of frontier proprietary models one to two orders of magnitude larger. The figure below compares it with the frontier comparator chosen on its own model card. All figures are Alibaba-reported and unreproduced, and newer proprietary releases have shipped since.
@@ -65,7 +62,7 @@ How a 27B keeps up:
 
 Qwen3.8-27B still trails on long-horizon agentic reliability, rare and long-tail domain knowledge, very long contexts, robustness to sloppy prompts, and non-English work. Benchmarks measure single dense tasks, not whether an agent stays coherent across a two-hour session.
 
-The narrower the task, the smaller the model can be. On OmniDocBench 1.5, [GLM-OCR](https://arxiv.org/abs/2603.10910), a 0.9B specialized document parser, scores 94.6 versus 89.2 for Qwen3-VL-235B, at about 1/260th the size. A Qwen3.8-27B adapted to a law firm's corpus has been reported to pass more tasks than a frontier model at roughly a tenth of the per-query cost. For a narrow enough task, a fleet of small fine-tuned models beats one big general one. Qwen's range of sizes and Apache 2.0 license make it a common base for that; [Fine-tuning with LoRA: Colab, CHTC, or AWS](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) walks through adapting a Qwen-based 3B model on a single GPU.
+The narrower the task, the smaller the model can be. On OmniDocBench 1.5, [GLM-OCR](https://arxiv.org/abs/2603.10910), a 0.9B specialized document parser, scores 94.6 versus 89.2 for Qwen3-VL-235B, at about 1/260th the size. A Qwen3.8-27B adapted to a law firm's corpus has been reported to pass more tasks than a frontier model at roughly a tenth of the per-query cost. For a narrow enough task, a fleet of small fine-tuned models beats one big general one. Qwen's range of sizes and its Apache 2.0 license, which lets you download, fine-tune, and deploy the weights commercially with no usage restrictions beyond attribution, make it a common base for that; [Fine-tuning with LoRA: Colab, CHTC, or AWS](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) walks through adapting a Qwen-based 3B model on a single GPU.
 
 ## Qwen variants: what still needs its own model
 One mid-size Qwen3.x model now handles chat, reasoning, agentic coding, OCR, and document parsing, and on the document and figure benchmarks above it beats the frontier comparator outright. At least two jobs still need a model of their own.
