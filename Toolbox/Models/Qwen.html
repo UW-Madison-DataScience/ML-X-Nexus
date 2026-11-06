@@ -457,7 +457,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="choosing-a-model-size-and-what-it-costs-in-gpu-memory" class="level2">
 <h2 class="anchored" data-anchor-id="choosing-a-model-size-and-what-it-costs-in-gpu-memory">Choosing a model size (and what it costs in GPU memory)</h2>
-<p>The rule of thumb: <strong>each billion parameters needs about 2 GB of GPU memory in FP16/BF16</strong>, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference, because you hold gradients and optimizer state alongside the weights (Adam keeps two extra values per parameter) plus the activations saved for the backward pass. LoRA and QLoRA avoid most of that by freezing the base weights and training small adapters, which is what makes single-GPU fine-tuning practical.</p>
+<p>The rule of thumb: <strong>each billion parameters needs about 2 GB of GPU memory in FP16/BF16</strong>, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. For inference, 8-bit is the usual compromise: half the memory of FP16 with little loss in output quality. 4-bit saves more but costs some accuracy, so test it on your own task. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference, because you hold gradients and optimizer state alongside the weights (Adam keeps two extra values per parameter) plus the activations saved for the backward pass. LoRA and QLoRA avoid most of that by freezing the base weights and training small adapters, which is what makes single-GPU fine-tuning practical.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 15%">
@@ -486,9 +486,9 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td><strong>Qwen3.8-27B</strong></td>
 <td style="text-align: right;"><strong>27B</strong></td>
-<td style="text-align: right;"><strong>~56 GB</strong></td>
-<td style="text-align: right;"><strong>~28 GB</strong></td>
-<td style="text-align: right;"><strong>~16 GB</strong></td>
+<td style="text-align: right;"><strong>~54 GB</strong></td>
+<td style="text-align: right;"><strong>~27 GB</strong></td>
+<td style="text-align: right;"><strong>~15 GB</strong></td>
 </tr>
 <tr class="odd">
 <td>Qwen3-30B-A3B (MoE)</td>
@@ -519,8 +519,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Qwen is the default open-weight family in several campus efforts, so there is existing work here to reuse.</p>
 <ul>
 <li><strong>NRP hosted LLMs</strong>: The free <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP) Nautilus</a> endpoint serves <code>qwen3</code> (a large VL model), <code>qwen3-small</code> (27B), and <code>qwen3-embedding</code> through an OpenAI-compatible API. It’s the fastest way to try Qwen with no hardware at all.</li>
-<li><strong>WattBot RAG deployments</strong>: The winning <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html">WattBot 2025</a> RAG system was rebuilt on campus hardware and compared against a commercial cloud deployment, testing Qwen from 7B up to 72B. Qwen at 32B and above matched the commercial APIs on the task. The largest model tested, Qwen1.5-110B, was not the best performer: generation matters more than raw size. Full walkthrough in the ML+X forum talk, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html">Deploying RAG in Bedrock vs.&nbsp;Local</a>.</li>
-<li><strong>BadgerBrain (campus-hosted model pilot)</strong>: DoIT’s Research Cyberinfrastructure office is piloting <a href="https://github.com/qualiaMachine/BadgerBrain">BadgerBrain</a>, campus-hosted models behind a shared OpenAI-compatible gateway. Anyone with a UW-Madison NetID can request an API key through the <a href="https://forms.gle/vkcLzApNrX7KbkTP9">BadgerBrain access form</a>; access requires the campus VPN, and the pilot is for public data only (see the <a href="https://github.com/qualiaMachine/BadgerBrain/blob/main/docs/usage-policy.md">usage policy</a>). The catalog is built largely around the Qwen3 family (chat and reasoning, VL for OCR, coder, embeddings, and rerankers) because one family with open weights, strong per-size performance, and a fast release cadence covers most use cases. Qwen3.8-27B was running on campus within days of release with no procurement or contract, which is the practical argument for open weights.</li>
+<li><strong>WattBot RAG deployments</strong>: The winning <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html">WattBot 2025</a> RAG system was rebuilt on campus hardware and compared against a commercial cloud deployment, testing Qwen from 7B up to 72B. Qwen at 32B and above matched the commercial APIs on the task. Full walkthrough in the ML+X forum talk, <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html">Deploying RAG in Bedrock vs.&nbsp;Local</a>.</li>
+<li><strong>BadgerBrain (campus-hosted model pilot)</strong>: DoIT’s Research Cyberinfrastructure office is piloting <a href="https://github.com/qualiaMachine/BadgerBrain">BadgerBrain</a>, campus-hosted models behind a shared OpenAI-compatible gateway. Anyone with a UW-Madison NetID can request an API key through the <a href="https://forms.gle/vkcLzApNrX7KbkTP9">BadgerBrain access form</a>; access requires the campus VPN, and the pilot is for public data only (see the <a href="https://github.com/qualiaMachine/BadgerBrain/blob/main/docs/usage-policy.md">usage policy</a>). The catalog is built largely around the Qwen3 family (chat and reasoning, VL for OCR, coder, embeddings, and rerankers) because one family with open weights, strong per-size performance, and a fast release cadence covers most use cases. Open weights are what make campus hosting possible: data stays on UW systems, there is no per-token bill, a model version can be pinned so results are reproducible, and the weights can be fine-tuned for a campus task.</li>
 </ul>
 </section>
 <section id="risks-safety-and-bias" class="level2">
