@@ -411,16 +411,13 @@ One caveat applies to the newest models. [Kumar, Ankner et al. (2024)](https://a
 
 When deciding whether and how to quantize, work through these questions:
 
-1. **Does the model fit on your GPU at FP16/BF16?** If yes, start there — no quantization needed unless you want faster inference.
-2. **Is this for training or inference?**
-   - *Training from scratch*: Use BF16 (or FP32 if your GPU lacks BF16 support). Don't quantize.
-   - *Fine-tuning*: If the full model doesn't fit, use QLoRA (4-bit base + FP16 adapters).
-   - *Inference*: Continue to step 3.
-3. **How much quality loss can you tolerate?**
-   - *None*: Use INT8. It's effectively lossless for most models.
-   - *Minimal, with significant memory savings*: Use 4-bit NF4 with double quantization.
-   - *You need extreme compression*: Try 3-bit, but **benchmark on your specific task** — quality loss at 3-bit is sharp and task-dependent.
-4. **Could you run a larger model by quantizing more aggressively?** Often the answer is yes. A 70B model at 4-bit typically beats a 13B model at 16-bit.
+1. **Is this for training or inference?**
+   * **Training from scratch**: Use BF16 (or FP32 if your GPU lacks BF16 support). Don't quantize.
+   * **Fine-tuning**: Use LoRA with the base model in BF16 if it fits. If it doesn't, use QLoRA (4-bit base + 16-bit adapters).
+   * **Inference**: Continue to step 2.
+2. **Start with the largest model that fits your GPU at 8-bit.** INT8 is effectively lossless, and a larger model at 8-bit beats a smaller one at 16-bit. If that model also fits at FP16/BF16 with room to spare, run it there instead: no quantization step, and faster, since 8-bit kernels add overhead.
+3. **If the model you need doesn't fit at 8-bit**, use 4-bit NF4 with double quantization, and measure the quality on your own task before relying on it. A 70B model at 4-bit still usually beats a 13B model at 16-bit.
+4. **Go below 4-bit only under extreme memory pressure.** Quality loss at 3-bit is sharp and task-dependent; benchmark it.
 
 ### Quick reference
 
