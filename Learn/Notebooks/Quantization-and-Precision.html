@@ -484,10 +484,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="a4995140" class="cell" data-execution_count="1">
+<div id="98dd776e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="492cbb71" class="cell" data-execution_count="2">
+<div id="f22b2845" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gc</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -592,7 +592,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="185d7411" class="cell" data-execution_count="3">
+<div id="3caabc38" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_gpu_memory_mb():</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return current GPU memory allocated in MB."""</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> torch.cuda.is_available():</span>
@@ -639,7 +639,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="641e012c" class="cell" data-execution_count="4">
+<div id="765ed75a" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model_name <span class="op">=</span> <span class="st">"gpt2"</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>model_fp32, mem_fp32, params_fp32 <span class="op">=</span> load_and_measure(</span>
@@ -652,7 +652,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="22c68e11" class="cell" data-execution_count="5">
+<div id="9d0c8dc2" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model_fp16, mem_fp16, params_fp16 <span class="op">=</span> load_and_measure(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    model_name, dtype<span class="op">=</span>torch.float16, label<span class="op">=</span><span class="st">"FP16 (16-bit floating point)"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -664,7 +664,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="91b91025" class="cell" data-execution_count="6">
+<div id="2bf59978" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model_bf16, mem_bf16, params_bf16 <span class="op">=</span> load_and_measure(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    model_name, dtype<span class="op">=</span>torch.bfloat16, label<span class="op">=</span><span class="st">"BF16 (bfloat16)"</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -675,7 +675,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="72c205f1" class="cell" data-execution_count="7">
+<div id="995786dd" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Memory comparison (GPT-2, 124M params):"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  FP32:  </span><span class="sc">{</span>mem_fp32<span class="sc">:,.1f}</span><span class="ss"> MB"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  FP16:  </span><span class="sc">{</span>mem_fp16<span class="sc">:,.1f}</span><span class="ss"> MB"</span>)</span>
@@ -722,7 +722,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="783867dd" class="cell" data-execution_count="8">
+<div id="a81b0e5a" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bnb_config_8bit <span class="op">=</span> BitsAndBytesConfig(load_in_8bit<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>model_8bit, mem_8bit, params_8bit <span class="op">=</span> load_and_measure(</span>
@@ -735,7 +735,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="e797291a" class="cell" data-execution_count="9">
+<div id="ea2e253f" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bnb_config_4bit <span class="op">=</span> BitsAndBytesConfig(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    load_in_4bit<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    bnb_4bit_quant_type<span class="op">=</span><span class="st">"nf4"</span>,           <span class="co"># normalized float 4-bit</span></span>
@@ -750,7 +750,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="7a07a25a" class="cell" data-execution_count="10">
+<div id="40af99a3" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span><span class="st">'='</span><span class="op">*</span><span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Summary: GPT-2 (124M params) at different precisions"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'='</span><span class="op">*</span><span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
@@ -784,7 +784,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="776f2d21" class="cell" data-execution_count="11">
+<div id="aeb11b98" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bitsandbytes <span class="im">as</span> bnb</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count_parameters_correct(model):</span>
@@ -806,7 +806,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total, quantized, non_quantized</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="259346ff" class="cell" data-execution_count="12">
+<div id="572c2325" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>naive_count <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model_4bit.parameters())</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>correct_total, quantized_params, non_quantized_params <span class="op">=</span> count_parameters_correct(model_4bit)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -822,7 +822,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="c779affe" class="cell" data-execution_count="13">
+<div id="e136ea9d" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, param <span class="kw">in</span> model_4bit.named_parameters():</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">hasattr</span>(param, <span class="st">"quant_state"</span>):</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Layer: </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -896,32 +896,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="how-low-can-you-go" class="level3">
 <h3 class="anchored" data-anchor-id="how-low-can-you-go">How low can you go?</h3>
-<p>Research suggests <strong>4-bit is the practical sweet spot</strong> for inference:</p>
+<p><strong>8-bit is the usual target: it is effectively lossless and halves the memory of FP16. 4-bit is the sweet spot only when memory is the binding constraint</strong>, because it lets you run a larger model than 8-bit would allow:</p>
 <ul>
-<li><a href="https://arxiv.org/abs/2212.09720">Dettmers &amp; Zettlemoyer (2023)</a> ran over 35,000 quantization experiments and found that 4-bit precision is nearly universally optimal when trading off total model bits against zero-shot accuracy. At 3-bit, quality degrades sharply.</li>
-<li>8-bit quantization (via <a href="https://arxiv.org/abs/2208.07339">LLM.int8()</a>) is effectively lossless for most models — it’s a safe default when memory is tight but you don’t want to risk any quality loss.</li>
+<li>8-bit quantization (via <a href="https://arxiv.org/abs/2208.07339">LLM.int8()</a>) is effectively lossless for most models. If the model fits at 8-bit, there is little reason to go lower.</li>
+<li><a href="https://arxiv.org/abs/2212.09720">Dettmers &amp; Zettlemoyer (2023)</a> ran over 35,000 quantization experiments and found that for a fixed total number of bits, a larger model at 4-bit beats a smaller model at higher precision on zero-shot accuracy. That is a statement about memory budgets, not about 4-bit being free: a given model loses some quality at 4-bit, and at 3-bit quality degrades sharply.</li>
 <li><a href="https://arxiv.org/abs/2210.17323">GPTQ</a> (Frantar et al., 2023) demonstrated that one-shot weight quantization to 3-4 bits is feasible even for 175B-parameter models with negligible accuracy loss, enabling single-GPU inference for models that otherwise require multiple GPUs.</li>
 </ul>
-<p>A recent study on <a href="https://arxiv.org/abs/2411.04330">Scaling Laws for Precision</a> (Kumar, Ankner et al., 2024) adds important nuance: <strong>the quality degradation from post-training quantization grows as models are trained on more data.</strong> A model trained to its full data budget may be more sensitive to aggressive quantization than one that was undertrained. This means the “safe” bit-width may shift upward as foundation models continue to scale their training data.</p>
+<p>One caveat applies to the newest models. <a href="https://arxiv.org/abs/2411.04330">Kumar, Ankner et al.&nbsp;(2024)</a> found that <strong>the more data a model was trained on, the more quality it loses when its weights are quantized after training.</strong> The intuition: training on more tokens packs more information into each weight, so the small values quantization rounds away carried more of what the model learned. Current models are trained on tens of trillions of tokens, far more than the models the 4-bit results above were measured on, so those results understate the loss for a model released today. In practice that means two things: a 4-bit figure from a 2023 paper does not transfer to a 2026 model, and 8-bit is the safer default for recent models until you have measured 4-bit on your own task.</p>
 </section>
 <section id="decision-flowchart" class="level3">
 <h3 class="anchored" data-anchor-id="decision-flowchart">Decision flowchart</h3>
 <p>When deciding whether and how to quantize, work through these questions:</p>
 <ol type="1">
-<li><strong>Does the model fit on your GPU at FP16/BF16?</strong> If yes, start there — no quantization needed unless you want faster inference.</li>
 <li><strong>Is this for training or inference?</strong>
 <ul>
-<li><em>Training from scratch</em>: Use BF16 (or FP32 if your GPU lacks BF16 support). Don’t quantize.</li>
-<li><em>Fine-tuning</em>: If the full model doesn’t fit, use QLoRA (4-bit base + FP16 adapters).</li>
-<li><em>Inference</em>: Continue to step 3.</li>
+<li><strong>Training from scratch</strong>: Use BF16 (or FP32 if your GPU lacks BF16 support). Don’t quantize.</li>
+<li><strong>Fine-tuning</strong>: Use LoRA with the base model in BF16 if it fits. If it doesn’t, use QLoRA (4-bit base + 16-bit adapters).</li>
+<li><strong>Inference</strong>: Continue to step 2.</li>
 </ul></li>
-<li><strong>How much quality loss can you tolerate?</strong>
-<ul>
-<li><em>None</em>: Use INT8. It’s effectively lossless for most models.</li>
-<li><em>Minimal, with significant memory savings</em>: Use 4-bit NF4 with double quantization.</li>
-<li><em>You need extreme compression</em>: Try 3-bit, but <strong>benchmark on your specific task</strong> — quality loss at 3-bit is sharp and task-dependent.</li>
-</ul></li>
-<li><strong>Could you run a larger model by quantizing more aggressively?</strong> Often the answer is yes. A 70B model at 4-bit typically beats a 13B model at 16-bit.</li>
+<li><strong>Start with the largest model that fits your GPU at 8-bit.</strong> INT8 is effectively lossless, and a larger model at 8-bit beats a smaller one at 16-bit. If that model also fits at FP16/BF16 with room to spare, run it there instead: no quantization step, and faster, since 8-bit kernels add overhead.</li>
+<li><strong>If the model you need doesn’t fit at 8-bit</strong>, use 4-bit NF4 with double quantization, and measure the quality on your own task before relying on it. A 70B model at 4-bit still usually beats a 13B model at 16-bit.</li>
+<li><strong>Go below 4-bit only under extreme memory pressure.</strong> Quality loss at 3-bit is sharp and task-dependent; benchmark it.</li>
 </ol>
 </section>
 <section id="quick-reference" class="level3">
@@ -972,7 +967,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="2aaa36d1" class="cell" data-execution_count="14">
+<div id="b9655df2" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> model_4bit</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gc.collect()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>torch.cuda.empty_cache()</span>
