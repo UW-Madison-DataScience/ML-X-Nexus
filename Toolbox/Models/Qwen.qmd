@@ -74,12 +74,12 @@ One mid-size Qwen3.x model now handles chat, reasoning, agentic coding, OCR, and
 - **[Qwen3-Embedding and Qwen3-Reranker](https://huggingface.co/collections/Qwen/qwen3-embedding-6841b2055b99c44d9a4c371f)**: Retrieval. Embedding and reranking models from 0.6B to 8B for semantic search and RAG. A chat model cannot do this job, and these are small enough to run alongside one.
 
 ## Choosing a model size (and what it costs in GPU memory)
-The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in FP16/BF16**, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference, because you hold gradients and optimizer state alongside the weights (Adam keeps two extra values per parameter) plus the activations saved for the backward pass. LoRA and QLoRA avoid most of that by freezing the base weights and training small adapters, which is what makes single-GPU fine-tuning practical.
+The rule of thumb: **each billion parameters needs about 2 GB of GPU memory in FP16/BF16**, about 1 GB at 8-bit, and about 0.5 GB at 4-bit, for the weights alone. For inference, 8-bit is the usual compromise: half the memory of FP16 with little loss in output quality. 4-bit saves more but costs some accuracy, so test it on your own task. Context length (the KV cache), batch size, and framework overhead add more, and long contexts (32K to 128K tokens) can add several GB. Training needs roughly 2 to 3 times more than inference, because you hold gradients and optimizer state alongside the weights (Adam keeps two extra values per parameter) plus the activations saved for the backward pass. LoRA and QLoRA avoid most of that by freezing the base weights and training small adapters, which is what makes single-GPU fine-tuning practical.
 
 | Model (dense unless noted) | Parameters | FP16 / BF16 | 8-bit | 4-bit |
 |---|---:|---:|---:|---:|
 | Qwen3-8B | 8B | ~16 GB | ~8 GB | ~5 GB |
-| **Qwen3.8-27B** | **27B** | **~56 GB** | **~28 GB** | **~16 GB** |
+| **Qwen3.8-27B** | **27B** | **~54 GB** | **~27 GB** | **~15 GB** |
 | Qwen3-30B-A3B (MoE) | 30B total, 3B active | ~60 GB | ~30 GB | ~17 GB |
 | Qwen3-235B-A22B (MoE) | 235B total, 22B active | ~470 GB | ~235 GB | ~130 GB |
 
