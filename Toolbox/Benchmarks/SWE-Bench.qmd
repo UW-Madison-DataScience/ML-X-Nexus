@@ -1,5 +1,5 @@
 ---
-title: "SWE-bench: Evaluating AI on Real-World Software Engineering"
+title: "SWE-bench: Evaluating AI on GitHub Issues"
 author:
   - name: Chris Endemann
     email: endemann@wisc.edu
@@ -9,13 +9,14 @@ date-format: long
 image: "../../../images/SWE_bench.jpg"
 
 categories:
+  - Benchmarks
   - Benchmarking
   - Agentic coding
   - LLM
   - GenAI
 ---
 
-[SWE-bench](https://www.swebench.com/) is a benchmark designed to evaluate whether AI models can solve real-world software engineering tasks. Rather than testing code generation in isolation, SWE-bench presents models with actual GitHub issues from popular open-source Python repositories and asks them to produce a patch that resolves the issue and passes the associated test suite.
+[SWE-bench](https://www.swebench.com/) is a benchmark designed to evaluate whether AI models can resolve issues from working open-source codebases. Rather than testing code generation in isolation, SWE-bench presents models with actual GitHub issues from popular open-source Python repositories and asks them to produce a patch that resolves the issue and passes the associated test suite.
 
 The benchmark was introduced in the 2024 paper [*SWE-bench: Can Language Models Resolve Real-World GitHub Issues?*](https://arxiv.org/abs/2310.06770) by Carlos E. Jimenez et al. at Princeton University.
 
@@ -39,7 +40,7 @@ The original SWE-bench dataset contains 2,294 tasks, but not all of them are wel
 
 SWE-bench Verified is now the standard subset used for most leaderboard comparisons.
 
-## Current state of the leaderboard (early 2025)
+## Current state of the leaderboard (as of early 2026)
 
 On the [Bash Only leaderboard](https://www.swebench.com/#test) — which evaluates all models on SWE-bench Verified using the same shell-based interface — the top models are resolving around 74% of issues:
 
@@ -51,16 +52,16 @@ On the [Bash Only leaderboard](https://www.swebench.com/#test) — which evaluat
 | Claude 4 Opus (May 2025) | 67.60% |
 | GPT-5 (medium reasoning) | 65.00% |
 
-These numbers have been climbing quickly — for context, the best scores were around 50% in early 2024.
+These numbers have been climbing quickly — for context, the best scores were around 50% in late 2024.
 
 ## Interpreting the results
 
-It's tempting to read "74% resolved" as meaning AI can fix 74% of real-world software bugs, but several important caveats apply:
+It's tempting to read "74% resolved" as meaning AI can fix 74% of the bugs it will meet in practice, but several important caveats apply:
 
-- **Curated subset**: SWE-bench Verified deliberately filters out ambiguous, under-documented, or hard-to-test issues. Real-world GitHub issues are messier.
+- **Curated subset**: SWE-bench Verified deliberately filters out ambiguous, under-documented, or hard-to-test issues. GitHub issues in the wild are messier.
 - **Issue specification quality**: In practice, much of the difficulty in software engineering lies in understanding vague requirements, reproducing bugs, and navigating large unfamiliar codebases. SWE-bench tasks are relatively well-scoped.
 - **Single-repo Python focus**: The benchmark currently draws from a set of well-maintained Python libraries (e.g., Django, scikit-learn, sympy). Generalization to other languages, less-documented codebases, or proprietary software is an open question.
-- **No deployment or integration testing**: SWE-bench tests whether a patch passes unit/integration tests, not whether it would be accepted in a real code review or function correctly at scale.
+- **No deployment or integration testing**: SWE-bench tests whether a patch passes unit/integration tests, not whether it would be accepted in code review or function correctly at scale.
 
 ### The self-driving car analogy
 
@@ -80,5 +81,8 @@ For researchers and practitioners in ML, SWE-bench offers:
 
 ## Related resources
 - [**GenAI**: GenAI at UW-Madison](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Overview of generative AI tools and resources available at UW-Madison.
+- [**Project**: Badger Code](https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Code.html): ML Marathon challenge to build an open coding agent on a single GPU.
+- [**Guide**: Claude Code Best Practices](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-best-practices.html): Working with the hosted coding agents that top the leaderboard, with a section on benchmarks and leaderboards.
+- [**Workshop**: Intro to Agentic Coding](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Agentic-Coding.html): Principles for using coding agents safely, whatever their benchmark score.
 
 ## Comments
