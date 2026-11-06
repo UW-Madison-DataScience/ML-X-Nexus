@@ -415,7 +415,7 @@ Claude's context window is your most important resource. As it fills up with con
 - **Use `/clear` between unrelated tasks** — a clean context dramatically improves quality
 - **Use `/compact` to summarize long conversations** — run `/compact focus on the API changes` to keep what matters and discard the rest
 - **Delegate exploration to subagents** — when Claude needs to read dozens of files to investigate something, have it use a [subagent](https://code.claude.com/docs/en/sub-agents). The subagent works in its own context and returns a summary, keeping your main conversation lean.
-- **Run `/context`** to see what's consuming your context window (MCP servers can be surprisingly expensive)
+- **Run `/context`** to see what's consuming your context window (MCP servers can take a large share of it)
 - **Course-correct early** — if Claude is going in the wrong direction, interrupt with `Esc` rather than letting it generate more output that clutters context. After two failed corrections, `/clear` and start fresh with a better prompt.
 
 ### Extend Claude Code with skills, hooks, and MCP
@@ -726,7 +726,7 @@ Agentic coding is evolving fast. Here are some of the best resources for staying
 
 - [Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/) — Simon Willison's guide to coding practices for getting the best results from agents like Claude Code and Codex. He frames this as "expertise amplification, not expertise replacement"
 - [A Guide to Which AI to Use in the Agentic Era](https://www.oneusefulthing.org/p/a-guide-to-which-ai-to-use-in-the) — Ethan Mollick's updated guide arguing that "using AI" now means agents with tools, not chatbots, and that users must think in terms of Models, Apps, and Harnesses
-- [How I Use Claude Code (+ My Best Tips)](https://www.builder.io/blog/claude-code) — practical walkthrough from Builder.io on real-world Claude Code workflows
+- [How I Use Claude Code (+ My Best Tips)](https://www.builder.io/blog/claude-code) — practical walkthrough from Builder.io on day-to-day Claude Code workflows
 - [The Complete Guide to Agentic Coding in 2026](https://www.teamday.ai/blog/complete-guide-agentic-coding-2026) — broad overview comparing tools, workflows, and team strategies
 - [Redefining the Software Engineering Profession for AI](https://cacm.acm.org/opinion/redefining-the-software-engineering-profession-for-ai/) — ACM opinion piece on how AI amplifies senior talent but risks leaving junior developers without the chance to develop architectural intuition
 
@@ -736,16 +736,16 @@ Agentic coding is evolving fast. Here are some of the best resources for staying
 
 ### Benchmarks and leaderboards
 
-Agentic coding benchmarks are evolving rapidly. These track how well different models and agent scaffolds perform on real-world software engineering tasks:
+Agentic coding benchmarks are evolving rapidly. These track how well different models and agent scaffolds perform on software engineering tasks drawn from working codebases:
 
 - [SWE-bench Leaderboards](https://www.swebench.com/) — the most widely cited benchmark for agentic coding. Models are evaluated on their ability to resolve real GitHub issues from open-source Python repos. The "Verified" split is the standard comparison point, though [contamination concerns](https://scale.com/blog/swe-bench-pro) have motivated harder variants
 - [SWE-bench Pro](https://scale.com/leaderboard/swe_bench_pro_public) — Scale AI's harder benchmark (1,865 tasks across 41 repos). Top models that score 70%+ on SWE-bench Verified score only ~23% here
-- [SWE-Lancer](https://openai.com/index/swe-lancer/) — OpenAI's benchmark based on 1,400+ real Upwork freelance tasks valued at $1M in payouts, ranging from $50 bug fixes to $32K feature implementations. Provides a natural difficulty gradient tied to real-world economics
+- [SWE-Lancer](https://openai.com/index/swe-lancer/) — OpenAI's benchmark based on 1,400+ Upwork freelance tasks valued at $1M in payouts, ranging from $50 bug fixes to $32K feature implementations. Provides a natural difficulty gradient tied to what clients paid
 - [Terminal-Bench](https://www.tbench.ai/) — evaluates agents on multi-step terminal workflows (not just code generation). Tests planning, execution, and recovery in sandboxed command-line environments
 - [Coding Agents Comparison](https://artificialanalysis.ai/insights/coding-agents-comparison) — Artificial Analysis's ongoing comparison with pricing breakdowns alongside benchmark scores
 - [Quantifying Infrastructure Noise in Agentic Coding Evals](https://www.anthropic.com/engineering/infrastructure-noise) — Anthropic's analysis showing that a 2-point leaderboard lead may reflect hardware differences rather than genuine capability gaps — important context for interpreting any benchmark
 
-**Caveat:** Benchmarks measure specific capabilities under controlled conditions. Real-world performance depends heavily on your prompt quality, project structure, and `CLAUDE.md` configuration. Use benchmarks to track the field's trajectory, not to pick a tool.
+**Caveat:** Benchmarks measure specific capabilities under controlled conditions. Performance on your own projects depends heavily on your prompt quality, project structure, and `CLAUDE.md` configuration. Use benchmarks to track the field's trajectory, not to pick a tool.
 
 ### Security
 
@@ -755,5 +755,11 @@ Agentic coding benchmarks are evolving rapidly. These track how well different m
 - [AI Agent Security Risks in 2026: A Practitioner's Guide](https://blog.cyberdesserts.com/ai-agent-security-risks/) — practical guide to defending against prompt injection, credential theft, and MCP vulnerabilities
 
 This is an area where best practices are being written in real time. What works today may be outdated in six months. Stay plugged into the communities above, and don't assume any single tool or configuration is permanently "safe."
+
+## Related resources
+- [**Workshop**: Intro to Agentic Coding](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Agentic-Coding.html): The tool-agnostic principles this guide builds on.
+- [**Guide**: Claude Code Cloud Setup Guide (Vertex AI & Bedrock)](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-cloud-setup.html): Step-by-step setup through a UW-Madison GCP or AWS account.
+- [**Benchmark**: SWE-bench: Evaluating AI on GitHub Issues](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Benchmarks/SWE-Bench.html): How the most cited coding-agent benchmark works and how to read its leaderboard.
+- [**GenAI**: UW Generative AI Services & Policies](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Campus guidance on which AI services are approved for which data types.
 
 ## Comments

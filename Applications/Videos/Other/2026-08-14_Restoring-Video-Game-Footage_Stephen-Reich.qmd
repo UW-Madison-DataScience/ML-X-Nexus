@@ -18,7 +18,7 @@ categories:
   - CNN
   - GPU
 ---
-In this talk from the 2026 Midwest Gaming Classic in Milwaukee, software engineer Stephen Reich shows how he trains models to clean up old video game footage, such as VHS tapes of games shown at trade shows. That footage is sometimes the only record of a game that was never released or changed before release, so cleaning it up helps people tell real differences from tape damage.
+In this talk from the 2026 Midwest Gaming Classic in Milwaukee, software engineer Stephen Reich shows how he trains models to clean up old video game footage, such as VHS tapes of games shown at trade shows. That footage is sometimes the only record of a game that was never released or changed before release, so cleaning it up helps people distinguish changes in the game from tape damage.
 
 Reich captures each frame twice: once from a clean RGB signal and once through composite, RF, or a VHS recorder. To get matching frames, he records each game's self-playing demo mode. He then trains small 1x restoration models (using the PLKSR architecture) for the NES and the Sega Genesis. The talk is aimed at a general audience and ends with how to run models like his using [chaiNNer](https://github.com/chaiNNer-org/chaiNNer) and the [OpenModelDB](https://openmodeldb.info/).
 
@@ -32,6 +32,8 @@ The same recipe (pair degraded and clean images of the same thing, then train a 
 - **A caution.** Restoration models fill in detail they expect to see, so a result can look convincing and still be wrong. If restored images will be used as evidence (Reich's own motivating case), keep the raw data, report your processing, and validate on held-out pairs. A model trained on one camera, microscope, or console can fail quietly on another.
 
 ## Related resources
-- [**OpenModelDB**](https://openmodeldb.info/): A community database of trained upscaling and restoration models.
-- [**PLKSR paper**](https://arxiv.org/abs/2404.11848): The efficient super-resolution architecture Reich used.
-- [**Learn: Out-of-distribution detection**](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html): Recognizing when a model sees inputs unlike its training data.
+- [**Website**: OpenModelDB](https://openmodeldb.info/): A community database of trained upscaling and restoration models.
+- [**Paper**: PLKSR](https://arxiv.org/abs/2404.11848): The efficient super-resolution architecture Reich used.
+- [**Video**: Intro to Out-of-Distribution Detection](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Videos/OOD-detection.html): Recognizing when a model sees inputs unlike its training data.
+
+## Comments
