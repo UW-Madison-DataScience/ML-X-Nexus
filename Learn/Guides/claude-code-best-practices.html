@@ -423,6 +423,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#benchmarks-and-leaderboards" id="toc-benchmarks-and-leaderboards" class="nav-link" data-scroll-target="#benchmarks-and-leaderboards">Benchmarks and leaderboards</a></li>
   <li><a href="#security" id="toc-security" class="nav-link" data-scroll-target="#security">Security</a></li>
   </ul></li>
+  <li><a href="#related-resources" id="toc-related-resources" class="nav-link" data-scroll-target="#related-resources">Related resources</a></li>
   <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UW-Madison-DataScience/ML-X-Nexus/edit/main/Learn/Guides/claude-code-best-practices.qmd" class="toc-action"><i class="bi bi-github"></i>Improve this page</a></li></ul></div></nav>
@@ -956,7 +957,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Use <code>/clear</code> between unrelated tasks</strong> — a clean context dramatically improves quality</li>
 <li><strong>Use <code>/compact</code> to summarize long conversations</strong> — run <code>/compact focus on the API changes</code> to keep what matters and discard the rest</li>
 <li><strong>Delegate exploration to subagents</strong> — when Claude needs to read dozens of files to investigate something, have it use a <a href="https://code.claude.com/docs/en/sub-agents">subagent</a>. The subagent works in its own context and returns a summary, keeping your main conversation lean.</li>
-<li><strong>Run <code>/context</code></strong> to see what’s consuming your context window (MCP servers can be surprisingly expensive)</li>
+<li><strong>Run <code>/context</code></strong> to see what’s consuming your context window (MCP servers can take a large share of it)</li>
 <li><strong>Course-correct early</strong> — if Claude is going in the wrong direction, interrupt with <code>Esc</code> rather than letting it generate more output that clutters context. After two failed corrections, <code>/clear</code> and start fresh with a better prompt.</li>
 </ul>
 </section>
@@ -1366,7 +1367,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><a href="https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/">Agentic Engineering Patterns</a> — Simon Willison’s guide to coding practices for getting the best results from agents like Claude Code and Codex. He frames this as “expertise amplification, not expertise replacement”</li>
 <li><a href="https://www.oneusefulthing.org/p/a-guide-to-which-ai-to-use-in-the">A Guide to Which AI to Use in the Agentic Era</a> — Ethan Mollick’s updated guide arguing that “using AI” now means agents with tools, not chatbots, and that users must think in terms of Models, Apps, and Harnesses</li>
-<li><a href="https://www.builder.io/blog/claude-code">How I Use Claude Code (+ My Best Tips)</a> — practical walkthrough from Builder.io on real-world Claude Code workflows</li>
+<li><a href="https://www.builder.io/blog/claude-code">How I Use Claude Code (+ My Best Tips)</a> — practical walkthrough from Builder.io on day-to-day Claude Code workflows</li>
 <li><a href="https://www.teamday.ai/blog/complete-guide-agentic-coding-2026">The Complete Guide to Agentic Coding in 2026</a> — broad overview comparing tools, workflows, and team strategies</li>
 <li><a href="https://cacm.acm.org/opinion/redefining-the-software-engineering-profession-for-ai/">Redefining the Software Engineering Profession for AI</a> — ACM opinion piece on how AI amplifies senior talent but risks leaving junior developers without the chance to develop architectural intuition</li>
 </ul>
@@ -1379,16 +1380,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="benchmarks-and-leaderboards" class="level3">
 <h3 class="anchored" data-anchor-id="benchmarks-and-leaderboards">Benchmarks and leaderboards</h3>
-<p>Agentic coding benchmarks are evolving rapidly. These track how well different models and agent scaffolds perform on real-world software engineering tasks:</p>
+<p>Agentic coding benchmarks are evolving rapidly. These track how well different models and agent scaffolds perform on software engineering tasks drawn from working codebases:</p>
 <ul>
 <li><a href="https://www.swebench.com/">SWE-bench Leaderboards</a> — the most widely cited benchmark for agentic coding. Models are evaluated on their ability to resolve real GitHub issues from open-source Python repos. The “Verified” split is the standard comparison point, though <a href="https://scale.com/blog/swe-bench-pro">contamination concerns</a> have motivated harder variants</li>
 <li><a href="https://scale.com/leaderboard/swe_bench_pro_public">SWE-bench Pro</a> — Scale AI’s harder benchmark (1,865 tasks across 41 repos). Top models that score 70%+ on SWE-bench Verified score only ~23% here</li>
-<li><a href="https://openai.com/index/swe-lancer/">SWE-Lancer</a> — OpenAI’s benchmark based on 1,400+ real Upwork freelance tasks valued at $1M in payouts, ranging from $50 bug fixes to $32K feature implementations. Provides a natural difficulty gradient tied to real-world economics</li>
+<li><a href="https://openai.com/index/swe-lancer/">SWE-Lancer</a> — OpenAI’s benchmark based on 1,400+ Upwork freelance tasks valued at $1M in payouts, ranging from $50 bug fixes to $32K feature implementations. Provides a natural difficulty gradient tied to what clients paid</li>
 <li><a href="https://www.tbench.ai/">Terminal-Bench</a> — evaluates agents on multi-step terminal workflows (not just code generation). Tests planning, execution, and recovery in sandboxed command-line environments</li>
 <li><a href="https://artificialanalysis.ai/insights/coding-agents-comparison">Coding Agents Comparison</a> — Artificial Analysis’s ongoing comparison with pricing breakdowns alongside benchmark scores</li>
 <li><a href="https://www.anthropic.com/engineering/infrastructure-noise">Quantifying Infrastructure Noise in Agentic Coding Evals</a> — Anthropic’s analysis showing that a 2-point leaderboard lead may reflect hardware differences rather than genuine capability gaps — important context for interpreting any benchmark</li>
 </ul>
-<p><strong>Caveat:</strong> Benchmarks measure specific capabilities under controlled conditions. Real-world performance depends heavily on your prompt quality, project structure, and <code>CLAUDE.md</code> configuration. Use benchmarks to track the field’s trajectory, not to pick a tool.</p>
+<p><strong>Caveat:</strong> Benchmarks measure specific capabilities under controlled conditions. Performance on your own projects depends heavily on your prompt quality, project structure, and <code>CLAUDE.md</code> configuration. Use benchmarks to track the field’s trajectory, not to pick a tool.</p>
 </section>
 <section id="security" class="level3">
 <h3 class="anchored" data-anchor-id="security">Security</h3>
@@ -1400,6 +1401,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>This is an area where best practices are being written in real time. What works today may be outdated in six months. Stay plugged into the communities above, and don’t assume any single tool or configuration is permanently “safe.”</p>
 </section>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Agentic-Coding.html"><strong>Workshop</strong>: Intro to Agentic Coding</a>: The tool-agnostic principles this guide builds on.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-cloud-setup.html"><strong>Guide</strong>: Claude Code Cloud Setup Guide (Vertex AI &amp; Bedrock)</a>: Step-by-step setup through a UW-Madison GCP or AWS account.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Benchmarks/SWE-Bench.html"><strong>Benchmark</strong>: SWE-bench: Evaluating AI on GitHub Issues</a>: How the most cited coding-agent benchmark works and how to read its leaderboard.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: UW Generative AI Services &amp; Policies</a>: Campus guidance on which AI services are approved for which data types.</li>
+</ul>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>

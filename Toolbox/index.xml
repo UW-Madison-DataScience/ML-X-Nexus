@@ -10,7 +10,145 @@
 <atom:link href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/index.xml" rel="self" type="application/rss+xml"/>
 <description>ML and AI tools, models, datasets, and libraries from the UW-Madison ML+X community</description>
 <generator>quarto-1.11.9</generator>
-<lastBuildDate>Fri, 18 Sep 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 02 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Fine-tuning with LoRA: Colab, CHTC, or AWS</title>
+  <dc:creator>Chris Endemann</dc:creator>
+  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<!-- MARKDOWN COMMENT:
+This Nexus page points to fine-tuning materials maintained in the
+ML_with_AWS_SageMaker repository. Edit notebooks and scripts upstream;
+edit the description and resource links here. With no Python cells, this page
+is skipped by the qmd-to-ipynb GitHub Action.
+-->
+<p>Fine-tuning lets us adapt an existing model to a specialized task without training a new one from scratch. In this exercise, we’ll fine-tune <a href="https://huggingface.co/stanford-oval/churro-3B">CHURRO-3B</a>, a vision-language model for historical documents, to transcribe handwritten German letters from the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html">Badger Scribe</a> challenge. The letters are written in Kurrent, a historical form of German handwriting that can be difficult for even specialized handwriting recognition models.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/fig/specialists-vs-large-models.png" class="img-fluid figure-img"></p>
+<figcaption><em>Small models fine-tuned for one task beat much larger general models on that task. Sources: <a href="https://arxiv.org/abs/2509.19768">CHURRO</a>, <a href="https://arxiv.org/abs/2508.03613">Goedel-Prover-V2</a>, <a href="https://arxiv.org/abs/2507.05201">MedGemma</a>.</em></figcaption>
+</figure>
+</div>
+<p>We’ll use LoRA (low-rank adaptation), which freezes the original model and trains a small adapter beside it. For this model, that cuts the GPU memory needed from about 60 GB to about 12 GB, so the fine-tune runs on a single GPU. On a GPU as small as Colab’s free 16 GB T4, the frozen weights are loaded in 4-bit, a variant called QLoRA, which brings the run to about 6 GB.</p>
+<section id="what-youll-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-youll-do">What you’ll do</h2>
+<p>Using 295 transcribed pages from the Anna Seifert correspondence, you’ll evaluate CHURRO’s initial transcription accuracy, fine-tune it for two epochs, and compare its performance on held-out pages. By the end, you will be able to:</p>
+<ul>
+<li>Explain when fine-tuning an existing model beats training one from scratch, and why GPU memory decides between full fine-tuning, LoRA and QLoRA.</li>
+<li>Estimate the size of a fine-tuning run before launching it. Tokens per page set the time and the adapter rank sets the trainable parameters, and both come from the model’s own processor and config file.</li>
+<li>Run a LoRA fine-tune of a 3B vision-language model on a single GPU, testing on a slice of the data first and checkpointing every epoch.</li>
+<li>Judge whether the fine-tune helped by comparing the model before and after on the same held-out pages with the task’s own metric, character error rate (CER), and by reading the held-out curve to see how many passes were worth it.</li>
+<li>Reuse the saved adapter, about 100 MB, to transcribe new pages, including the challenge’s 141 unlabeled test pages.</li>
+</ul>
+<p>The exercise is available on three platforms. Start with the Colab notebook if you’re new to fine-tuning; it requires only a Google account. The CHTC and AWS versions take the same workflow to campus or cloud GPU infrastructure.</p>
+</section>
+<section id="where-to-run-it" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-run-it">Where to run it</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><a href="https://colab.research.google.com/github/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/colab/LoRA-finetuning-on-a-free-GPU.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open in Colab"></a></th>
+<th><a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/chtc/LoRA-finetuning-on-CHTC.md">CHTC</a></th>
+<th><a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">AWS SageMaker</a></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>How it runs</td>
+<td>Interactive notebook</td>
+<td>HTCondor batch job</td>
+<td>Managed training job</td>
+</tr>
+<tr class="even">
+<td>GPU</td>
+<td>T4, 16 GB, on the free tier; larger GPUs on paid plans</td>
+<td>L40S, A100, H100, H200</td>
+<td>A10G, 24 GB, in this exercise. By the hour, anything from a T4 up to 8-GPU H100, H200, B200 and B300 servers</td>
+</tr>
+<tr class="odd">
+<td>Estimated runtime</td>
+<td>~1.5 hours</td>
+<td>~20 minutes plus queue</td>
+<td>~33 minutes</td>
+</tr>
+<tr class="even">
+<td>Compute cost</td>
+<td>Free</td>
+<td>Free</td>
+<td>~$0.75</td>
+</tr>
+<tr class="odd">
+<td>What you’ll learn</td>
+<td>Fine-tuning with limited GPU memory</td>
+<td>Containers, batch jobs and data staging</td>
+<td>Cloud training jobs and cost management</td>
+</tr>
+<tr class="even">
+<td>Status</td>
+<td>Ready</td>
+<td>Guide in development</td>
+<td>Ready</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Google Colab</strong> is the easiest starting point and needs only a Google account. It is a place to learn fine-tuning, not to run a project: free GPU availability varies, sessions end after a few hours of use or 90 minutes idle, and the notebook saves checkpoints to Google Drive so a dropped session costs one epoch. Expect to get through the notebook about once before the free tier’s GPU limit cuts you off for the day, so run it in one sitting if you can.</p>
+<p><strong>CHTC</strong> is the first choice for UW-Madison researchers. It is free and has GPUs with 48 to 141 GB of memory; jobs wait in a queue. The CHTC version packages the job in a container and submits it through HTCondor; you need a CHTC account with a faculty sponsor, GPU Lab access and a <code>/staging</code> directory. The <a href="https://github.com/carpentries-incubator/ML_with_AWS_SageMaker/blob/main/finetune_extras/chtc/LoRA-finetuning-on-CHTC.md">guide</a> is still in development and has not been tested end to end. CHTC’s facilitators hold <a href="https://chtc.cs.wisc.edu/uw-research-computing/get-help">office hours</a> for setup questions.</p>
+<p><strong>AWS SageMaker</strong> runs the same exercise as a managed training job. The <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/08_Finetuning-BadgerScribe.html">fine-tuning episode</a> is part of the <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html">Intro to AWS for ML/AI</a> workshop and covers estimating costs, setting runtime limits, launching jobs and tracking spending. It assumes the SageMaker setup and GPU quota from the workshop’s <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/index.html#setup">earlier episodes</a>. UW researchers can use <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">UW Cloud Services</a> for institutional AWS accounts, and the Public Cloud Team’s <a href="https://kb.wisc.edu/101516">office hours</a> for help.</p>
+<p>The <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html">National Research Platform (NRP)</a> also offers free GPU resources, including notebook-based access, although a separate version of this exercise is not yet available.</p>
+<section id="prerequisites" class="level4">
+<h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
+<p>Basic Python skills and familiarity with model training and evaluation are recommended. These resources provide useful background:</p>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html"><strong>Workshop</strong>: Basic Python Programming</a></li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html"><strong>Workshop</strong>: Intro to Machine Learning</a></li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Understanding Quantization and Precision</a>, recommended. Quantization and precision come up in all three versions, and this notebook explains what the formats cost in GPU memory</li>
+</ul>
+</section>
+</section>
+<section id="related-resources" class="level2">
+<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
+<ul>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Workshop</strong>: Intro to AWS for ML/AI</a> – The full workshop, including SageMaker fine-tuning.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> – Campus GPU access and job scheduling.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> – Free GPU notebooks and runtime limits.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html"><strong>Compute</strong>: National Research Platform (NRP)</a> – GPU notebooks and other research computing options.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html"><strong>Compute</strong>: UW-Madison Cloud Services (AWS, GCP, Azure)</a> – Institutional cloud accounts.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html"><strong>Project</strong>: Badger Scribe</a> – The handwriting transcription challenge.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Understanding Quantization and Precision</a> – GPU memory and numerical precision.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a> – Tools for working with open-weight models.</li>
+<li><a href="https://arxiv.org/abs/2106.09685"><strong>Paper</strong>: LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)</a>: The original LoRA paper.</li>
+<li><a href="https://arxiv.org/abs/2509.19768"><strong>Paper</strong>: CHURRO: Making History Readable with an Open-Weight Large Vision-Language Model (EMNLP 2025)</a>: The model used in this exercise.</li>
+</ul>
+</section>
+<section id="comments" class="level2">
+<h2 class="anchored" data-anchor-id="comments">Comments</h2>
+
+
+</section>
+
+ ]]></description>
+  <category>Notebooks</category>
+  <category>Code-along</category>
+  <category>Carpentries</category>
+  <category>Fine-tuning</category>
+  <category>Deep learning</category>
+  <category>Computer vision</category>
+  <category>OCR</category>
+  <category>LLM</category>
+  <category>GPU</category>
+  <category>Compute</category>
+  <category>Hugging Face</category>
+  <category>PyTorch</category>
+  <category>Transfer learning</category>
+  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html</guid>
+  <pubDate>Mon, 02 Nov 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/LoRA-finetuning_tile.png" medium="image" type="image/png" height="90" width="144"/>
+</item>
 <item>
   <title>Qwen: Open-Weight Language and Multimodal Models from Alibaba Cloud</title>
   <dc:creator>Zain Waseem</dc:creator>
@@ -424,7 +562,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="d4c0cd27" class="cell" data-execution_count="1">
+<div id="0edade5a" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -461,7 +599,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="554ad926" class="cell" data-execution_count="2">
+<div id="71ab20ef" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -478,7 +616,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="1f2ab9a4" class="cell" data-execution_count="3">
+<div id="25dd79d2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -518,7 +656,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="5486c0dc" class="cell" data-execution_count="4">
+<div id="4f9c5c0a" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -556,7 +694,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="82d06edd" class="cell" data-execution_count="5">
+<div id="93c2cf10" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -662,7 +800,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="703c97d1" class="cell" data-execution_count="6">
+<div id="a9d6e8e2" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -737,7 +875,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="ba362f49" class="cell" data-execution_count="7">
+<div id="536d8141" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -812,7 +950,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="248adcf5" class="cell" data-execution_count="8">
+<div id="cd8ef06e" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -892,6 +1030,9 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html"><strong>GenAI</strong>: OpenScholar</a> — Open-source scientific literature synthesis tool; relevant for RAG-style workflows you could host on NRP.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Quantization-and-Precision.html"><strong>Notebook</strong>: Quantization and Precision</a> — Background on the quantization tricks that make large-model inference fit on a single GPU.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/"><strong>Projects</strong>: ML+X Machine Learning Marathon</a> — Annual 12-week ML/AI hackathon at UW–Madison.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Qwen.html"><strong>Model</strong>: Qwen</a>: Qwen models make up most of the LLM endpoints hosted on NRP; the page covers sizes, variants, and safety considerations.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html"><strong>Notebook</strong>: Fine-tuning with LoRA: Colab, CHTC, or AWS</a>: A LoRA fine-tune you can run on an NRP GPU instead of Colab.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Code.html"><strong>Project</strong>: Badger Code</a>: An ML Marathon challenge that runs a local coding agent on a single GPU.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -943,14 +1084,14 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="0a2ea7bb" class="cell" data-execution_count="1">
+<div id="b5dd8ec8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="c09f2877" class="cell" data-execution_count="2">
+<div id="56f0291f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1063,7 +1204,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="5e39fc06" class="cell" data-execution_count="3">
+<div id="844d8e94" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1300,7 +1441,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="0ebbf2ba" class="cell" data-execution_count="4">
+<div id="88dd5191" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1328,7 +1469,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="0e40bacd" class="cell" data-execution_count="5">
+<div id="6660a6e0" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1351,7 +1492,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="05685a06" class="cell" data-execution_count="6">
+<div id="38f625ad" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1373,7 +1514,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="d740efa5" class="cell" data-execution_count="7">
+<div id="4a14da82" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1496,7 +1637,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="eb34a033" class="cell" data-execution_count="8">
+<div id="929c6b37" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1526,7 +1667,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="166bb2ad" class="cell" data-execution_count="9">
+<div id="ffafbf1b" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1571,7 +1712,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="c4d02abc" class="cell" data-execution_count="10">
+<div id="24937ec6" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1807,7 +1948,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="2964971a" class="cell" data-execution_count="11">
+<div id="e9a02d70" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -1883,7 +2024,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="186ed05e" class="cell" data-execution_count="12">
+<div id="6b20d950" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -1999,7 +2140,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="ccae2ff5" class="cell" data-execution_count="13">
+<div id="efa3fe17" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2240,7 +2381,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="90a7840e" class="cell" data-execution_count="14">
+<div id="6c81a202" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2259,8 +2400,11 @@ font-style: inherit;">"GPU memory cleared."</span>)</span></code></pre></div></d
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: Exploring Fact-Based QA with RAG: Romeo and Juliet</a>: A RAG tutorial that uses bitsandbytes for running quantized models in resource-constrained environments.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html"><strong>Notebook</strong>: Fine-tuning with LoRA: Colab, CHTC, or AWS</a>: Puts 4-bit quantization to work — the frozen base weights of a 3B model are loaded with bitsandbytes so a LoRA fine-tune fits a 16 GB T4.</li>
-<li><a href="https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes">Hugging Face: bitsandbytes integration</a>: Official documentation on using bitsandbytes with the <code>transformers</code> library.</li>
-<li><a href="https://github.com/bitsandbytes-foundation/bitsandbytes">bitsandbytes on GitHub</a>: The bitsandbytes library for 8-bit and 4-bit quantization.</li>
+<li><a href="https://huggingface.co/docs/transformers/main/en/quantization/bitsandbytes"><strong>Docs</strong>: Hugging Face: bitsandbytes integration</a>: Official documentation on using bitsandbytes with the <code>transformers</code> library.</li>
+<li><a href="https://github.com/bitsandbytes-foundation/bitsandbytes"><strong>Code</strong>: bitsandbytes on GitHub</a>: The bitsandbytes library for 8-bit and 4-bit quantization.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Qwen.html"><strong>Model</strong>: Qwen</a>: Open-weight models from under 1B to over 200B parameters; the page’s memory table shows which sizes fit a given GPU at 16-, 8-, and 4-bit.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html"><strong>Compute</strong>: National Research Platform (NRP)</a>: Free GPU access and hosted open-weight LLM endpoints for running quantized models without buying hardware.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html"><strong>Talk</strong>: Deploying RAG in Bedrock vs.&nbsp;Local: WattBot 2025 Case Study</a>: Compares a hosted API deployment with running quantized open models locally.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -2326,13 +2470,14 @@ font-style: inherit;">"GPU memory cleared."</span>)</span></code></pre></div></d
 <h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html"><strong>Compute</strong>: UW-Madison Cloud Services (AWS, GCP, Azure)</a> – Institutional discounts, lower grant overhead, data protections, research credits, and how to request a UW cloud account.</li>
-<li><a href="https://kb.wisc.edu/101516">Public Cloud Team Office Hours</a> – Drop-in hours on Thursdays, 2–3:15 PM via Zoom. Get answers to cloud-related questions from the RCI and Public Cloud Team.</li>
-<li><a href="https://cloud.google.com/free">GCP Free Tier</a>: Overview of free-tier limits and credits for new users.</li>
-<li><a href="https://edu.google.com/intl/ALL_us/programs/credits/research/">Google Cloud Research Credits</a>: Apply for up to $5,000 in GCP credits for research.</li>
+<li><a href="https://kb.wisc.edu/101516"><strong>Support</strong>: Public Cloud Team office hours</a>: Drop-in hours on Thursdays, 2–3:15 PM via Zoom. Get answers to cloud-related questions from the RCI and Public Cloud Team.</li>
+<li><a href="https://cloud.google.com/free"><strong>Docs</strong>: GCP Free Tier</a>: Overview of free-tier limits and credits for new users.</li>
+<li><a href="https://edu.google.com/intl/ALL_us/programs/credits/research/"><strong>Docs</strong>: Google Cloud Research Credits</a>: Apply for up to $5,000 in GCP credits for research.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html"><strong>Compute</strong>: BadgerCompute</a> – UW–Madison’s lightweight, NetID-authenticated Jupyter service for short interactive sessions and classroom use. Includes a 4-hour runtime limit (which may sometimes beat the free version of Colab).</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> – Learn how to use Google Colab for machine learning workflows.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> – Learn how to use CHTC for machine learning jobs.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Compute</strong>: AWS SageMaker</a> – Parallel workshop covering similar cloud ML concepts using AWS infrastructure.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html"><strong>Compute</strong>: National Research Platform (NRP)</a>: A free, NSF-funded GPU platform to consider before paying for cloud GPUs.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -2739,7 +2884,7 @@ Tip
   <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/uw-logo-vertical-color-web-digital.png" medium="image" type="image/png" height="95" width="144"/>
 </item>
 <item>
-  <title>SWE-bench: Evaluating AI on Real-World Software Engineering</title>
+  <title>SWE-bench: Evaluating AI on GitHub Issues</title>
   <dc:creator>Chris Endemann</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Benchmarks/SWE-Bench.html</link>
   <description><![CDATA[ 
@@ -2747,7 +2892,7 @@ Tip
 
 
 
-<p><a href="https://www.swebench.com/">SWE-bench</a> is a benchmark designed to evaluate whether AI models can solve real-world software engineering tasks. Rather than testing code generation in isolation, SWE-bench presents models with actual GitHub issues from popular open-source Python repositories and asks them to produce a patch that resolves the issue and passes the associated test suite.</p>
+<p><a href="https://www.swebench.com/">SWE-bench</a> is a benchmark designed to evaluate whether AI models can resolve issues from working open-source codebases. Rather than testing code generation in isolation, SWE-bench presents models with actual GitHub issues from popular open-source Python repositories and asks them to produce a patch that resolves the issue and passes the associated test suite.</p>
 <p>The benchmark was introduced in the 2024 paper <a href="https://arxiv.org/abs/2310.06770"><em>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</em></a> by Carlos E. Jimenez et al.&nbsp;at Princeton University.</p>
 <section id="how-it-works" class="level2">
 <h2 class="anchored" data-anchor-id="how-it-works">How it works</h2>
@@ -2769,8 +2914,8 @@ Tip
 </ul>
 <p>SWE-bench Verified is now the standard subset used for most leaderboard comparisons.</p>
 </section>
-<section id="current-state-of-the-leaderboard-early-2025" class="level2">
-<h2 class="anchored" data-anchor-id="current-state-of-the-leaderboard-early-2025">Current state of the leaderboard (early 2025)</h2>
+<section id="current-state-of-the-leaderboard-as-of-early-2026" class="level2">
+<h2 class="anchored" data-anchor-id="current-state-of-the-leaderboard-as-of-early-2026">Current state of the leaderboard (as of early 2026)</h2>
 <p>On the <a href="https://www.swebench.com/#test">Bash Only leaderboard</a> — which evaluates all models on SWE-bench Verified using the same shell-based interface — the top models are resolving around 74% of issues:</p>
 <table class="caption-top table">
 <thead>
@@ -2802,16 +2947,16 @@ Tip
 </tr>
 </tbody>
 </table>
-<p>These numbers have been climbing quickly — for context, the best scores were around 50% in early 2024.</p>
+<p>These numbers have been climbing quickly — for context, the best scores were around 50% in late 2024.</p>
 </section>
 <section id="interpreting-the-results" class="level2">
 <h2 class="anchored" data-anchor-id="interpreting-the-results">Interpreting the results</h2>
-<p>It’s tempting to read “74% resolved” as meaning AI can fix 74% of real-world software bugs, but several important caveats apply:</p>
+<p>It’s tempting to read “74% resolved” as meaning AI can fix 74% of the bugs it will meet in practice, but several important caveats apply:</p>
 <ul>
-<li><strong>Curated subset</strong>: SWE-bench Verified deliberately filters out ambiguous, under-documented, or hard-to-test issues. Real-world GitHub issues are messier.</li>
+<li><strong>Curated subset</strong>: SWE-bench Verified deliberately filters out ambiguous, under-documented, or hard-to-test issues. GitHub issues in the wild are messier.</li>
 <li><strong>Issue specification quality</strong>: In practice, much of the difficulty in software engineering lies in understanding vague requirements, reproducing bugs, and navigating large unfamiliar codebases. SWE-bench tasks are relatively well-scoped.</li>
 <li><strong>Single-repo Python focus</strong>: The benchmark currently draws from a set of well-maintained Python libraries (e.g., Django, scikit-learn, sympy). Generalization to other languages, less-documented codebases, or proprietary software is an open question.</li>
-<li><strong>No deployment or integration testing</strong>: SWE-bench tests whether a patch passes unit/integration tests, not whether it would be accepted in a real code review or function correctly at scale.</li>
+<li><strong>No deployment or integration testing</strong>: SWE-bench tests whether a patch passes unit/integration tests, not whether it would be accepted in code review or function correctly at scale.</li>
 </ul>
 <section id="the-self-driving-car-analogy" class="level3">
 <h3 class="anchored" data-anchor-id="the-self-driving-car-analogy">The self-driving car analogy</h3>
@@ -2833,6 +2978,9 @@ Tip
 <h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html"><strong>GenAI</strong>: GenAI at UW-Madison</a>: Overview of generative AI tools and resources available at UW-Madison.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Code.html"><strong>Project</strong>: Badger Code</a>: ML Marathon challenge to build an open coding agent on a single GPU.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-best-practices.html"><strong>Guide</strong>: Claude Code Best Practices</a>: Working with the hosted coding agents that top the leaderboard, with a section on benchmarks and leaderboards.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Agentic-Coding.html"><strong>Workshop</strong>: Intro to Agentic Coding</a>: Principles for using coding agents safely, whatever their benchmark score.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -2842,6 +2990,7 @@ Tip
 </section>
 
  ]]></description>
+  <category>Benchmarks</category>
   <category>Benchmarking</category>
   <category>Agentic coding</category>
   <category>LLM</category>
@@ -3002,7 +3151,7 @@ Tip
 
 
 
-<p>This introductory <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/">AWS SageMaker workshop</a> teaches core workflows for running predictive ML/AI models in AWS SageMaker, an AWS-managed machine learning environment. Participants will learn to set up data, configure SageMaker Notebooks, manage code repositories, train and tune models, and optimize resource costs effectively within AWS. Users will benefit from tips on controlling AWS expenses and scaling models efficiently, with real-world guidance on choosing appropriate CPU and GPU resources.</p>
+<p>This introductory <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/">AWS SageMaker workshop</a> teaches core workflows for running predictive ML/AI models in AWS SageMaker, an AWS-managed machine learning environment. Participants will learn to set up data, configure SageMaker Notebooks, manage code repositories, train and tune models, and optimize resource costs effectively within AWS. Users will benefit from tips on controlling AWS expenses and scaling models efficiently, with practical guidance on choosing appropriate CPU and GPU resources.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -3037,13 +3186,15 @@ Tip
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html"><strong>Notebook</strong>: Fine-tuning with LoRA: Colab, CHTC, or AWS</a> – The lesson’s fine-tuning episode on Google Colab’s free T4, no AWS account needed, with a side-by-side of running the same fine-tune on AWS SageMaker and CHTC.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html"><strong>Compute</strong>: UW-Madison Cloud Services (AWS, GCP, Azure)</a> – Institutional discounts, lower grant overhead, data protections, research credits, and how to request a UW cloud account.</li>
-<li><a href="https://kb.wisc.edu/101516">Public Cloud Team Office Hours</a> – Drop-in hours on Thursdays, 2–3:15 PM via Zoom. Get answers to cloud-related questions from the RCI and Public Cloud Team.</li>
-<li><a href="https://aws.amazon.com/free">AWS Free Tier Guide</a>: An overview of the AWS Free Tier, including limitations and expected costs for beginner users.</li>
-<li><a href="https://researchci.it.wisc.edu/introduction-to-aws-for-researchers/">Introduction to AWS for Researchers (RCI)</a> – UW-Madison RCI’s guide to getting started with AWS for research.</li>
+<li><a href="https://kb.wisc.edu/101516"><strong>Support</strong>: Public Cloud Team office hours</a>: Drop-in hours on Thursdays, 2–3:15 PM via Zoom. Get answers to cloud-related questions from the RCI and Public Cloud Team.</li>
+<li><a href="https://aws.amazon.com/free"><strong>Docs</strong>: AWS Free Tier guide</a>: An overview of the AWS Free Tier, including limitations and expected costs for beginner users.</li>
+<li><a href="https://researchci.it.wisc.edu/introduction-to-aws-for-researchers/"><strong>Guide</strong>: Introduction to AWS for Researchers (RCI)</a>: UW-Madison RCI’s guide to getting started with AWS for research.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-GCP.html"><strong>Compute</strong>: Intro to GCP for ML/AI</a> – Parallel workshop covering similar cloud ML concepts using GCP infrastructure.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html"><strong>Compute</strong>: BadgerCompute</a> – UW–Madison’s lightweight, NetID-authenticated Jupyter service for short interactive sessions and classroom use. Includes a 4-hour runtime limit (which may sometimes beat the free version of Colab).</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> - Learn how to use Google Colab for machine learning workflows.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html"><strong>Talk</strong>: Deploying RAG in Bedrock vs.&nbsp;Local: WattBot 2025 Case Study</a>: Case study of a RAG system deployed on Bedrock and compared with a local open-model deployment.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/WattBot-2025.html"><strong>Project</strong>: WattBot 2025</a>: The ML Marathon challenge used as the workshop’s RAG example.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -3573,9 +3724,9 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Blogs/blog-music-identification.html"><strong>Blog</strong>: What Tune Is That? A Humanities Application of Deep Learning</a>: A Nexus community post applying deep learning to audio and music identification.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: TorchAudio is built on PyTorch — start here if you’re new to the framework.</li>
-<li><a href="https://docs.pytorch.org/audio/stable/index.html">TorchAudio Documentation</a>: Includes official API as well as tutorials.</li>
-<li><a href="https://www.youtube.com/watch?v=3mju52xBFK8">Getting Started With Torchaudio | PyTorch Tutorial (YouTube)</a>: In this youtube video from the AssemblyAI youtube channel, you can learn how to code the basic features of TorchAudio, including resampling and incorporating an audio dataset.</li>
-<li><a href="https://magenta.tensorflow.org/datasets/maestro">The MAESTRO Dataset</a>: Popular dataset containing hundreds of paired audio and MIDI recordings that can be processed with TorchAudio and used for training.</li>
+<li><a href="https://docs.pytorch.org/audio/stable/index.html"><strong>Docs</strong>: TorchAudio Documentation</a>: Includes official API as well as tutorials.</li>
+<li><a href="https://www.youtube.com/watch?v=3mju52xBFK8"><strong>Video</strong>: Getting Started With Torchaudio (AssemblyAI)</a>: In this youtube video from the AssemblyAI youtube channel, you can learn how to code the basic features of TorchAudio, including resampling and incorporating an audio dataset.</li>
+<li><a href="https://magenta.tensorflow.org/datasets/maestro"><strong>Data</strong>: The MAESTRO Dataset</a>: Popular dataset containing hundreds of paired audio and MIDI recordings that can be processed with TorchAudio and used for training.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -3633,7 +3784,8 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/DeepForest.html"><strong>Model</strong>: DeepForest</a>: A related toolkit for tree and wildlife detection in aerial imagery.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/iNaturalist.html"><strong>Data</strong>: iNaturalist</a>: A large-scale biodiversity dataset relevant to wildlife and ecology applications.</li>
-<li><a href="https://github.com/microsoft/CameraTraps">Microsoft PyTorch Wildlife</a>: The Microsoft-run fork of their support to the MegaDetector project.</li>
+<li><a href="https://github.com/microsoft/CameraTraps"><strong>Library</strong>: PyTorch Wildlife</a>: The Microsoft-run fork of their support to the MegaDetector project.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Snapshot-WI-Oh-Deer.html"><strong>Project</strong>: Snapshot Wisconsin: Oh Deer</a>: ML Marathon challenge that applies detection to trail camera images of deer.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -3894,10 +4046,10 @@ font-style: inherit;"># visit http://127.0.0.1:5000</span></span></code></pre></
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html"><strong>Workshop</strong>: Intro to Machine Learning with Sklearn</a>: Prerequisite workshop covering the Sklearn fundamentals used in this tutorial.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/Github-desktop.html"><strong>Guide</strong>: Version Control with GitHub Desktop</a>: Prerequisite guide on version control, essential for reproducible ML workflows.</li>
-<li><a href="https://mlflow.org/docs/latest/tracking.html">MLflow Tracking (official docs)</a></li>
-<li><a href="https://mlflow.org/docs/latest/ml/tracking/quickstart/">Tracking quickstart (official)</a></li>
-<li><a href="https://docs.databricks.com/aws/en/mlflow/tracking">Track model development using MLflow (Databricks guide)</a></li>
-<li><a href="https://dvc.org/doc/start">DVC “Get Started” for data versioning</a></li>
+<li><a href="https://mlflow.org/docs/latest/tracking.html"><strong>Docs</strong>: MLflow Tracking</a>: The official reference for the tracking API.</li>
+<li><a href="https://mlflow.org/docs/latest/ml/tracking/quickstart/"><strong>Docs</strong>: MLflow tracking quickstart</a>: A short official walkthrough of logging a first run.</li>
+<li><a href="https://docs.databricks.com/aws/en/mlflow/tracking"><strong>Guide</strong>: Track model development using MLflow</a>: Databricks guide to the same workflow in a hosted setting.</li>
+<li><a href="https://dvc.org/doc/start"><strong>Docs</strong>: DVC Get Started</a>: Data versioning to pair with experiment tracking.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -4105,11 +4257,12 @@ font-style: inherit;">"example.png"</span>))</span></code></pre></div></div>
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-TextAnalysis_Python.html"><strong>Workshop</strong>: Intro to Text Analysis / NLP</a>: Covers NLP fundamentals that complement OCR-based text extraction pipelines.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/geodeepdive.html"><strong>Notebook</strong>: GeoDeepDive</a>: An example of OCR and NLP applied to scientific text mining at scale.</li>
-<li><a href="https://github.com/madmaze/pytesseract">GitHub repo: madmaze/pytesseract</a> – Source code and examples</li>
-<li><a href="https://github.com/PaddlePaddle/PaddleOCR">PaddleOCR</a> – End-to-end OCR with detection, recognition, and layout modeling (CNN and ViT backends)</li>
-<li><a href="https://huggingface.co/microsoft/trocr-base-stage1">TrOCR</a> – Transformer-based OCR with multilingual support</li>
-<li><a href="https://github.com/clovaai/donut">Donut</a> – OCR + document understanding via vision-language modeling</li>
-<li><a href="https://github.com/JaidedAI/EasyOCR">EasyOCR</a> – Lightweight OCR tool with CNN + LSTM backends</li>
+<li><a href="https://github.com/madmaze/pytesseract"><strong>Code</strong>: pytesseract on GitHub</a>: Source code and examples</li>
+<li><a href="https://github.com/PaddlePaddle/PaddleOCR"><strong>Library</strong>: PaddleOCR</a>: End-to-end OCR with detection, recognition, and layout modeling (CNN and ViT backends)</li>
+<li><a href="https://huggingface.co/microsoft/trocr-base-stage1"><strong>Model</strong>: TrOCR</a>: Transformer-based OCR with multilingual support</li>
+<li><a href="https://github.com/clovaai/donut"><strong>Model</strong>: Donut</a>: OCR + document understanding via vision-language modeling</li>
+<li><a href="https://github.com/JaidedAI/EasyOCR"><strong>Library</strong>: EasyOCR</a>: Lightweight OCR tool with CNN + LSTM backends</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html"><strong>Project</strong>: Badger Scribe</a>: ML Marathon challenge transcribing 19th-century handwriting, where classical OCR is a baseline for vision-language models.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -4216,12 +4369,12 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <section id="related-resources" class="level2">
 <h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
 <ul>
-<li><a href="https://deepforest.readthedocs.io/en/latest/">Documentation: DeepForest User Guide</a>: Full instructions for loading, training, evaluating, and customizing models<br>
-</li>
+<li><a href="https://deepforest.readthedocs.io/en/latest/"><strong>Docs</strong>: DeepForest user guide</a>: Full instructions for loading, training, evaluating, and customizing models</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/UNET.html"><strong>Model</strong>: U-Net</a>: A foundational segmentation model used in ecological and medical applications<br>
 </li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-03-04.html"><strong>Talk</strong>: Automating Scientific Discovery</a>: Discusses retrieval and large-scale image analysis in ecology; mentions DeepForest among supporting tools.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: DeepForest’s pretrained models are hosted on the Hugging Face Hub — learn more about the platform and its tools.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Megadetector.html"><strong>Model</strong>: MegaDetector</a>: Pretrained detector for camera trap images; DeepForest covers the aerial view.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -4254,10 +4407,10 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 
 
 <p><a href="https://www.inaturalist.org/">iNaturalist (iNat)</a> is one of the largest community-contributed biodiversity datasets, with millions of photos of plants, animals, and fungi submitted by citizen scientists around the world. These images are accompanied by rich metadata — including time, location, and species ID — and are verified through community consensus.</p>
-<p>The <strong>iNat2024 (iNat24)</strong> subset, used in benchmarks like <a href="https://inquire-benchmark.github.io/">INQUIRE</a>, includes over 5 million images and provides a real-world testbed for evaluating species classification, visual reasoning, and multimodal retrieval tasks.</p>
+<p>The <strong>iNat2024 (iNat24)</strong> subset, used in benchmarks like <a href="https://inquire-benchmark.github.io/">INQUIRE</a>, includes over 5 million images and provides a field-data testbed for evaluating species classification, visual reasoning, and multimodal retrieval tasks.</p>
 <section id="what-makes-inat-valuable-for-ai" class="level3">
 <h3 class="anchored" data-anchor-id="what-makes-inat-valuable-for-ai">What makes iNat valuable for AI?</h3>
-<p>Most large-scale image datasets are curated or scraped from the internet. In contrast, iNat data reflects real-world ecological observations: images are often messy, off-center, and diverse in setting, but rich in scientific value. This makes iNat an ideal source for developing and testing robust machine learning models.</p>
+<p>Most large-scale image datasets are curated or scraped from the internet. In contrast, iNat data reflects field observations: images are often messy, off-center, and diverse in setting, but rich in scientific value. This makes iNat an ideal source for developing and testing robust machine learning models.</p>
 <p>Researchers use iNat to:</p>
 <ul>
 <li>Train and evaluate models on fine-grained species classification<br>
@@ -4283,6 +4436,8 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/BioTrove.html"><strong>Data:</strong> BioTrove</a>: The largest publicly accessible biodiversity image dataset (161.9M images, ~366K species), curated from iNaturalist research-grade observations.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/INQUIRE.html"><strong>Data:</strong> INQUIRE Benchmark</a>: Built on iNat24, this benchmark supports multimodal ecological retrieval tasks.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-03-04.html"><strong>Talk:</strong> Automating Scientific Discovery</a>: Learn how iNat data is being used to train AI systems that support ecological research.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Megadetector.html"><strong>Model</strong>: MegaDetector</a>: Pretrained animal detector for camera trap images, a complement to iNat’s citizen-science photos.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/BioTrove-Clustering.html"><strong>Project</strong>: Clustering the BioTrove Dataset</a>: ML Marathon challenge built on iNaturalist-derived images.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -4314,7 +4469,7 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 
 
 
-<p><a href="https://inquire-benchmark.github.io/">INQUIRE</a> is a benchmark for evaluating text-to-image retrieval models on expert-level ecological queries. Built on a 5-million-image subset of iNaturalist 2024 (iNat24), it includes 250 natural language prompts developed with domain experts — such as “a sick cassava plant” or “a hermit crab using plastic trash as its shell.” Each query is paired with a comprehensively labeled set of relevant images (over 33,000 in total), drawn from real-world biodiversity data.</p>
+<p><a href="https://inquire-benchmark.github.io/">INQUIRE</a> is a benchmark for evaluating text-to-image retrieval models on expert-level ecological queries. Built on a 5-million-image subset of iNaturalist 2024 (iNat24), it includes 250 natural language prompts developed with domain experts — such as “a sick cassava plant” or “a hermit crab using plastic trash as its shell.” Each query is paired with a comprehensively labeled set of relevant images (over 33,000 in total), drawn from field biodiversity data.</p>
 <p>INQUIRE goes beyond traditional retrieval tasks by focusing on scientifically meaningful concepts. Its goal is to push AI systems toward supporting ecological and biodiversity research, helping researchers find specific behaviors, species traits, or environmental conditions in large image corpora.</p>
 <section id="why-this-benchmark-matters" class="level3">
 <h3 class="anchored" data-anchor-id="why-this-benchmark-matters">Why this benchmark matters</h3>
@@ -4329,7 +4484,7 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 </li>
 <li>Contextual or environmental cues</li>
 </ul>
-<p>Even top-performing models — including CLIP ViT-H with GPT-4o reranking — fail to achieve mean average precision (mAP@50) above 50%. This reflects the difficulty of bridging general-purpose vision-language modeling with the nuance required for real-world science.</p>
+<p>Even top-performing models — including CLIP ViT-H with GPT-4o reranking — fail to achieve mean average precision (mAP@50) above 50%. This reflects the difficulty of bridging general-purpose vision-language modeling with the nuance required for expert scientific use.</p>
 <p>INQUIRE provides a structured way to evaluate whether retrieval systems are ready to assist with challenges like species monitoring, environmental analysis, and automated ecological observation.</p>
 </section>
 <section id="retrieval-tasks-fullrank-and-rerank" class="level3">
@@ -4376,7 +4531,7 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <ul>
 <li>Building retrieval tools for ecologists and conservation scientists</li>
 <li>Developing multimodal models for biodiversity datasets</li>
-<li>Testing zero-shot generalization of vision-language models on real-world visual data</li>
+<li>Testing zero-shot generalization of vision-language models on field-collected visual data</li>
 <li>Constructing image subsets for training, analysis, or monitoring using query-based filtering</li>
 <li>Supporting research workflows that require specific ecological visual evidence</li>
 </ul>
@@ -4428,13 +4583,13 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 
 
 
-<p>CIFAR-10 (Canadian Institute for Advanced Research) is a widely used dataset consisting of 60,000 color images at a resolution of 32×32 pixels, spanning 10 distinct classes with 6,000 images per class. To be exact, the classes are airplanes, automobiles, birds, cats, deer, dogs, frogs, horses, ships, and trucks. It is a labeled subset of the 80 Million Tiny Images dataset, originally created by researchers at MIT and NYU, with image annotations provided by paid student annotators. Despite its simplicity, CIFAR-10 covers a diverse set of real-world objects, making it a standard benchmark for evaluating and training computer vision models.</p>
+<p>CIFAR-10 (Canadian Institute for Advanced Research) is a widely used dataset consisting of 60,000 color images at a resolution of 32×32 pixels, spanning 10 distinct classes with 6,000 images per class. To be exact, the classes are airplanes, automobiles, birds, cats, deer, dogs, frogs, horses, ships, and trucks. It is a labeled subset of the 80 Million Tiny Images dataset, originally created by researchers at MIT and NYU, with image annotations provided by paid student annotators. Despite its simplicity, CIFAR-10 covers a diverse set of everyday objects, making it a standard benchmark for evaluating and training computer vision models.</p>
 <p>CIFAR-100 is a more fine-grained variant of CIFAR-10, containing the same images but categorized into 100 classes instead of 10. These 100 classes are grouped into 20 superclasses, with 600 images per class. This finer categorization makes CIFAR-100 a more challenging dataset, requiring models to distinguish between more nuanced variations of objects within the same broad categories. For example, in CIFAR-10, all dogs fall under a single “dog” category. In CIFAR-100, this is broken down into multiple specific dog breeds such as beagle, dalmatian, and golden retriever. Similarly, the “automobile” category in CIFAR-10 is split into more detailed vehicle types in CIFAR-100, such as pickup truck, race car, and tractor. This increased level of detail makes CIFAR-100 useful for training models that need to recognize finer-grained object differences.</p>
 <section id="key-features" class="level4">
 <h4 class="anchored" data-anchor-id="key-features">Key features</h4>
 <ul>
 <li><strong>Small size</strong>: Each image is only 32x32 pixels, and with only 60,000 images in total, the dataset is computationally manageable.</li>
-<li><strong>Diversity</strong>: The dataset covers a broad range of real-world objects, mainly consisting of animals and transportation vehicles. With this diversity, CIFAR-10 ensures that models generalize well across different types of objects rather than specializing in a narrow domain.</li>
+<li><strong>Diversity</strong>: The dataset covers a broad range of everyday objects, mainly consisting of animals and transportation vehicles. With this diversity, CIFAR-10 ensures that models generalize well across different types of objects rather than specializing in a narrow domain.</li>
 <li><strong>Balance</strong>: Each class contains an equal number of images, preventing class imbalance issues.</li>
 </ul>
 </section>
@@ -4464,11 +4619,12 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <ul>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html"><strong>Workshop</strong>: Intro to Deep Learning with PyTorch</a>: Learn the fundamentals of deep learning, including CNNs commonly used with CIFAR.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_Keras.html"><strong>Workshop</strong>: Intro to Deep Learning with Keras</a>: Another intro to deep learning covering CNN architectures suited for image classification.</li>
-<li><a href="https://www.kaggle.com/c/cifar-10/">CIFAR-10 Kaggle</a>: CIFAR-10 Kaggle image prediction competition.</li>
-<li><a href="https://paperswithcode.com/dataset/cifar-10">Papers With Code (CIFAR-10)</a>: Additional documentation on CIFAR-10</li>
-<li><a href="https://paperswithcode.com/dataset/cifar-100">Papers With Code (CIFAR-100)</a>: CIFAR-100 documentation</li>
-<li><a href="https://venturebeat.com/ai/mit-takes-down-80-million-tiny-images-data-set-due-to-racist-and-offensive-content/">CIFAR Ethical Acknowledgement</a>: News article that detailed the ethical concerns of 80 Million Tiny Images that lead to its shutdown.</li>
-<li><a href="https://zenodo.org/records/10970014">Dollar street 10</a>: More details and download link to Dollar street 10.</li>
+<li><a href="https://www.kaggle.com/c/cifar-10/"><strong>Data</strong>: CIFAR-10 on Kaggle</a>: CIFAR-10 Kaggle image prediction competition.</li>
+<li><a href="https://paperswithcode.com/dataset/cifar-10"><strong>Docs</strong>: Papers With Code (CIFAR-10)</a>: Additional documentation on CIFAR-10</li>
+<li><a href="https://paperswithcode.com/dataset/cifar-100"><strong>Docs</strong>: Papers With Code (CIFAR-100)</a>: CIFAR-100 documentation</li>
+<li><a href="https://venturebeat.com/ai/mit-takes-down-80-million-tiny-images-data-set-due-to-racist-and-offensive-content/"><strong>Article</strong>: CIFAR ethical acknowledgement</a>: News article that detailed the ethical concerns of 80 Million Tiny Images that lead to its shutdown.</li>
+<li><a href="https://zenodo.org/records/10970014"><strong>Data</strong>: Dollar Street 10</a>: More details and download link to Dollar street 10.</li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-02-10.html"><strong>Talk</strong>: Learning Through Comparison: Use Cases of Contrastive Learning</a>: ML+X forum on contrastive learning; CIFAR is a standard testbed for the methods discussed.</li>
 </ul>
 </section>
 <section id="comments" class="level2">
@@ -4486,75 +4642,6 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
   <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/CIFAR.html</guid>
   <pubDate>Mon, 03 Mar 2025 00:00:00 GMT</pubDate>
   <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/cifar.png" medium="image" type="image/png" height="111" width="144"/>
-</item>
-<item>
-  <title>UW Generative AI Services &amp; Policies</title>
-  <dc:creator>Chris Endemann</dc:creator>
-  <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>The University of Wisconsin–‍Madison is committed to responsibly harnessing the power of generative artificial intelligence to enhance teaching, learning, research and university operations. The Division of Information Technology (DoIT) oversees university-wide AI initiatives focused on providing secure enterprise AI tools. These tools are available university-wide for free and provide higher data security and privacy protection than public services. Please consider these options before exploring unvetted generative AI services for university work.</p>
-<p>To learn more about vetted tools and genAI use policies, visit the <a href="https://it.wisc.edu/generative-ai-services-uw-madison/">Generative AI Services at UW-Madison</a> webpage. The current list of free supported tools include:</p>
-<ul>
-<li><a href="https://it.wisc.edu/ai/meet-google-gemini/">Google Gemini</a>: A conversational AI chatbot for text generation, coding, and image creation.</li>
-<li><a href="https://kb.wisc.edu/139076">Webex AI Assistant</a>: A meeting tool with real-time translation, transcription, and voice commands.</li>
-<li><a href="https://it.wisc.edu/services/microsoft-copilot/">Microsoft Copilot</a>: A digital assistant integrated with Microsoft 365 for creative tasks and problem-solving.</li>
-<li><a href="https://kb.wisc.edu/139097">Zoom AI Companion</a>: Summarizes meetings and identifies actionable items.</li>
-</ul>
-<p>In addition, the following tools are available on a pay-as-you-go basis through UW-provisioned cloud accounts:</p>
-<ul>
-<li><a href="https://it.wisc.edu/services/amazon-web-services/">Amazon Web Services (AWS) Bedrock</a>: Amazon Bedrock is a cloud service that makes it easy to build AI applications using foundation models from leading AI companies. It provides a single way to access and use these models and tools to customize them with public or internal data and create AI assistants that can interact with university systems and information.</li>
-<li><a href="https://it.wisc.edu/services/google-cloud-platform/">Google Cloud Platform AI Services</a>: Google Cloud Platform (GCP) offers cloud computing resources and access to more than 90 foundation models, such as Claude from Anthropic and Mixtral from Mistral AI, for processing and storing public or internal data. GCP is available to faculty and staff but requires Cybersecurity evaluation for uses involving sensitive or restricted data.</li>
-<li><a href="https://it.wisc.edu/services/microsoft-azure/">Microsoft Azure AI Services</a>: UW–‍Madison’s Azure service offers cloud computing resources, including access to OpenAI’s API, for processing and storing public or internal data. It’s available to faculty and staff but requires Cybersecurity evaluation for uses involving sensitive or restricted data.</li>
-</ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Using cloud AI services? Get a UW-provisioned account first
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>To access the pay-as-you-go services above, you’ll need a UW-provisioned cloud account. UW accounts come with institutional pricing discounts, lower grant overhead (26% instead of the usual 55.5% — saving ~$2,950 per $10k in cloud costs), data protection agreements (including BAA for HIPAA), and dedicated support. NIH-funded researchers can get additional discounts through the <a href="https://kb.wisc.edu/109813">STRIDES Initiative</a>.</p>
-<p><a href="https://kb.wisc.edu/sbsedirbs/page.php?id=104090">Request a cloud account</a> | <a href="https://kb.wisc.edu/101516">Office hours (Thursdays, 2–3:15 PM)</a> | <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html">Full details: UW Cloud Services</a></p>
-</div>
-</div>
-<section id="ai-and-institutional-data" class="level3">
-<h3 class="anchored" data-anchor-id="ai-and-institutional-data">AI and institutional data</h3>
-<p>While some of the enterprise tools can be used with “internal data”, <strong>most genAI tools cannot be used for senstive/restriced data</strong>. Review the <a href="https://it.wisc.edu/generative-ai-services-uw-madison/#faq">FAQ section</a> to learn which tools are appropriate for your data. If you have questions about data classification, contact the appropriate <a href="https://data.wisc.edu/data-governance/data-stewards/">data steward</a>. For more information on genAI use policies, visit <a href="https://it.wisc.edu/generative-ai-uw-madison-use-policies/">it.wisc.edu/generative-ai-uw-madison-use-policies/</a></p>
-</section>
-<section id="related-resources" class="level2">
-<h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
-<ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html"><strong>GenAI</strong>: OpenScholar</a>: An open-source alternative for scientific literature synthesis — relevant for researchers exploring RAG-based tools.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/NotebookLM.html"><strong>GenAI</strong>: NotebookLM</a>: Google’s AI-powered notebook tool for summarizing and interacting with documents.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Amazon_SageMaker.html"><strong>Workshop</strong>: Intro to AWS for ML/AI</a>: Hands-on workshop covering AWS SageMaker and Bedrock for cloud-based ML/AI workflows.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-GCP.html"><strong>Workshop</strong>: Intro to GCP for ML/AI</a>: Get started with GCP’s AI and compute services available to UW-Madison researchers.</li>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/TrustworthyAI_Explainability-Bias-Fairness-OODdetection.html"><strong>Workshop</strong>: Trustworthy AI</a>: Learn about explainability, bias, and fairness considerations when deploying AI tools.</li>
-</ul>
-</section>
-<section id="comments" class="level2">
-<h2 class="anchored" data-anchor-id="comments">Comments</h2>
-
-
-</section>
-
- ]]></description>
-  <category>GenAI</category>
-  <category>Guides</category>
-  <category>Microsoft Copilot</category>
-  <category>Gemini</category>
-  <category>UW-Madison</category>
-  <category>LLM</category>
-  <category>Foundation models</category>
-  <guid>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html</guid>
-  <pubDate>Tue, 07 Jan 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://uw-madison-datascience.github.io/ML-X-Nexus/images/UW-genAI-services.png" medium="image" type="image/png" height="119" width="144"/>
 </item>
 </channel>
 </rss>
