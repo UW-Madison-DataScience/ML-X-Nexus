@@ -16,7 +16,7 @@
 ## Authorship
 
 - `author` is whoever wrote the Nexus page. The title block labels it "Nexus author" (set in `_quarto.yml` under `language`).
-- `resource-author` (always a YAML list, even for one name) names who made an authored work the page shares when that is someone else: a book, a recorded talk or lecture, a lesson from another team, a competition. It shows as "Resource author" or "Resource authors" in the title block only, not on tiles. Leave it out for overviews of a tool, model, dataset or service, where the maker is named in the text.
+- `resource-author` (always a YAML list, even for one name) names who made an authored work the page shares when that is someone else: a book, a recorded talk or lecture, a lesson from another team, a competition. It shows as "Resource author" or "Resource authors" in the title block, and a post-render script puts those names on the page's tile in place of the Nexus author. Leave it out for overviews of a tool, model, dataset or service, where the maker is named in the text.
 
 ## Dates
 
