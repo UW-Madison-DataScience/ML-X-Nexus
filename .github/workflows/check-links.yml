@@ -55,11 +55,6 @@ jobs:
           website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
           # Log only warnings and errors; every successful fetch used to print a line.
           verbose: warning
-          # github.com and colab answer a burst of requests with 429s; fewer parallel
-          # connections per host and longer retry backoff keep those from counting as broken.
-          connect_limit_per_host: 2
-          max_retries: 6
-          max_retry_time: 120
           # Fail fast on dead or slow hosts. Defaults are 4 retries and 30 s backoff,
           # so a single unresponsive link could hold the job for several minutes.
           max_retries: 2
