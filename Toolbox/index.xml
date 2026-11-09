@@ -154,8 +154,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </item>
 <item>
   <title>Qwen: Open-Weight Language and Multimodal Models from Alibaba Cloud</title>
-  <dc:creator>Zain Waseem</dc:creator>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Qwen Team, Alibaba Cloud</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Qwen.html</link>
   <description><![CDATA[ 
 
@@ -351,6 +350,9 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <li><strong>Paper</strong>: <a href="https://arxiv.org/html/2605.23825v1">Post-training bias in Qwen models</a>: Duke University study of how post-training shapes political and social bias in Qwen models.</li>
 <li><strong>Paper</strong>: <a href="https://arxiv.org/html/2512.15792v2">Systematic bias in LLMs on political topics</a>: Nanyang Technological University study of systematic bias across LLMs on politics and related issues.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Zain Waseem and Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -379,7 +381,7 @@ is skipped by the qmd-to-ipynb GitHub Action.
 </item>
 <item>
   <title>National Research Platform (NRP)</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>National Research Platform</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html</link>
   <description><![CDATA[ 
 
@@ -569,7 +571,7 @@ font-style: inherit;">"NRP_LLM_TOKEN"</span>).strip()</span></code></pre></div><
 </ol>
 <p><a href="https://colab.research.google.com/github/UW-Madison-DataScience/ML-X-Nexus/blob/main/Toolbox/Compute/NRP-Nautilus.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <p><strong>Install and configure the client.</strong></p>
-<div id="825acff0" class="cell" data-execution_count="1">
+<div id="87d6b9f4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pip install --quiet openai python-dotenv requests</span></span>
@@ -606,7 +608,7 @@ font-style: inherit;">"https://ellm.nrp-nautilus.io/v1"</span>,</span>
 <span id="cb3-10">)</span></code></pre></div></div>
 </div>
 <p><strong>List available models.</strong> Expect <code>qwen3</code>, <code>gpt-oss</code>, <code>kimi</code>, <code>gemma</code>, <code>qwen3-embedding</code>, etc. — the live set rotates.</p>
-<div id="1a186188" class="cell" data-execution_count="2">
+<div id="0614d84b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -623,7 +625,7 @@ background-color: null;
 font-style: inherit;">id</span>)</span></code></pre></div></div>
 </div>
 <p><strong>A chat completion.</strong> <code>gpt-oss</code> is a good first call — text-only, low GPU footprint, stable across model updates.</p>
-<div id="51200bbc" class="cell" data-execution_count="3">
+<div id="d845f554" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -663,7 +665,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If your client needs <code>max_tokens</code>, set it to ~1/3–1/4 of the model’s context — it caps output, not total context.</p>
 <p><strong>Toggle reasoning mode.</strong> Several models default to “thinking” mode, which adds latency. Disable via <code>extra_body</code>:</p>
-<div id="095c15d8" class="cell" data-execution_count="4">
+<div id="ed560ccd" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -701,7 +703,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>Exact keys vary by model — see each <a href="https://nrp.ai/documentation/userdocs/ai/llm-managed/models/">model card</a> for <code>glm-5</code>, <code>kimi</code>, etc.</p>
 <p><strong>Multimodal image input.</strong> <code>gemma</code>, <code>qwen3</code>, <code>qwen3-small</code>, <code>gemma-small</code>, and <code>kimi</code> accept images as <code>image_url</code> content blocks (URL or base64 data URI). <code>gemma-small</code> is the only catalogued model that also accepts <strong>audio</strong> (ASR / speech-to-text).</p>
-<div id="a3fe5e5f" class="cell" data-execution_count="5">
+<div id="ef907e26" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> base64, requests</span>
@@ -807,7 +809,7 @@ background-color: null;
 font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p><strong>Audio input (ASR / speech-to-text).</strong> <code>gemma-small</code> is the only catalogued model that accepts audio. Toy example using a short public-domain MLK clip from a Hugging Face fixture dataset:</p>
-<div id="d9e4e48a" class="cell" data-execution_count="6">
+<div id="9a732728" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">audio <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(</span>
@@ -882,7 +884,7 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </div>
 <p>If <code>gemma-small</code> rejects FLAC on your account, try a WAV or MP3 source — vLLM’s audio support varies by build. The OpenAI-compatible content-block shape stays the same; only the <code>data:audio/&lt;fmt&gt;;base64,...</code> MIME hint changes.</p>
 <p><strong>Embeddings for RAG.</strong> <code>qwen3-embedding</code> is the embedding model; do not call it for chat completions.</p>
-<div id="f9f936c1" class="cell" data-execution_count="7">
+<div id="b9f4ebe7" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">emb <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.embeddings.create(</span>
@@ -957,7 +959,7 @@ font-style: inherit;"># e.g. -&gt; 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZn
 <pre><code>NRP_LLM_TOKEN=...
 NRP_CACHE_SALT=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcQ==</code></pre>
 <p>Then pass it on each request:</p>
-<div id="ca897ebd" class="cell" data-execution_count="8">
+<div id="c286ff3e" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">completion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> client.chat.completions.create(</span>
@@ -1041,6 +1043,9 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html"><strong>Notebook</strong>: Fine-tuning with LoRA: Colab, CHTC, or AWS</a>: A LoRA fine-tune you can run on an NRP GPU instead of Colab.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Code.html"><strong>Project</strong>: Badger Code</a>: An ML Marathon challenge that runs a local coding agent on a single GPU.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -1090,14 +1095,14 @@ font-style: inherit;">0</span>].message.content)</span></code></pre></div></div>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="85642620" class="cell" data-execution_count="1">
+<div id="bcf9764f" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>q transformers accelerate bitsandbytes torch</span></code></pre></div></div>
 </div>
-<div id="0d138673" class="cell" data-execution_count="2">
+<div id="7b583087" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1210,7 +1215,7 @@ font-style: inherit;">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAnd
 <p>We’ll use a small model — GPT-2 (124M parameters) — to keep things manageable and demonstrate the concepts clearly.</p>
 <section id="helper-measure-gpu-memory" class="level3">
 <h3 class="anchored" data-anchor-id="helper-measure-gpu-memory">Helper: Measure GPU memory</h3>
-<div id="c339bb61" class="cell" data-execution_count="3">
+<div id="b5d63d42" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1447,7 +1452,7 @@ font-style: inherit;">return</span> model, mem_used, total_params</span></code><
 </section>
 <section id="fp32-default" class="level3">
 <h3 class="anchored" data-anchor-id="fp32-default">FP32 (default)</h3>
-<div id="17ef5dee" class="cell" data-execution_count="4">
+<div id="e589a6ab" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">model_name <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -1475,7 +1480,7 @@ font-style: inherit;">del</span> model_fp32</span>
 </section>
 <section id="fp16-half-precision" class="level3">
 <h3 class="anchored" data-anchor-id="fp16-half-precision">FP16 (half precision)</h3>
-<div id="dba5e9e0" class="cell" data-execution_count="5">
+<div id="3705226b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">model_fp16, mem_fp16, params_fp16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1498,7 +1503,7 @@ font-style: inherit;">del</span> model_fp16</span>
 <section id="bf16-bfloat16" class="level3">
 <h3 class="anchored" data-anchor-id="bf16-bfloat16">BF16 (bfloat16)</h3>
 <p>BF16 uses 16 bits like FP16, but allocates them differently (as shown in the table in Part 1). FP16 gives 10 bits to the fraction for finer precision, but only 5 bits to the exponent — which is why it caps out around 65,504 and can’t represent very small values. BF16 flips this tradeoff: it keeps the same 8-bit exponent as FP32 (giving it the same massive range), at the cost of only 7 fraction bits. In practice, this works well for deep learning — the range matters more than fine-grained precision, and BF16 avoids the overflow/underflow issues that can plague FP16 during training.</p>
-<div id="180abab2" class="cell" data-execution_count="6">
+<div id="53ad53ed" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">model_bf16, mem_bf16, params_bf16 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> load_and_measure(</span>
@@ -1520,7 +1525,7 @@ font-style: inherit;">del</span> model_bf16</span>
 </section>
 <section id="compare-precision-vs.-memory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-precision-vs.-memory">Compare: precision vs.&nbsp;memory</h3>
-<div id="d11ece19" class="cell" data-execution_count="7">
+<div id="5cfa2549" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1643,7 +1648,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="bit-quantization" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization">8-bit quantization</h3>
-<div id="d8eb4886" class="cell" data-execution_count="8">
+<div id="71267769" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">bnb_config_8bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(load_in_8bit<span class="op" style="color: #5E5E5E;
@@ -1673,7 +1678,7 @@ font-style: inherit;">del</span> model_8bit</span>
 </section>
 <section id="bit-quantization-nf4" class="level3">
 <h3 class="anchored" data-anchor-id="bit-quantization-nf4">4-bit quantization (NF4)</h3>
-<div id="1865a478" class="cell" data-execution_count="9">
+<div id="a8b7c1a5" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">bnb_config_4bit <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> BitsAndBytesConfig(</span>
@@ -1718,7 +1723,7 @@ font-style: inherit;">"NF4 (4-bit via bitsandbytes)"</span></span>
 </section>
 <section id="compare-all-configurations" class="level3">
 <h3 class="anchored" data-anchor-id="compare-all-configurations">Compare all configurations</h3>
-<div id="df513d54" class="cell" data-execution_count="10">
+<div id="99fce8e5" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1954,7 +1959,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="correctly-counting-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="correctly-counting-parameters">Correctly counting parameters</h3>
 <p>To get the real parameter count, we need to check whether each parameter is a quantized <code>bitsandbytes</code> type and recover the original shape:</p>
-<div id="19eaa13d" class="cell" data-execution_count="11">
+<div id="7d686925" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> bitsandbytes <span class="im" style="color: #00769E;
@@ -2030,7 +2035,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> total, quantized, non_quantized</span></code></pre></div></div>
 </div>
-<div id="3edb0b93" class="cell" data-execution_count="12">
+<div id="57adabcf" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">naive_count <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -2146,7 +2151,7 @@ font-style: inherit;"> (naive total) ✓"</span>)</span></code></pre></div></div
 <section id="whats-happening-under-the-hood" class="level3">
 <h3 class="anchored" data-anchor-id="whats-happening-under-the-hood">What’s happening under the hood</h3>
 <p>Let’s peek at an individual layer to see the difference between the stored tensor shape and the logical weight shape:</p>
-<div id="0af9b5df" class="cell" data-execution_count="13">
+<div id="ae38e925" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2387,7 +2392,7 @@ font-style: inherit;"># just show one example</span></span></code></pre></div></
 </section>
 <section id="cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="cleanup">Cleanup</h2>
-<div id="d27eb8d2" class="cell" data-execution_count="14">
+<div id="cc8c6878" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2894,7 +2899,7 @@ Tip
 </item>
 <item>
   <title>SWE-bench: Evaluating AI on GitHub Issues</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Carlos E. Jimenez and collaborators, Princeton University</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Benchmarks/SWE-Bench.html</link>
   <description><![CDATA[ 
 
@@ -2991,6 +2996,9 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Guides/claude-code-best-practices.html"><strong>Guide</strong>: Claude Code Best Practices</a>: Working with the hosted coding agents that top the leaderboard, with a section on benchmarks and leaderboards.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Agentic-Coding.html"><strong>Workshop</strong>: Intro to Agentic Coding</a>: Principles for using coding agents safely, whatever their benchmark score.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -3009,7 +3017,8 @@ Tip
 </item>
 <item>
   <title>OpenScholar: Scientific Literature Synthesis with Retrieval-Augmented LMs</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Allen Institute for AI</dc:creator>
+  <dc:creator>University of Washington</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/OpenScholar.html</link>
   <description><![CDATA[ 
 
@@ -3130,6 +3139,9 @@ Tip
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html"><strong>Forum</strong>: Deploying RAG in Bedrock vs.&nbsp;Local</a>: A case study comparing cloud-based and local RAG deployment strategies.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: The platform hosting OpenScholar’s model weights and retriever — learn more about the Hub, pipelines, and model hosting.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -3230,7 +3242,7 @@ Tip
 </item>
 <item>
   <title>Google Colab</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Google </dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html</link>
   <description><![CDATA[ 
 
@@ -3358,6 +3370,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html"><strong>Notebook</strong>: Fine-tuning with LoRA: Colab, CHTC, or AWS</a> – A worked example of what the free T4 can do: LoRA fine-tune a 3B vision-language model in 4-bit, with checkpoints on Google Drive to survive session timeouts.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -3378,7 +3393,7 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 </item>
 <item>
   <title>BadgerCompute</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>UW-Madison BadgerCompute team</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html</link>
   <description><![CDATA[ 
 
@@ -3466,6 +3481,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html"><strong>Compute</strong>: Google Colab</a> - Learn how to use Google Colab for machine learning workflows.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html"><strong>Compute</strong>: Center for High Throughput Computing (CHTC)</a> - Learn how to use CHTC for machine learning jobs.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -3485,7 +3503,7 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 </item>
 <item>
   <title>BioTrove</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Baskar Group, Iowa State University</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/BioTrove.html</link>
   <description><![CDATA[ 
 
@@ -3551,6 +3569,9 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 <li><a href="https://huggingface.co/BGLab/BioTrove-CLIP"><strong>Hugging Face</strong>: BioTrove-CLIP models</a></li>
 <li><a href="https://github.com/baskargroup/BioTrove/"><strong>GitHub</strong>: BioTrove tools and scripts</a></li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -3575,7 +3596,7 @@ font-style: inherit;">'/content/drive/MyDrive/data.csv'</span>)</span></code></p
 </item>
 <item>
   <title>TorchAudio</title>
-  <dc:creator>Andrew Piela</dc:creator>
+  <dc:creator>PyTorch team</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/torchaudio.html</link>
   <description><![CDATA[ 
 
@@ -3739,6 +3760,9 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <li><a href="https://www.youtube.com/watch?v=3mju52xBFK8"><strong>Video</strong>: Getting Started With Torchaudio (AssemblyAI)</a>: In this youtube video from the AssemblyAI youtube channel, you can learn how to code the basic features of TorchAudio, including resampling and incorporating an audio dataset.</li>
 <li><a href="https://magenta.tensorflow.org/datasets/maestro"><strong>Data</strong>: The MAESTRO Dataset</a>: Popular dataset containing hundreds of paired audio and MIDI recordings that can be processed with TorchAudio and used for training.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Andrew Piela</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -3759,7 +3783,9 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 </item>
 <item>
   <title>MegaDetector: Pre-Trained Animal Object Detection for Camera Trap Images</title>
-  <dc:creator>Ryan Bemowski</dc:creator>
+  <dc:creator>Dan Morris</dc:creator>
+  <dc:creator>Sarah Beery</dc:creator>
+  <dc:creator>Microsoft AI for Earth</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Megadetector.html</link>
   <description><![CDATA[ 
 
@@ -3798,6 +3824,9 @@ font-style: inherit;"># shape would be (1, 128, T)  </span></span></code></pre><
 <li><a href="https://github.com/microsoft/CameraTraps"><strong>Library</strong>: PyTorch Wildlife</a>: The Microsoft-run fork of their support to the MegaDetector project.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Snapshot-WI-Oh-Deer.html"><strong>Project</strong>: Snapshot Wisconsin: Oh Deer</a>: ML Marathon challenge that applies detection to trail camera images of deer.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Ryan Bemowski</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -4082,7 +4111,8 @@ font-style: inherit;"># visit http://127.0.0.1:5000</span></span></code></pre></
 </item>
 <item>
   <title>Pytesseract: OCR with Tesseract (LSTM) in Python</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Matthias A. Lee (pytesseract)</dc:creator>
+  <dc:creator>Tesseract OCR contributors</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/PyTesseract.html</link>
   <description><![CDATA[ 
 
@@ -4275,6 +4305,9 @@ font-style: inherit;">"example.png"</span>))</span></code></pre></div></div>
 <li><a href="https://github.com/JaidedAI/EasyOCR"><strong>Library</strong>: EasyOCR</a>: Lightweight OCR tool with CNN + LSTM backends</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/Badger-Scribe.html"><strong>Project</strong>: Badger Scribe</a>: ML Marathon challenge transcribing 19th-century handwriting, where classical OCR is a baseline for vision-language models.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -4298,7 +4331,8 @@ font-style: inherit;">"example.png"</span>))</span></code></pre></div></div>
 </item>
 <item>
   <title>DeepForest: A Toolkit of Models for Tree and Wildlife Detection in Aerial Imagery</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Ben Weinstein</dc:creator>
+  <dc:creator>Weecology lab</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/DeepForest.html</link>
   <description><![CDATA[ 
 
@@ -4388,6 +4422,9 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: DeepForest’s pretrained models are hosted on the Hugging Face Hub — learn more about the platform and its tools.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Megadetector.html"><strong>Model</strong>: MegaDetector</a>: Pretrained detector for camera trap images; DeepForest covers the aerial view.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -4413,7 +4450,7 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 </item>
 <item>
   <title>iNaturalist (iNat)</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>iNaturalist </dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/iNaturalist.html</link>
   <description><![CDATA[ 
 
@@ -4453,6 +4490,9 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/Megadetector.html"><strong>Model</strong>: MegaDetector</a>: Pretrained animal detector for camera trap images, a complement to iNat’s citizen-science photos.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Projects/ML-Marathon/BioTrove-Clustering.html"><strong>Project</strong>: Clustering the BioTrove Dataset</a>: ML Marathon challenge built on iNaturalist-derived images.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -4476,7 +4516,7 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 </item>
 <item>
   <title>INQUIRE</title>
-  <dc:creator>Chris Endemann</dc:creator>
+  <dc:creator>Edward Vendrow and collaborators</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/INQUIRE.html</link>
   <description><![CDATA[ 
 
@@ -4564,6 +4604,9 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/iNaturalist.html"><strong>Data</strong>: iNaturalist</a>: Learn more about the iNaturalist dataset.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Libraries/HuggingFace.html"><strong>Library</strong>: Hugging Face</a>: The rerank task is hosted on Hugging Face — learn more about the platform’s model and dataset hosting capabilities.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Chris Endemann</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
@@ -4592,7 +4635,9 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 </item>
 <item>
   <title>CIFAR Dataset</title>
-  <dc:creator>Aidan O&#39;Brien</dc:creator>
+  <dc:creator>Alex Krizhevsky</dc:creator>
+  <dc:creator>Vinod Nair</dc:creator>
+  <dc:creator>Geoffrey Hinton</dc:creator>
   <link>https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Data/CIFAR.html</link>
   <description><![CDATA[ 
 
@@ -4642,6 +4687,9 @@ font-style: inherit;">pip</span> install deepforest</span></code></pre></div></d
 <li><a href="https://zenodo.org/records/10970014"><strong>Data</strong>: Dollar Street 10</a>: More details and download link to Dollar street 10.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2025-02-10.html"><strong>Talk</strong>: Learning Through Comparison: Use Cases of Contrastive Learning</a>: ML+X forum on contrastive learning; CIFAR is a standard testbed for the methods discussed.</li>
 </ul>
+<div class="nexus-contributor">
+<p><em>Nexus page by Aidan O’Brien</em></p>
+</div>
 </section>
 <section id="comments" class="level2">
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
