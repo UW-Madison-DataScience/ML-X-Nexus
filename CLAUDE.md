@@ -13,6 +13,11 @@
 - Tile pages for externally hosted material follow the same sections as the other tiles: Prerequisites, Estimated time to complete, Related resources (bulleted, with bold type prefixes), Comments.
 - Reference figures from an upstream lesson by their published URL; do not copy them into `images/` unless the file is specific to this site (for example, a cropped tile image).
 
+## Authorship
+
+- `author` names whoever created the content a page describes (book authors, speakers, lesson authors, model or dataset creators). It is what tiles and page headers display.
+- The person who wrote the Nexus page goes in `nexus-contributor`; the filter renders it as a "Nexus page by …" line above Comments. Omit `nexus-contributor` when the content creator wrote the page.
+
 ## Dates
 
 - `date-modified` marks a change in a page's substance: facts, numbers, recommendations, instructions, prerequisites, scope or structure. Set it to today when you make such a change. Leave it alone for typos, wording, formatting, tags, links and cross-references.
