@@ -50,7 +50,7 @@ def parse_start(s):
     for fmt in ("%Y-%m-%d %H:%M:%S %z", "%Y-%m-%dT%H:%M:%S %z", "%Y-%m-%dT%H:%M:%S%z",
                 "%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
         try:
-            return dt.datetime.strptime(s, fmt)
+            return dt.datetime.strptime(s, fmt).replace(tzinfo=None)   # wall time in Madison; offsets dropped
         except ValueError:
             pass
     return dt.datetime.fromisoformat(s[:10])
