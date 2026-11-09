@@ -47,7 +47,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-3e921c7a0158014abf0ff431005e466e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-408ea6e4a52d59fa249b16689c5ec8ad.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -375,6 +375,12 @@ ul.task-list li input[type="checkbox"] {
     </div>
   </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">November 9, 2026</p>
+    </div>
+  </div>
     
   </div>
   
@@ -383,7 +389,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This introductory <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/">AWS SageMaker workshop</a> teaches core workflows for running predictive ML/AI models in AWS SageMaker, an AWS-managed machine learning environment. Participants will learn to set up data, configure SageMaker Notebooks, manage code repositories, train and tune models, and optimize resource costs effectively within AWS. Users will benefit from tips on controlling AWS expenses and scaling models efficiently, with practical guidance on choosing appropriate CPU and GPU resources.</p>
+<p><a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/">Machine Learning on AWS with SageMaker and Bedrock</a> teaches researchers how to run ML and AI work on AWS: where to store the data, which compute to use, how to launch and monitor a job, and how to estimate and manage the cost. SageMaker trains, fine-tunes and runs your own models, launched from a small notebook instance that acts as the controller while the demanding work runs on separate instances started for each job. Bedrock calls models AWS hosts through an API.</p>
+<p>The 15 episodes run in four parts: orientation and setup (pricing, an S3 bucket, the controller notebook); SageMaker training, hyperparameter tuning, and a LoRA fine-tune of a vision-language model; RAG with Bedrock and with SageMaker Processing jobs; and cleanup and cost tracking. No previous AWS experience is needed.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -400,18 +407,20 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <section id="cost-estimate" class="level4">
 <h4 class="anchored" data-anchor-id="cost-estimate">Cost estimate</h4>
-<p>Running through this workshop should cost approximately <strong>$5-$10</strong> on AWS, assuming moderate usage of GPU instances and a few parallel jobs (i.e., sticking to the lesson materials). For new AWS accounts, the <strong>AWS Free Tier</strong> may cover some of these costs, including 250 hours per month of the <code>ml.t2.medium</code> instance for the first two months, as well as some limited S3 storage. We recommend monitoring usage through the AWS Billing Dashboard to stay within the free tier and manage any extra expenses effectively. Remember to practice <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/Resource-management-cleanup.html">good resource management</a> and delete unused buckets, instances, etc.</p>
+<p>Run as written, the exercises cost each learner <strong>a few dollars, about $10 on an account of your own</strong>, with the CPU and GPU training jobs, hyperparameter tuning, the LoRA fine-tune and RAG inference included. Every job is estimated before launch, capped in runtime, and read back from the bill afterwards, and the <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/15_Resource-management-cleanup.html">final episode</a> covers cleanup and cost tracking. UW-Madison sessions (ML Marathon, Research Bazaar) use a shared account with guard rails that block the expensive mistakes. On an account of your own, new accounts start on a free plan that does not cover GPUs, so you need the paid plan and a GPU quota request filed three to four weeks ahead; the lesson’s <a href="https://carpentries-incubator.github.io/ML_with_AWS_SageMaker/index.html#setup-complete-before-the-workshop">setup page</a> has the steps.</p>
 </section>
 <section id="prerequisites" class="level4">
 <h4 class="anchored" data-anchor-id="prerequisites">Prerequisites</h4>
+<p>The lesson assumes you are comfortable with Python and Jupyter and know the basics of model training, hyperparameter tuning, fine-tuning, embeddings and RAG. It uses those methods but does not teach them.</p>
 <ul>
-<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html"><strong>Workshop</strong>: Intro to Machine Learning</a></li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Python_Gapminder.html"><strong>Workshop</strong>: Basic Python Programming</a></li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-ML_Sklearn.html"><strong>Workshop</strong>: Intro to Machine Learning</a></li>
+<li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/2025-05-07_RAG-Romeo-Juliet.html"><strong>Notebook</strong>: Exploring Fact-Based QA with RAG: Romeo and Juliet</a>, for the RAG episodes</li>
 </ul>
 </section>
 <section id="estimated-time-to-complete" class="level4">
 <h4 class="anchored" data-anchor-id="estimated-time-to-complete">Estimated time to complete</h4>
-<p><strong>3-5 hours</strong>: Based on running through training, tuning, and experimenting with example code setups.</p>
+<p><strong>About 10 hours</strong> of teaching and exercises for the core episodes, 12 with the three optional ones (pushing notebooks to GitHub, RAG on a notebook GPU, and the same jobs from the terminal). The fine-tuning episode alone is three hours.</p>
 </section>
 <section id="related-resources" class="level2">
 <h2 class="anchored" data-anchor-id="related-resources">Related resources</h2>
@@ -419,7 +428,6 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html"><strong>Notebook</strong>: Fine-tuning with LoRA: Colab, CHTC, or AWS</a> – The lesson’s fine-tuning episode on Google Colab’s free T4, no AWS account needed, with a side-by-side of running the same fine-tune on AWS SageMaker and CHTC.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html"><strong>Compute</strong>: UW-Madison Cloud Services (AWS, GCP, Azure)</a> – Institutional discounts, lower grant overhead, data protections, research credits, and how to request a UW cloud account.</li>
 <li><a href="https://kb.wisc.edu/101516"><strong>Support</strong>: Public Cloud Team office hours</a>: Drop-in hours on Thursdays, 2–3:15 PM via Zoom. Get answers to cloud-related questions from the RCI and Public Cloud Team.</li>
-<li><a href="https://aws.amazon.com/free"><strong>Docs</strong>: AWS Free Tier guide</a>: An overview of the AWS Free Tier, including limitations and expected costs for beginner users.</li>
 <li><a href="https://researchci.it.wisc.edu/introduction-to-aws-for-researchers/"><strong>Guide</strong>: Introduction to AWS for Researchers (RCI)</a>: UW-Madison RCI’s guide to getting started with AWS for research.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-GCP.html"><strong>Compute</strong>: Intro to GCP for ML/AI</a> – Parallel workshop covering similar cloud ML concepts using GCP infrastructure.</li>
 <li><a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html"><strong>Compute</strong>: BadgerCompute</a> – UW–Madison’s lightweight, NetID-authenticated Jupyter service for short interactive sessions and classroom use. Includes a 4-hour runtime limit (which may sometimes beat the free version of Colab).</li>
