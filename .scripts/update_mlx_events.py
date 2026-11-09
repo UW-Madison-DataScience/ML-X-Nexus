@@ -45,11 +45,15 @@ def fetch(tag, start, end):
 
 
 def parse_start(s):
-    s = (s or "").strip().replace(" ", "T", 1)
-    try:
-        return dt.datetime.fromisoformat(s)
-    except ValueError:
-        return dt.datetime.fromisoformat(s[:10])
+    """The calendar returns dates like '2024/05/15 09:00:00 -0500'; accept that and ISO forms."""
+    s = (s or "").strip().replace("/", "-")
+    for fmt in ("%Y-%m-%d %H:%M:%S %z", "%Y-%m-%dT%H:%M:%S %z", "%Y-%m-%dT%H:%M:%S%z",
+                "%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+        try:
+            return dt.datetime.strptime(s, fmt)
+        except ValueError:
+            pass
+    return dt.datetime.fromisoformat(s[:10])
 
 
 def session_name(title):
@@ -66,7 +70,11 @@ def render(events, today):
         if not re.search(r"ML\s*\+\s*Coffee", title, re.I) or key in seen:
             continue
         seen.add(key)
-        start = parse_start(e.get("startDate"))
+        try:
+            start = parse_start(e.get("startDate"))
+        except ValueError:
+            print(f"skip: unreadable date {e.get('startDate')!r} on {title!r}")
+            continue
         link = f"https://today.wisc.edu/events/view/{e['id']}" if e.get("id") else TAG_PAGE
         coffee.append((start, session_name(title), link))
     coffee.sort(key=lambda x: x[0])
