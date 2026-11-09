@@ -15,8 +15,8 @@
 
 ## Authorship
 
-- `author` names whoever created the content a page describes (book authors, speakers, lesson authors, model or dataset creators). It is what tiles and page headers display.
-- The person who wrote the Nexus page goes in `nexus-contributor`; the filter renders it as a "Nexus page by …" line above Comments. Omit `nexus-contributor` when the content creator wrote the page.
+- `author` is whoever wrote the Nexus page, as on every other site page.
+- `created-by` (a plain string) names whoever created the content the page describes (book authors, speakers, lesson authors, model or dataset creators) when that is someone else. It shows as "Created by" in the title block and on tiles. Leave it out for pages that are the author's own guide, notebook or lesson, even when they describe a product or service.
 
 ## Dates
 
