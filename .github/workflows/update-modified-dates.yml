@@ -1,0 +1,76 @@
+# -------------------------------------------------------------------------------------
+# GitHub Actions Workflow: Move date-modified when a page's substance changes
+# -------------------------------------------------------------------------------------
+# After each push to main, compares every changed content page with its previous
+# version and decides whether the change was substantive (facts, recommendations,
+# instructions, scope) or editorial (wording, typos, formatting, tags, links).
+# Substantive changes move the page's date-modified to the commit date, which is
+# what the home and section grids sort by.
+#
+# With an ANTHROPIC_API_KEY repository secret, a Claude model reads each body diff
+# and decides. Without it, a word-count heuristic decides. Commit messages can
+# override either: [content] forces a bump, [minor] suppresses one.
+# Pages with `lesson-repo` or `date-modified-auto: false` are never touched.
+# -------------------------------------------------------------------------------------
+
+name: Update modified dates
+
+on:
+  push:
+    branches: [main]
+    paths: ['**/*.qmd']
+
+jobs:
+  bump-dates:
+    # Pushes made by the Actions token don't trigger this workflow, but guard anyway.
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: Check out repository with history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the Anthropic SDK
+        run: pip install -q anthropic
+
+      - name: Judge the changed pages
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          before="${{ github.event.before }}"
+          if [[ "$before" =~ ^0+$ ]] || ! git cat-file -e "$before" 2>/dev/null; then
+            before="$(git rev-parse HEAD~1)"
+          fi
+          python3 .scripts/bump_modified_dates.py "$before" "${{ github.sha }}"
+
+      - name: Commit and push changes
+        id: commit
+        run: |
+          if git diff --quiet; then
+            echo "No date changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update date-modified for substantive edits"
+          git pull --rebase origin main
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger site publish
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run publish.yml --ref main
