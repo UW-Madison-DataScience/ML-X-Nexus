@@ -15,8 +15,8 @@
 
 ## Authorship
 
-- `author` is whoever wrote the Nexus page, as on every other site page.
-- `created-by` (a plain string) names the creator of an authored work the page shares when that is someone else: a book, a recorded talk or lecture, a lesson from another team, a competition. It shows as "Created by" in the title block and on tiles. Leave it out for Toolbox pages and other overviews of a tool, model, dataset or service, where the maker is named in the text and the page is the author's own.
+- `author` is whoever wrote the Nexus page. The title block labels it "Nexus author" (set in `_quarto.yml` under `language`).
+- `resource-author` (always a YAML list, even for one name) names who made an authored work the page shares when that is someone else: a book, a recorded talk or lecture, a lesson from another team, a competition. It shows as "Resource author" or "Resource authors" in the title block only, not on tiles. Leave it out for overviews of a tool, model, dataset or service, where the maker is named in the text.
 
 ## Dates
 

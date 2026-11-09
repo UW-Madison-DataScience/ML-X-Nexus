@@ -1,4 +1,4 @@
-<!-- Copy of Quarto's title-metadata partial with one addition: a 'Created by' block for the `created-by` field. -->
+$-- Copy of Quarto's title-metadata partial with one addition: a 'Resource author' block for the resource-author field.
 $if(by-affiliation/first)$
 <div class="quarto-title-meta-author">
   <div class="quarto-title-meta-heading">$labels.authors$</div>
@@ -39,11 +39,13 @@ $endif$
   </div>
   $endif$
   
-  $if(created-by)$
+  $if(resource-author)$
   <div>
-    <div class="quarto-title-meta-heading">Created by</div>
+    <div class="quarto-title-meta-heading">$if(resource-author/rest)$Resource authors$else$Resource author$endif$</div>
     <div class="quarto-title-meta-contents">
-      <p class="created-by">$created-by$</p>
+      $for(resource-author)$
+      <p class="resource-author">$it$</p>
+      $endfor$
     </div>
   </div>
   $endif$
