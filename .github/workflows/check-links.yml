@@ -55,13 +55,13 @@ jobs:
           website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
           # Log only warnings and errors; every successful fetch used to print a line.
           verbose: warning
-          # Fail fast on dead or slow hosts. Defaults are 4 retries and 30 s backoff,
-          # so a single unresponsive link could hold the job for several minutes.
-          max_retries: 2
-          max_retry_time: 10
+          # github.com answers bursts with 429 (rate limited). The default retry budget, 4 tries
+          # over 30 s, is enough to ride that out; 2 tries over 10 s was not.
+          max_retries: 4
+          max_retry_time: 30
           timeout: 45
-          # GitHub rate-limits (429) when hit with 10 parallel connections; 3 is enough.
-          connect_limit_per_host: 3
+          # One connection per host: github.com still rate-limited the crawler at 3.
+          connect_limit_per_host: 1
           # Skip in-page anchors (#comments, #cb3-1, ...). They point at pages the crawler
           # has already fetched, and checking thousands of them queued up behind the
           # per-host connection limit and tripped the timeout.
