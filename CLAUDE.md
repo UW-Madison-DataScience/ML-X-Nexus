@@ -16,7 +16,7 @@
 ## Authorship
 
 - `author` is whoever wrote the Nexus page, as on every other site page.
-- `created-by` (a plain string) names whoever created the content the page describes (book authors, speakers, lesson authors, model or dataset creators) when that is someone else. It shows as "Created by" in the title block and on tiles. Leave it out for pages that are the author's own guide, notebook or lesson, even when they describe a product or service.
+- `created-by` (a plain string) names the creator of an authored work the page shares when that is someone else: a book, a recorded talk or lecture, a lesson from another team, a competition. It shows as "Created by" in the title block and on tiles. Leave it out for Toolbox pages and other overviews of a tool, model, dataset or service, where the maker is named in the text and the page is the author's own.
 
 ## Dates
 
