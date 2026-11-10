@@ -451,12 +451,12 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><strong>Persistent services</strong></td>
-<td>Batch jobs only. No model endpoints or always-on applications</td>
+<td>Batch jobs only. No model endpoints or always-on applications. For campus-hosted open-weight model endpoints, see the <a href="https://github.com/qualiaMachine/BadgerBrain">BadgerBrain</a> pilot</td>
 <td>Model endpoints, RAG applications, dashboards, databases</td>
 </tr>
 <tr class="odd">
 <td><strong>Interactive use</strong></td>
-<td>Limited. Since April 2026 interactive GPU work runs in a dedicated A100 slot; everything else is batch</td>
+<td>Limited. Since April 2026 interactive GPU work runs in a dedicated A100 slot; everything else is batch. For interactive Jupyter sessions with a GPU, use <a href="https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html">BadgerCompute</a></td>
 <td>Jupyter, VS Code, persistent VMs</td>
 </tr>
 <tr class="even">
@@ -475,7 +475,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="when-does-model-size-justify-cloud-compute" class="level3">
 <h3 class="anchored" data-anchor-id="when-does-model-size-justify-cloud-compute">When does model size justify cloud compute?</h3>
-<p>A memory rule of thumb decides most cases: inference needs about 2 bytes per parameter in bf16 (1 in FP8, 0.5 in 4-bit), a LoRA fine-tune about 2.5 (about 1 with the frozen weights in 4-bit), and a full fine-tune 16, plus a few gigabytes for activations. Measured against CHTC’s cards and AWS list prices:</p>
+<p>A memory rule of thumb decides most cases: inference needs about 1 byte per parameter at 8-bit, the usual choice for serving (2 in bf16, 0.5 in 4-bit), a LoRA fine-tune about 2.5 in bf16 (about 1 with the frozen weights in 4-bit), and a full fine-tune 16, plus a few gigabytes for activations. Measured against CHTC’s cards and AWS list prices:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -499,13 +499,13 @@ ul.task-list li input[type="checkbox"] {
 <td>Each run billed; managed sweeps on SageMaker and Vertex AI</td>
 </tr>
 <tr class="odd">
-<td>Inference, up to 7B in bf16</td>
+<td>Inference, up to 14B at 8-bit (7B in bf16)</td>
 <td>up to ~14 GB</td>
 <td>Any GPU Lab card</td>
 <td>T4 <code>$0.74</code>/h, L4 <code>$1.13</code>/h, A10G <code>$1.41</code>/h</td>
 </tr>
 <tr class="even">
-<td>Inference, 27B in FP8 or 70B in 4-bit</td>
+<td>Inference, 27B at 8-bit or 70B in 4-bit</td>
 <td>27–35 GB</td>
 <td>L40S (48 GB) or any larger card</td>
 <td>L40S <code>$2.61</code>/h</td>
