@@ -56,7 +56,7 @@ A memory rule of thumb decides most cases: inference needs about 1 byte per para
 |------|-----------|---------|--------------|
 | Training from scratch, up to ~1B parameters (CNNs, ResNets, BERT-scale models, most research models) | 16 bytes per parameter plus activations: ~2 GB for a 100M model, ~16 GB for 1B | Any GPU Lab card; several cards in one server for large batches | T4 `$0.74`/h to A10G `$1.41`/h; 4 × A10G `$7.09`/h |
 | Many runs: hyperparameter sweeps, cross-validation, batch inference | One card per run | CHTC's strength: submit hundreds or thousands of jobs from one submit file | Each run billed; managed sweeps on SageMaker and Vertex AI |
-| Inference, up to 14B at 8-bit (7B in bf16) | up to ~14 GB | Any GPU Lab card | T4 `$0.74`/h, L4 `$1.13`/h, A10G `$1.41`/h |
+| Inference, up to 14B at 8-bit | up to ~14 GB | Any GPU Lab card | T4 `$0.74`/h, L4 `$1.13`/h, A10G `$1.41`/h |
 | Inference, 27B at 8-bit or 70B in 4-bit | 27–35 GB | L40S (48 GB) or any larger card | L40S `$2.61`/h |
 | LoRA fine-tune, 3B | ~12 GB | Any GPU Lab card; a [3B LoRA fine-tune on 295 pages](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html) runs in about 20 minutes | A10G `$1.41`/h; the same run takes 33 minutes and costs about `$0.75` |
 | LoRA fine-tune, 7B–27B | 22–72 GB | One 80 GB card; up to about 50B on an H200 | A10G for 7B; 4 × A10G `$7.09`/h for 27B |
