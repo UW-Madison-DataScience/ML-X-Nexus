@@ -10,7 +10,8 @@
 - Never use the word "real" as an intensifier ("a real task", "real research", "real-world"). Say what the thing is instead.
 - No colloquial openers or hedging adverbs ("surprisingly", "simply", "the trick is"). State the fact.
 - Maintainer notes go in an HTML comment at the top of the file, never in reader-facing text.
-- Tile pages for externally hosted material follow the same sections as the other tiles: Prerequisites, Estimated time to complete, Related resources (bulleted, with bold type prefixes), Comments.
+- Tile pages for externally hosted material follow the same sections as the other tiles: Prerequisites, Estimated time to complete, Related resources, Comments.
+- Related resources: a resource that has its own Nexus page gets a bold type prefix inside the link, `[**Workshop**: Title](nexus-url): description`. Anything not on Nexus (papers, docs, repositories, external sites) is listed plainly, `[Title](url): description`, with no bold and no type prefix. This has been the convention from the start; do not invent new prefixes for external links.
 - Reference figures from an upstream lesson by their published URL; do not copy them into `images/` unless the file is specific to this site (for example, a cropped tile image).
 
 ## Authorship
