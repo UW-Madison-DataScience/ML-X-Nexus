@@ -58,9 +58,10 @@ jobs:
           # Authenticated github.com requests get a far higher rate limit.
           token: ${{ secrets.GITHUB_TOKEN }}
           fail: true
-          # Domain exclusions below are kept to four, each for a reason other than a dead page:
+          # Domain exclusions below are kept to five, each for a reason other than a dead page:
           # Vimeo embeds answer 401 to anything but a browser, the AWS and Google Cloud consoles
-          # redirect to sign-in, and ScienceDirect answers 400 to automated requests. A full run
+          # redirect to sign-in, ScienceDirect answers 400 to automated requests, and internet2.edu
+          # serves a certificate chain that non-browser clients reject. A full run
           # without any domain exclusions (Nov 2026) passed everything else, so add an entry
           # only with a reason. (Comments cannot go inside the args block: they would be passed
           # to the shell as arguments.)
@@ -78,4 +79,5 @@ jobs:
             --exclude '^https://console\.cloud\.google\.com/'
             --exclude '^https://console\.aws\.amazon\.com/'
             --exclude '^https://www\.sciencedirect\.com/'
+            --exclude '^https://internet2\.edu/'
             '**/*.html'
