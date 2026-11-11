@@ -996,7 +996,7 @@ GEMINI_API_KEY = await client.secrets.resolve("op://Research/Gemini/api-key")
 
 Use it for: long-running web apps (Flask, FastAPI, Express), Kubernetes pods, daemons — anything where wrapping the entrypoint with `op run` is awkward, or where you want to re-fetch / rotate secrets without restarting the process.
 
-The SDKs also pair with [**1Password Environments**](https://developer.1password.com/docs/environments/) — a per-app bucket of secrets, separate from your Private vault — which is the recommended home for production app secrets. See ["Replace .env with 1Password SDKs"](https://blog.1password.com/replace-env-files-1password-sdks/) for a walkthrough.
+The SDKs also pair with [**1Password Environments**](https://developer.1password.com/docs/environments/) — a per-app bucket of secrets, separate from your Private vault — which is the recommended home for production app secrets. See ["Replace .env with 1Password SDKs"](https://1password.com/blog/env-file-migration-secure-programming-best-practices) for a walkthrough.
 :::
 
 #### Set it up
@@ -1046,7 +1046,7 @@ How `op` authenticates depends on whether a human is at the keyboard.
 
 **Interactive (your laptop, with desktop app integration):** The 1Password desktop app must be unlocked. Day-to-day this is barely noticeable — unlocking is a Touch ID / Windows Hello tap, and `op run` triggers an unlock prompt if the app is locked. Two timers to know:
 
-- **Desktop-authenticated CLI/SDK sessions expire after 10 minutes of inactivity, or whenever 1Password locks** ([1Password announcement, Feb 2026](https://blog.1password.com/expanding-programmatic-access/)). After that, your next `op run` re-prompts for biometrics. The short window is deliberate — it limits exposure if you walk away from an unlocked machine.
+- **Desktop-authenticated CLI/SDK sessions expire after 10 minutes of inactivity, or whenever 1Password locks** ([1Password announcement, Feb 2026](https://1password.com/blog/programmatically-read-environments-sdks-desktop)). After that, your next `op run` re-prompts for biometrics. The short window is deliberate — it limits exposure if you walk away from an unlocked machine.
 - **The desktop app's own auto-lock** is separately configurable in **Settings → Security**.
 - **If you `op signin` without desktop integration**, session tokens default to 30 minutes of inactivity. See [Sign in and out](https://developer.1password.com/docs/cli/sign-in-manually/).
 

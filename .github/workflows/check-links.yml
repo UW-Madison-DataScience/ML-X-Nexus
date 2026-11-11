@@ -67,5 +67,13 @@ jobs:
             --accept '200..=206,403,429,500..=599'
             --exclude-path site_libs
             --exclude-path Contributor-templates
+            # Excluded on purpose, each for a reason other than a dead page: Vimeo embeds answer 401 to
+            # anything but a browser, the AWS and Google Cloud consoles redirect to sign-in, and
+            # ScienceDirect answers 400 to automated requests. A full run without any domain
+            # exclusions (Nov 2026) passed everything else, so add entries here only with a reason.
             --exclude '\.qmd$'
+            --exclude '^https://player\.vimeo\.com/'
+            --exclude '^https://console\.cloud\.google\.com/'
+            --exclude '^https://console\.aws\.amazon\.com/'
+            --exclude '^https://www\.sciencedirect\.com/'
             '**/*.html'
