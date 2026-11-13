@@ -97,7 +97,7 @@ def render(events, today):
             when += s.strftime(", %-I:%M %p").replace(":00", "")
         out.append(f"**Next ML+Coffee:** {when}. [{name}]({link}).\n")
     else:
-        out.append("**Next ML+Coffee:** not yet scheduled. Join the Google group below to get the calendar invite.\n")
+        out.append("**Next ML+Coffee:** not yet scheduled. Join the [Google group](https://groups.google.com/a/g-groups.wisc.edu/g/ml-community-of-practice) to get the calendar invite.\n")
     if past:
         out.append("\n| Date | Past sessions |\n|---|---|\n")
         out += [f"| {s:%Y-%m-%d} | [{name}]({link}) |\n" for s, name, link in past]
