@@ -423,8 +423,14 @@ is skipped by the qmd-to-ipynb GitHub Action.
 <li>Judge whether the fine-tune helped by comparing the model before and after on the same held-out pages with the task’s own metric, character error rate (CER), and by reading the held-out curve to see how many passes were worth it.</li>
 <li>Reuse the saved adapter, about 100 MB, to transcribe new pages, including the challenge’s 141 unlabeled test pages.</li>
 </ul>
-<p>Spoiler: in the lesson’s run, two epochs took the mean character error rate on the held-out pages from 0.267 to 0.065, a quarter of the characters wrong before and one in fifteen after, for about 75 cents of GPU time.</p>
-<p>The exercise is available on three platforms. Start with the Colab notebook if you’re new to fine-tuning; it requires only a Google account. The CHTC and AWS versions take the same workflow to campus or cloud GPU infrastructure.</p>
+<p>In the lesson’s run, two epochs took the character error rate on the held-out pages from 26% to 6.5%, for about 75 cents of GPU time.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../images/LoRA-finetuning_cer-curve.png" class="img-fluid figure-img"></p>
+<figcaption><em>Training loss and held-out CER over the two epochs. Most of the gain comes in the first pass.</em></figcaption>
+</figure>
+</div>
+<p>The exercise is available on three platforms. Start with the Colab notebook for the quickest setup and to focus on fine-tuning concepts; it requires only a Google account. The CHTC and AWS versions take the same workflow to campus or cloud GPU infrastructure.</p>
 </section>
 <section id="where-to-run-it" class="level2">
 <h2 class="anchored" data-anchor-id="where-to-run-it">Where to run it</h2>
