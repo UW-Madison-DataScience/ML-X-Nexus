@@ -18,6 +18,13 @@ on:
 
 name: Quarto Publish  # Display name for the workflow
 
+# Publishes push to the gh-pages branch. Two running at once collide there and the second
+# one fails, which happened whenever two commits landed within a minute or two. Queue them:
+# one publish at a time, and a newer one waits rather than cancelling the one in progress.
+concurrency:
+  group: quarto-publish
+  cancel-in-progress: false
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest  # GitHub-hosted Ubuntu runner with common tools pre-installed
