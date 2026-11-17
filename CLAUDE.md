@@ -3,3 +3,24 @@
 ## Repository Rules
 
 - **NEVER edit `.ipynb` files.** Notebooks are auto-generated from `.qmd` files. Only edit the `.qmd` source files.
+
+## Writing Rules
+
+
+- Never use the word "real" as an intensifier ("a real task", "real research", "real-world"). Say what the thing is instead.
+- No colloquial openers or hedging adverbs ("surprisingly", "simply", "the trick is"). State the fact.
+- Maintainer notes go in an HTML comment at the top of the file, never in reader-facing text.
+- Tile pages for externally hosted material follow the same sections as the other tiles: Prerequisites, Estimated time to complete, Related resources, Comments.
+- Related resources: a resource that has its own Nexus page gets a bold type prefix inside the link, `[**Workshop**: Title](nexus-url): description`. Anything not on Nexus (papers, docs, repositories, external sites) is listed plainly, `[Title](url): description`, with no bold and no type prefix. This has been the convention from the start; do not invent new prefixes for external links.
+- Reference figures from an upstream lesson by their published URL; do not copy them into `images/` unless the file is specific to this site (for example, a cropped tile image).
+
+## Authorship
+
+- `author` is whoever wrote the Nexus page. The title block labels it "Nexus author" (set in `_quarto.yml` under `language`).
+- `resource-author` (always a YAML list, even for one name) names who made an authored work the page shares when that is someone else: a book, a recorded talk or lecture, a lesson from another team, a competition. It shows as "Resource author" or "Resource authors" in the title block, and a post-render script puts those names on the page's tile in place of the Nexus author. Leave it out for overviews of a tool, model, dataset or service, where the maker is named in the text.
+
+## Dates
+
+- `date-modified` marks a change in a page's substance: facts, numbers, recommendations, instructions, prerequisites, scope or structure. Set it to today when you make such a change. Leave it alone for typos, wording, formatting, tags, links and cross-references.
+- An Action re-checks every push to main and moves the date when the change was substantive. Put `[minor]` in a commit message to tell it not to, or `[content]` to make it.
+- Lesson tiles with `lesson-repo` take their date from the upstream repository; pages with `date-modified-auto: false` are pinned by hand. Do not edit those dates.

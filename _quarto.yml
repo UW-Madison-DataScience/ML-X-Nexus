@@ -2,6 +2,8 @@ project:
   type: website
   resources: 
     - images/*
+  post-render:
+    - .scripts/tile_resource_authors.py  # tiles show resource authors in place of the Nexus author
 
 website:
   title: "Nexus: Crowdsourced ML Resources"
@@ -31,6 +33,9 @@ website:
       - href: index.qmd
         text: Home
 
+      - href: MLX/index.qmd
+        text: "ML+X"
+
       - href: Learn/Guides/How-to-contribute.qmd
         text: "How to contribute?" 
 
@@ -51,13 +56,10 @@ website:
       - section: "Projects"
         href: Projects/index.qmd
         contents:
-          - section: "ML Marathon"
-            href: Projects/ML-Marathon/index.qmd
-            contents:
-              - text: "MLM26"
-                href: Projects/ML-Marathon/index.qmd#category=MLM26
-              - text: "MLM25"
-                href: Projects/ML-Marathon/index.qmd#category=MLM25
+          - text: "MLM26"
+            href: Projects/ML-Marathon/index.html#category=MLM26
+          - text: "MLM25"
+            href: Projects/ML-Marathon/index.html#category=MLM25
 
       - section: "Stories"
         href: Applications/index.qmd
@@ -107,10 +109,14 @@ format:
     toc: true
     code-copy: true
     code-overflow: wrap
+    template-partials:
+      - templates/title-metadata.html
 
 execute:
   freeze: auto
 
 language:
   repo-action-links-edit: "Improve this page"
+  title-block-author-single: "Nexus author"
+  title-block-author-plural: "Nexus authors"
 

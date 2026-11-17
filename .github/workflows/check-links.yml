@@ -32,66 +32,52 @@ on:
 # Job: A self-contained unit of work run on a specific virtual machine (runner).
 # -------------------------------------------------------------------------------------
 jobs:
-  crawl_for_broken_links:
-    # Specify the operating system environment where this job runs.
-    # This is required — GitHub needs to know which kind of runner to use.
-    #
-    # `ubuntu-latest` is the most common and has many pre-installed tools.
+  check_links:
+    # When started by a Pages deployment, run only if that deployment succeeded; a
+    # cancelled or failed deployment leaves the old site up and nothing new to check.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-
-    # Optional display name (helpful if your workflow has multiple jobs)
-    name: Broken-Links-Crawler
+    name: Check links on the published site
 
     steps:
-      - name: Checking Links
-        # Use a prebuilt *action* — a reusable task from the GitHub Marketplace.
-        # This one crawls the site and detects broken hyperlinks.
-        #
-        # Source: https://github.com/ScholliYT/Broken-Links-Crawler-Action
-        uses: ScholliYT/Broken-Links-Crawler-Action@v3.3.1
-
+      # The published site lives on the gh-pages branch, so check that copy of the HTML:
+      # relative links between pages are verified against the files themselves, and
+      # external links are fetched over the network.
+      - name: Check out the published site (gh-pages branch)
+        uses: actions/checkout@v4
         with:
-          # URL to start crawling from — in this case, the homepage of your GitHub Pages site
-          website_url: 'https://uw-madison-datascience.github.io/ML-X-Nexus/'
-          verbose: true
-          # Using full URLs to "whitelist" these
-          exclude_url_prefix: >
-            mailto:,
-            https://www.biorxiv.org/content/10.1101/2024.03.15.585128v1,
-            https://techcommunity.microsoft.com/blog/healthcareandlifesciencesblog/discovering-the-power-of-finetuning-medimageinsight-on-your-data/4395057,
-            https://dl.acm.org/doi/10.1145/3065386,
-            https://openai.com/research/,
-            https://www.sciencedirect.com/science/article/abs/pii/S0168169922006603,
-            https://www.kaggle.com/,
-            https://mediaspace.wisc.edu/,
-            https://kb.wisc.edu/,
-            https://vimeo.com/,
-            https://player.vimeo.com/,
-            https://it.wisc.edu/exploring-artificial-intelligence-uw-madison/,
-            https://cacm.acm.org/,
-            https://opportunitydesk.org/,
-            https://www.carbonbrief.org/,
-            https://jeffry.in/,
-            https://claude.ai,
-            https://www.iea.org/,
-            https://www.fastcompany.com/,
-            https://www.sitepoint.com/,
-            https://console.cloud.google.com/,
-            https://www.linkedin.com/,
-            https://devops.com/,
-            https://openai.com/index/,
-            https://www.gbif.org/,
-            https://venturebeat.com/,
-            https://console.aws.amazon.com/,
-            https://monai.io/,
-            https://researchci.it.wisc.edu/,
-            https://marketplace.visualstudio.com/,
-            https://doi.org/10.1002/eap.2694,
-            https://doi.org/10.3390/,
-            https://www.mdpi.com/,
-            https://canvas.wisc.edu/enroll/,
-            https://zenodo.org/,
-            https://lmarena.ai/,
-            https://dvc.org/,
-            https://blog.1password.com/
-          exclude_url_suffix: '.qmd'
+          ref: gh-pages
+
+      # lychee (https://github.com/lycheeverse/lychee) replaces the earlier crawler. The
+      # difference that matters: it can treat a server's temporary trouble (rate limiting,
+      # 5xx errors, bot-blocking 403s) as acceptable, so the job fails only for links that
+      # are dead (404, 410, unresolvable hosts) rather than for every site having a bad hour.
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Authenticated github.com requests get a far higher rate limit.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail: true
+          # Domain exclusions below are kept to five, each for a reason other than a dead page:
+          # Vimeo embeds answer 401 to anything but a browser, the AWS and Google Cloud consoles
+          # redirect to sign-in, ScienceDirect answers 400 to automated requests, and internet2.edu
+          # serves a certificate chain that non-browser clients reject. A full run
+          # without any domain exclusions (Nov 2026) passed everything else, so add an entry
+          # only with a reason. (Comments cannot go inside the args block: they would be passed
+          # to the shell as arguments.)
+          args: >-
+            --no-progress
+            --max-concurrency 6
+            --max-retries 3
+            --retry-wait-time 10
+            --timeout 30
+            --accept '200..=206,403,429,500..=599'
+            --exclude-path site_libs
+            --exclude-path Contributor-templates
+            --exclude '\.qmd$'
+            --exclude '^https://player\.vimeo\.com/'
+            --exclude '^https://console\.cloud\.google\.com/'
+            --exclude '^https://console\.aws\.amazon\.com/'
+            --exclude '^https://www\.sciencedirect\.com/'
+            --exclude '^https://internet2\.edu/'
+            '**/*.html'

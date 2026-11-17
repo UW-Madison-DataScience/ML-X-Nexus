@@ -1,0 +1,55 @@
+# -------------------------------------------------------------------------------------
+# GitHub Actions Workflow: Update the ML+Coffee schedule on the About ML+X page
+# -------------------------------------------------------------------------------------
+# Reads events tagged "ML+X" from the UW-Madison events calendar (today.wisc.edu),
+# writes the next ML+Coffee session and recent past sessions to
+# includes/_mlx-coffee-events.qmd, commits if anything changed, and triggers the
+# site publish. Runs daily so "next session" rolls over the morning after each event.
+# -------------------------------------------------------------------------------------
+
+name: Update ML+Coffee schedule
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 12 * * *'  # daily, 12:23 UTC (6:23 AM Central)
+
+jobs:
+  update-events:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Read the ML+X events from today.wisc.edu
+        run: python3 .scripts/update_mlx_events.py
+
+      - name: Commit and push changes
+        id: commit
+        run: |
+          if git diff --quiet; then
+            echo "No schedule changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update ML+Coffee schedule (scheduled)"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger site publish
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run publish.yml --ref main

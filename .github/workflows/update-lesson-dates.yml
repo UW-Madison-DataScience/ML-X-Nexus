@@ -1,0 +1,62 @@
+# -------------------------------------------------------------------------------------
+# GitHub Actions Workflow: Update last-modified dates of externally hosted lessons
+# -------------------------------------------------------------------------------------
+# Tile pages that point at a lesson maintained in another repository declare it in
+# their front matter with `lesson-repo: owner/name`. This workflow asks GitHub for
+# each lesson repository's latest commit date, writes it into the page's
+# `date-modified:` line, commits any changes, and triggers the site publish so the
+# new dates appear on the site.
+#
+# Runs weekly, and on demand from the Actions tab.
+# -------------------------------------------------------------------------------------
+
+name: Update lesson dates
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * 1'  # Mondays, 05:17 UTC
+
+jobs:
+  update-dates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # commit the updated .qmd files
+      actions: write    # trigger the publish workflow afterwards
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Read lesson repositories' latest commit dates
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .scripts/update_lesson_dates.py
+
+      - name: Commit and push changes
+        id: commit
+        run: |
+          if git diff --quiet; then
+            echo "No date changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update lesson last-modified dates (scheduled)"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not start other workflows on its own, so the
+      # site publish is triggered explicitly.
+      - name: Trigger site publish
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run publish.yml --ref main
