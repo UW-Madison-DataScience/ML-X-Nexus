@@ -1,0 +1,68 @@
+---
+title: "AI Compute Finder"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+date: 2026-11-17
+date-modified: 2026-11-17
+date-format: long
+image: "../../../images/AI-Compute-Finder.png"
+description: "Answer five questions and the finder narrows UW-Madison's sixteen compute options for ML/AI work to the ones that fit, with GPU specs, limits, costs and data policies for each."
+categories:
+  - Compute
+  - Guides
+  - UW-Madison
+  - GPU
+  - Cloud
+  - HPC
+  - GenAI
+---
+
+The [AI Compute Finder](https://uw-compute-finder.vercel.app/) is a short questionnaire that narrows the sixteen compute platforms open to UW-Madison researchers down to the ones that fit a piece of ML/AI work. Answer five questions about how you want to work, what you are doing, who you are, what data you have and how you want to pay, and the list shrinks to the platforms that match. Click a tile to see its details: the GPUs it offers and their memory, runtime and queue limits, cost, data policies and an estimate of the largest models it can train, fine-tune or serve.
+
+It is maintained by [DoIT Research Cyberinfrastructure](https://it.wisc.edu/about/division-of-information-technology/research-cyberinfrastructure/). GPU figures are crawled weekly from the providers' own pages. Use the **Suggest a correction** link on the site, or email [endemann@wisc.edu](mailto:endemann@wisc.edu), when something is out of date.
+
+## The five questions
+
+1. **How you want to use the resource**: interactive (notebooks, a VM or a desktop), batch (jobs submitted to a scheduler), or an API (calling hosted models, including bulk requests).
+2. **The kind of work**: inference (prompting, serving, embeddings, RAG), training (from scratch, classical ML through deep learning), parameter-efficient fine-tuning (LoRA, QLoRA), or hyperparameter tuning (many repeated runs or sweeps).
+3. **Your affiliation**: in a research group, student, faculty, staff, or external collaborator.
+4. **Your data**: the UW-Madison classification (Public, Internal, Sensitive, Restricted), plus FERPA-protected student records or HIPAA-protected health information as additional requirements where they apply.
+5. **How you pay**: free or shared queue, service-supported (a consultation plus a project charge), or pay-as-you-go.
+
+## What it covers
+
+**UW-Madison services**
+
+- [BadgerCompute](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html): interactive notebooks for teaching and small prototypes. Free.
+- BadgerInfer: an OpenAI-compatible API to open-weight models hosted on campus GPUs, with a per-user key, for inference only. A pilot run by DoIT Research Cyberinfrastructure; Public and Internal data only. Free.
+- [CHTC](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html): high-throughput computing (HTCondor) for many independent CPU and GPU jobs, and an HPC cluster for tightly coupled multi-node CPU work. GPU jobs run on the HTC side. Free.
+- Platform R: Slurm-managed on-campus HPC for restricted biomedical workloads. Service-supported.
+- Platform X: a secure Azure research environment with Windows, Linux and GPU VMs and access to AI models through Microsoft Foundry, for Restricted and HIPAA data under SMPH controls. Pay-as-you-go.
+- SSCC: service-supported on-campus research computing for statistics and moderate ML workloads, and SSCC Silo, its secure enclave for regulated and restricted data.
+
+**National services**
+
+- NAIRR Pilot: free, allocation-based access to GPU clusters at NSF centers and DOE labs, cloud credits and hosted model APIs. Rolling call, reviewed monthly.
+- [National Research Platform](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html): a community-governed, NSF-funded pool of GPUs, petabyte-scale storage and open-weight models. Free.
+- NSF ACCESS: free, allocation-based time on NSF supercomputers (DeltaAI, Delta, Bridges-2, Expanse, Anvil, Jetstream2 and others). A one-paragraph Explore request is usually approved within days.
+
+**Commercial cloud under UW-Madison contracts**, all pay-as-you-go: AWS Bedrock and SageMaker, Azure Machine Learning and Azure OpenAI, the Gemini API and Google's Agent Platform (formerly Vertex AI). [UW-Madison Cloud Services](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html) explains how to get an institutional account and when the cloud is worth paying for.
+
+## Reading the results
+
+- **Model-size figures are estimates.** They are worked out from each platform's documented GPU memory. What fits in practice depends on the model architecture, precision, sequence length and batch size, and a multi-GPU estimate assumes the platform supports distributed execution on that hardware.
+- **Data approval is per use, not per platform.** A platform that supports Restricted data is not automatically approved for FERPA records or PHI. Where the provider documents support, the finder says so; otherwise confirm with the provider and the relevant UW data steward before putting regulated data on it.
+- **Start free.** For most campus work the free options, CHTC, BadgerCompute, NRP and the national allocations, cover the job. The paid tiers earn their cost when you need many GPUs at once, a guaranteed start time, or a hosted service that stays up.
+
+## Related resources
+
+- [**Compute**: Center for High Throughput Computing (CHTC)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/CHTC.html): The free campus GPU pool the finder recommends most often.
+- [**Compute**: BadgerCompute](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/BadgerCompute.html): Interactive notebooks with a GPU for short sessions.
+- [**Compute**: UW-Madison Cloud Services (AWS, GCP, Azure)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/UW-Cloud-Services.html): Institutional cloud accounts and a CHTC-versus-cloud comparison.
+- [**Compute**: National Research Platform (NRP)](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/NRP-Nautilus.html): Free GPUs and hosted open-weight models.
+- [**Compute**: Google Colab](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Compute/GoogleColab.html): Free notebooks for learning, with their limits.
+- [**GenAI**: UW Generative AI Services & Policies](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/GenAI/GenAI-at-UW-Madison.html): Which hosted AI services are approved for which data at UW-Madison.
+- [**Notebook**: Fine-tuning with LoRA: Colab, CHTC, or AWS](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Notebooks/Finetuning-with-LoRA.html): The same fine-tune on three of the platforms the finder lists.
+
+## Comments
