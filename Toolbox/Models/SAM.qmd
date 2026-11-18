@@ -1,0 +1,85 @@
+---
+title: "Segment Anything Model (SAM): Foundation Model for Image Segmentation"
+author:
+  - name: Chris Endemann
+    email: endemann@wisc.edu
+
+date: 2026-03-11
+date-format: long
+image: "../../../images/SAM.png"
+
+categories:
+  - Models
+  - Deep learning
+  - Computer vision
+  - Image segmentation
+  - Transfer learning
+  - Transformers
+  - Zero-shot learning
+---
+
+The Segment Anything Model (SAM) is a foundation model for image segmentation developed by Meta AI Research. Introduced in the 2023 paper, "[Segment Anything](https://arxiv.org/abs/2304.02643)", SAM is designed to "segment anything" in images using flexible prompts such as points, bounding boxes, or text. Trained on a massive dataset of over 1 billion masks (SA-1B), SAM demonstrates strong zero-shot generalization, meaning it can segment objects in images and domains it has never seen during training — making it a powerful general-purpose tool for segmentation tasks.
+
+#### Key features
+- **Promptable segmentation**: SAM accepts a variety of prompts — including points, bounding boxes, masks, and text — to specify what to segment, enabling flexible and interactive use.
+- **Zero-shot generalization**: Trained on the diverse SA-1B dataset (11 million images, 1.1 billion masks), SAM generalizes to new image domains and object types without fine-tuning.
+- **Real-time interaction**: The lightweight mask decoder enables real-time mask prediction, making SAM suitable for interactive annotation and exploration.
+- **Foundation model architecture**: SAM uses a Vision Transformer (ViT) image encoder combined with a prompt encoder and mask decoder, following the foundation model paradigm of training once and adapting to many tasks.
+
+## How SAM works
+
+SAM's architecture consists of three components:
+
+1. **Image encoder**: A Vision Transformer (ViT) pre-trained with Masked Autoencoders (MAE) processes the input image into an image embedding. This is the most computationally expensive component but only needs to run once per image.
+2. **Prompt encoder**: Encodes user-provided prompts (points, boxes, masks, or text) into embeddings that guide segmentation.
+3. **Mask decoder**: A lightweight transformer-based decoder combines image and prompt embeddings to predict segmentation masks in real time.
+
+This design separates the heavy image encoding from the lightweight prompt-to-mask step, enabling interactive use where users can iterate on prompts without re-encoding the image.
+
+## Timeline context
+
+SAM builds on decades of progress in image segmentation and vision models:
+
+- **[FCN (2014)](https://arxiv.org/abs/1411.4038)**: Pioneered fully convolutional networks for dense pixel-wise prediction.
+- **[U-Net (2015)](https://arxiv.org/abs/1505.04597)**: Encoder-decoder architecture with skip connections for biomedical image segmentation.
+- **[Mask R-CNN (2017)](https://arxiv.org/abs/1703.06870)**: Instance segmentation combining object detection with pixel-level masks.
+- **[Vision Transformer (ViT) (2020)](https://arxiv.org/abs/2010.11929)**: Applied transformer architecture to image classification.
+- **[Masked Autoencoders (MAE) (2021)](https://arxiv.org/abs/2111.06377)**: Self-supervised pre-training for Vision Transformers.
+- **[Segment Anything (SAM) (2023)](https://arxiv.org/abs/2304.02643)**: Foundation model for promptable, zero-shot image segmentation.
+- **[SAM 2 (2024)](https://arxiv.org/abs/2408.00714)**: Extended SAM to video segmentation with streaming memory for tracking objects across frames.
+
+## SAM variants and related models
+- **[SAM 2](https://github.com/facebookresearch/sam2)**: Extends SAM to video, adding a memory mechanism for consistent object tracking across frames. Also improves image segmentation performance over the original SAM.
+- **[MedSAM](https://arxiv.org/abs/2304.12306)**: Fine-tuned version of SAM for medical image segmentation across diverse imaging modalities.
+- **[FastSAM](https://arxiv.org/abs/2306.12156)**: A CNN-based alternative offering 50x faster inference while approaching SAM's segmentation quality.
+- **[EfficientSAM](https://arxiv.org/abs/2312.00863)**: Uses knowledge distillation from SAM's ViT-H encoder to create smaller, faster models.
+- **[Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)**: Combines Grounding DINO (open-set object detection) with SAM for text-prompted segmentation.
+
+## Model playground
+
+#### Tutorials and getting started
+- **[SAM GitHub repository](https://github.com/facebookresearch/segment-anything)**: Official code, model checkpoints, and usage examples.
+- **[SAM 2 GitHub repository](https://github.com/facebookresearch/sam2)**: Latest version with video segmentation support.
+- **[SAM demo](https://segment-anything.com/demo)**: Interactive web demo for trying SAM on your own images.
+
+#### High-level tips for effective use
+- **Choose the right model size**: SAM offers ViT-B (base), ViT-L (large), and ViT-H (huge) backbones. Start with ViT-B for faster experimentation and scale up for higher-quality results.
+- **Leverage prompt engineering**: Experiment with different prompt types (points, boxes, or combinations) to get the best segmentation for your use case. Multiple positive/negative point prompts often improve results.
+- **Use automatic mask generation**: For exploratory analysis, SAM's automatic mode generates masks for all objects in an image without any prompts.
+- **Consider fine-tuning for specialized domains**: While SAM generalizes well, fine-tuning on domain-specific data (e.g., medical imaging, satellite imagery) can significantly improve performance for specialized tasks.
+- **Batch image encoding**: When processing many prompts on the same image, encode the image once and reuse the embedding for all prompts to maximize throughput.
+
+#### Applications
+- **Medical imaging**: Segmenting organs, tumors, and anatomical structures across imaging modalities (CT, MRI, X-ray).
+- **Remote sensing**: Delineating land use, buildings, roads, and natural features in satellite and aerial imagery.
+- **Agriculture**: Identifying and measuring crop features, plant diseases, or field boundaries.
+- **Data annotation**: Dramatically accelerating the creation of segmentation datasets for training specialized models.
+- **Scientific imaging**: Segmenting cells, organisms, or structures in microscopy and other scientific imaging.
+
+## Related resources
+- [**Model**: U-Net](https://uw-madison-datascience.github.io/ML-X-Nexus/Toolbox/Models/UNET.html): A foundational encoder-decoder architecture for biomedical image segmentation.
+- [**Playlists**: ML4MI Seminar](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/): Biomedical applications of ML (especially computer vision) at UW-Madison.
+- [**Video**: Vision, Language, and Vision-Language Modeling in Radiology](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/ML4MI/2024-09-16_Vision-Language-and-VisionLanguage-Modeling-in-Radiology_Tyler-Bradshaw.html): ML4MI seminar covering vision and vision-language models in medical imaging.
+- [**Workshop**: Introduction to Deep Learning with PyTorch](https://uw-madison-datascience.github.io/ML-X-Nexus/Learn/Workshops/Intro-Deeplearning_PyTorch.html): Learn how to use PyTorch to build and train deep learning models.
+
+## Comments
