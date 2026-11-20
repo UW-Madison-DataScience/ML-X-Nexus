@@ -33,6 +33,12 @@ DATE_OVERRIDES = {
     "214961": "2025-11-05",   # Protein Engineering with MaveDB (calendar says 2026-11-05)
 }
 
+# Session names to show in place of the calendar title, by event id, when the calendar
+# title leaves a topic out.
+TITLE_OVERRIDES = {
+    "224269": "Qwen Powered Robotics, Surgical Video to Op Notes & Is Qwen Biased?",
+}
+
 
 def fetch(tag, start, end):
     events, page = [], 1
@@ -85,7 +91,8 @@ def render(events, today):
             print(f"skip: unreadable date {e.get('startDate')!r} on {title!r}")
             continue
         link = f"https://today.wisc.edu/events/view/{e['id']}" if e.get("id") else TAG_PAGE
-        coffee.append((start, session_name(title), link))
+        name = TITLE_OVERRIDES.get(str(e.get("id"))) or session_name(title)
+        coffee.append((start, name, link))
     coffee.sort(key=lambda x: x[0])
     upcoming = [c for c in coffee if c[0].date() >= today]
     past = [c for c in coffee if PAST_FROM <= c[0].date() < today][::-1]
